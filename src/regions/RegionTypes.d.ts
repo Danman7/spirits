@@ -1,4 +1,4 @@
-export enum Dweller {
+export const enum Dweller {
   BUILDER = 'Builder',
   HUNTER_GATHERER = 'Hunter/Gatherer'
 }

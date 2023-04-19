@@ -1,1 +1,4 @@
 src/Main.tsx
+jest.config.ts
+babel.config.js
+vite.config.ts
