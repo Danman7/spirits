@@ -1,6 +1,6 @@
 export enum Dweller {
   BUILDER = 'Builder',
-  HUNTER_GATHERER = 'Hunter/Gatherer',
+  HUNTER_GATHERER = 'Hunter/Gatherer'
 }
 
 export interface RegionBase {

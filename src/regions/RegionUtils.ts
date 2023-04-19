@@ -1,18 +1,18 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { Dweller, Region, RegionBase } from './RegionTypes.d'
-import { RegionNames } from './RegionNames'
 import { getRandomItemFromArray } from '../utils'
+import { RegionNames } from './RegionNames'
+import { Dweller, Region, RegionBase } from './RegionTypes.d'
 
-interface createNewRegionOptions extends RegionBase {
+interface CreateNewRegionOptions extends RegionBase {
   populationNumber: number
 }
 
 const createNewRegion = ({
   name,
   foodMultiplier,
-  populationNumber,
-}: createNewRegionOptions): Region => ({
+  populationNumber
+}: CreateNewRegionOptions): Region => ({
   id: uuidv4(),
   name,
   foodMultiplier,
@@ -20,7 +20,7 @@ const createNewRegion = ({
     { length: populationNumber },
     () => Dweller.HUNTER_GATHERER
   ),
-  foodSupply: 0,
+  foodSupply: 0
 })
 
 export const createRandomRegions = (amount: number) => {
@@ -29,7 +29,7 @@ export const createRandomRegions = (amount: number) => {
 
   for (let index = 0; index < amount; index++) {
     const name = getRandomItemFromArray(
-      RegionNames.filter((name) => !usedNames.includes(name))
+      RegionNames.filter(regionName => !usedNames.includes(regionName))
     )
 
     if (name) {

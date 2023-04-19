@@ -1,13 +1,14 @@
 {
   "name": "realms",
-  "private": true,
-  "version": "0.0.0",
+  "private": false,
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "tsc"
+    "lint": "tsc --noEmit && eslint src",
+    "lint:fix": "tsc --noEmit && eslint --fix src"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.3",
@@ -17,17 +18,17 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.21.4",
+    "@babel/eslint-parser": "^7.21.3",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@types/uuid": "^9.0.1",
     "@vitejs/plugin-react": "^3.1.0",
     "eslint": "^8.38.0",
-    "eslint-config-semistandard": "^17.0.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-n": "^15.7.0",
-    "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-react": "^7.32.2",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "typescript": "^4.9.3",
     "vite": "^4.2.0"
   }

@@ -18,5 +18,5 @@ export const RegionNames = [
   'Moonshadow Duchy',
   'Dragonspire',
   'Ravenshadow',
-  'Celestial Domain',
+  'Celestial Domain'
 ]
