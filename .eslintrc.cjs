@@ -276,7 +276,8 @@ module.exports = {
     'react-hooks/exhaustive-deps': 0,
     'prettier/prettier': 2,
     'import/no-default-export': 2,
-    'import/no-relative-parent-imports': 0
+    'import/no-relative-parent-imports': 0,
+    'no-restricted-imports': [2, { patterns: ['.*'] }]
   },
   overrides: [
     {

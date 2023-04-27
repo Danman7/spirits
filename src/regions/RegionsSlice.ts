@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Dweller, Region } from './RegionTypes.d'
+import { RegionTypes } from 'src/regions'
 
-export type RegionsState = Region[]
+export type RegionsState = RegionTypes.Region[]
 
 const initialState: RegionsState = []
 
@@ -9,14 +9,14 @@ export const regionsSlice = createSlice({
   name: 'regions',
   initialState,
   reducers: {
-    populateRegions: (_state, action: PayloadAction<Region[]>) =>
+    populateRegions: (_state, action: PayloadAction<RegionTypes.Region[]>) =>
       action.payload,
     passSeason: (state, action: PayloadAction<number>) => {
       state.forEach(region => {
         const { foodMultiplier, population } = region
 
         const hunterGatherers = population.filter(
-          dweller => dweller === Dweller.HUNTER_GATHERER
+          dweller => dweller === RegionTypes.Dweller.HUNTER_GATHERER
         ).length
 
         region.foodSupply += hunterGatherers * foodMultiplier * action.payload
@@ -25,6 +25,6 @@ export const regionsSlice = createSlice({
   }
 })
 
-export const { populateRegions, passSeason } = regionsSlice.actions
+export const RegionActions = regionsSlice.actions
 
-export const regionsRducer = regionsSlice.reducer
+export const RegionsRducer = regionsSlice.reducer

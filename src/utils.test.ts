@@ -1,4 +1,4 @@
-import { getRandomItemFromArray } from './utils'
+import { getRandomItemFromArray } from 'src/utils'
 
 describe('General Utils', () => {
   it('should get a random item from an array with getRandomItemFromArray', () => {

@@ -1,16 +1,14 @@
 import { useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from './redux/hooks'
-import { generateMap } from './regions/map-generation'
-import { getRegions } from './regions/RegionSelectors'
-import { populateRegions } from './regions/RegionsSlice'
+import { useAppDispatch, useAppSelector } from 'src/store'
+import { MapGeneration, RegionActions, RegionSelectors } from 'src/regions'
 
 export const App = () => {
   const dispatch = useAppDispatch()
-  const regions = useAppSelector(getRegions)
+  const regions = useAppSelector(RegionSelectors.getRegions)
 
   useEffect(() => {
-    const generatedRegions = generateMap(10)
-    dispatch(populateRegions(generatedRegions))
+    const generatedRegions = MapGeneration.generateMap(10)
+    dispatch(RegionActions.populateRegions(generatedRegions))
   }, [])
 
   return <div>{JSON.stringify(regions)}</div>

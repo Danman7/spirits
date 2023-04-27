@@ -1,4 +1,7 @@
-import { connectRegions, createRandomBaseRegions } from './RegionUtils'
+import {
+  connectRegions,
+  createRandomBaseRegions
+} from 'src/regions/map-generation/RegionUtils'
 
 describe('RegionUtils', () => {
   it('should generate N amount of random regions with createRandomBaseRegions', () => {
