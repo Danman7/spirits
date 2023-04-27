@@ -12,4 +12,5 @@ export interface Region extends RegionBase {
   id: string
   population: Dweller[]
   foodSupply: number
+  connectedRegionIds: string[]
 }

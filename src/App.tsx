@@ -1,15 +1,15 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from './redux/hooks'
+import { generateMap } from './regions/map-generation'
 import { getRegions } from './regions/RegionSelectors'
 import { populateRegions } from './regions/RegionsSlice'
-import { createRandomRegions } from './regions/RegionUtils'
 
 export const App = () => {
   const dispatch = useAppDispatch()
   const regions = useAppSelector(getRegions)
 
   useEffect(() => {
-    const generatedRegions = createRandomRegions(10)
+    const generatedRegions = generateMap(10)
     dispatch(populateRegions(generatedRegions))
   }, [])
 
