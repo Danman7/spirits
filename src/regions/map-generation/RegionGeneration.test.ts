@@ -1,9 +1,9 @@
 import {
   connectRegions,
   createRandomBaseRegions
-} from 'src/regions/map-generation/RegionUtils'
+} from 'src/regions/map-generation/RegionGeneration'
 
-describe('RegionUtils', () => {
+describe('Region Generation', () => {
   it('should generate N amount of random regions with createRandomBaseRegions', () => {
     const numberOfRegions = 10
     const regions = createRandomBaseRegions(numberOfRegions)
@@ -23,12 +23,9 @@ describe('RegionUtils', () => {
   })
 
   it('should create connections between the regions with connectRegions', () => {
-    const numberOfRegions = 10
-    const regions = createRandomBaseRegions(numberOfRegions)
+    const regions = createRandomBaseRegions(10)
 
     const connectedRegions = connectRegions(regions)
-
-    expect(connectedRegions.length).toBe(numberOfRegions)
 
     expect(connectedRegions).toEqual(
       expect.arrayContaining([

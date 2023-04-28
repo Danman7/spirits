@@ -1,5 +1,7 @@
 {
   "name": "realms",
+  "description": "An experiment in turn based strategy gaming.",
+  "license": "MIT",
   "private": false,
   "version": "0.1.0",
   "type": "module",

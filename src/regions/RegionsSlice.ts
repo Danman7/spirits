@@ -3,7 +3,7 @@ import { RegionTypes } from 'src/regions'
 
 export type RegionsState = RegionTypes.Region[]
 
-const initialState: RegionsState = []
+export const initialState: RegionsState = []
 
 export const regionsSlice = createSlice({
   name: 'regions',
@@ -11,7 +11,7 @@ export const regionsSlice = createSlice({
   reducers: {
     populateRegions: (_state, action: PayloadAction<RegionTypes.Region[]>) =>
       action.payload,
-    passSeason: (state, action: PayloadAction<number>) => {
+    advanceTurn: (state, action: PayloadAction<number>) => {
       state.forEach(region => {
         const { foodMultiplier, population } = region
 
