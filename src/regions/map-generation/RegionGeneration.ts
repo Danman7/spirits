@@ -7,7 +7,7 @@ interface CreateNewBaseRegionOptions extends RegionTypes.RegionBase {
   populationNumber: number
 }
 
-const createNewBaseRegion = ({
+export const createNewBaseRegion = ({
   name,
   foodMultiplier,
   populationNumber
