@@ -27,12 +27,9 @@ describe('Region Generation', () => {
 
     const connectedRegions = connectRegions(regions)
 
-    expect(connectedRegions).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          connectedRegionIds: expect.arrayContaining([expect.any(String)])
-        })
-      ])
-    )
+    connectedRegions.forEach(region => {
+      expect(region.connectedRegionIds.length).toBeGreaterThan(0)
+      expect(region.connectedRegionIds.length).toBeLessThan(4)
+    })
   })
 })
