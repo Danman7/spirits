@@ -1,8 +1,3 @@
-export const enum Dweller {
-  BUILDER = 'Builder',
-  HUNTER_GATHERER = 'Hunter/Gatherer'
-}
-
 export interface RegionBase {
   name: string
   foodMultiplier: number
@@ -10,7 +5,9 @@ export interface RegionBase {
 
 export interface Region extends RegionBase {
   id: string
-  population: Dweller[]
+  population: number
   foodSupply: number
   connectedRegionIds: string[]
+  border: string
+  namePath: string
 }

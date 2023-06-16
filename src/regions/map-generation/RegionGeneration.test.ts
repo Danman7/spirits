@@ -1,7 +1,4 @@
-import {
-  connectRegions,
-  createRandomBaseRegions
-} from 'src/regions/map-generation/RegionGeneration'
+import { createRandomBaseRegions } from 'src/regions/map-generation/RegionGeneration'
 
 describe('Region Generation', () => {
   it('should generate N amount of random regions with createRandomBaseRegions', () => {
@@ -16,20 +13,9 @@ describe('Region Generation', () => {
           id: expect.any(String),
           name: expect.any(String),
           foodMultiplier: expect.any(Number),
-          population: expect.any(Array)
+          population: expect.any(Number)
         })
       ])
     )
-  })
-
-  it('should create connections between the regions with connectRegions', () => {
-    const regions = createRandomBaseRegions(10)
-
-    const connectedRegions = connectRegions(regions)
-
-    connectedRegions.forEach(region => {
-      expect(region.connectedRegionIds.length).toBeGreaterThan(0)
-      expect(region.connectedRegionIds.length).toBeLessThan(4)
-    })
   })
 })

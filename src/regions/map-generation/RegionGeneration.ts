@@ -9,18 +9,16 @@ interface CreateNewBaseRegionOptions extends RegionTypes.RegionBase {
 
 export const createNewBaseRegion = ({
   name,
-  foodMultiplier,
-  populationNumber
+  foodMultiplier
 }: CreateNewBaseRegionOptions): RegionTypes.Region => ({
   id: uuidv4(),
   name,
   foodMultiplier,
-  population: Array.from(
-    { length: populationNumber },
-    () => RegionTypes.Dweller.HUNTER_GATHERER
-  ),
+  population: 3,
   foodSupply: 0,
-  connectedRegionIds: []
+  connectedRegionIds: [],
+  border: '',
+  namePath: ''
 })
 
 export const createRandomBaseRegions = (
@@ -42,29 +40,6 @@ export const createRandomBaseRegions = (
       )
     }
   }
-
-  return regions
-}
-
-export const connectRegions = (
-  regions: RegionTypes.Region[]
-): RegionTypes.Region[] => {
-  const connectedRegionIds: string[] = []
-
-  regions.forEach(region => {
-    const randomRegion = getRandomItemFromArray(
-      regions.filter(
-        filteredRegion => !connectedRegionIds.includes(filteredRegion.id)
-      )
-    )
-
-    if (randomRegion) {
-      const { id } = randomRegion
-
-      region.connectedRegionIds.push(id)
-      connectedRegionIds.push(id)
-    }
-  })
 
   return regions
 }

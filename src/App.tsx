@@ -1,15 +1,31 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/store'
-import { MapGeneration, RegionActions, RegionSelectors } from 'src/regions'
+import {
+  Scenarios,
+  RegionActions,
+  RegionSelectors,
+  Region,
+  Map,
+  RegionTypes
+} from 'src/regions'
 
 export const App = () => {
   const dispatch = useAppDispatch()
-  const regions = useAppSelector(RegionSelectors.getRegions)
+  const regions: RegionTypes.Region[] = useAppSelector(
+    RegionSelectors.getRegions
+  )
 
   useEffect(() => {
-    const generatedRegions = MapGeneration.generateMap(10)
-    dispatch(RegionActions.populateRegions(generatedRegions))
+    dispatch(RegionActions.populateRegions(Scenarios.Mythosia))
   }, [])
 
-  return <div>{JSON.stringify(regions)}</div>
+  return (
+    <>
+      <Map width={1400} height={800}>
+        {regions.map(region => (
+          <Region key={region.id} {...region} />
+        ))}
+      </Map>
+    </>
+  )
 }

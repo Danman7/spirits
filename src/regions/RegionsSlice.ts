@@ -10,18 +10,7 @@ export const regionsSlice = createSlice({
   initialState,
   reducers: {
     populateRegions: (_state, action: PayloadAction<RegionTypes.Region[]>) =>
-      action.payload,
-    advanceTurn: (state, action: PayloadAction<number>) => {
-      state.forEach(region => {
-        const { foodMultiplier, population } = region
-
-        const hunterGatherers = population.filter(
-          dweller => dweller === RegionTypes.Dweller.HUNTER_GATHERER
-        ).length
-
-        region.foodSupply += hunterGatherers * foodMultiplier * action.payload
-      })
-    }
+      action.payload
   }
 })
 
