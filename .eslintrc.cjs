@@ -94,7 +94,6 @@ module.exports = {
   plugins: ['react', 'react-hooks', 'prettier'],
   rules: {
     'jsx-a11y/href-no-hash': 0,
-
     'no-console': 1,
     complexity: [2, 30],
     'prefer-object-spread': 2,
