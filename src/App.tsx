@@ -4,10 +4,9 @@ import {
   Scenarios,
   RegionActions,
   RegionSelectors,
-  Region,
   Map,
   RegionTypes
-} from 'src/regions'
+} from 'src/world'
 
 export const App = () => {
   const dispatch = useAppDispatch()
@@ -21,11 +20,7 @@ export const App = () => {
 
   return (
     <>
-      <Map width={1400} height={800}>
-        {regions.map(region => (
-          <Region key={region.id} {...region} />
-        ))}
-      </Map>
+      <Map width={1400} height={800} regions={regions} />
     </>
   )
 }

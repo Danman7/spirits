@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RegionTypes } from 'src/regions'
+import { RegionTypes } from 'src/world'
 
 export type RegionsState = RegionTypes.Region[]
 

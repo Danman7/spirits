@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { Region, Scenarios } from 'src/regions'
+import { Region, Scenarios } from 'src/world'
 
 describe('Region component', () => {
   it('should render correctly', () => {

@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { RegionsRducer } from 'src/regions'
+import { RegionsRducer } from 'src/world'
 import type { AppDispatch, RootState } from 'src/store/types.d'
 import { useAppDispatch, useAppSelector } from 'src/store/hooks'
 

@@ -1,6 +1,6 @@
 import { FC } from 'react'
-import { RegionTypes } from 'src/regions'
-import { RegionBorder, RegionName } from 'src/regions/components/styles'
+import { RegionTypes } from 'src/world'
+import { RegionBorder, RegionName } from 'src/world/components/styles'
 
 export const Region: FC<RegionTypes.Region> = ({ name, namePath, border }) => (
   <g>

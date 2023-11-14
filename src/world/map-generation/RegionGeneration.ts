@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
-import { RegionTypes } from 'src/regions'
+import { RegionTypes } from 'src/world'
 import { getRandomItemFromArray } from 'src/utils'
-import { RegionNames } from 'src/regions/RegionNames'
+import { RegionNames } from 'src/world/RegionNames'
 
 interface CreateNewBaseRegionOptions extends RegionTypes.RegionBase {
   populationNumber: number

@@ -1,4 +1,4 @@
-import { RegionTypes } from 'src/regions'
+import { RegionTypes } from 'src/world'
 
 export const Mythosia: RegionTypes.Region[] = [
   {
