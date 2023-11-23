@@ -10,17 +10,19 @@ import {
 
 export const App = () => {
   const dispatch = useAppDispatch()
-  const regions: RegionTypes.Region[] = useAppSelector(
+  const regionsFromState: RegionTypes.Region[] = useAppSelector(
     RegionSelectors.getRegions
   )
 
+  const { regions, width, height } = Scenarios.Mythosia
+
   useEffect(() => {
-    dispatch(RegionActions.populateRegions(Scenarios.Mythosia))
+    dispatch(RegionActions.populateRegions(regions))
   }, [])
 
   return (
     <>
-      <Map width={1400} height={800} regions={regions} />
+      <Map width={width} height={height} regions={regionsFromState} />
     </>
   )
 }
