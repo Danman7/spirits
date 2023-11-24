@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from 'src/store'
+import { useAppDispatch, useAppSelector } from 'src/redux'
 import {
   Scenarios,
   RegionActions,
@@ -10,7 +10,7 @@ import {
 
 export const App = () => {
   const dispatch = useAppDispatch()
-  const regionsFromState: RegionTypes.Region[] = useAppSelector(
+  const regionsFromState: RegionTypes.GameRegion[] = useAppSelector(
     RegionSelectors.getRegions
   )
 

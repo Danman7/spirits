@@ -2,7 +2,11 @@ import { FC } from 'react'
 import { RegionTypes } from 'src/world'
 import { RegionBorder, RegionName } from 'src/world/components/styles'
 
-export const Region: FC<RegionTypes.Region> = ({ name, namePath, border }) => (
+export const Region: FC<RegionTypes.GameRegion> = ({
+  name,
+  namePath,
+  border
+}) => (
   <g>
     <RegionBorder d={border} />
     <path id={`${name}-name-path`} fill="none" d={namePath} />

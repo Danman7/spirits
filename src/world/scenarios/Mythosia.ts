@@ -8,8 +8,6 @@ export const Mythosia: RegionTypes.Scenario = {
     {
       id: 'eldermont',
       name: 'Eldermont',
-      foodSupply: 0,
-      population: 3,
       connectedRegionIds: ['highgrove', 'mistwood', 'stormriderspine'],
       namePath: 'M 400 750 Q 600 700 685 600',
       border:
@@ -18,8 +16,6 @@ export const Mythosia: RegionTypes.Scenario = {
     {
       id: 'highgrove',
       name: 'High Grove',
-      foodSupply: 0,
-      population: 3,
       connectedRegionIds: [
         'eldermont',
         'mistwood',
@@ -33,8 +29,6 @@ export const Mythosia: RegionTypes.Scenario = {
     {
       id: 'stormriderspine',
       name: "Stormrider's Spine",
-      foodSupply: 0,
-      population: 3,
       connectedRegionIds: ['eldermont', 'mistwood', 'eldoria'],
       namePath: 'M 750 540 Q 850 700 1070 740',
       border:
@@ -43,8 +37,6 @@ export const Mythosia: RegionTypes.Scenario = {
     {
       id: 'mistwood',
       name: 'Mistwood',
-      foodSupply: 0,
-      population: 3,
       connectedRegionIds: [
         'eldermont',
         'highgrove',
@@ -59,8 +51,6 @@ export const Mythosia: RegionTypes.Scenario = {
     {
       id: 'eldoria',
       name: 'Eldoria',
-      foodSupply: 0,
-      population: 3,
       connectedRegionIds: ['stormriderspine', 'mistwood', 'flatlands'],
       namePath: 'M 840 320 Q 830 480 1040 550',
       border:
@@ -69,8 +59,6 @@ export const Mythosia: RegionTypes.Scenario = {
     {
       id: 'flatlands',
       name: 'The Flatlands',
-      foodSupply: 0,
-      population: 3,
       connectedRegionIds: [
         'eldoria',
         'mistwood',
@@ -84,8 +72,6 @@ export const Mythosia: RegionTypes.Scenario = {
     {
       id: 'red-plateaus',
       name: 'Red Plateaus',
-      foodSupply: 0,
-      population: 3,
       connectedRegionIds: ['marshes', 'flatlands'],
       namePath: 'M 940 50 Q 1040 140 1070 290',
       border:
@@ -94,8 +80,6 @@ export const Mythosia: RegionTypes.Scenario = {
     {
       id: 'lake-valley',
       name: 'Lake Valley',
-      foodSupply: 0,
-      population: 3,
       connectedRegionIds: ['highgrove', 'white-coast'],
       namePath: 'M 130 690 Q 40 590 240 410',
       border:
@@ -104,8 +88,6 @@ export const Mythosia: RegionTypes.Scenario = {
     {
       id: 'marshes',
       name: 'The Marshes',
-      foodSupply: 0,
-      population: 3,
       connectedRegionIds: ['red-plateaus'],
       namePath: 'M 1160 310 Q 1250 170 1310 40',
       border:
@@ -114,8 +96,6 @@ export const Mythosia: RegionTypes.Scenario = {
     {
       id: 'white-coast',
       name: 'White Coast',
-      foodSupply: 0,
-      population: 3,
       connectedRegionIds: ['flatlands', 'mistwood', 'highgrove', 'lake-valley'],
       namePath: 'M 400 340 Q 460 220 470 60',
       border:

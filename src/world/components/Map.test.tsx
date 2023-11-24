@@ -1,7 +1,7 @@
-import { render } from '@testing-library/react'
+import { render } from 'src/utils/testUtils'
 import { Map, Scenarios } from 'src/world'
 
-const { regions, width, height } = Scenarios.Mythosia
+const { regions, width, height } = Scenarios.TestScenario
 
 describe('Map component', () => {
   it('should render correctly', () => {

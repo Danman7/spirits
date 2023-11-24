@@ -4,7 +4,7 @@ import { RegionTypes, Region } from 'src/world'
 interface MapProps {
   width: number
   height: number
-  regions: RegionTypes.Region[]
+  regions: RegionTypes.GameRegion[]
 }
 
 export const Map: FC<PropsWithChildren<MapProps>> = ({

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RegionTypes } from 'src/world'
 
-export type RegionsState = RegionTypes.Region[]
+export type RegionsState = RegionTypes.GameRegion[]
 
 export const initialState: RegionsState = []
 
@@ -9,8 +9,14 @@ export const regionsSlice = createSlice({
   name: 'regions',
   initialState,
   reducers: {
-    populateRegions: (_state, action: PayloadAction<RegionTypes.Region[]>) =>
-      action.payload
+    populateRegions: (
+      _state,
+      action: PayloadAction<RegionTypes.ScenarioRegion[]>
+    ) =>
+      action.payload.map(scenarioRegion => ({
+        ...scenarioRegion,
+        population: 0
+      }))
   }
 })
 
