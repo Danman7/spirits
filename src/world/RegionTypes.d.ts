@@ -6,8 +6,13 @@ export interface ScenarioRegion {
   connectedRegionIds: string[]
 }
 
+export const enum PopulationType {
+  Colonist = 'Colonist',
+  Dweller = 'Dweller'
+}
+
 export interface GameRegion extends ScenarioRegion {
-  population: number
+  population: PopulationType[]
 }
 
 export interface Scenario {

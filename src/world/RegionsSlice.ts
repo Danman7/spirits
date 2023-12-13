@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RegionTypes } from 'src/world'
+import { mode } from 'src/utils/gameUtils'
 
 export type RegionsState = RegionTypes.GameRegion[]
 
@@ -15,8 +16,23 @@ export const regionsSlice = createSlice({
     ) =>
       action.payload.map(scenarioRegion => ({
         ...scenarioRegion,
-        population: 0
-      }))
+        population: []
+      })),
+    updatePopulations: state => {
+      state.forEach(region => {
+        const { population } = region
+
+        const populationSize = population.length
+
+        if (populationSize > 1) {
+          const newPopulation = mode(population)
+
+          if (newPopulation) {
+            population.push(newPopulation)
+          }
+        }
+      })
+    }
   }
 })
 
