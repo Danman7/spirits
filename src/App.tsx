@@ -1,28 +1,20 @@
 import { useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from 'src/redux'
-import {
-  Scenarios,
-  RegionActions,
-  RegionSelectors,
-  Map,
-  RegionTypes
-} from 'src/world'
+import { Table } from './Game/components/Table'
+import { useDispatch } from 'react-redux'
+import { GameActions } from './Game/GameSlice'
+import { MockPlayer1, MockPlayer2 } from './utils/mocks'
 
 export const App = () => {
-  const dispatch = useAppDispatch()
-  const regionsFromState: RegionTypes.GameRegion[] = useAppSelector(
-    RegionSelectors.getRegions
-  )
-
-  const { regions, width, height } = Scenarios.Mythosia
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(RegionActions.populateRegions(regions))
-  }, [])
+    dispatch(
+      GameActions.startGame({
+        topPlayer: MockPlayer1,
+        bottomPlayer: MockPlayer2
+      })
+    )
+  }, [dispatch])
 
-  return (
-    <>
-      <Map width={width} height={height} regions={regionsFromState} />
-    </>
-  )
+  return <Table />
 }

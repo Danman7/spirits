@@ -1,15 +1,9 @@
-import { RegionTypes } from 'src/world'
+export const generateUUID = () =>
+  'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = (Math.random() * 16) | 0,
+      v = c === 'x' ? r : (r & 0x3) | 0x8
 
-export const getRandomItemFromArray = <T>(arr: T[]): T | undefined =>
-  arr[Math.floor(Math.random() * arr.length)]
+    return v.toString(16)
+  })
 
-export const mode = (
-  array: RegionTypes.PopulationType[]
-): RegionTypes.PopulationType => {
-  const sortedArray = array.sort(
-    (a, b) =>
-      array.filter(v => v === a).length - array.filter(v => v === b).length
-  )
-
-  return sortedArray[sortedArray?.length - 1]
-}
+export const coinToss = () => (Math.random() < 0.5 ? true : false)
