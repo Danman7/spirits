@@ -3,7 +3,8 @@ import 'styled-components'
 declare module 'styled-components' {
   export interface DefaultTheme {
     borderRadius: string
-    animationDuration: string
+    quickAnimationDuration: string
+    slowAnimationDuration: string
     spacing: number
 
     cardWidth: number

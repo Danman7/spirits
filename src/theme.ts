@@ -1,8 +1,10 @@
 import { DefaultTheme } from 'styled-components'
+import { SLOW_ANIMATION_DURATION } from './Game/constants'
 
 export const defaultTheme: DefaultTheme = {
   borderRadius: '4px',
-  animationDuration: '0.1s',
+  quickAnimationDuration: '0.1s',
+  slowAnimationDuration: `${SLOW_ANIMATION_DURATION}ms`,
   spacing: 8,
 
   cardWidth: 250,

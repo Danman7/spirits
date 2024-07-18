@@ -6,3 +6,5 @@ export const EMPTY_PLAYER: Player = {
   deck: [],
   field: []
 }
+
+export const SLOW_ANIMATION_DURATION = 2000

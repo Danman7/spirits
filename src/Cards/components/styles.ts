@@ -7,9 +7,8 @@ export const StyledCard = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.line};
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'not-allowed')};
   box-shadow: 1px 1px 1px ${({ theme }) => theme.colors.line};
-  transition: all ${({ theme }) => theme.animationDuration} ease;
+  transition: all ${({ theme }) => theme.quickAnimationDuration} ease;
   background-color: ${({ theme }) => theme.colors.background};
-  transform-origin: top;
 
   ${({ onClick }) =>
     onClick &&

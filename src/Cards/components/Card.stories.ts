@@ -1,10 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from '@storybook/test'
 import { Card } from './Card'
-import { HammeriteAcolyte } from '../OrderCards'
-import { PlayCard } from '../types'
-
-const mockCard: PlayCard = { ...HammeriteAcolyte, id: '1' }
+import { mockCard } from './mocks'
 
 const meta = {
   title: 'Card',

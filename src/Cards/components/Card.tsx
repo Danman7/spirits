@@ -26,7 +26,7 @@ export const Card: FC<CardProps> = ({ card, isFaceDown, onClick }) => {
                 x2="0"
                 y2="12"
                 stroke="#999999"
-                stroke-width="8"
+                strokeWidth="8"
               />
             </pattern>
           </defs>
