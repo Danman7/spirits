@@ -2,7 +2,8 @@ import { FC } from 'react'
 import {
   BottomPlayerDeck,
   StyledTable,
-  TableRow,
+  TopPlayField,
+  BottomPlayField,
   TopPlayerDeck
 } from './styles'
 import { useDispatch, useSelector } from 'react-redux'
@@ -32,10 +33,12 @@ export const Table: FC = () => {
       <TopPlayerDeck>
         {topPlayer?.deck.map(card => <Card card={card} isFaceDown />)}
       </TopPlayerDeck>
-      <TableRow>{topPlayer?.field.map(card => <Card card={card} />)}</TableRow>
-      <TableRow>
+      <TopPlayField>
+        {topPlayer?.field.map(card => <Card card={card} />)}
+      </TopPlayField>
+      <BottomPlayField>
         {bottomPlayer?.field.map(card => <Card card={card} />)}
-      </TableRow>
+      </BottomPlayField>
       <BottomPlayerDeck>
         {bottomPlayer?.deck.map(card => (
           <Card card={card} onClick={isPlayerTurn ? onPlayCard : undefined} />

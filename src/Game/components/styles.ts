@@ -7,32 +7,43 @@ export const StyledTable = styled.div`
   height: 100vh;
   overflow: hidden;
 `
-
-export const TableRow = styled.div`
-  height: ${({ theme }) => theme.cardHeight}px;
-  padding: ${({ theme }) => theme.spacing}px;
+const PlayField = styled.div`
+  height: 50vh;
   display: flex;
   flex-direction: row;
+  justify-content: center;
+
+  ${StyledCard} {
+    transform: scale(0.7);
+  }
+`
+
+export const TopPlayField = styled(PlayField)`
+  border-bottom: 1px dashed ${({ theme }) => theme.colors.pale};
+  align-items: flex-end;
+`
+
+export const BottomPlayField = styled(PlayField)`
+  align-items: flex-start;
 `
 
 const PlayerDeck = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
+  position: fixed;
+  left: 0;
+  right: 0;
 
   ${StyledCard} {
-    margin-right: -${({ theme }) => theme.cardHeight / 2}px;
+    margin: -${({ theme }) => theme.cardHeight / 4}px;
   }
 `
 
 export const TopPlayerDeck = styled(PlayerDeck)`
-  margin-top: -200px;
+  top: -200px;
 `
 
 export const BottomPlayerDeck = styled(PlayerDeck)`
-  margin-bottom: -200px;
-
-  ${StyledCard}:hover {
-    margin-bottom: 200px;
-  }
+  bottom: -200px;
 `

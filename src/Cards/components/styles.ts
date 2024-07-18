@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const StyledCard = styled.div`
   width: ${({ theme }) => theme.cardWidth}px;
@@ -9,13 +9,17 @@ export const StyledCard = styled.div`
   box-shadow: 1px 1px 1px ${({ theme }) => theme.colors.line};
   transition: all ${({ theme }) => theme.animationDuration} ease;
   background-color: ${({ theme }) => theme.colors.background};
-  z-index: 1;
+  transform-origin: top;
 
-  &:hover {
-    z-index: 2;
-    transform: scale(1.01, 1.01);
-    box-shadow: 3px 3px 3px ${({ theme }) => theme.colors.line};
-  }
+  ${({ onClick }) =>
+    onClick &&
+    css`
+      &:hover {
+        z-index: 2;
+        transform: scale(1.01, 1.01);
+        box-shadow: 3px 3px 3px ${({ theme }) => theme.colors.line};
+      }
+    `};
 
   &:active {
     transform: scale(1, 1);

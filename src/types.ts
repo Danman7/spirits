@@ -12,6 +12,7 @@ declare module 'styled-components' {
     colors: {
       main: string
       line: string
+      pale: string
       background: string
     }
   }
