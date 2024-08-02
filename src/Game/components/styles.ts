@@ -1,7 +1,8 @@
 import { StyledCard } from 'src/Cards/components/styles'
-import styled, { keyframes } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
+import { OverlayProps } from './Overlay'
 
-export const StyledTable = styled.div`
+export const StyledBoard = styled.div`
   position: relative;
   height: 100vh;
   overflow: hidden;
@@ -83,17 +84,40 @@ const fadeInAndOut = keyframes`
   }
 `
 
-export const StyledOverlay = styled.div`
+export const StyledOverlay = styled.div<OverlayProps>`
   position: absolute;
+  pointer-events: none;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #fff;
-  animation: ${fadeInAndOut} ${({ theme }) => theme.slowAnimationDuration}
-    linear forwards;
+  animation: ${({ isAnimated, theme }) =>
+    isAnimated
+      ? css`
+          ${fadeInAndOut}
+          ${theme.slowAnimationDuration} linear forwards
+        `
+      : 'none'};
+`
+
+interface PlayerInfoProps {
+  $isActivePlayer: boolean
+}
+
+const PlayerInfo = styled.div<PlayerInfoProps>`
+  position: fixed;
+  left: ${({ theme }) => theme.spacing}px;
+  font-weight: ${({ $isActivePlayer }) => ($isActivePlayer ? 800 : 400)};
+`
+
+export const TopPlayerInfo = styled(PlayerInfo)`
+  top: ${({ theme }) => theme.spacing}px;
+`
+
+export const BottomPlayerInfo = styled(PlayerInfo)`
+  bottom: ${({ theme }) => theme.spacing}px;
 `

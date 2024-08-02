@@ -1,10 +1,12 @@
 import { FC, useEffect, useState } from 'react'
 import {
   BottomPlayerDeck,
-  StyledTable,
+  StyledBoard,
   TopPlayField,
   BottomPlayField,
-  TopPlayerDeck
+  TopPlayerDeck,
+  TopPlayerInfo,
+  BottomPlayerInfo
 } from './styles'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -19,7 +21,11 @@ import { CardProps } from 'src/Cards/components/types'
 import { Overlay } from './Overlay'
 import { SLOW_ANIMATION_DURATION } from '../constants'
 
-export const Table: FC = () => {
+export interface BoardProps {
+  shouldDisableOverlay?: boolean
+}
+
+export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
   const dispatch = useDispatch()
 
   const [shouldShowOverlay, setShouldShowOverlay] = useState(false)
@@ -35,6 +41,10 @@ export const Table: FC = () => {
     dispatch(GameActions.playCard(cardId))
 
   useEffect(() => {
+    if (shouldDisableOverlay) {
+      return
+    }
+
     setShouldShowOverlay(true)
 
     const overlayCloseTimer = setTimeout(() => {
@@ -44,25 +54,43 @@ export const Table: FC = () => {
     return () => {
       clearTimeout(overlayCloseTimer)
     }
-  }, [turn])
+  }, [turn, shouldDisableOverlay])
 
   return (
-    <StyledTable>
+    <StyledBoard>
+      <TopPlayerInfo $isActivePlayer={!isPlayerTurn}>
+        {topPlayer?.name}
+      </TopPlayerInfo>
+
       <TopPlayerDeck>
-        {topPlayer?.deck.map(card => <Card card={card} isFaceDown />)}
+        {topPlayer?.deck.map(card => (
+          <Card key={card.id} card={card} isFaceDown />
+        ))}
       </TopPlayerDeck>
+
       <TopPlayField>
-        {topPlayer?.field.map(card => <Card card={card} />)}
+        {topPlayer?.field.map(card => <Card key={card.id} card={card} />)}
       </TopPlayField>
+
       <BottomPlayField>
-        {bottomPlayer?.field.map(card => <Card card={card} />)}
+        {bottomPlayer?.field.map(card => <Card key={card.id} card={card} />)}
       </BottomPlayField>
+
       <BottomPlayerDeck>
         {bottomPlayer?.deck.map(card => (
-          <Card card={card} onClick={isPlayerTurn ? onPlayCard : undefined} />
+          <Card
+            key={card.id}
+            card={card}
+            onClick={isPlayerTurn ? onPlayCard : undefined}
+          />
         ))}
       </BottomPlayerDeck>
+
+      <BottomPlayerInfo $isActivePlayer={isPlayerTurn}>
+        {bottomPlayer?.name}
+      </BottomPlayerInfo>
+
       {shouldShowOverlay && <Overlay />}
-    </StyledTable>
+    </StyledBoard>
   )
 }

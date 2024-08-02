@@ -28,6 +28,17 @@ describe('Game State Slice', () => {
     expect([MockPlayer1.id, MockPlayer2.id]).toContain(activePlayerId)
   })
 
+  it('should be able to optionally choose starting player', () => {
+    const state = GameReducer(
+      initialState,
+      GameActions.startGame({ ...playersStartingTheGame, isPlayerFirst: false })
+    )
+
+    const { activePlayerId, topPlayer } = state
+
+    expect(activePlayerId).toBe(topPlayer.id)
+  })
+
   it('should change the active player on turn end', () => {
     const state = GameReducer(gameStartedState, GameActions.endTurn())
 

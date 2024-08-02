@@ -8,7 +8,11 @@ import {
 } from '../GameSelectors'
 import { getOverlayMessage } from './utils'
 
-export const Overlay: FC = () => {
+export interface OverlayProps {
+  isAnimated?: boolean
+}
+
+export const Overlay: FC<OverlayProps> = ({ isAnimated = true }) => {
   const bottomPlayer = useSelector(getBottomPlayer)
   const activePlayerId = useSelector(getActivePlayerId)
   const turn = useSelector(getGameTurn)
@@ -19,7 +23,7 @@ export const Overlay: FC = () => {
   const message = getOverlayMessage(isPlayerTurn, isFirstTurn)
 
   return (
-    <StyledOverlay>
+    <StyledOverlay isAnimated={isAnimated}>
       <h1>{message}</h1>
     </StyledOverlay>
   )

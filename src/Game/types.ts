@@ -15,4 +15,5 @@ export interface Player {
 export interface StartGamePayload {
   topPlayer: Player
   bottomPlayer: Player
+  isPlayerFirst?: boolean
 }

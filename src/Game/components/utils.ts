@@ -1,18 +1,25 @@
+import {
+  playerFirstMessage,
+  opponentFirstMessage,
+  yourTurnMessage,
+  opponentTurnMessage
+} from '../messages'
+
 export const getOverlayMessage = (
   isPlayerTurn: boolean,
   isFirstTurn: boolean
 ): string => {
   if (isPlayerTurn && isFirstTurn) {
-    return 'You go first!'
+    return playerFirstMessage
   }
 
   if (!isPlayerTurn && isFirstTurn) {
-    return 'Your opponent goes first!'
+    return opponentFirstMessage
   }
 
   if (isPlayerTurn && !isFirstTurn) {
-    return "It's your turn!"
+    return yourTurnMessage
   }
 
-  return "It's your opponent's turn!"
+  return opponentTurnMessage
 }

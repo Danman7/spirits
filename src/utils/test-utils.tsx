@@ -1,23 +1,28 @@
-import { ReactElement } from 'react'
-import { render, RenderOptions } from '@testing-library/react'
+import {
+  queries,
+  render as rtlRender,
+  RenderOptions
+} from '@testing-library/react'
 import { Provider } from 'react-redux'
+import { configureStore } from '@reduxjs/toolkit'
 import { ThemeProvider } from 'styled-components'
 
 import { GlobalStyles } from 'src/styles'
 import { defaultTheme } from 'src/theme'
 import { MainState } from 'src/state/types'
 import { reducer, store } from 'src/state'
-import { configureStore } from '@reduxjs/toolkit'
 
-// eslint-disable-next-line react-refresh/only-export-components
-const AllTheProviders = ({
-  children,
-  preloadedState
-}: {
-  children: React.ReactNode
+interface customRenderOptions extends RenderOptions {
   preloadedState?: MainState
-}) => {
-  return (
+}
+
+const customRender = (
+  ui: React.ReactElement,
+  { preloadedState, ...renderOptions }: customRenderOptions = {}
+) => {
+  const Wrapper: React.FC<React.PropsWithChildren<Record<string, unknown>>> = ({
+    children
+  }) => (
     <Provider
       store={
         preloadedState
@@ -32,12 +37,13 @@ const AllTheProviders = ({
       <ThemeProvider theme={defaultTheme}>{children}</ThemeProvider>
     </Provider>
   )
-}
 
-const customRender = (
-  ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
-) => render(ui, { wrapper: AllTheProviders, ...options })
+  return rtlRender(ui, {
+    wrapper: Wrapper,
+    ...renderOptions,
+    queries: queries
+  })
+}
 
 // eslint-disable-next-line react-refresh/only-export-components
 export * from '@testing-library/react'

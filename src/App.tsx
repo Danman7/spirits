@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Table } from './Game/components/Table'
+import { Board } from './Game/components/Board'
 import { useDispatch } from 'react-redux'
 import { GameActions } from './Game/GameSlice'
 import { MockPlayer1, MockPlayer2 } from './utils/mocks'
@@ -16,5 +16,5 @@ export const App = () => {
     )
   }, [dispatch])
 
-  return <Table />
+  return <Board />
 }

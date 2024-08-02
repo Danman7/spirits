@@ -16,9 +16,9 @@ export const gameSlice = createSlice({
   initialState,
   reducers: {
     startGame: (state, action: PayloadAction<StartGamePayload>) => {
-      const { topPlayer, bottomPlayer } = action.payload
+      const { topPlayer, bottomPlayer, isPlayerFirst } = action.payload
 
-      const isBottomPlayerFirst = coinToss()
+      const isBottomPlayerFirst = isPlayerFirst ?? coinToss()
 
       return {
         ...state,
