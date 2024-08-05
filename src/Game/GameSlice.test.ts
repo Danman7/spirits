@@ -59,30 +59,30 @@ describe('Game State Slice', () => {
   it('should be able to play a card if is the active player', () => {
     const state = GameReducer(
       gameStartedState,
-      GameActions.playCard(MockPlayer1.deck[0].id)
+      GameActions.playCard(MockPlayer1.hand[0].id)
     )
 
     const { topPlayer } = state
 
-    const { field, deck } = topPlayer
+    const { field, hand } = topPlayer
 
-    expect(field).toEqual([MockPlayer1.deck[0]])
+    expect(field).toEqual([MockPlayer1.hand[0]])
 
-    expect(deck).toEqual([MockPlayer1.deck[1]])
+    expect(hand).toEqual([MockPlayer1.hand[1]])
   })
 
   it('should not be able to play a card if is not the active player', () => {
     const state = GameReducer(
       gameStartedState,
-      GameActions.playCard(MockPlayer2.deck[0].id)
+      GameActions.playCard(MockPlayer2.hand[0].id)
     )
 
     const { bottomPlayer } = state
 
-    const { field, deck } = bottomPlayer
+    const { field, hand } = bottomPlayer
 
     expect(field).toEqual([])
 
-    expect(deck).toEqual(MockPlayer2.deck)
+    expect(hand).toEqual(MockPlayer2.hand)
   })
 })

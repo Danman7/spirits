@@ -1,4 +1,4 @@
-import { HammeriteAcolyte } from '../OrderCards'
+import { Haunt } from '../AllCards'
 import { PlayCard } from '../types'
 
-export const mockCard: PlayCard = { ...HammeriteAcolyte, id: '1' }
+export const mockCard: PlayCard = { ...Haunt, id: '1' }

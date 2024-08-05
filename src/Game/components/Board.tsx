@@ -1,14 +1,13 @@
 import { FC, useEffect, useState } from 'react'
 import {
-  BottomPlayerDeck,
+  BottomPlayerHand,
   StyledBoard,
   TopPlayField,
   BottomPlayField,
-  TopPlayerDeck,
+  TopPlayerHand,
   TopPlayerInfo,
   BottomPlayerInfo
 } from './styles'
-import { useDispatch, useSelector } from 'react-redux'
 import {
   getActivePlayerId,
   getTopPlayer,
@@ -20,20 +19,21 @@ import { GameActions } from '../GameSlice'
 import { CardProps } from 'src/Cards/components/types'
 import { Overlay } from './Overlay'
 import { SLOW_ANIMATION_DURATION } from '../constants'
+import { useAppDispatch, useAppSelector } from 'src/state'
 
 export interface BoardProps {
   shouldDisableOverlay?: boolean
 }
 
 export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const [shouldShowOverlay, setShouldShowOverlay] = useState(false)
 
-  const topPlayer = useSelector(getTopPlayer)
-  const bottomPlayer = useSelector(getBottomPlayer)
-  const activePlayerId = useSelector(getActivePlayerId)
-  const turn = useSelector(getGameTurn)
+  const topPlayer = useAppSelector(getTopPlayer)
+  const bottomPlayer = useAppSelector(getBottomPlayer)
+  const activePlayerId = useAppSelector(getActivePlayerId)
+  const turn = useAppSelector(getGameTurn)
 
   const isPlayerTurn = bottomPlayer?.id === activePlayerId
 
@@ -59,14 +59,14 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
   return (
     <StyledBoard>
       <TopPlayerInfo $isActivePlayer={!isPlayerTurn}>
-        {topPlayer?.name}
+        <span>{topPlayer?.name}</span> / <span>{topPlayer?.coins}</span>
       </TopPlayerInfo>
 
-      <TopPlayerDeck>
-        {topPlayer?.deck.map(card => (
+      <TopPlayerHand>
+        {topPlayer?.hand.map(card => (
           <Card key={card.id} card={card} isFaceDown />
         ))}
-      </TopPlayerDeck>
+      </TopPlayerHand>
 
       <TopPlayField>
         {topPlayer?.field.map(card => <Card key={card.id} card={card} />)}
@@ -76,18 +76,18 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
         {bottomPlayer?.field.map(card => <Card key={card.id} card={card} />)}
       </BottomPlayField>
 
-      <BottomPlayerDeck>
-        {bottomPlayer?.deck.map(card => (
+      <BottomPlayerHand>
+        {bottomPlayer?.hand.map(card => (
           <Card
             key={card.id}
             card={card}
             onClick={isPlayerTurn ? onPlayCard : undefined}
           />
         ))}
-      </BottomPlayerDeck>
+      </BottomPlayerHand>
 
       <BottomPlayerInfo $isActivePlayer={isPlayerTurn}>
-        {bottomPlayer?.name}
+        <span>{bottomPlayer?.name}</span> / <span>{bottomPlayer?.coins}</span>
       </BottomPlayerInfo>
 
       {shouldShowOverlay && <Overlay />}

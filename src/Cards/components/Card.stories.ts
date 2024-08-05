@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from '@storybook/test'
 import { Card } from './Card'
 import { mockCard } from './mocks'
+import {
+  GarrettMasterThief,
+  HammeriteNovice,
+  ViktoriaThiefPawn
+} from '../AllCards'
 
 const meta = {
   title: 'Card',
@@ -10,7 +15,7 @@ const meta = {
     layout: 'centered'
   },
   tags: ['autodocs'],
-  argTypes: {}
+  args: { onClick: fn() }
 } satisfies Meta<typeof Card>
 
 export default meta
@@ -25,13 +30,49 @@ export const Default: Story = {
 
 export const NotClickable: Story = {
   args: {
-    card: mockCard
+    card: mockCard,
+    onClick: undefined
   }
 }
 
-export const FaceDown: Story = {
+export const OrderCard: Story = {
+  args: {
+    card: { ...HammeriteNovice, id: '1' }
+  }
+}
+
+export const ShadowCard: Story = {
+  args: {
+    card: { ...GarrettMasterThief, id: '1' }
+  }
+}
+
+export const MultipleFactions: Story = {
+  args: {
+    card: { ...ViktoriaThiefPawn, id: '1' }
+  }
+}
+
+export const ChaosFaceDown: Story = {
   args: {
     card: mockCard,
+    onClick: undefined,
+    isFaceDown: true
+  }
+}
+
+export const OrderFaceDown: Story = {
+  args: {
+    card: { ...HammeriteNovice, id: '1' },
+    onClick: undefined,
+    isFaceDown: true
+  }
+}
+
+export const ShadowFaceDown: Story = {
+  args: {
+    card: { ...GarrettMasterThief, id: '1' },
+    onClick: undefined,
     isFaceDown: true
   }
 }

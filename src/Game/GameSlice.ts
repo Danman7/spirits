@@ -44,14 +44,14 @@ export const gameSlice = createSlice({
       const { payload: playedCardId } = action
 
       const players = [topPlayer, bottomPlayer].map(player => {
-        const { deck, field } = player
+        const { hand, field } = player
 
-        const playedCard = deck.find(card => card.id === playedCardId)
+        const playedCard = hand.find(card => card.id === playedCardId)
 
         if (playedCard && player.id === activePlayerId) {
           return {
             ...player,
-            deck: deck.filter(card => card.id !== playedCard.id),
+            hand: hand.filter(card => card.id !== playedCard.id),
             field: [...field, playedCard]
           } as Player
         }

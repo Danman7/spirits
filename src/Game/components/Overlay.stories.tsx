@@ -4,7 +4,6 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { reducer } from 'src/state'
 import { Overlay } from './Overlay'
 import { baseGameMockedState } from './mocks'
-import { MockPlayer1, MockPlayer2 } from 'src/utils/mocks'
 
 const meta = {
   title: 'Overlay',
@@ -49,7 +48,7 @@ export const OpponentFirst: Story = {
             ...baseGameMockedState,
             game: {
               ...baseGameMockedState.game,
-              activePlayerId: MockPlayer1.id
+              activePlayerId: baseGameMockedState.game.topPlayer.id
             }
           }
         })}
@@ -72,8 +71,7 @@ export const PlayerTurn: Story = {
             ...baseGameMockedState,
             game: {
               ...baseGameMockedState.game,
-              turn: 2,
-              activePlayerId: MockPlayer2.id
+              turn: 2
             }
           }
         })}
@@ -96,7 +94,7 @@ export const OpponentTurn: Story = {
             game: {
               ...baseGameMockedState.game,
               turn: 2,
-              activePlayerId: MockPlayer1.id
+              activePlayerId: baseGameMockedState.game.topPlayer.id
             }
           }
         })}

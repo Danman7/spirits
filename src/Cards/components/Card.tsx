@@ -1,10 +1,18 @@
 import { FC } from 'react'
-import { CardHeader, CardContent, StyledCard } from './styles'
+import {
+  CardHeader,
+  CardContent,
+  StyledCard,
+  CardTitle,
+  CardTypes,
+  CardFlavor
+} from './styles'
 import { CardProps } from './types'
 import { Lead } from 'src/styles'
+import { getFactionColor, joinCardTypes } from '../utils'
 
 export const Card: FC<CardProps> = ({ card, isFaceDown, onClick }) => {
-  const { name, strength, id } = card
+  const { name, strength, id, description, flavor, types, factions } = card
 
   const onClickCard = onClick ? () => onClick(id) : undefined
 
@@ -25,7 +33,7 @@ export const Card: FC<CardProps> = ({ card, isFaceDown, onClick }) => {
                 y="0"
                 x2="0"
                 y2="12"
-                stroke="#999999"
+                stroke={getFactionColor([factions[0]])}
                 strokeWidth="8"
               />
             </pattern>
@@ -34,11 +42,18 @@ export const Card: FC<CardProps> = ({ card, isFaceDown, onClick }) => {
         </svg>
       ) : (
         <>
-          <CardHeader>
-            <Lead>{name}</Lead>
-            <Lead>{strength}</Lead>
+          <CardHeader $factionColor={getFactionColor(factions)}>
+            <CardTitle>
+              <Lead>{name}</Lead>
+              <Lead>{strength}</Lead>
+            </CardTitle>
+            <CardTypes>{joinCardTypes(types)}</CardTypes>
           </CardHeader>
-          <CardContent />
+          <CardContent>
+            {description}
+            <br />
+            <CardFlavor>{flavor}</CardFlavor>
+          </CardContent>
         </>
       )}
     </StyledCard>

@@ -23,7 +23,7 @@ export const Overlay: FC<OverlayProps> = ({ isAnimated = true }) => {
   const message = getOverlayMessage(isPlayerTurn, isFirstTurn)
 
   return (
-    <StyledOverlay isAnimated={isAnimated}>
+    <StyledOverlay $isAnimated={isAnimated}>
       <h1>{message}</h1>
     </StyledOverlay>
   )

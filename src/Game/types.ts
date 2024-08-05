@@ -8,7 +8,8 @@ export interface GameState extends StartGamePayload {
 export interface Player {
   id: string
   name: string
-  deck: PlayCard[]
+  coins: number
+  hand: PlayCard[]
   field: PlayCard[]
 }
 

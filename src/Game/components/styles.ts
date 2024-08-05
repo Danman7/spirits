@@ -1,6 +1,5 @@
 import { StyledCard } from 'src/Cards/components/styles'
 import styled, { css, keyframes } from 'styled-components'
-import { OverlayProps } from './Overlay'
 
 export const StyledBoard = styled.div`
   position: relative;
@@ -37,7 +36,7 @@ export const BottomPlayField = styled(PlayField)`
   }
 `
 
-const PlayerDeck = styled.div`
+const PlayerHand = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -46,22 +45,23 @@ const PlayerDeck = styled.div`
   right: 0;
 
   ${StyledCard} {
-    margin: -${({ theme }) => theme.cardHeight / 4}px;
+    margin: 0 -${({ theme }) => theme.cardHeight / 4}px;
   }
 `
 
-export const TopPlayerDeck = styled(PlayerDeck)`
-  top: -200px;
+export const TopPlayerHand = styled(PlayerHand)`
+  top: -275px;
 `
 
-export const BottomPlayerDeck = styled(PlayerDeck)`
+export const BottomPlayerHand = styled(PlayerHand)`
   bottom: 0;
 
   ${StyledCard} {
-    margin-bottom: -300px;
+    position: relative;
+    bottom: -250px;
 
     &:hover {
-      margin-bottom: 0;
+      bottom: 0;
     }
   }
 `
@@ -84,7 +84,11 @@ const fadeInAndOut = keyframes`
   }
 `
 
-export const StyledOverlay = styled.div<OverlayProps>`
+interface StyledOverlayProps {
+  $isAnimated?: boolean
+}
+
+export const StyledOverlay = styled.div<StyledOverlayProps>`
   position: absolute;
   pointer-events: none;
   top: 0;
@@ -95,8 +99,8 @@ export const StyledOverlay = styled.div<OverlayProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: ${({ isAnimated, theme }) =>
-    isAnimated
+  animation: ${({ $isAnimated, theme }) =>
+    $isAnimated
       ? css`
           ${fadeInAndOut}
           ${theme.slowAnimationDuration} linear forwards
