@@ -1,6 +1,8 @@
 import styled, { css } from 'styled-components'
 
 export const StyledCard = styled.div`
+  display: flex;
+  flex-direction: column;
   width: ${({ theme }) => theme.cardWidth}px;
   height: ${({ theme }) => theme.cardHeight}px;
   border-radius: ${({ theme }) => theme.borderRadius};
@@ -39,6 +41,13 @@ export const CardHeader = styled.div<CardHeaderProps>`
   background: ${({ $factionColor }) => $factionColor};
 `
 
+export const CardFooter = styled.div`
+  padding: ${({ theme }) => theme.spacing}px;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid ${({ theme }) => theme.colors.line};
+`
+
 export const CardTitle = styled.div`
   display: flex;
   justify-content: space-between;
@@ -53,6 +62,7 @@ export const CardTypes = styled.div`
 
 export const CardContent = styled.div`
   padding: ${({ theme }) => theme.spacing}px;
+  flex-grow: 2;
 `
 
 export const CardFlavor = styled.p`

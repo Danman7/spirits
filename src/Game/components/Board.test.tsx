@@ -4,6 +4,7 @@ import { Board } from './Board'
 import { baseGameMockedState } from './mocks'
 import { userEvent } from '@storybook/test'
 import { playerFirstMessage } from '../messages'
+import { act } from 'react'
 
 describe('Board Component', () => {
   it('should show the initial UI elements', async () => {
@@ -31,10 +32,18 @@ describe('Board Component', () => {
   it('should be able to play a card from hand', async () => {
     const { bottomPlayer } = baseGameMockedState.game
 
+    const { hand, coins } = bottomPlayer
+
+    const { name, cost } = hand[0]
+
     render(<Board shouldDisableOverlay />, {
       preloadedState: baseGameMockedState
     })
 
-    await userEvent.click(screen.getByText(bottomPlayer.hand[0].name))
+    await act(async () => {
+      await userEvent.click(screen.getByText(name))
+    })
+
+    expect(await screen.queryByText(coins - cost)).toBeInTheDocument()
   })
 })

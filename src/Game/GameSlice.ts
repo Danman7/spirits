@@ -51,6 +51,7 @@ export const gameSlice = createSlice({
         if (playedCard && player.id === activePlayerId) {
           return {
             ...player,
+            coins: player.coins - playedCard.cost,
             hand: hand.filter(card => card.id !== playedCard.id),
             field: [...field, playedCard]
           } as Player

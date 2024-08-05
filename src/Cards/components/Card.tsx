@@ -5,14 +5,16 @@ import {
   StyledCard,
   CardTitle,
   CardTypes,
-  CardFlavor
+  CardFlavor,
+  CardFooter
 } from './styles'
 import { CardProps } from './types'
 import { Lead } from 'src/styles'
 import { getFactionColor, joinCardTypes } from '../utils'
 
 export const Card: FC<CardProps> = ({ card, isFaceDown, onClick }) => {
-  const { name, strength, id, description, flavor, types, factions } = card
+  const { name, strength, id, description, flavor, types, factions, cost } =
+    card
 
   const onClickCard = onClick ? () => onClick(id) : undefined
 
@@ -54,6 +56,7 @@ export const Card: FC<CardProps> = ({ card, isFaceDown, onClick }) => {
             <br />
             <CardFlavor>{flavor}</CardFlavor>
           </CardContent>
+          <CardFooter>Cost: {cost}</CardFooter>
         </>
       )}
     </StyledCard>

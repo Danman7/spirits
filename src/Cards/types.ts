@@ -1,8 +1,9 @@
 export interface Card {
   name: string
-  strength: number
+  cost: number
   factions: CardFaction[]
   types: CardType[]
+  strength?: number
   description?: string
   flavor?: string
 }

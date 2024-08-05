@@ -10,6 +10,7 @@ import { getCoinsMessage } from './utils'
 export const Zombie: Card = {
   name: 'Zombie',
   strength: 3,
+  cost: 1,
   factions: [CardFaction.Chaos],
   types: [CardType.Undead],
   description:
@@ -21,6 +22,7 @@ export const Zombie: Card = {
 export const Haunt: Card = {
   name: 'Haunt',
   strength: 7,
+  cost: 3,
   factions: [CardFaction.Chaos],
   types: [CardType.Undead, CardType.Hammerite],
   description: `Whenever your opponent plays a card with strength, damage it by ${HAUNT_DAMAGE}.`,
@@ -31,6 +33,7 @@ export const Haunt: Card = {
 export const HammeriteNovice: Card = {
   name: 'Hammerite Novice',
   strength: 3,
+  cost: 1,
   factions: [CardFaction.Order],
   types: [CardType.Hammerite],
   description:
@@ -42,6 +45,7 @@ export const HammeriteNovice: Card = {
 export const ElevatedAcolyte: Card = {
   name: 'Elevated Acolyte',
   strength: 5,
+  cost: 3,
   factions: [CardFaction.Order],
   types: [CardType.Hammerite],
   description: `On play boost any Hammerite with lower strength by ${ELEVATED_ACOLYTE_BOOST}.`,
@@ -52,6 +56,7 @@ export const ElevatedAcolyte: Card = {
 export const ViktoriaThiefPawn: Card = {
   name: 'Viktoria: Thiefs-pawn',
   strength: 4,
+  cost: 5,
   factions: [CardFaction.Chaos, CardFaction.Shadow],
   types: [CardType.Fence, CardType.Pagan],
   description: `Whenever you steal coins from the opponent, gain ${getCoinsMessage(
@@ -64,6 +69,7 @@ export const ViktoriaThiefPawn: Card = {
 export const GarrettMasterThief: Card = {
   name: 'Garrett: Master Thief',
   strength: 4,
+  cost: 5,
   factions: [CardFaction.Shadow],
   types: [CardType.Thief],
   description: `Whenever your opponent spends coins, gain ${getCoinsMessage(
