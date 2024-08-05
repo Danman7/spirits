@@ -6,13 +6,15 @@ import {
   BottomPlayField,
   TopPlayerHand,
   TopPlayerInfo,
-  BottomPlayerInfo
+  BottomPlayerInfo,
+  EndTurnButton
 } from './styles'
 import {
   getActivePlayerId,
   getTopPlayer,
   getBottomPlayer,
-  getGameTurn
+  getGameTurn,
+  getIsCardPlayedThisTurn
 } from '../GameSelectors'
 import { Card } from 'src/Cards/components/Card'
 import { GameActions } from '../GameSlice'
@@ -20,6 +22,8 @@ import { CardProps } from 'src/Cards/components/types'
 import { Overlay } from './Overlay'
 import { SLOW_ANIMATION_DURATION } from '../constants'
 import { useAppDispatch, useAppSelector } from 'src/state'
+import { useSelector } from 'react-redux'
+import { endTurnMessage, passButtonMessage } from '../messages'
 
 export interface BoardProps {
   shouldDisableOverlay?: boolean
@@ -34,11 +38,14 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
   const bottomPlayer = useAppSelector(getBottomPlayer)
   const activePlayerId = useAppSelector(getActivePlayerId)
   const turn = useAppSelector(getGameTurn)
+  const isCardPlayedThisTurn = useSelector(getIsCardPlayedThisTurn)
 
   const isPlayerTurn = bottomPlayer?.id === activePlayerId
 
   const onPlayCard: CardProps['onClick'] = cardId =>
     dispatch(GameActions.playCard(cardId))
+
+  const onEndTurn = () => dispatch(GameActions.endTurn())
 
   useEffect(() => {
     if (shouldDisableOverlay) {
@@ -81,7 +88,9 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
           <Card
             key={card.id}
             card={card}
-            onClick={isPlayerTurn ? onPlayCard : undefined}
+            onClick={
+              isPlayerTurn && !isCardPlayedThisTurn ? onPlayCard : undefined
+            }
           />
         ))}
       </BottomPlayerHand>
@@ -91,6 +100,12 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
       </BottomPlayerInfo>
 
       {shouldShowOverlay && <Overlay />}
+
+      {isPlayerTurn && (
+        <EndTurnButton onClick={onEndTurn}>
+          {isCardPlayedThisTurn ? endTurnMessage : passButtonMessage}
+        </EndTurnButton>
+      )}
     </StyledBoard>
   )
 }

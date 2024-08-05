@@ -3,7 +3,11 @@ import { render, screen } from 'src/utils/test-utils'
 import { Board } from './Board'
 import { baseGameMockedState } from './mocks'
 import { userEvent } from '@storybook/test'
-import { playerFirstMessage } from '../messages'
+import {
+  endTurnMessage,
+  passButtonMessage,
+  playerFirstMessage
+} from '../messages'
 import { act } from 'react'
 
 describe('Board Component', () => {
@@ -40,10 +44,28 @@ describe('Board Component', () => {
       preloadedState: baseGameMockedState
     })
 
+    expect(await screen.queryByText(passButtonMessage)).toBeInTheDocument()
+
     await act(async () => {
       await userEvent.click(screen.getByText(name))
     })
 
     expect(await screen.queryByText(coins - cost)).toBeInTheDocument()
+
+    expect(await screen.queryByText(endTurnMessage)).toBeInTheDocument()
+  })
+
+  it('should be able to end the turn', async () => {
+    render(<Board shouldDisableOverlay />, {
+      preloadedState: baseGameMockedState
+    })
+
+    expect(await screen.queryByRole('button')).toBeInTheDocument()
+
+    await act(async () => {
+      await userEvent.click(screen.getByText(passButtonMessage))
+    })
+
+    expect(await screen.queryByRole('button')).not.toBeInTheDocument()
   })
 })

@@ -10,7 +10,8 @@ const playersStartingTheGame = {
 const gameStartedState: GameState = {
   ...playersStartingTheGame,
   turn: 1,
-  activePlayerId: MockPlayer1.id
+  activePlayerId: MockPlayer1.id,
+  isCardPlayedThisTurn: false
 }
 
 describe('Game State Slice', () => {

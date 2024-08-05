@@ -3,6 +3,7 @@ import { PlayCard } from '../Cards/types'
 export interface GameState extends StartGamePayload {
   turn: number
   activePlayerId: string
+  isCardPlayedThisTurn: boolean
 }
 
 export interface Player {

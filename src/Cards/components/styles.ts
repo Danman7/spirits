@@ -8,7 +8,7 @@ export const StyledCard = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius};
   border: 1px solid ${({ theme }) => theme.colors.line};
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'not-allowed')};
-  box-shadow: 1px 1px 1px ${({ theme }) => theme.colors.line};
+  box-shadow: 1px 1px 1px ${({ theme }) => theme.colors.shadow};
   transition: all ${({ theme }) => theme.quickAnimationDuration} ease;
   background-color: ${({ theme }) => theme.colors.background};
   transform: scale(0.9, 0.9);
@@ -19,13 +19,13 @@ export const StyledCard = styled.div`
       &:hover {
         z-index: 2;
         transform: scale(1, 1);
-        box-shadow: 3px 3px 3px ${({ theme }) => theme.colors.line};
+        box-shadow: 3px 3px 3px ${({ theme }) => theme.colors.shadow};
       }
     `};
 
   &:active {
     transform: scale(0.9, 0.9);
-    box-shadow: 0 0 1px ${({ theme }) => theme.colors.line};
+    box-shadow: 0 0 1px ${({ theme }) => theme.colors.shadow};
   }
 `
 

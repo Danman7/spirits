@@ -125,3 +125,33 @@ export const TopPlayerInfo = styled(PlayerInfo)`
 export const BottomPlayerInfo = styled(PlayerInfo)`
   bottom: ${({ theme }) => theme.spacing}px;
 `
+
+const Button = styled.button`
+  background: ${({ theme }) => theme.colors.main};
+  color: #fff;
+  border: none;
+  padding: ${({ theme }) => theme.spacing}px
+    ${({ theme }) => theme.spacing * 2}px;
+  box-shadow:
+    inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
+    1px 1px 1px ${({ theme }) => theme.colors.shadow};
+  border-radius: ${({ theme }) => theme.borderRadius};
+  transition: all ${({ theme }) => theme.quickAnimationDuration} ease;
+
+  &:hover {
+    box-shadow:
+      inset 3px 3px 3px 0px rgba(255, 255, 255, 0.5),
+      3px 3px 3px ${({ theme }) => theme.colors.shadow};
+  }
+
+  &:active {
+    box-shadow: none;
+  }
+`
+
+export const EndTurnButton = styled(Button)`
+  position: absolute;
+  left: ${({ theme }) => theme.spacing}px;
+  top: 50%;
+  transform: translateY(-50%);
+`

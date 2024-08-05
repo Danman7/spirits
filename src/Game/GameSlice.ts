@@ -8,7 +8,8 @@ export const initialState: GameState = {
   turn: 0,
   activePlayerId: '',
   topPlayer: EMPTY_PLAYER,
-  bottomPlayer: EMPTY_PLAYER
+  bottomPlayer: EMPTY_PLAYER,
+  isCardPlayedThisTurn: false
 }
 
 export const gameSlice = createSlice({
@@ -36,7 +37,8 @@ export const gameSlice = createSlice({
       return {
         ...state,
         turn: turn + 1,
-        activePlayerId: isBottomPlayerActive ? topPlayer.id : bottomPlayer.id
+        activePlayerId: isBottomPlayerActive ? topPlayer.id : bottomPlayer.id,
+        isCardPlayedThisTurn: false
       }
     },
     playCard: (state, action: PayloadAction<PlayCard['id']>) => {
@@ -63,7 +65,8 @@ export const gameSlice = createSlice({
       return {
         ...state,
         topPlayer: players[0],
-        bottomPlayer: players[1]
+        bottomPlayer: players[1],
+        isCardPlayedThisTurn: true
       }
     }
   }

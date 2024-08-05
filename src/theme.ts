@@ -12,8 +12,10 @@ export const defaultTheme: DefaultTheme = {
 
   colors: {
     main: '#e81c4f',
+    active: '#4fe81c',
     line: '#999',
     pale: '#ccc',
-    background: '#fff'
+    background: '#fff',
+    shadow: '#888'
   }
 }

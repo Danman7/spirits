@@ -22,3 +22,8 @@ export const getBottomPlayer = createSelector(
   getGameState,
   gameState => gameState.bottomPlayer
 )
+
+export const getIsCardPlayedThisTurn = createSelector(
+  getGameState,
+  gameState => gameState.isCardPlayedThisTurn
+)
