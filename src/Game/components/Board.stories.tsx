@@ -5,6 +5,11 @@ import { reducer } from 'src/state'
 import { Board } from './Board'
 import { baseGameMockedState } from '../../utils/mocks'
 import { MockCPUPlayer } from 'src/utils/mocks'
+import {
+  DownwinderThief,
+  GarrettMasterThief,
+  ViktoriaThiefPawn
+} from 'src/Cards/AllCards'
 
 const meta = {
   title: 'Board',
@@ -29,6 +34,35 @@ export const Default: Story = {
         store={configureStore({
           reducer,
           preloadedState: baseGameMockedState
+        })}
+      >
+        {story()}
+      </Provider>
+    )
+  ]
+}
+
+export const LimitedBudget: Story = {
+  decorators: [
+    story => (
+      <Provider
+        store={configureStore({
+          reducer,
+          preloadedState: {
+            ...baseGameMockedState,
+            game: {
+              ...baseGameMockedState.game,
+              bottomPlayer: {
+                ...baseGameMockedState.game.bottomPlayer,
+                coins: 3,
+                hand: [
+                  { ...DownwinderThief, id: '1' },
+                  { ...ViktoriaThiefPawn, id: '2' },
+                  { ...GarrettMasterThief, id: '3' }
+                ]
+              }
+            }
+          }
         })}
       >
         {story()}

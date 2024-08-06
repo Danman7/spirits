@@ -35,6 +35,14 @@ export const NotClickable: Story = {
   }
 }
 
+export const IsPlayable: Story = {
+  args: {
+    card: mockCard,
+    isPlayable: true,
+    onClick: fn()
+  }
+}
+
 export const OrderCard: Story = {
   args: {
     card: { ...HammeriteNovice, id: '1' }

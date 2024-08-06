@@ -1,6 +1,25 @@
-import styled, { css } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
+import { DefaultTheme } from 'styled-components/dist/types'
 
-export const StyledCard = styled.div`
+interface StyledCardProps {
+  $isPlayable?: boolean
+}
+
+const activeCardGlow = (theme: DefaultTheme) => keyframes`
+  0% {
+    box-shadow: 0 0 1px 2px ${theme.colors.active};
+  }
+
+  50% {
+    box-shadow: 0 0 5px 5px ${theme.colors.active};
+  }
+
+  100% {
+    box-shadow: 0 0 1px 2px ${theme.colors.active};
+  }
+`
+
+export const StyledCard = styled.div<StyledCardProps>`
   display: flex;
   flex-direction: column;
   width: ${({ theme }) => theme.cardWidth}px;
@@ -31,6 +50,7 @@ export const StyledCard = styled.div`
 
 interface CardHeaderProps {
   $factionColor: string
+  $isPlayable?: boolean
 }
 
 export const CardHeader = styled.div<CardHeaderProps>`
@@ -39,6 +59,14 @@ export const CardHeader = styled.div<CardHeaderProps>`
   flex-direction: column;
   border-bottom: 1px solid ${({ theme }) => theme.colors.line};
   background: ${({ $factionColor }) => $factionColor};
+
+  animation: ${({ $isPlayable, theme }) =>
+    $isPlayable
+      ? css`
+          ${activeCardGlow(theme)}
+          ${theme.slowAnimationDuration} infinite
+        `
+      : 'none'};
 `
 
 export const CardFooter = styled.div`

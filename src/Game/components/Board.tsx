@@ -107,6 +107,11 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
           <Card
             key={card.id}
             card={card}
+            isPlayable={
+              card.cost <= bottomPlayer.coins &&
+              isPlayerTurn &&
+              !isCardPlayedThisTurn
+            }
             onClick={
               isPlayerTurn && !isCardPlayedThisTurn ? onPlayCard : undefined
             }

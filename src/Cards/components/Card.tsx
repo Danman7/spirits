@@ -12,14 +12,19 @@ import { CardProps } from './types'
 import { Lead } from 'src/styles'
 import { getFactionColor, joinCardTypes } from '../utils'
 
-export const Card: FC<CardProps> = ({ card, isFaceDown, onClick }) => {
+export const Card: FC<CardProps> = ({
+  card,
+  isFaceDown,
+  isPlayable,
+  onClick
+}) => {
   const { name, strength, id, description, flavor, types, factions, cost } =
     card
 
   const onClickCard = onClick ? () => onClick(id) : undefined
 
   return (
-    <StyledCard onClick={onClickCard}>
+    <StyledCard onClick={onClickCard} $isPlayable={isPlayable}>
       {isFaceDown ? (
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
           <defs>
@@ -44,7 +49,10 @@ export const Card: FC<CardProps> = ({ card, isFaceDown, onClick }) => {
         </svg>
       ) : (
         <>
-          <CardHeader $factionColor={getFactionColor(factions)}>
+          <CardHeader
+            $factionColor={getFactionColor(factions)}
+            $isPlayable={isPlayable}
+          >
             <CardTitle>
               <Lead>{name}</Lead>
               <Lead>{strength}</Lead>
