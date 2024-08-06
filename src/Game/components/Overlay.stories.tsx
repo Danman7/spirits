@@ -3,7 +3,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import type { Meta, StoryObj } from '@storybook/react'
 import { reducer } from 'src/state'
 import { Overlay } from './Overlay'
-import { baseGameMockedState } from './mocks'
+import { baseGameMockedState } from '../../utils/mocks'
 
 const meta = {
   title: 'Overlay',

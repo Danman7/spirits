@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from '@storybook/test'
 import { Card } from './Card'
-import { mockCard } from './mocks'
+import { mockCard } from '../../utils/mocks'
 import {
   GarrettMasterThief,
   HammeriteNovice,

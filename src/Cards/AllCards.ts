@@ -1,4 +1,5 @@
 import {
+  DOWNWINDER_BOOST,
   ELEVATED_ACOLYTE_BOOST,
   GARRETT_COIN_GAIN,
   HAUNT_DAMAGE,
@@ -76,5 +77,16 @@ export const GarrettMasterThief: Card = {
     GARRETT_COIN_GAIN
   )}.`,
   flavor:
-    'His heart was clouded, and his balance was lost, but his abilities were unmatched. --Keeper Annals'
+    'His heart was clouded, and his balance was lost, but his abilities were unmatched. -- Keeper Annals'
+}
+
+export const DownwinderThief: Card = {
+  name: 'Downwinder Thief',
+  strength: 2,
+  cost: 1,
+  factions: [CardFaction.Shadow],
+  types: [CardType.Thief],
+  description: `When stealing coins from opponent boost self by ${DOWNWINDER_BOOST}.`,
+  flavor:
+    "We chose our profession in defiance of the greed of the monarchy. We will not live for the sake of taxes to fatten the noble's pockets. -- excerpt from the Downwinders Creed"
 }

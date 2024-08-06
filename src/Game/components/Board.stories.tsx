@@ -3,7 +3,8 @@ import { configureStore } from '@reduxjs/toolkit'
 import type { Meta, StoryObj } from '@storybook/react'
 import { reducer } from 'src/state'
 import { Board } from './Board'
-import { baseGameMockedState } from './mocks'
+import { baseGameMockedState } from '../../utils/mocks'
+import { MockCPUPlayer } from 'src/utils/mocks'
 
 const meta = {
   title: 'Board',
@@ -28,6 +29,24 @@ export const Default: Story = {
         store={configureStore({
           reducer,
           preloadedState: baseGameMockedState
+        })}
+      >
+        {story()}
+      </Provider>
+    )
+  ]
+}
+
+export const PlayWithCPU: Story = {
+  decorators: [
+    story => (
+      <Provider
+        store={configureStore({
+          reducer,
+          preloadedState: {
+            ...baseGameMockedState,
+            game: { ...baseGameMockedState.game, topPlayer: MockCPUPlayer }
+          }
         })}
       >
         {story()}

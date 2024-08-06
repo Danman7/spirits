@@ -38,6 +38,13 @@ describe('Game State Slice', () => {
     const { activePlayerId, topPlayer } = state
 
     expect(activePlayerId).toBe(topPlayer.id)
+
+    const nextState = GameReducer(
+      initialState,
+      GameActions.startGame({ ...playersStartingTheGame, isPlayerFirst: true })
+    )
+
+    expect(nextState.activePlayerId).toBe(nextState.bottomPlayer.id)
   })
 
   it('should change the active player on turn end', () => {

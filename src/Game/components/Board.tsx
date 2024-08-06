@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import {
   BottomPlayerHand,
   StyledBoard,
@@ -24,6 +24,7 @@ import { SLOW_ANIMATION_DURATION } from '../constants'
 import { useAppDispatch, useAppSelector } from 'src/state'
 import { useSelector } from 'react-redux'
 import { endTurnMessage, passButtonMessage } from '../messages'
+import { compPlayTurn } from '../ComputerPlayerUtils'
 
 export interface BoardProps {
   shouldDisableOverlay?: boolean
@@ -42,10 +43,18 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
 
   const isPlayerTurn = bottomPlayer?.id === activePlayerId
 
-  const onPlayCard: CardProps['onClick'] = cardId =>
-    dispatch(GameActions.playCard(cardId))
+  const prevIsPlayerTurn = useRef(isPlayerTurn).current
 
-  const onEndTurn = () => dispatch(GameActions.endTurn())
+  const onPlayCard: CardProps['onClick'] = useCallback(
+    (cardId: string) => {
+      dispatch(GameActions.playCard(cardId))
+    },
+    [dispatch]
+  )
+
+  const onEndTurn = useCallback(() => {
+    dispatch(GameActions.endTurn())
+  }, [dispatch])
 
   useEffect(() => {
     if (shouldDisableOverlay) {
@@ -62,6 +71,16 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
       clearTimeout(overlayCloseTimer)
     }
   }, [turn, shouldDisableOverlay])
+
+  useEffect(() => {
+    if (
+      prevIsPlayerTurn !== isPlayerTurn &&
+      topPlayer.isNonHuman &&
+      !isPlayerTurn
+    ) {
+      compPlayTurn(topPlayer, onPlayCard, onEndTurn)
+    }
+  }, [isPlayerTurn, prevIsPlayerTurn, topPlayer, onPlayCard, onEndTurn])
 
   return (
     <StyledBoard>

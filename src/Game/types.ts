@@ -12,6 +12,7 @@ export interface Player {
   coins: number
   hand: PlayCard[]
   field: PlayCard[]
+  isNonHuman?: boolean
 }
 
 export interface StartGamePayload {

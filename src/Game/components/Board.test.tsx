@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom'
 import { render, screen } from 'src/utils/test-utils'
 import { Board } from './Board'
-import { baseGameMockedState } from './mocks'
+import { baseGameMockedState } from '../../utils/mocks'
 import { userEvent } from '@storybook/test'
 import {
   endTurnMessage,
@@ -9,6 +9,7 @@ import {
   playerFirstMessage
 } from '../messages'
 import { act } from 'react'
+import { MockCPUPlayer } from 'src/utils/mocks'
 
 describe('Board Component', () => {
   it('should show the initial UI elements', async () => {
@@ -67,5 +68,31 @@ describe('Board Component', () => {
     })
 
     expect(await screen.queryByRole('button')).not.toBeInTheDocument()
+  })
+
+  it('should play a card as CPU and end the turn', async () => {
+    render(<Board shouldDisableOverlay />, {
+      preloadedState: {
+        ...baseGameMockedState,
+        game: { ...baseGameMockedState.game, topPlayer: MockCPUPlayer }
+      }
+    })
+
+    expect(
+      await screen.queryByText(MockCPUPlayer.hand[0].name)
+    ).not.toBeInTheDocument()
+
+    await act(async () => {
+      await userEvent.click(
+        screen.getByText(baseGameMockedState.game.bottomPlayer.hand[0].name)
+      )
+      await userEvent.click(screen.getByText(passButtonMessage))
+    })
+
+    expect(
+      await screen.queryByText(MockCPUPlayer.hand[0].name)
+    ).toBeInTheDocument()
+
+    expect(await screen.queryByText(passButtonMessage)).toBeInTheDocument()
   })
 })

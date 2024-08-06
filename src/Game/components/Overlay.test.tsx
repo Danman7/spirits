@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 import { render, screen } from 'src/utils/test-utils'
-import { baseGameMockedState } from './mocks'
+import { baseGameMockedState } from '../../utils/mocks'
 import { Overlay } from './Overlay'
 import { opponentFirstMessage, playerFirstMessage } from '../messages'
 import { MockPlayer1 } from 'src/utils/mocks'

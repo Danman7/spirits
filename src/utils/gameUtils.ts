@@ -7,3 +7,6 @@ export const generateUUID = () =>
   })
 
 export const coinToss = () => (Math.random() < 0.5 ? true : false)
+
+export const getRandomArrayItem = <T>(array: T[]) =>
+  array.length ? array[Math.floor(Math.random() * array.length)] : null

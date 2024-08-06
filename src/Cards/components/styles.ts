@@ -19,7 +19,7 @@ export const StyledCard = styled.div`
       &:hover {
         z-index: 2;
         transform: scale(1, 1);
-        box-shadow: 3px 3px 3px ${({ theme }) => theme.colors.shadow};
+        box-shadow: 5px 5px 5px ${({ theme }) => theme.colors.shadow};
       }
     `};
 

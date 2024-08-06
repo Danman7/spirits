@@ -2,7 +2,7 @@ import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import { render, screen } from 'src/utils/test-utils'
 import { Card } from './Card'
-import { mockCard } from './mocks'
+import { mockCard } from '../../utils/mocks'
 import { joinCardTypes } from '../utils'
 
 describe('Card Component', () => {
