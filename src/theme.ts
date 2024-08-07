@@ -11,8 +11,8 @@ export const defaultTheme: DefaultTheme = {
   cardHeight: 350,
 
   colors: {
-    main: '#e81c4f',
-    active: '#4fe81c',
+    negative: '#e81c4f',
+    positive: '#4fe81c',
     line: '#999',
     pale: '#ccc',
     background: '#fff',

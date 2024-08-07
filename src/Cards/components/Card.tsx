@@ -11,6 +11,7 @@ import {
 import { CardProps } from './types'
 import { Lead } from 'src/styles'
 import { getFactionColor, joinCardTypes } from '../utils'
+import { PositiveNegativeNumber } from './PositiveNegativeNumber'
 
 export const Card: FC<CardProps> = ({
   card,
@@ -18,8 +19,17 @@ export const Card: FC<CardProps> = ({
   isPlayable,
   onClick
 }) => {
-  const { name, strength, id, description, flavor, types, factions, cost } =
-    card
+  const {
+    name,
+    strength,
+    id,
+    description,
+    flavor,
+    types,
+    factions,
+    cost,
+    prototype
+  } = card
 
   const onClickCard = onClick ? () => onClick(id) : undefined
 
@@ -55,7 +65,14 @@ export const Card: FC<CardProps> = ({
           >
             <CardTitle>
               <Lead>{name}</Lead>
-              <Lead>{strength}</Lead>
+              <Lead>
+                {strength && prototype.strength && (
+                  <PositiveNegativeNumber
+                    current={strength}
+                    base={prototype.strength}
+                  />
+                )}
+              </Lead>
             </CardTitle>
             <CardTypes>{joinCardTypes(types)}</CardTypes>
           </CardHeader>

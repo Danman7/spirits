@@ -3,10 +3,12 @@ import { fn } from '@storybook/test'
 import { Card } from './Card'
 import { mockCard } from '../../utils/mocks'
 import {
+  ElevatedAcolyte,
   GarrettMasterThief,
   HammeriteNovice,
   ViktoriaThiefPawn
 } from '../AllCards'
+import { createPlayCardFromPrototype } from '../utils'
 
 const meta = {
   title: 'Card',
@@ -43,21 +45,40 @@ export const IsPlayable: Story = {
   }
 }
 
+export const Boosted: Story = {
+  args: {
+    card: { ...mockCard, strength: (mockCard.strength as number) + 2 },
+    isPlayable: true,
+    onClick: fn()
+  }
+}
+
+export const Damaged: Story = {
+  args: {
+    card: {
+      ...createPlayCardFromPrototype(ElevatedAcolyte),
+      strength: (ElevatedAcolyte.strength as number) - 1
+    },
+    isPlayable: true,
+    onClick: fn()
+  }
+}
+
 export const OrderCard: Story = {
   args: {
-    card: { ...HammeriteNovice, id: '1' }
+    card: createPlayCardFromPrototype(HammeriteNovice)
   }
 }
 
 export const ShadowCard: Story = {
   args: {
-    card: { ...GarrettMasterThief, id: '1' }
+    card: createPlayCardFromPrototype(GarrettMasterThief)
   }
 }
 
 export const MultipleFactions: Story = {
   args: {
-    card: { ...ViktoriaThiefPawn, id: '1' }
+    card: createPlayCardFromPrototype(ViktoriaThiefPawn)
   }
 }
 
@@ -71,7 +92,7 @@ export const ChaosFaceDown: Story = {
 
 export const OrderFaceDown: Story = {
   args: {
-    card: { ...HammeriteNovice, id: '1' },
+    card: createPlayCardFromPrototype(HammeriteNovice),
     onClick: undefined,
     isFaceDown: true
   }
@@ -79,7 +100,7 @@ export const OrderFaceDown: Story = {
 
 export const ShadowFaceDown: Story = {
   args: {
-    card: { ...GarrettMasterThief, id: '1' },
+    card: createPlayCardFromPrototype(GarrettMasterThief),
     onClick: undefined,
     isFaceDown: true
   }

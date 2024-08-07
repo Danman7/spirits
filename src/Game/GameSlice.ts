@@ -72,8 +72,6 @@ export const gameSlice = createSlice({
         isCardPlayedThisTurn: true
       }
 
-      console.log(playedCard)
-
       if (playedCard?.onPlayAbility) {
         return OnPlayCardAbilitiesMap[playedCard.onPlayAbility](updatedState)
       }

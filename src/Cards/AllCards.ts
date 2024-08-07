@@ -5,10 +5,10 @@ import {
   HAUNT_DAMAGE,
   VIKTORIA_COIN_GAIN
 } from './constants'
-import { CardFaction, CardType, OnPlayAbilities, Unit } from './types'
+import { Card, CardFaction, CardType, OnPlayAbilities } from './types'
 import { getCoinsMessage } from './utils'
 
-export const Zombie: Unit = {
+export const Zombie: Card = {
   name: 'Zombie',
   strength: 3,
   cost: 1,
@@ -20,7 +20,7 @@ export const Zombie: Unit = {
     "The zombie's antipathy for all living creatures is both its strength and weakness."
 }
 
-export const Haunt: Unit = {
+export const Haunt: Card = {
   name: 'Haunt',
   strength: 7,
   cost: 3,
@@ -31,7 +31,7 @@ export const Haunt: Unit = {
     'These haunts who inhabit the bodies of my brethren... they must all be killed. -- The apparition of Brother Murus'
 }
 
-export const HammeriteNovice: Unit = {
+export const HammeriteNovice: Card = {
   name: 'Hammerite Novice',
   strength: 3,
   cost: 1,
@@ -43,7 +43,7 @@ export const HammeriteNovice: Unit = {
     'This novice has been instructed in the rules and strictures of the Order and has sworn his warrants to be silent in his vigils.'
 }
 
-export const ElevatedAcolyte: Unit = {
+export const ElevatedAcolyte: Card = {
   name: 'Elevated Acolyte',
   strength: 5,
   cost: 3,
@@ -55,7 +55,7 @@ export const ElevatedAcolyte: Unit = {
   onPlayAbility: OnPlayAbilities.ElevatedAcolyteOnPlay
 }
 
-export const ViktoriaThiefPawn: Unit = {
+export const ViktoriaThiefPawn: Card = {
   name: 'Viktoria: Thiefs-pawn',
   strength: 4,
   cost: 5,
@@ -68,7 +68,7 @@ export const ViktoriaThiefPawn: Unit = {
     'About your Victoria, nothing yet. Walks she an inch above the ground, for all the dirt of her footprints have I found. -- From a report to Lord Bafford'
 }
 
-export const GarrettMasterThief: Unit = {
+export const GarrettMasterThief: Card = {
   name: 'Garrett: Master Thief',
   strength: 4,
   cost: 5,
@@ -81,7 +81,7 @@ export const GarrettMasterThief: Unit = {
     'His heart was clouded, and his balance was lost, but his abilities were unmatched. -- Keeper Annals'
 }
 
-export const DownwinderThief: Unit = {
+export const DownwinderThief: Card = {
   name: 'Downwinder Thief',
   strength: 2,
   cost: 1,

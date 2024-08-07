@@ -130,8 +130,7 @@ export const BottomPlayerInfo = styled(PlayerInfo)`
 `
 
 const Button = styled.button`
-  background: ${({ theme }) => theme.colors.main};
-  color: #fff;
+  background: ${({ theme }) => theme.colors.positive};
   border: none;
   padding: ${({ theme }) => theme.spacing}px
     ${({ theme }) => theme.spacing * 2}px;
@@ -140,6 +139,7 @@ const Button = styled.button`
     1px 1px 1px ${({ theme }) => theme.colors.shadow};
   border-radius: ${({ theme }) => theme.borderRadius};
   transition: all ${({ theme }) => theme.quickAnimationDuration} ease;
+  cursor: pointer;
 
   &:hover {
     box-shadow:

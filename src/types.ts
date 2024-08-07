@@ -11,8 +11,8 @@ declare module 'styled-components' {
     cardHeight: number
 
     colors: {
-      main: string
-      active: string
+      positive: string
+      negative: string
       line: string
       pale: string
       background: string

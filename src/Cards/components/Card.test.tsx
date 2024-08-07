@@ -15,7 +15,9 @@ describe('Card Component', () => {
       await screen.queryByText(`Cost: ${mockCard.cost}`)
     ).toBeInTheDocument()
 
-    expect(await screen.queryByText(mockCard.strength)).toBeInTheDocument()
+    expect(
+      await screen.queryByText(mockCard.strength as number)
+    ).toBeInTheDocument()
 
     expect(
       await screen.queryByText(joinCardTypes(mockCard.types))
@@ -34,7 +36,9 @@ describe('Card Component', () => {
     render(<Card card={mockCard} isFaceDown />)
 
     expect(await screen.queryByText(mockCard.name)).not.toBeInTheDocument()
-    expect(await screen.queryByText(mockCard.strength)).not.toBeInTheDocument()
+    expect(
+      await screen.queryByText(mockCard.strength as number)
+    ).not.toBeInTheDocument()
   })
 
   it('should fire on click event passing card id', async () => {

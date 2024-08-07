@@ -1,8 +1,8 @@
 import { CardFaction } from './types'
 
-export const ORDER_COLOR = '#e44'
-export const CHAOS_COLOR = '#0f8'
-export const SHADOW_COLOR = '#77e'
+export const ORDER_COLOR = '#802'
+export const CHAOS_COLOR = '#093'
+export const SHADOW_COLOR = '#419'
 
 export const FACTION_COLOR_MAP = {
   [CardFaction.Order]: ORDER_COLOR,

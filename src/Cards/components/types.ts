@@ -6,3 +6,8 @@ export interface CardProps {
   isFaceDown?: boolean
   onClick?: (cardId: PlayCard['id']) => void
 }
+
+export interface PositiveNegativeNumberProps {
+  base: number
+  current: number
+}

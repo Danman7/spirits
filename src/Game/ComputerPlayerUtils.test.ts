@@ -2,6 +2,7 @@ import { MockPlayer1, MockPlayer2 } from 'src/utils/mocks'
 import { compPlayRandomCard, compPlayTurn } from './ComputerPlayerUtils'
 import { GarrettMasterThief, ViktoriaThiefPawn } from 'src/Cards/AllCards'
 import { PlayCard } from 'src/Cards/types'
+import { createPlayCardFromPrototype } from 'src/Cards/utils'
 
 describe('Computer Player utils', () => {
   it('should be able to play a random card from hand within budget', () => {
@@ -22,8 +23,8 @@ describe('Computer Player utils', () => {
     const mockPlayer = {
       ...MockPlayer1,
       hand: [
-        { ...ViktoriaThiefPawn, id: '1' },
-        { ...GarrettMasterThief, id: '2' }
+        createPlayCardFromPrototype(ViktoriaThiefPawn),
+        createPlayCardFromPrototype(GarrettMasterThief)
       ],
       coins: 3
     }

@@ -5,17 +5,19 @@ export interface Card {
   cost: number
   factions: CardFaction[]
   types: CardType[]
+  strength?: number
   description?: string
   flavor?: string
   onPlayAbility?: OnPlayAbilities
 }
 
-export interface Unit extends Card {
-  strength: number
-}
-
-export interface PlayCard extends Card, Unit {
+export interface PlayCard extends Card {
   id: string
+  strength?: number
+  prototype: {
+    strength?: Card['strength']
+    cost: Card['cost']
+  }
 }
 
 export const enum CardFaction {

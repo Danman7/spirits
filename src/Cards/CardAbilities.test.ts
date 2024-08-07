@@ -3,6 +3,7 @@ import { ElevatedAcolyteOnPlay } from './CardAbilities'
 import { GameState } from 'src/Game/types'
 import { ElevatedAcolyte, HammeriteNovice } from './AllCards'
 import { ELEVATED_ACOLYTE_BOOST } from './constants'
+import { createPlayCardFromPrototype } from './utils'
 
 const baseGameState = baseGameMockedState.game
 
@@ -12,15 +13,15 @@ describe('Card abilities', () => {
       ...baseGameState,
       bottomPlayer: {
         ...baseGameState.bottomPlayer,
-        field: [{ ...ElevatedAcolyte, id: '1' }]
+        field: [createPlayCardFromPrototype(ElevatedAcolyte)]
       }
     }
 
     expect(ElevatedAcolyteOnPlay(state)).toEqual(state)
 
     const boostableField = [
-      { ...HammeriteNovice, id: '1' },
-      { ...HammeriteNovice, id: '2' }
+      createPlayCardFromPrototype(HammeriteNovice),
+      createPlayCardFromPrototype(HammeriteNovice)
     ]
 
     state.bottomPlayer.field = boostableField
@@ -32,11 +33,13 @@ describe('Card abilities', () => {
         field: [
           {
             ...boostableField[0],
-            strength: boostableField[0].strength + ELEVATED_ACOLYTE_BOOST
+            strength:
+              (boostableField[0].strength as number) + ELEVATED_ACOLYTE_BOOST
           },
           {
             ...boostableField[1],
-            strength: boostableField[1].strength + ELEVATED_ACOLYTE_BOOST
+            strength:
+              (boostableField[1].strength as number) + ELEVATED_ACOLYTE_BOOST
           }
         ]
       }
