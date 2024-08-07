@@ -3,6 +3,7 @@ import { GameState, Player, StartGamePayload } from './types'
 import { PlayCard } from 'src/Cards/types'
 import { EMPTY_PLAYER } from './constants'
 import { coinToss } from 'src/utils/gameUtils'
+import { OnPlayCardAbilitiesMap } from 'src/Cards/CardAbilities'
 
 export const initialState: GameState = {
   turn: 0,
@@ -45,16 +46,18 @@ export const gameSlice = createSlice({
       const { topPlayer, bottomPlayer, activePlayerId } = state
       const { payload: playedCardId } = action
 
+      let playedCard: PlayCard | undefined
+
       const players = [topPlayer, bottomPlayer].map(player => {
         const { hand, field } = player
 
-        const playedCard = hand.find(card => card.id === playedCardId)
+        playedCard = hand.find(card => card.id === playedCardId) || playedCard
 
         if (playedCard && player.id === activePlayerId) {
           return {
             ...player,
             coins: player.coins - playedCard.cost,
-            hand: hand.filter(card => card.id !== playedCard.id),
+            hand: hand.filter(card => card.id !== (playedCard as PlayCard).id),
             field: [...field, playedCard]
           } as Player
         }
@@ -62,12 +65,20 @@ export const gameSlice = createSlice({
         return player as Player
       })
 
-      return {
+      const updatedState: GameState = {
         ...state,
         topPlayer: players[0],
         bottomPlayer: players[1],
         isCardPlayedThisTurn: true
       }
+
+      console.log(playedCard)
+
+      if (playedCard?.onPlayAbility) {
+        return OnPlayCardAbilitiesMap[playedCard.onPlayAbility](updatedState)
+      }
+
+      return updatedState
     }
   }
 })

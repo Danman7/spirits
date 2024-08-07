@@ -5,10 +5,10 @@ import {
   HAUNT_DAMAGE,
   VIKTORIA_COIN_GAIN
 } from './constants'
-import { Card, CardFaction, CardType } from './types'
+import { CardFaction, CardType, OnPlayAbilities, Unit } from './types'
 import { getCoinsMessage } from './utils'
 
-export const Zombie: Card = {
+export const Zombie: Unit = {
   name: 'Zombie',
   strength: 3,
   cost: 1,
@@ -20,7 +20,7 @@ export const Zombie: Card = {
     "The zombie's antipathy for all living creatures is both its strength and weakness."
 }
 
-export const Haunt: Card = {
+export const Haunt: Unit = {
   name: 'Haunt',
   strength: 7,
   cost: 3,
@@ -31,7 +31,7 @@ export const Haunt: Card = {
     'These haunts who inhabit the bodies of my brethren... they must all be killed. -- The apparition of Brother Murus'
 }
 
-export const HammeriteNovice: Card = {
+export const HammeriteNovice: Unit = {
   name: 'Hammerite Novice',
   strength: 3,
   cost: 1,
@@ -43,7 +43,7 @@ export const HammeriteNovice: Card = {
     'This novice has been instructed in the rules and strictures of the Order and has sworn his warrants to be silent in his vigils.'
 }
 
-export const ElevatedAcolyte: Card = {
+export const ElevatedAcolyte: Unit = {
   name: 'Elevated Acolyte',
   strength: 5,
   cost: 3,
@@ -51,10 +51,11 @@ export const ElevatedAcolyte: Card = {
   types: [CardType.Hammerite],
   description: `On play boost any Hammerite with lower strength by ${ELEVATED_ACOLYTE_BOOST}.`,
   flavor:
-    'He will endure a standard three-year contract of service, at the end of which he will be considered for indoctrination as an Elevated Acolyte.'
+    'He will endure a standard three-year contract of service, at the end of which he will be considered for indoctrination as an Elevated Acolyte.',
+  onPlayAbility: OnPlayAbilities.ElevatedAcolyteOnPlay
 }
 
-export const ViktoriaThiefPawn: Card = {
+export const ViktoriaThiefPawn: Unit = {
   name: 'Viktoria: Thiefs-pawn',
   strength: 4,
   cost: 5,
@@ -67,7 +68,7 @@ export const ViktoriaThiefPawn: Card = {
     'About your Victoria, nothing yet. Walks she an inch above the ground, for all the dirt of her footprints have I found. -- From a report to Lord Bafford'
 }
 
-export const GarrettMasterThief: Card = {
+export const GarrettMasterThief: Unit = {
   name: 'Garrett: Master Thief',
   strength: 4,
   cost: 5,
@@ -80,7 +81,7 @@ export const GarrettMasterThief: Card = {
     'His heart was clouded, and his balance was lost, but his abilities were unmatched. -- Keeper Annals'
 }
 
-export const DownwinderThief: Card = {
+export const DownwinderThief: Unit = {
   name: 'Downwinder Thief',
   strength: 2,
   cost: 1,

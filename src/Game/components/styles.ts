@@ -16,6 +16,7 @@ const PlayField = styled.div`
 
   ${StyledCard} {
     transform: scale(0.7);
+    margin: 0 -40px;
   }
 `
 
@@ -95,10 +96,12 @@ export const StyledOverlay = styled.div<StyledOverlayProps>`
   right: 0;
   bottom: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 10;
   animation: ${({ $isAnimated, theme }) =>
     $isAnimated
       ? css`

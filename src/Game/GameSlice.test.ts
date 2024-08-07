@@ -1,6 +1,8 @@
 import { MockPlayer1, MockPlayer2 } from 'src/utils/mocks'
 import { GameActions, GameReducer, initialState } from './GameSlice'
 import { GameState } from './types'
+import { HammeriteNovice } from 'src/Cards/AllCards'
+import { ELEVATED_ACOLYTE_BOOST } from 'src/Cards/constants'
 
 const playersStartingTheGame = {
   topPlayer: MockPlayer1,
@@ -92,5 +94,37 @@ describe('Game State Slice', () => {
     expect(field).toEqual([])
 
     expect(hand).toEqual(MockPlayer2.hand)
+  })
+
+  it('should trigger on play effect on card if one is present', () => {
+    const topPlayerField = [
+      { ...HammeriteNovice, id: '1' },
+      { ...HammeriteNovice, id: '2' }
+    ]
+
+    const state = GameReducer(
+      {
+        ...gameStartedState,
+        topPlayer: {
+          ...gameStartedState.topPlayer,
+          field: topPlayerField
+        }
+      },
+      GameActions.playCard(MockPlayer1.hand[1].id)
+    )
+
+    const { field } = state.topPlayer
+
+    expect(field).toEqual([
+      {
+        ...topPlayerField[0],
+        strength: topPlayerField[0].strength + ELEVATED_ACOLYTE_BOOST
+      },
+      {
+        ...topPlayerField[1],
+        strength: topPlayerField[1].strength + ELEVATED_ACOLYTE_BOOST
+      },
+      MockPlayer1.hand[1]
+    ])
   })
 })

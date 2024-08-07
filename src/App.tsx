@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Board } from './Game/components/Board'
 import { GameActions } from './Game/GameSlice'
-import { MockPlayer1, MockPlayer2 } from './utils/mocks'
+import { PlayTestPlayer1, PlayTestPlayer2 } from './utils/mocks'
 import { useAppDispatch } from './state'
 
 export const App = () => {
@@ -10,8 +10,8 @@ export const App = () => {
   useEffect(() => {
     dispatch(
       GameActions.startGame({
-        topPlayer: MockPlayer1,
-        bottomPlayer: MockPlayer2
+        topPlayer: PlayTestPlayer2,
+        bottomPlayer: PlayTestPlayer1
       })
     )
   }, [dispatch])

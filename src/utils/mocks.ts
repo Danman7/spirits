@@ -16,8 +16,8 @@ export const MockPlayer1: Player = {
   name: 'Garret',
   coins: DEFAULT_COINS_AMOUNT,
   hand: [
-    { ...ElevatedAcolyte, id: '1' },
-    { ...HammeriteNovice, id: '2' }
+    { ...HammeriteNovice, id: '2' },
+    { ...ElevatedAcolyte, id: '1' }
   ],
   field: []
 }
@@ -46,11 +46,8 @@ export const PlayTestPlayer1: Player = {
   id: 'player1',
   name: 'Victoria',
   coins: DEFAULT_COINS_AMOUNT,
-  hand: [
-    { ...ElevatedAcolyte, id: '1' },
-    { ...HammeriteNovice, id: '2' }
-  ],
-  field: []
+  hand: [{ ...ElevatedAcolyte, id: '1' }],
+  field: [{ ...HammeriteNovice, id: '2' }]
 }
 
 export const PlayTestPlayer2: Player = {
