@@ -11,6 +11,11 @@ import {
 import { act } from 'react'
 import { MockCPUPlayer } from 'src/utils/mocks'
 
+jest.mock('animejs/lib/anime.es.js', () => ({
+  __esModule: true,
+  default: () => jest.fn()
+}))
+
 describe('Board Component', () => {
   it('should show the initial UI elements', async () => {
     const { topPlayer, bottomPlayer } = baseGameMockedState.game

@@ -8,6 +8,4 @@ export const EMPTY_PLAYER: Player = {
   field: []
 }
 
-export const SLOW_ANIMATION_DURATION = 2000
-
 export const DEFAULT_COINS_AMOUNT = 30

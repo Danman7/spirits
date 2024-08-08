@@ -47,7 +47,10 @@ export const PlayTestPlayer1: Player = {
   id: 'player1',
   name: 'Victoria',
   coins: DEFAULT_COINS_AMOUNT,
-  hand: [createPlayCardFromPrototype(ElevatedAcolyte)],
+  hand: [
+    createPlayCardFromPrototype(ElevatedAcolyte),
+    createPlayCardFromPrototype(ElevatedAcolyte)
+  ],
   field: [
     createPlayCardFromPrototype(HammeriteNovice),
     createPlayCardFromPrototype(HammeriteNovice)
@@ -60,6 +63,7 @@ export const PlayTestPlayer2: Player = {
   coins: DEFAULT_COINS_AMOUNT - 1,
   isNonHuman: true,
   hand: [
+    createPlayCardFromPrototype(Zombie),
     createPlayCardFromPrototype(Zombie),
     createPlayCardFromPrototype(Haunt)
   ],

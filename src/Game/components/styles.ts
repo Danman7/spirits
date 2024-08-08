@@ -13,11 +13,7 @@ const PlayField = styled.div`
   justify-content: center;
   padding: ${({ theme }) => theme.spacing}px;
   gap: ${({ theme }) => theme.spacing}px;
-
-  ${StyledCard} {
-    transform: scale(0.7);
-    margin: 0 -40px;
-  }
+  z-index: 1;
 `
 
 export const TopPlayField = styled(PlayField)`
@@ -44,6 +40,7 @@ const PlayerHand = styled.div`
   position: fixed;
   left: 0;
   right: 0;
+  z-index: 2;
 
   ${StyledCard} {
     margin: 0 -${({ theme }) => theme.cardHeight / 4}px;
@@ -91,7 +88,6 @@ interface StyledOverlayProps {
 
 export const StyledOverlay = styled.div<StyledOverlayProps>`
   position: absolute;
-  pointer-events: none;
   top: 0;
   right: 0;
   bottom: 0;
@@ -106,7 +102,7 @@ export const StyledOverlay = styled.div<StyledOverlayProps>`
     $isAnimated
       ? css`
           ${fadeInAndOut}
-          ${theme.slowAnimationDuration} linear forwards
+          ${theme.slowAnimationDuration}ms linear forwards
         `
       : 'none'};
 `
@@ -138,16 +134,19 @@ const Button = styled.button`
     inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
     1px 1px 1px ${({ theme }) => theme.colors.shadow};
   border-radius: ${({ theme }) => theme.borderRadius};
-  transition: all ${({ theme }) => theme.quickAnimationDuration} ease;
+  transition: all ${({ theme }) => theme.quickAnimationDuration}ms ease;
   cursor: pointer;
+  transform-origin: center;
 
   &:hover {
+    transform: scale(1.1);
     box-shadow:
       inset 3px 3px 3px 0px rgba(255, 255, 255, 0.5),
       3px 3px 3px ${({ theme }) => theme.colors.shadow};
   }
 
   &:active {
+    transform: scale(0.95);
     box-shadow: none;
   }
 `
@@ -156,5 +155,5 @@ export const EndTurnButton = styled(Button)`
   position: absolute;
   left: ${({ theme }) => theme.spacing}px;
   top: 50%;
-  transform: translateY(-50%);
+  z-index: 3;
 `

@@ -3,9 +3,10 @@ import 'styled-components'
 declare module 'styled-components' {
   export interface DefaultTheme {
     borderRadius: string
-    quickAnimationDuration: string
-    slowAnimationDuration: string
+    quickAnimationDuration: number
+    slowAnimationDuration: number
     spacing: number
+    onBoardCardScale: number
 
     cardWidth: number
     cardHeight: number

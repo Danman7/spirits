@@ -1,25 +1,6 @@
-import styled, { css, keyframes } from 'styled-components'
-import { DefaultTheme } from 'styled-components/dist/types'
+import styled, { css } from 'styled-components'
 
-interface StyledCardProps {
-  $isPlayable?: boolean
-}
-
-const activeCardGlow = (theme: DefaultTheme) => keyframes`
-  0% {
-    box-shadow: 0 0 1px 2px ${theme.colors.positive};
-  }
-
-  50% {
-    box-shadow: 0 0 5px 5px ${theme.colors.positive};
-  }
-
-  100% {
-    box-shadow: 0 0 1px 2px ${theme.colors.positive};
-  }
-`
-
-export const StyledCard = styled.div<StyledCardProps>`
+export const StyledCard = styled.div<{ $isOnTheBoard?: boolean }>`
   display: flex;
   flex-direction: column;
   width: ${({ theme }) => theme.cardWidth}px;
@@ -28,29 +9,30 @@ export const StyledCard = styled.div<StyledCardProps>`
   border: 1px solid ${({ theme }) => theme.colors.line};
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'not-allowed')};
   box-shadow: 1px 1px 1px ${({ theme }) => theme.colors.shadow};
-  transition: all ${({ theme }) => theme.quickAnimationDuration} ease;
+  transition: all ${({ theme }) => theme.quickAnimationDuration}ms ease;
   background-color: ${({ theme }) => theme.colors.background};
-  transform: scale(0.9, 0.9);
+  scale: ${({ $isOnTheBoard, theme }) =>
+    $isOnTheBoard ? theme.onBoardCardScale : 1};
+  margin: ${({ $isOnTheBoard }) => ($isOnTheBoard ? '0 -50px' : '0')};
 
   ${({ onClick }) =>
     onClick &&
     css`
       &:hover {
         z-index: 2;
-        transform: scale(1, 1);
+        transform: scale(1);
         box-shadow: 5px 5px 5px ${({ theme }) => theme.colors.shadow};
       }
     `};
 
   &:active {
-    transform: scale(0.9, 0.9);
+    transform: scale(0.9);
     box-shadow: 0 0 1px ${({ theme }) => theme.colors.shadow};
   }
 `
 
 interface CardHeaderProps {
   $factionColor: string
-  $isPlayable?: boolean
 }
 
 export const CardHeader = styled.div<CardHeaderProps>`
@@ -60,14 +42,6 @@ export const CardHeader = styled.div<CardHeaderProps>`
   border-bottom: 1px solid ${({ theme }) => theme.colors.line};
   color: #fff;
   background: ${({ $factionColor }) => $factionColor};
-
-  animation: ${({ $isPlayable, theme }) =>
-    $isPlayable
-      ? css`
-          ${activeCardGlow(theme)}
-          ${theme.slowAnimationDuration} infinite
-        `
-      : 'none'};
 `
 
 export const CardFooter = styled.div`

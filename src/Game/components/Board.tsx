@@ -20,11 +20,11 @@ import { Card } from 'src/Cards/components/Card'
 import { GameActions } from '../GameSlice'
 import { CardProps } from 'src/Cards/components/types'
 import { Overlay } from './Overlay'
-import { SLOW_ANIMATION_DURATION } from '../constants'
 import { useAppDispatch, useAppSelector } from 'src/state'
 import { useSelector } from 'react-redux'
 import { endTurnMessage, passButtonMessage } from '../messages'
 import { compPlayTurn } from '../ComputerPlayerUtils'
+import { useTheme } from 'styled-components'
 
 export interface BoardProps {
   shouldDisableOverlay?: boolean
@@ -32,6 +32,8 @@ export interface BoardProps {
 
 export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
   const dispatch = useAppDispatch()
+
+  const theme = useTheme()
 
   const [shouldShowOverlay, setShouldShowOverlay] = useState(false)
 
@@ -65,12 +67,12 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
 
     const overlayCloseTimer = setTimeout(() => {
       setShouldShowOverlay(false)
-    }, SLOW_ANIMATION_DURATION)
+    }, theme.slowAnimationDuration)
 
     return () => {
       clearTimeout(overlayCloseTimer)
     }
-  }, [turn, shouldDisableOverlay])
+  }, [turn, shouldDisableOverlay, theme.slowAnimationDuration])
 
   useEffect(() => {
     if (
@@ -95,11 +97,15 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
       </TopPlayerHand>
 
       <TopPlayField>
-        {topPlayer?.field.map(card => <Card key={card.id} card={card} />)}
+        {topPlayer?.field.map(card => (
+          <Card key={card.id} card={card} isOnTheBoard />
+        ))}
       </TopPlayField>
 
       <BottomPlayField>
-        {bottomPlayer?.field.map(card => <Card key={card.id} card={card} />)}
+        {bottomPlayer?.field.map(card => (
+          <Card key={card.id} card={card} isOnTheBoard />
+        ))}
       </BottomPlayField>
 
       <BottomPlayerHand>

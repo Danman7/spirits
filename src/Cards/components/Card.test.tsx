@@ -5,6 +5,11 @@ import { Card } from './Card'
 import { mockCard } from '../../utils/mocks'
 import { joinCardTypes } from '../utils'
 
+jest.mock('animejs/lib/anime.es.js', () => ({
+  __esModule: true,
+  default: () => jest.fn()
+}))
+
 describe('Card Component', () => {
   it('should display all shared UI segments of a card when face up', async () => {
     render(<Card card={mockCard} />)

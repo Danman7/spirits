@@ -17,7 +17,12 @@ const meta = {
     layout: 'centered'
   },
   tags: ['autodocs'],
-  args: { onClick: fn() }
+  args: {
+    onClick: fn(),
+    isFaceDown: false,
+    isOnTheBoard: false,
+    isPlayable: false
+  }
 } satisfies Meta<typeof Card>
 
 export default meta
@@ -26,6 +31,14 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     card: mockCard,
+    onClick: fn()
+  }
+}
+
+export const OnTheBoard: Story = {
+  args: {
+    card: mockCard,
+    isOnTheBoard: true,
     onClick: fn()
   }
 }

@@ -1,4 +1,6 @@
-import { FC } from 'react'
+import { FC, useEffect, useRef } from 'react'
+import anime from 'animejs/lib/anime.es.js'
+
 import {
   CardHeader,
   CardContent,
@@ -12,10 +14,12 @@ import { CardProps } from './types'
 import { Lead } from 'src/styles'
 import { getFactionColor, joinCardTypes } from '../utils'
 import { PositiveNegativeNumber } from './PositiveNegativeNumber'
+import { useTheme } from 'styled-components'
 
 export const Card: FC<CardProps> = ({
   card,
   isFaceDown,
+  isOnTheBoard,
   isPlayable,
   onClick
 }) => {
@@ -33,8 +37,56 @@ export const Card: FC<CardProps> = ({
 
   const onClickCard = onClick ? () => onClick(id) : undefined
 
+  const theme = useTheme()
+
+  const prevStrength = useRef(strength).current
+  const strengthElement = useRef<HTMLDivElement>(null)
+  const cardElement = useRef<HTMLDivElement>(null)
+
+  const strengthChange = anime({
+    targets: strengthElement.current,
+    scale: [1, 2, 1],
+    loop: 3,
+    autoplay: false
+  })
+
+  const boostAnimation = anime({
+    targets: cardElement.current,
+    scale: [1, 1.1, 1],
+    autoplay: false
+  })
+
+  const playableAnimation = anime({
+    targets: cardElement.current,
+    boxShadow: [
+      `0 0 2px 2px ${theme.colors.positive}`,
+      `0 0 4px 4px ${theme.colors.positive}`,
+      `0 0 2px 2px ${theme.colors.positive}`
+    ],
+    duration: theme.slowAnimationDuration,
+    loop: true,
+    autoplay: false
+  })
+
+  useEffect(() => {
+    if ((prevStrength as number) < (strength as number)) {
+      strengthChange.play()
+      boostAnimation.play()
+    }
+  }, [strength, strengthChange, prevStrength, boostAnimation])
+
+  useEffect(() => {
+    if (isPlayable && playableAnimation.play) {
+      playableAnimation.play()
+    }
+  }, [isPlayable, playableAnimation])
+
   return (
-    <StyledCard onClick={onClickCard} $isPlayable={isPlayable}>
+    <StyledCard
+      onClick={onClickCard}
+      ref={cardElement}
+      $isOnTheBoard={isOnTheBoard}
+    >
       {isFaceDown ? (
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
           <defs>
@@ -59,13 +111,10 @@ export const Card: FC<CardProps> = ({
         </svg>
       ) : (
         <>
-          <CardHeader
-            $factionColor={getFactionColor(factions)}
-            $isPlayable={isPlayable}
-          >
+          <CardHeader $factionColor={getFactionColor(factions)}>
             <CardTitle>
               <Lead>{name}</Lead>
-              <Lead>
+              <Lead ref={strengthElement}>
                 {strength && prototype.strength && (
                   <PositiveNegativeNumber
                     current={strength}
