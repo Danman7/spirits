@@ -33,11 +33,8 @@ export const ElevatedAcolyteOnPlay: CardAbilityFunction = (
     return player
   }
 
-  return {
-    ...state,
-    topPlayer: updatePlayer(topPlayer),
-    bottomPlayer: updatePlayer(bottomPlayer)
-  }
+  state.topPlayer = updatePlayer(topPlayer)
+  state.bottomPlayer = updatePlayer(bottomPlayer)
 }
 
 export const OnPlayCardAbilitiesMap: OnPlayAbilitiesMap = {

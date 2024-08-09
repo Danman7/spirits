@@ -9,15 +9,18 @@ const baseGameState = baseGameMockedState.game
 
 describe('Card abilities', () => {
   it('Elevated Acolyte should boost other Hammerite cards with lower strength', () => {
+    const baseField = [createPlayCardFromPrototype(ElevatedAcolyte)]
     const state: GameState = {
       ...baseGameState,
       bottomPlayer: {
         ...baseGameState.bottomPlayer,
-        field: [createPlayCardFromPrototype(ElevatedAcolyte)]
+        field: baseField
       }
     }
 
-    expect(ElevatedAcolyteOnPlay(state)).toEqual(state)
+    ElevatedAcolyteOnPlay(state)
+
+    expect(state.bottomPlayer.field).toEqual(baseField)
 
     const boostableField = [
       createPlayCardFromPrototype(HammeriteNovice),
@@ -26,23 +29,19 @@ describe('Card abilities', () => {
 
     state.bottomPlayer.field = boostableField
 
-    expect(ElevatedAcolyteOnPlay(state)).toEqual({
-      ...state,
-      bottomPlayer: {
-        ...state.bottomPlayer,
-        field: [
-          {
-            ...boostableField[0],
-            strength:
-              (boostableField[0].strength as number) + ELEVATED_ACOLYTE_BOOST
-          },
-          {
-            ...boostableField[1],
-            strength:
-              (boostableField[1].strength as number) + ELEVATED_ACOLYTE_BOOST
-          }
-        ]
+    ElevatedAcolyteOnPlay(state)
+
+    expect(state.bottomPlayer.field).toEqual([
+      {
+        ...boostableField[0],
+        strength:
+          (boostableField[0].strength as number) + ELEVATED_ACOLYTE_BOOST
+      },
+      {
+        ...boostableField[1],
+        strength:
+          (boostableField[1].strength as number) + ELEVATED_ACOLYTE_BOOST
       }
-    })
+    ])
   })
 })

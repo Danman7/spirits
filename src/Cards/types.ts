@@ -34,7 +34,7 @@ export const enum CardType {
   Thief = 'Thief'
 }
 
-export type CardAbilityFunction = (state: GameState) => GameState
+export type CardAbilityFunction = (state: GameState) => void
 
 export const enum OnPlayAbilities {
   ElevatedAcolyteOnPlay = 'ElevatedAcolyteOnPlay'

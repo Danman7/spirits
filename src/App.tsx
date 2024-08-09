@@ -11,7 +11,8 @@ export const App = () => {
     dispatch(
       GameActions.startGame({
         topPlayer: PlayTestPlayer2,
-        bottomPlayer: PlayTestPlayer1
+        bottomPlayer: PlayTestPlayer1,
+        isPlayerFirst: true
       })
     )
   }, [dispatch])

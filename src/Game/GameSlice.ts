@@ -22,25 +22,24 @@ export const gameSlice = createSlice({
 
       const isBottomPlayerFirst = isPlayerFirst ?? coinToss()
 
-      return {
-        ...state,
-        turn: 1,
-        topPlayer,
-        bottomPlayer,
-        activePlayerId: isBottomPlayerFirst ? bottomPlayer.id : topPlayer.id
-      }
+      state.turn = 1
+      state.activePlayerId = isBottomPlayerFirst
+        ? bottomPlayer.id
+        : topPlayer.id
+
+      state.topPlayer = topPlayer
+      state.bottomPlayer = bottomPlayer
     },
     endTurn: state => {
-      const { turn, topPlayer, bottomPlayer, activePlayerId } = state
+      const { topPlayer, bottomPlayer, activePlayerId } = state
 
       const isBottomPlayerActive = bottomPlayer.id === activePlayerId
 
-      return {
-        ...state,
-        turn: turn + 1,
-        activePlayerId: isBottomPlayerActive ? topPlayer.id : bottomPlayer.id,
-        isCardPlayedThisTurn: false
-      }
+      state.turn += 1
+      state.activePlayerId = isBottomPlayerActive
+        ? topPlayer.id
+        : bottomPlayer.id
+      state.isCardPlayedThisTurn = false
     },
     playCard: (state, action: PayloadAction<PlayCard['id']>) => {
       const { topPlayer, bottomPlayer, activePlayerId } = state
@@ -48,7 +47,7 @@ export const gameSlice = createSlice({
 
       let playedCard: PlayCard | undefined
 
-      const players = [topPlayer, bottomPlayer].map(player => {
+      const updatePlayer = (player: Player) => {
         const { hand, field } = player
 
         playedCard = hand.find(card => card.id === playedCardId) || playedCard
@@ -63,20 +62,15 @@ export const gameSlice = createSlice({
         }
 
         return player as Player
-      })
-
-      const updatedState: GameState = {
-        ...state,
-        topPlayer: players[0],
-        bottomPlayer: players[1],
-        isCardPlayedThisTurn: true
       }
+
+      state.topPlayer = updatePlayer(topPlayer)
+      state.bottomPlayer = updatePlayer(bottomPlayer)
+      state.isCardPlayedThisTurn = true
 
       if (playedCard?.onPlayAbility) {
-        return OnPlayCardAbilitiesMap[playedCard.onPlayAbility](updatedState)
+        OnPlayCardAbilitiesMap[playedCard.onPlayAbility](state)
       }
-
-      return updatedState
     }
   }
 })
