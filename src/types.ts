@@ -14,6 +14,7 @@ declare module 'styled-components' {
     colors: {
       positive: string
       negative: string
+      hilight: string
       line: string
       pale: string
       background: string

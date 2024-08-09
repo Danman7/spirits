@@ -60,7 +60,7 @@ export const PlayTestPlayer1: Player = {
 export const PlayTestPlayer2: Player = {
   id: 'player2',
   name: 'Hume',
-  coins: DEFAULT_COINS_AMOUNT - 1,
+  coins: DEFAULT_COINS_AMOUNT,
   isNonHuman: true,
   hand: [
     createPlayCardFromPrototype(Zombie),

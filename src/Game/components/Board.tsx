@@ -7,7 +7,8 @@ import {
   TopPlayerHand,
   TopPlayerInfo,
   BottomPlayerInfo,
-  EndTurnButton
+  EndTurnButton,
+  CoinsElement
 } from './styles'
 import {
   getActivePlayerId,
@@ -25,6 +26,8 @@ import { useSelector } from 'react-redux'
 import { endTurnMessage, passButtonMessage } from '../messages'
 import { compPlayTurn } from '../ComputerPlayerUtils'
 import { useTheme } from 'styled-components'
+import { numberChangeAnimation } from 'src/utils/animations'
+import { usePrevious } from 'src/utils/customHooks'
 
 export interface BoardProps {
   shouldDisableOverlay?: boolean
@@ -45,7 +48,22 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
 
   const isPlayerTurn = bottomPlayer?.id === activePlayerId
 
-  const prevIsPlayerTurn = useRef(isPlayerTurn).current
+  const prevTopPlayerCoins = usePrevious(topPlayer.coins)
+  const prevBottomPlayerCoins = usePrevious(bottomPlayer.coins)
+  const prevActivePlayerId = usePrevious(activePlayerId)
+
+  const topPlayerCoinsElement = useRef<HTMLDivElement>(null)
+  const bottomPlayerCoinsElement = useRef<HTMLDivElement>(null)
+
+  const topPlayerCoinChangeAnimation = numberChangeAnimation(
+    topPlayerCoinsElement.current,
+    theme
+  )
+
+  const bottomPlayerCoinChangeAnimation = numberChangeAnimation(
+    bottomPlayerCoinsElement.current,
+    theme
+  )
 
   const onPlayCard: CardProps['onClick'] = useCallback(
     (cardId: string) => {
@@ -76,18 +94,45 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
 
   useEffect(() => {
     if (
-      prevIsPlayerTurn !== isPlayerTurn &&
       topPlayer.isNonHuman &&
-      !isPlayerTurn
+      prevActivePlayerId !== activePlayerId &&
+      activePlayerId === topPlayer.id
     ) {
       compPlayTurn(topPlayer, onPlayCard, onEndTurn)
     }
-  }, [isPlayerTurn, prevIsPlayerTurn, topPlayer, onPlayCard, onEndTurn])
+  }, [activePlayerId, onEndTurn, onPlayCard, prevActivePlayerId, topPlayer])
+
+  useEffect(() => {
+    if (
+      prevTopPlayerCoins &&
+      prevTopPlayerCoins !== topPlayer.coins &&
+      topPlayerCoinChangeAnimation.play
+    ) {
+      topPlayerCoinChangeAnimation.play()
+    }
+  }, [prevTopPlayerCoins, topPlayerCoinChangeAnimation, topPlayer.coins])
+
+  useEffect(() => {
+    if (
+      prevBottomPlayerCoins &&
+      prevBottomPlayerCoins !== bottomPlayer.coins &&
+      bottomPlayerCoinChangeAnimation.play
+    ) {
+      bottomPlayerCoinChangeAnimation.play()
+    }
+  }, [
+    prevBottomPlayerCoins,
+    bottomPlayer.coins,
+    bottomPlayerCoinChangeAnimation
+  ])
 
   return (
     <StyledBoard>
       <TopPlayerInfo $isActivePlayer={!isPlayerTurn}>
-        <span>{topPlayer?.name}</span> / <span>{topPlayer?.coins}</span>
+        <span>{topPlayer?.name}</span> /{' '}
+        <CoinsElement ref={topPlayerCoinsElement}>
+          {topPlayer?.coins}
+        </CoinsElement>
       </TopPlayerInfo>
 
       <TopPlayerHand>
@@ -126,7 +171,10 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
       </BottomPlayerHand>
 
       <BottomPlayerInfo $isActivePlayer={isPlayerTurn}>
-        <span>{bottomPlayer?.name}</span> / <span>{bottomPlayer?.coins}</span>
+        <span>{bottomPlayer?.name}</span> /{' '}
+        <CoinsElement ref={bottomPlayerCoinsElement}>
+          {bottomPlayer?.coins}
+        </CoinsElement>
       </BottomPlayerInfo>
 
       {shouldShowOverlay && <Overlay />}

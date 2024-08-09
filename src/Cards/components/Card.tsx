@@ -1,5 +1,4 @@
 import { FC, useEffect, useRef } from 'react'
-import anime from 'animejs/lib/anime.es.js'
 
 import {
   CardHeader,
@@ -15,6 +14,12 @@ import { Lead } from 'src/styles'
 import { getFactionColor, joinCardTypes } from '../utils'
 import { PositiveNegativeNumber } from './PositiveNegativeNumber'
 import { useTheme } from 'styled-components'
+import {
+  boostCardAnimation,
+  numberChangeAnimation,
+  playableCardAnimation
+} from 'src/utils/animations'
+import { usePrevious } from 'src/utils/customHooks'
 
 export const Card: FC<CardProps> = ({
   card,
@@ -39,41 +44,31 @@ export const Card: FC<CardProps> = ({
 
   const theme = useTheme()
 
-  const prevStrength = useRef(strength).current
+  const prevStrength = usePrevious(strength)
   const strengthElement = useRef<HTMLDivElement>(null)
   const cardElement = useRef<HTMLDivElement>(null)
 
-  const strengthChange = anime({
-    targets: strengthElement.current,
-    scale: [1, 2, 1],
-    loop: 3,
-    autoplay: false
-  })
+  const strengthChangeAnimation = numberChangeAnimation(
+    strengthElement.current,
+    theme
+  )
 
-  const boostAnimation = anime({
-    targets: cardElement.current,
-    scale: [1, 1.1, 1],
-    autoplay: false
-  })
+  const boostAnimation = boostCardAnimation(cardElement.current)
 
-  const playableAnimation = anime({
-    targets: cardElement.current,
-    boxShadow: [
-      `0 0 2px 2px ${theme.colors.positive}`,
-      `0 0 4px 4px ${theme.colors.positive}`,
-      `0 0 2px 2px ${theme.colors.positive}`
-    ],
-    duration: theme.slowAnimationDuration,
-    loop: true,
-    autoplay: false
-  })
+  const playableAnimation = playableCardAnimation(cardElement.current, theme)
 
   useEffect(() => {
-    if ((prevStrength as number) < (strength as number)) {
-      strengthChange.play()
+    if (prevStrength !== strength && strengthChangeAnimation.play) {
+      strengthChangeAnimation.play()
+    }
+
+    if (
+      (prevStrength as number) < (strength as number) &&
+      boostAnimation.play
+    ) {
       boostAnimation.play()
     }
-  }, [strength, strengthChange, prevStrength, boostAnimation])
+  }, [strength, strengthChangeAnimation, prevStrength, boostAnimation])
 
   useEffect(() => {
     if (isPlayable && playableAnimation.play) {

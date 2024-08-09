@@ -157,3 +157,7 @@ export const EndTurnButton = styled(Button)`
   top: 50%;
   z-index: 3;
 `
+
+export const CoinsElement = styled.div`
+  display: inline-block;
+`

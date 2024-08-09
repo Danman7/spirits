@@ -13,6 +13,7 @@ export const defaultTheme: DefaultTheme = {
   colors: {
     negative: '#e81c4f',
     positive: '#4fe81c',
+    hilight: '#FFD700',
     line: '#999',
     pale: '#ccc',
     background: '#fff',
