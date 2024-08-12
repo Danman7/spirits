@@ -1,4 +1,4 @@
-import { GameState, Player } from 'src/Game/types'
+import { GameState, Player } from '../Game/types'
 import { CardAbilityFunction, CardType, OnPlayAbilitiesMap } from './types'
 import { ELEVATED_ACOLYTE_BOOST } from './constants'
 import { ElevatedAcolyte } from './AllCards'

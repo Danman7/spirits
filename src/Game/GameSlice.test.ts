@@ -1,9 +1,9 @@
-import { MockPlayer1, MockPlayer2 } from 'src/utils/mocks'
+import { MockPlayer1, MockPlayer2 } from '../utils/mocks'
 import { GameActions, GameReducer, initialState } from './GameSlice'
 import { GameState } from './types'
-import { HammeriteNovice } from 'src/Cards/AllCards'
-import { ELEVATED_ACOLYTE_BOOST } from 'src/Cards/constants'
-import { createPlayCardFromPrototype } from 'src/Cards/utils'
+import { HammeriteNovice } from '../Cards/AllCards'
+import { ELEVATED_ACOLYTE_BOOST } from '../Cards/constants'
+import { createPlayCardFromPrototype } from '../Cards/utils'
 
 const playersStartingTheGame = {
   topPlayer: MockPlayer1,

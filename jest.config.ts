@@ -1,10 +1,12 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
+import type { Config } from 'jest'
+
+const config: Config = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   moduleDirectories: ['node_modules', 'src'],
-  moduleNameMapper: {
-    'src/(.*)': '<rootDir>/src/$1'
+  setupFiles: ['<rootDir>/src/utils/jest.mock.ts'],
+  transform: {
+    '^.+\\.jsx?$': 'babel-jest'
   },
   coverageThreshold: {
     global: {
@@ -15,3 +17,5 @@ module.exports = {
     }
   }
 }
+
+export default config

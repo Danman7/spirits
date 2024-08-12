@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { PositiveNegativeNumberProps } from './types'
-import { NegativeText, PositiveText } from 'src/styles'
+import { NegativeText, PositiveText } from '../../styles'
 
 export const PositiveNegativeNumber: FC<PositiveNegativeNumberProps> = ({
   base,

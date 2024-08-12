@@ -1,14 +1,9 @@
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
-import { render, screen } from 'src/utils/test-utils'
+import { render, screen } from '../../utils/test-utils'
 import { Card } from './Card'
 import { mockCard } from '../../utils/mocks'
 import { joinCardTypes } from '../utils'
-
-jest.mock('animejs/lib/anime.es.js', () => ({
-  __esModule: true,
-  default: () => jest.fn()
-}))
 
 describe('Card Component', () => {
   it('should display all shared UI segments of a card when face up', async () => {

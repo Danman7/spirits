@@ -1,8 +1,6 @@
 import styled, { css } from 'styled-components'
 
 export const StyledCard = styled.div<{ $isOnTheBoard?: boolean }>`
-  display: flex;
-  flex-direction: column;
   width: ${({ theme }) => theme.cardWidth}px;
   height: ${({ theme }) => theme.cardHeight}px;
   border-radius: ${({ theme }) => theme.borderRadius};
@@ -10,25 +8,32 @@ export const StyledCard = styled.div<{ $isOnTheBoard?: boolean }>`
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'not-allowed')};
   box-shadow: 1px 1px 1px ${({ theme }) => theme.colors.shadow};
   transition: all ${({ theme }) => theme.quickAnimationDuration}ms ease;
-  background-color: ${({ theme }) => theme.colors.background};
   scale: ${({ $isOnTheBoard, theme }) =>
     $isOnTheBoard ? theme.onBoardCardScale : 1};
   margin: ${({ $isOnTheBoard }) => ($isOnTheBoard ? '0 -50px' : '0')};
+
+  &:hover {
+    box-shadow: 5px 5px 5px ${({ theme }) => theme.colors.shadow};
+  }
 
   ${({ onClick }) =>
     onClick &&
     css`
       &:hover {
         z-index: 2;
-        transform: scale(1);
-        box-shadow: 5px 5px 5px ${({ theme }) => theme.colors.shadow};
       }
     `};
+`
 
-  &:active {
-    transform: scale(0.9);
-    box-shadow: 0 0 1px ${({ theme }) => theme.colors.shadow};
-  }
+export const CardPaper = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: ${({ theme }) => theme.colors.background};
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 `
 
 interface CardHeaderProps {

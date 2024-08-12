@@ -1,4 +1,4 @@
-import { GameReducer } from 'src/Game/GameSlice'
+import { GameReducer } from '../Game/GameSlice'
 import { MainReducer } from './types'
 
 export const reducer: MainReducer = {

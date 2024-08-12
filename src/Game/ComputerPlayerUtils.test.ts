@@ -1,8 +1,8 @@
-import { MockPlayer1, MockPlayer2 } from 'src/utils/mocks'
+import { MockPlayer1, MockPlayer2 } from '../utils/mocks'
 import { compPlayRandomCard, compPlayTurn } from './ComputerPlayerUtils'
-import { GarrettMasterThief, ViktoriaThiefPawn } from 'src/Cards/AllCards'
-import { PlayCard } from 'src/Cards/types'
-import { createPlayCardFromPrototype } from 'src/Cards/utils'
+import { GarrettMasterThief, ViktoriaThiefPawn } from '../Cards/AllCards'
+import { PlayCard } from '../Cards/types'
+import { createPlayCardFromPrototype } from '../Cards/utils'
 
 describe('Computer Player utils', () => {
   it('should be able to play a random card from hand within budget', () => {

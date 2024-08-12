@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom'
-import { render, screen } from 'src/utils/test-utils'
+import { render, screen } from '../../utils/test-utils'
 import { PositiveNegativeNumber } from './PositiveNegativeNumber'
-import { defaultTheme } from 'src/theme'
+import { defaultTheme } from '../../theme'
 
 const base = 3
 

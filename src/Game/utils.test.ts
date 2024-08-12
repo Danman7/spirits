@@ -6,7 +6,7 @@ import {
 } from './messages'
 import { getOverlayMessage } from './components/utils'
 import { getPlayableCards } from './utils'
-import { MockPlayer1 } from 'src/utils/mocks'
+import { MockPlayer1 } from '../utils/mocks'
 
 describe('Game utils', () => {
   it('should return the correct overlay message', () => {

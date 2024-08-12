@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom'
-import { render, screen } from 'src/utils/test-utils'
+import { render, screen } from '../../utils/test-utils'
 import { Board } from './Board'
 import { baseGameMockedState } from '../../utils/mocks'
 import { userEvent } from '@storybook/test'
@@ -9,12 +9,7 @@ import {
   playerFirstMessage
 } from '../messages'
 import { act } from 'react'
-import { MockCPUPlayer } from 'src/utils/mocks'
-
-jest.mock('animejs/lib/anime.es.js', () => ({
-  __esModule: true,
-  default: () => jest.fn()
-}))
+import { MockCPUPlayer } from '../../utils/mocks'
 
 describe('Board Component', () => {
   it('should show the initial UI elements', async () => {

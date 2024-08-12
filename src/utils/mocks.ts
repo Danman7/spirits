@@ -4,13 +4,13 @@ import {
   ElevatedAcolyte,
   HammeriteNovice,
   DownwinderThief
-} from 'src/Cards/AllCards'
-import { PlayCard } from 'src/Cards/types'
-import { createPlayCardFromPrototype } from 'src/Cards/utils'
-import { DEFAULT_COINS_AMOUNT } from 'src/Game/constants'
-import { Player } from 'src/Game/types'
-import { store } from 'src/state'
-import { MainState } from 'src/state/types'
+} from '../Cards/AllCards'
+import { PlayCard } from '../Cards/types'
+import { createPlayCardFromPrototype } from '../Cards/utils'
+import { DEFAULT_COINS_AMOUNT } from '../Game/constants'
+import { Player } from '../Game/types'
+import { store } from '../state'
+import { MainState } from '../state/types'
 
 export const MockPlayer1: Player = {
   id: 'player1',

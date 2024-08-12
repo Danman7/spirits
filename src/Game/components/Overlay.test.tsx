@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom'
-import { render, screen } from 'src/utils/test-utils'
+import { render, screen } from '../../utils/test-utils'
 import { baseGameMockedState } from '../../utils/mocks'
 import { Overlay } from './Overlay'
 import { opponentFirstMessage, playerFirstMessage } from '../messages'
-import { MockPlayer1 } from 'src/utils/mocks'
+import { MockPlayer1 } from '../../utils/mocks'
 
 describe('Overlay component', () => {
   it('should show the correct message when player is first', async () => {

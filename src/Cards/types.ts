@@ -1,4 +1,4 @@
-import { GameState } from 'src/Game/types'
+import { GameState } from '../Game/types'
 
 export interface Card {
   name: string

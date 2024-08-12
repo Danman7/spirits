@@ -1,5 +1,5 @@
-import anime from 'animejs/lib/anime.es.js'
-import { DefaultTheme } from 'styled-components/dist/types'
+import anime from 'animejs'
+import { DefaultTheme } from 'styled-components'
 
 export const numberChangeAnimation = (
   element: HTMLElement | null,
@@ -7,35 +7,44 @@ export const numberChangeAnimation = (
 ) =>
   anime({
     targets: element,
-    scale: [1, 1.5],
-    color: (element: HTMLElement) => [
-      window.getComputedStyle(element).color,
-      theme.colors.hilight
-    ],
+    scale: 1.5,
+    color: theme.colors.hilight,
     direction: 'alternate',
     duration: 250,
     autoplay: false
   })
 
-export const boostCardAnimation = (element: HTMLElement | null) =>
-  anime({
-    targets: element,
-    scale: [1, 1.1, 1],
-    autoplay: false
-  })
-
-export const playableCardAnimation = (
+export const boostCardAnimation = (
   element: HTMLElement | null,
   theme: DefaultTheme
 ) =>
   anime({
     targets: element,
+    scale: 1.1,
     boxShadow: [
-      `0 0 2px 2px ${theme.colors.positive}`,
-      `0 0 4px 4px ${theme.colors.positive}`,
-      `0 0 2px 2px ${theme.colors.positive}`
+      `0 0 0 0 ${theme.colors.hilight}`,
+      `0 0 5px 5px ${theme.colors.hilight}`
     ],
-    duration: theme.slowAnimationDuration,
-    loop: true,
+    duration: 250,
+    direction: 'alternate',
+    loop: 2,
     autoplay: false
   })
+
+export const playableCardAnimation = (
+  element: HTMLElement | null,
+  theme: DefaultTheme,
+  isPlayable?: boolean
+) =>
+  isPlayable && !!anime
+    ? anime({
+        targets: element,
+        boxShadow: [
+          `0 0 0 0 ${theme.colors.positive}`,
+          `0 0 5px 5px ${theme.colors.positive}`
+        ],
+        direction: 'alternate',
+        easing: 'linear',
+        loop: true
+      })
+    : anime.remove(element)

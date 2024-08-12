@@ -1,4 +1,4 @@
-import { generateUUID } from 'src/utils/gameUtils'
+import { generateUUID } from '../utils/gameUtils'
 import { FACTION_COLOR_MAP } from './constants'
 import { Card, PlayCard } from './types'
 

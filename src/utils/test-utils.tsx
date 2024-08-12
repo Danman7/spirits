@@ -7,10 +7,10 @@ import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 import { ThemeProvider } from 'styled-components'
 
-import { GlobalStyles } from 'src/styles'
-import { defaultTheme } from 'src/theme'
-import { MainState } from 'src/state/types'
-import { reducer, store } from 'src/state'
+import { GlobalStyles } from '../styles'
+import { defaultTheme } from '../theme'
+import { MainState } from '../state/types'
+import { reducer, store } from '../state'
 
 interface customRenderOptions extends RenderOptions {
   preloadedState?: MainState

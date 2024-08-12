@@ -17,6 +17,6 @@ export const defaultTheme: DefaultTheme = {
     line: '#999',
     pale: '#ccc',
     background: '#fff',
-    shadow: '#888'
+    shadow: '#333'
   }
 }

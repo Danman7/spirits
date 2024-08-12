@@ -17,17 +17,17 @@ import {
   getGameTurn,
   getIsCardPlayedThisTurn
 } from '../GameSelectors'
-import { Card } from 'src/Cards/components/Card'
+import { Card } from '../../Cards/components/Card'
 import { GameActions } from '../GameSlice'
-import { CardProps } from 'src/Cards/components/types'
+import { CardProps } from '../../Cards/components/types'
 import { Overlay } from './Overlay'
-import { useAppDispatch, useAppSelector } from 'src/state'
+import { useAppDispatch, useAppSelector } from '../../state'
 import { useSelector } from 'react-redux'
 import { endTurnMessage, passButtonMessage } from '../messages'
 import { compPlayTurn } from '../ComputerPlayerUtils'
 import { useTheme } from 'styled-components'
-import { numberChangeAnimation } from 'src/utils/animations'
-import { usePrevious } from 'src/utils/customHooks'
+import { numberChangeAnimation } from '../../utils/animations'
+import { usePrevious } from '../../utils/customHooks'
 
 export interface BoardProps {
   shouldDisableOverlay?: boolean

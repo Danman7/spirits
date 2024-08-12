@@ -1,7 +1,7 @@
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 import type { Meta, StoryObj } from '@storybook/react'
-import { reducer } from 'src/state'
+import { reducer } from '../../state'
 import { Overlay } from './Overlay'
 import { baseGameMockedState } from '../../utils/mocks'
 
