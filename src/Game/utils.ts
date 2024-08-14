@@ -1,3 +1,4 @@
+import { CardState } from '../Cards/components/types'
 import {
   playerFirstMessage,
   opponentFirstMessage,
@@ -26,4 +27,12 @@ export const getOverlayMessage = (
 }
 
 export const getPlayableCards = (player: Player) =>
-  player.hand.filter(card => card.cost <= player.coins)
+  player.cards.filter(
+    card => card.state === CardState.InHand && card.cost <= player.coins
+  )
+
+export const getCardsInHand = (player: Player) =>
+  player.cards.filter(card => card.state === CardState.InHand)
+
+export const getCardsOnBoard = (player: Player) =>
+  player.cards.filter(card => card.state === CardState.OnBoard)

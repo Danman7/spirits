@@ -1,9 +1,12 @@
 import { MockPlayer1, MockPlayer2 } from '../utils/mocks'
 import { GameActions, GameReducer, initialState } from './GameSlice'
 import { GameState } from './types'
-import { HammeriteNovice } from '../Cards/AllCards'
-import { ELEVATED_ACOLYTE_BOOST } from '../Cards/constants'
+import { BrotherSachelman, HammeriteNovice } from '../Cards/AllCards'
+import { BROTHER_SACHELMAN_BOOST } from '../Cards/constants'
 import { createPlayCardFromPrototype } from '../Cards/utils'
+import { getCardsInHand, getCardsOnBoard } from './utils'
+import { CardState } from '../Cards/components/types'
+import { OnPlayAbility } from '../Cards/types'
 
 const playersStartingTheGame = {
   topPlayer: MockPlayer1,
@@ -68,66 +71,68 @@ describe('Game State Slice', () => {
   })
 
   it('should be able to play a card if is the active player', () => {
+    const playerHand = getCardsInHand(MockPlayer1)
+
     const state = GameReducer(
       gameStartedState,
-      GameActions.playCard(MockPlayer1.hand[0].id)
+      GameActions.playCard(playerHand[0].id)
     )
 
     const { topPlayer } = state
 
-    const { field, hand } = topPlayer
+    expect(getCardsOnBoard(topPlayer)).toEqual([
+      { ...playerHand[0], state: CardState.OnBoard }
+    ])
 
-    expect(field).toEqual([MockPlayer1.hand[0]])
-
-    expect(hand).toEqual([MockPlayer1.hand[1]])
+    expect(getCardsInHand(topPlayer)).toEqual([playerHand[1]])
   })
 
   it('should not be able to play a card if is not the active player', () => {
+    const playerHand = getCardsInHand(MockPlayer2)
+
     const state = GameReducer(
       gameStartedState,
-      GameActions.playCard(MockPlayer2.hand[0].id)
+      GameActions.playCard(playerHand[0].id)
     )
 
     const { bottomPlayer } = state
 
-    const { field, hand } = bottomPlayer
+    expect(getCardsOnBoard(bottomPlayer)).toEqual([])
 
-    expect(field).toEqual([])
-
-    expect(hand).toEqual(MockPlayer2.hand)
+    expect(getCardsInHand(bottomPlayer)).toEqual(playerHand)
   })
 
   it('should trigger on play effect on card if one is present', () => {
-    const topPlayerField = [
-      createPlayCardFromPrototype(HammeriteNovice),
-      createPlayCardFromPrototype(HammeriteNovice)
+    const topPlayerBoard = [
+      createPlayCardFromPrototype(HammeriteNovice, CardState.OnBoard),
+      createPlayCardFromPrototype(HammeriteNovice, CardState.OnBoard)
     ]
 
+    const playedCard = createPlayCardFromPrototype(BrotherSachelman)
+
+    const mockGameState: GameState = { ...gameStartedState }
+
+    mockGameState.topPlayer = {
+      ...mockGameState.topPlayer,
+      cards: [...topPlayerBoard, playedCard]
+    }
+
     const state = GameReducer(
-      {
-        ...gameStartedState,
-        topPlayer: {
-          ...gameStartedState.topPlayer,
-          field: topPlayerField
-        }
-      },
-      GameActions.playCard(MockPlayer1.hand[1].id)
+      mockGameState,
+      GameActions.triggerOnPlayAbility(OnPlayAbility.BrotherSachelmanOnPlay)
     )
 
-    const { field } = state.topPlayer
-
-    expect(field).toEqual([
+    expect(getCardsOnBoard(state.topPlayer)).toEqual([
       {
-        ...topPlayerField[0],
+        ...topPlayerBoard[0],
         strength:
-          (topPlayerField[0].strength as number) + ELEVATED_ACOLYTE_BOOST
+          (topPlayerBoard[0].strength as number) + BROTHER_SACHELMAN_BOOST
       },
       {
-        ...topPlayerField[1],
+        ...topPlayerBoard[1],
         strength:
-          (topPlayerField[1].strength as number) + ELEVATED_ACOLYTE_BOOST
-      },
-      MockPlayer1.hand[1]
+          (topPlayerBoard[1].strength as number) + BROTHER_SACHELMAN_BOOST
+      }
     ])
   })
 })

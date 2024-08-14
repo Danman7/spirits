@@ -5,7 +5,7 @@ import {
   opponentTurnMessage
 } from './messages'
 import { getOverlayMessage } from './components/utils'
-import { getPlayableCards } from './utils'
+import { getCardsInHand, getPlayableCards } from './utils'
 import { MockPlayer1 } from '../utils/mocks'
 
 describe('Game utils', () => {
@@ -20,7 +20,7 @@ describe('Game utils', () => {
     expect(getPlayableCards(MockPlayer1)).toHaveLength(2)
     expect(getPlayableCards({ ...MockPlayer1, coins: 2 })).toHaveLength(1)
     expect(getPlayableCards({ ...MockPlayer1, coins: 1 })).toEqual([
-      MockPlayer1.hand[0]
+      getCardsInHand(MockPlayer1)[0]
     ])
     expect(getPlayableCards({ ...MockPlayer1, coins: 0 })).toHaveLength(0)
   })

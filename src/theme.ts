@@ -2,7 +2,7 @@ import { DefaultTheme } from 'styled-components'
 
 export const defaultTheme: DefaultTheme = {
   borderRadius: '4px',
-  quickAnimationDuration: 100,
+  quickAnimationDuration: 200,
   slowAnimationDuration: 2000,
   spacing: 8,
   onBoardCardScale: 0.6,

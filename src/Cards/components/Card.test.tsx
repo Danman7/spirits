@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom'
+
 import userEvent from '@testing-library/user-event'
 import { render, screen } from '../../utils/test-utils'
 import { Card } from './Card'
@@ -50,4 +51,18 @@ describe('Card Component', () => {
 
     expect(onCardClick).toHaveBeenCalledWith(mockCard.id)
   })
+
+  // it('should trigger boost animation if card is boosted', async () => {
+  //   const useDispatchSpy = jest.spyOn(reactRedux, 'useDispatch')
+
+  //   const { rerender } = render(<Card card={mockCard} />)
+
+  //   rerender(
+  //     <Card
+  //       card={{ ...mockCard, strength: (mockCard.strength as number) + 1 }}
+  //     />
+  //   )
+
+  //   expect(useDispatchSpy).toHaveBeenCalledWith(mockCard.id)
+  // })
 })

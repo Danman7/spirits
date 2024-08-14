@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { GameState, Player, StartGamePayload } from './types'
-import { PlayCard } from '../Cards/types'
+import { OnPlayAbility, PlayCard } from '../Cards/types'
 import { EMPTY_PLAYER } from './constants'
 import { coinToss } from '../utils/gameUtils'
+import { CardState } from '../Cards/components/types'
 import { OnPlayCardAbilitiesMap } from '../Cards/CardAbilities'
 
 export const initialState: GameState = {
@@ -45,19 +46,25 @@ export const gameSlice = createSlice({
       const { topPlayer, bottomPlayer, activePlayerId } = state
       const { payload: playedCardId } = action
 
-      let playedCard: PlayCard | undefined
-
       const updatePlayer = (player: Player) => {
-        const { hand, field } = player
+        const { cards } = player
 
-        playedCard = hand.find(card => card.id === playedCardId) || playedCard
+        const playedCard = cards.find(card => card.id === playedCardId)
 
         if (playedCard && player.id === activePlayerId) {
           return {
             ...player,
             coins: player.coins - playedCard.cost,
-            hand: hand.filter(card => card.id !== (playedCard as PlayCard).id),
-            field: [...field, playedCard]
+            cards: cards.map(card => {
+              if (card.id === playedCardId) {
+                return {
+                  ...card,
+                  state: CardState.OnBoard
+                }
+              }
+
+              return card
+            })
           } as Player
         }
 
@@ -67,11 +74,9 @@ export const gameSlice = createSlice({
       state.topPlayer = updatePlayer(topPlayer)
       state.bottomPlayer = updatePlayer(bottomPlayer)
       state.isCardPlayedThisTurn = true
-
-      if (playedCard?.onPlayAbility) {
-        OnPlayCardAbilitiesMap[playedCard.onPlayAbility](state)
-      }
-    }
+    },
+    triggerOnPlayAbility: (state, action: PayloadAction<OnPlayAbility>) =>
+      OnPlayCardAbilitiesMap[action.payload](state)
   }
 })
 

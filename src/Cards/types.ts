@@ -1,4 +1,5 @@
 import { GameState } from '../Game/types'
+import { CardState } from './components/types'
 
 export interface Card {
   name: string
@@ -8,7 +9,7 @@ export interface Card {
   strength?: number
   description?: string
   flavor?: string
-  onPlayAbility?: OnPlayAbilities
+  onPlayAbility?: OnPlayAbility
 }
 
 export interface PlayCard extends Card {
@@ -18,6 +19,7 @@ export interface PlayCard extends Card {
     strength?: Card['strength']
     cost: Card['cost']
   }
+  state: CardState
 }
 
 export const enum CardFaction {
@@ -31,16 +33,17 @@ export const enum CardType {
   Undead = 'Undead',
   Fence = 'Fence',
   Pagan = 'Pagan',
-  Thief = 'Thief'
+  Thief = 'Thief',
+  Guard = 'Guard'
 }
 
 export type CardAbilityFunction = (state: GameState) => void
 
-export const enum OnPlayAbilities {
-  ElevatedAcolyteOnPlay = 'ElevatedAcolyteOnPlay'
+export const enum OnPlayAbility {
+  BrotherSachelmanOnPlay = 'BrotherSachelmanOnPlay'
 }
 
-type EnumKeys = keyof typeof OnPlayAbilities
+type EnumKeys = keyof typeof OnPlayAbility
 
 export type OnPlayAbilitiesMap = {
   [P in EnumKeys]: CardAbilityFunction

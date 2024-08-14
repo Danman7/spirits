@@ -1,9 +1,11 @@
+import { CardState } from '../Cards/components/types'
 import {
   Haunt,
   Zombie,
   ElevatedAcolyte,
   HammeriteNovice,
-  DownwinderThief
+  DownwinderThief,
+  BrotherSachelman
 } from '../Cards/AllCards'
 import { PlayCard } from '../Cards/types'
 import { createPlayCardFromPrototype } from '../Cards/utils'
@@ -16,44 +18,39 @@ export const MockPlayer1: Player = {
   id: 'player1',
   name: 'Garret',
   coins: DEFAULT_COINS_AMOUNT,
-  hand: [
+  cards: [
     createPlayCardFromPrototype(HammeriteNovice),
     createPlayCardFromPrototype(ElevatedAcolyte)
-  ],
-  field: []
+  ]
 }
 
 export const MockPlayer2: Player = {
   id: 'player2',
   name: 'Karras',
   coins: DEFAULT_COINS_AMOUNT - 1,
-  hand: [
+  cards: [
     createPlayCardFromPrototype(Zombie),
     createPlayCardFromPrototype(Haunt)
-  ],
-  field: []
+  ]
 }
 
 export const MockCPUPlayer: Player = {
   id: 'playerCPU',
   name: 'Constantine',
   coins: DEFAULT_COINS_AMOUNT,
-  hand: [createPlayCardFromPrototype(DownwinderThief)],
-  isNonHuman: true,
-  field: []
+  cards: [createPlayCardFromPrototype(DownwinderThief)],
+  isNonHuman: true
 }
 
 export const PlayTestPlayer1: Player = {
   id: 'player1',
   name: 'Victoria',
   coins: DEFAULT_COINS_AMOUNT,
-  hand: [
+  cards: [
+    createPlayCardFromPrototype(BrotherSachelman),
     createPlayCardFromPrototype(ElevatedAcolyte),
-    createPlayCardFromPrototype(ElevatedAcolyte)
-  ],
-  field: [
-    createPlayCardFromPrototype(HammeriteNovice),
-    createPlayCardFromPrototype(HammeriteNovice)
+    createPlayCardFromPrototype(HammeriteNovice, CardState.OnBoard),
+    createPlayCardFromPrototype(HammeriteNovice, CardState.OnBoard)
   ]
 }
 
@@ -62,12 +59,11 @@ export const PlayTestPlayer2: Player = {
   name: 'Hume',
   coins: DEFAULT_COINS_AMOUNT,
   isNonHuman: true,
-  hand: [
+  cards: [
     createPlayCardFromPrototype(Zombie),
     createPlayCardFromPrototype(Zombie),
     createPlayCardFromPrototype(Haunt)
-  ],
-  field: []
+  ]
 }
 
 export const mockCard: PlayCard = createPlayCardFromPrototype(Haunt)

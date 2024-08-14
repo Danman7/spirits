@@ -1,37 +1,39 @@
 import { baseGameMockedState } from '../utils/mocks'
-import { ElevatedAcolyteOnPlay } from './CardAbilities'
+import { BrotherSachelmanOnPlay } from './CardAbilities'
 import { GameState } from '../Game/types'
-import { ElevatedAcolyte, HammeriteNovice } from './AllCards'
+import { HammeriteNovice, TempleGuardsman } from './AllCards'
 import { ELEVATED_ACOLYTE_BOOST } from './constants'
 import { createPlayCardFromPrototype } from './utils'
+import { CardState } from './components/types'
+import { getCardsOnBoard } from '../Game/utils'
 
 const baseGameState = baseGameMockedState.game
 
 describe('Card abilities', () => {
-  it('Elevated Acolyte should boost other Hammerite cards with lower strength', () => {
-    const baseField = [createPlayCardFromPrototype(ElevatedAcolyte)]
-    const state: GameState = {
-      ...baseGameState,
-      bottomPlayer: {
-        ...baseGameState.bottomPlayer,
-        field: baseField
-      }
-    }
+  it('Brother Sachelman should boost other Hammerite cards with lower strength', () => {
+    const cardOnBoard = createPlayCardFromPrototype(
+      TempleGuardsman,
+      CardState.OnBoard
+    )
 
-    ElevatedAcolyteOnPlay(state)
+    const state: GameState = baseGameState
 
-    expect(state.bottomPlayer.field).toEqual(baseField)
+    state.bottomPlayer.cards = [...state.bottomPlayer.cards, cardOnBoard]
+
+    BrotherSachelmanOnPlay(state)
+
+    expect(getCardsOnBoard(state.bottomPlayer)).toEqual([cardOnBoard])
 
     const boostableField = [
-      createPlayCardFromPrototype(HammeriteNovice),
-      createPlayCardFromPrototype(HammeriteNovice)
+      createPlayCardFromPrototype(HammeriteNovice, CardState.OnBoard),
+      createPlayCardFromPrototype(HammeriteNovice, CardState.OnBoard)
     ]
 
-    state.bottomPlayer.field = boostableField
+    state.bottomPlayer.cards = boostableField
 
-    ElevatedAcolyteOnPlay(state)
+    BrotherSachelmanOnPlay(state)
 
-    expect(state.bottomPlayer.field).toEqual([
+    expect(getCardsOnBoard(state.bottomPlayer)).toEqual([
       {
         ...boostableField[0],
         strength:

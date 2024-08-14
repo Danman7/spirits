@@ -1,11 +1,12 @@
 import {
+  BROTHER_SACHELMAN_BOOST,
   DOWNWINDER_BOOST,
   ELEVATED_ACOLYTE_BOOST,
   GARRETT_COIN_GAIN,
   HAUNT_DAMAGE,
   VIKTORIA_COIN_GAIN
 } from './constants'
-import { Card, CardFaction, CardType, OnPlayAbilities } from './types'
+import { Card, CardFaction, CardType, OnPlayAbility } from './types'
 import { getCoinsMessage } from './utils'
 
 export const Zombie: Card = {
@@ -49,10 +50,31 @@ export const ElevatedAcolyte: Card = {
   cost: 3,
   factions: [CardFaction.Order],
   types: [CardType.Hammerite],
-  description: `On play boost any Hammerite with lower strength by ${ELEVATED_ACOLYTE_BOOST}.`,
+  description: `If a card is boosted next to Elevated Acolyte, boost Elevated Acolyte by ${ELEVATED_ACOLYTE_BOOST}.`,
   flavor:
-    'He will endure a standard three-year contract of service, at the end of which he will be considered for indoctrination as an Elevated Acolyte.',
-  onPlayAbility: OnPlayAbilities.ElevatedAcolyteOnPlay
+    'He will endure a standard three-year contract of service, at the end of which he will be considered for indoctrination as an Elevated Acolyte.'
+}
+
+export const TempleGuardsman: Card = {
+  name: 'Temple Guardsman',
+  strength: 5,
+  cost: 4,
+  factions: [CardFaction.Order],
+  types: [CardType.Hammerite, CardType.Guard],
+  description: 'When this card is attacked, it retaliates.',
+  flavor:
+    'Thy hammer pounds the nail, holds the roof-beam. Thy hammer strikes the iron, shapes the cauldron.'
+}
+
+export const BrotherSachelman: Card = {
+  name: 'Brother Sachelman',
+  strength: 5,
+  cost: 3,
+  factions: [CardFaction.Order],
+  types: [CardType.Hammerite],
+  description: `On play boost any Hammerite in play with lower strength than Brother Scahelman by ${BROTHER_SACHELMAN_BOOST}`,
+  flavor: '',
+  onPlayAbility: OnPlayAbility.BrotherSachelmanOnPlay
 }
 
 export const ViktoriaThiefPawn: Card = {

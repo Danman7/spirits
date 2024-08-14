@@ -9,6 +9,7 @@ import {
   ViktoriaThiefPawn
 } from '../AllCards'
 import { createPlayCardFromPrototype } from '../utils'
+import { CardState } from './types'
 
 const meta = {
   title: 'Card',
@@ -18,9 +19,9 @@ const meta = {
   },
   tags: ['autodocs'],
   args: {
+    card: mockCard,
     onClick: fn(),
     isFaceDown: false,
-    isOnTheBoard: false,
     isPlayable: false
   }
 } satisfies Meta<typeof Card>
@@ -28,41 +29,29 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {
-  args: {
-    card: mockCard,
-    onClick: fn()
-  }
-}
+export const Default: Story = {}
 
 export const OnTheBoard: Story = {
   args: {
-    card: mockCard,
-    isOnTheBoard: true,
-    onClick: fn()
+    card: { ...mockCard, state: CardState.OnBoard }
   }
 }
 
 export const NotClickable: Story = {
   args: {
-    card: mockCard,
     onClick: undefined
   }
 }
 
 export const IsPlayable: Story = {
   args: {
-    card: mockCard,
-    isPlayable: true,
-    onClick: fn()
+    isPlayable: true
   }
 }
 
 export const Boosted: Story = {
   args: {
-    card: { ...mockCard, strength: (mockCard.strength as number) + 2 },
-    isPlayable: true,
-    onClick: fn()
+    card: { ...mockCard, strength: (mockCard.strength as number) + 2 }
   }
 }
 
@@ -71,9 +60,7 @@ export const Damaged: Story = {
     card: {
       ...createPlayCardFromPrototype(ElevatedAcolyte),
       strength: (ElevatedAcolyte.strength as number) - 1
-    },
-    isPlayable: true,
-    onClick: fn()
+    }
   }
 }
 
@@ -97,7 +84,6 @@ export const MultipleFactions: Story = {
 
 export const ChaosFaceDown: Story = {
   args: {
-    card: mockCard,
     onClick: undefined,
     isFaceDown: true
   }

@@ -3,6 +3,8 @@ import { compPlayRandomCard, compPlayTurn } from './ComputerPlayerUtils'
 import { GarrettMasterThief, ViktoriaThiefPawn } from '../Cards/AllCards'
 import { PlayCard } from '../Cards/types'
 import { createPlayCardFromPrototype } from '../Cards/utils'
+import { getCardsInHand } from './utils'
+import { Player } from './types'
 
 describe('Computer Player utils', () => {
   it('should be able to play a random card from hand within budget', () => {
@@ -12,7 +14,7 @@ describe('Computer Player utils', () => {
 
     const playedCard = compPlayRandomCard(mockPlayer, mockPlayCard) as PlayCard
 
-    expect(mockPlayer.hand).toContain(playedCard)
+    expect(getCardsInHand(mockPlayer)).toContain(playedCard)
     expect(playedCard.cost).toBeLessThanOrEqual(mockPlayer.coins)
     expect(mockPlayCard).toHaveBeenCalledWith(playedCard.id)
   })
@@ -20,9 +22,9 @@ describe('Computer Player utils', () => {
   it('should not play a card if it doesn not have enough coins', () => {
     const mockPlayCard = jest.fn()
 
-    const mockPlayer = {
+    const mockPlayer: Player = {
       ...MockPlayer1,
-      hand: [
+      cards: [
         createPlayCardFromPrototype(ViktoriaThiefPawn),
         createPlayCardFromPrototype(GarrettMasterThief)
       ],
@@ -40,7 +42,7 @@ describe('Computer Player utils', () => {
 
     compPlayTurn(mockPlayer, mockPlayCard, mockEndTurn)
 
-    expect(mockPlayCard).toHaveBeenCalledWith(mockPlayer.hand[0].id)
+    expect(mockPlayCard).toHaveBeenCalledWith(getCardsInHand(mockPlayer)[0].id)
     expect(mockEndTurn).toHaveBeenCalled()
   })
 })

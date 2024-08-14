@@ -10,9 +10,9 @@ import {
   CardFooter,
   CardPaper
 } from './styles'
-import { CardProps } from './types'
+import { CardProps, CardState } from './types'
 import { Lead } from '../../styles'
-import { getFactionColor, joinCardTypes } from '../utils'
+import { getCardPortalElements, getFactionColor, joinCardTypes } from '../utils'
 import { PositiveNegativeNumber } from './PositiveNegativeNumber'
 import { useTheme } from 'styled-components'
 import {
@@ -21,13 +21,14 @@ import {
   playableCardAnimation
 } from '../../utils/animations'
 import { usePrevious } from '../../utils/customHooks'
-
-// const isTesting = process.env.NODE_ENV === 'test'
+import { createPortal } from 'react-dom'
+import { useAppDispatch } from '../../state'
+import { GameActions } from '../../Game/GameSlice'
 
 export const Card: FC<CardProps> = ({
   card,
+  isPlayerCard,
   isFaceDown,
-  isOnTheBoard,
   isPlayable,
   onClick
 }) => {
@@ -40,14 +41,19 @@ export const Card: FC<CardProps> = ({
     types,
     factions,
     cost,
-    prototype
+    prototype,
+    state,
+    onPlayAbility
   } = card
 
   const onClickCard = onClick ? () => onClick(id) : undefined
 
+  const dispatch = useAppDispatch()
   const theme = useTheme()
 
   const prevStrength = usePrevious(strength)
+  const prevState = usePrevious(state)
+
   const strengthElement = useRef<HTMLDivElement>(null)
   const cardElement = useRef<HTMLDivElement>(null)
 
@@ -57,6 +63,16 @@ export const Card: FC<CardProps> = ({
   )
 
   const boostAnimation = boostCardAnimation(cardElement.current, theme)
+
+  useEffect(() => {
+    if (
+      prevState === CardState.InHand &&
+      state === CardState.OnBoard &&
+      onPlayAbility
+    ) {
+      dispatch(GameActions.triggerOnPlayAbility(onPlayAbility))
+    }
+  }, [prevState, state, dispatch, onPlayAbility])
 
   useEffect(() => {
     if (prevStrength !== strength) {
@@ -72,8 +88,12 @@ export const Card: FC<CardProps> = ({
     playableCardAnimation(cardElement.current, theme, isPlayable)
   }, [isPlayable, theme])
 
-  return (
-    <StyledCard onClick={onClickCard} $isOnTheBoard={isOnTheBoard}>
+  return createPortal(
+    <StyledCard
+      onClick={onClickCard}
+      $cardState={state}
+      $isFaceDown={isFaceDown}
+    >
       <CardPaper ref={cardElement}>
         {isFaceDown ? (
           <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
@@ -122,6 +142,7 @@ export const Card: FC<CardProps> = ({
           </>
         )}
       </CardPaper>
-    </StyledCard>
+    </StyledCard>,
+    getCardPortalElements(state, isPlayerCard)
   )
 }

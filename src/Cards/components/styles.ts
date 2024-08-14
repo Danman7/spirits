@@ -1,6 +1,10 @@
 import styled, { css } from 'styled-components'
+import { CardState } from './types'
 
-export const StyledCard = styled.div<{ $isOnTheBoard?: boolean }>`
+export const StyledCard = styled.div<{
+  $cardState: CardState
+  $isFaceDown?: boolean
+}>`
   width: ${({ theme }) => theme.cardWidth}px;
   height: ${({ theme }) => theme.cardHeight}px;
   border-radius: ${({ theme }) => theme.borderRadius};
@@ -8,13 +12,19 @@ export const StyledCard = styled.div<{ $isOnTheBoard?: boolean }>`
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'not-allowed')};
   box-shadow: 1px 1px 1px ${({ theme }) => theme.colors.shadow};
   transition: all ${({ theme }) => theme.quickAnimationDuration}ms ease;
-  scale: ${({ $isOnTheBoard, theme }) =>
-    $isOnTheBoard ? theme.onBoardCardScale : 1};
-  margin: ${({ $isOnTheBoard }) => ($isOnTheBoard ? '0 -50px' : '0')};
+  scale: ${({ $cardState, theme }) =>
+    $cardState === CardState.OnBoard ? theme.onBoardCardScale : 1};
+  margin: ${({ $cardState }) =>
+    $cardState === CardState.OnBoard ? '0 -50px' : '0'};
+  grid-row: ${({ $cardState }) => ($cardState === CardState.InHand ? 2 : 1)};
 
-  &:hover {
-    box-shadow: 5px 5px 5px ${({ theme }) => theme.colors.shadow};
-  }
+  ${({ $isFaceDown }) =>
+    !$isFaceDown &&
+    css`
+      &:hover {
+        box-shadow: 5px 5px 5px ${({ theme }) => theme.colors.shadow};
+      }
+    `};
 
   ${({ onClick }) =>
     onClick &&

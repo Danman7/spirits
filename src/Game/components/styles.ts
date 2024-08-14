@@ -6,7 +6,7 @@ export const StyledBoard = styled.div`
   height: 100vh;
   overflow: hidden;
 `
-const PlayField = styled.div`
+const PlayerBoard = styled.div`
   height: 50vh;
   display: flex;
   flex-direction: row;
@@ -16,7 +16,7 @@ const PlayField = styled.div`
   z-index: 1;
 `
 
-export const TopPlayField = styled(PlayField)`
+export const TopPlayerBoard = styled(PlayerBoard)`
   border-bottom: 1px dashed ${({ theme }) => theme.colors.pale};
   align-items: flex-end;
 
@@ -25,7 +25,7 @@ export const TopPlayField = styled(PlayField)`
   }
 `
 
-export const BottomPlayField = styled(PlayField)`
+export const BottomPlayerBoard = styled(PlayerBoard)`
   align-items: flex-start;
 
   ${StyledCard} {

@@ -10,6 +10,7 @@ import {
 } from '../messages'
 import { act } from 'react'
 import { MockCPUPlayer } from '../../utils/mocks'
+import { getCardsInHand } from '../utils'
 
 describe('Board Component', () => {
   it('should show the initial UI elements', async () => {
@@ -37,9 +38,9 @@ describe('Board Component', () => {
   it('should be able to play a card from hand', async () => {
     const { bottomPlayer } = baseGameMockedState.game
 
-    const { hand, coins } = bottomPlayer
+    const { coins } = bottomPlayer
 
-    const { name, cost } = hand[0]
+    const { name, cost } = getCardsInHand(bottomPlayer)[0]
 
     render(<Board shouldDisableOverlay />, {
       preloadedState: baseGameMockedState
@@ -78,20 +79,20 @@ describe('Board Component', () => {
       }
     })
 
-    expect(
-      await screen.queryByText(MockCPUPlayer.hand[0].name)
-    ).not.toBeInTheDocument()
+    const playedCPUCard = getCardsInHand(MockCPUPlayer)[0]
+
+    expect(await screen.queryByText(playedCPUCard.name)).not.toBeInTheDocument()
 
     await act(async () => {
       await userEvent.click(
-        screen.getByText(baseGameMockedState.game.bottomPlayer.hand[0].name)
+        screen.getByText(
+          getCardsInHand(baseGameMockedState.game.bottomPlayer)[0].name
+        )
       )
       await userEvent.click(screen.getByText(passButtonMessage))
     })
 
-    expect(
-      await screen.queryByText(MockCPUPlayer.hand[0].name)
-    ).toBeInTheDocument()
+    expect(await screen.queryByText(playedCPUCard.name)).toBeInTheDocument()
 
     expect(await screen.queryByText(passButtonMessage)).toBeInTheDocument()
   })

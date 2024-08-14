@@ -10,8 +10,7 @@ export interface Player {
   id: string
   name: string
   coins: number
-  hand: PlayCard[]
-  field: PlayCard[]
+  cards: PlayCard[]
   isNonHuman?: boolean
 }
 

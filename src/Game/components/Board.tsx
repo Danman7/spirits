@@ -2,8 +2,8 @@ import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import {
   BottomPlayerHand,
   StyledBoard,
-  TopPlayField,
-  BottomPlayField,
+  TopPlayerBoard,
+  BottomPlayerBoard,
   TopPlayerHand,
   TopPlayerInfo,
   BottomPlayerInfo,
@@ -19,7 +19,7 @@ import {
 } from '../GameSelectors'
 import { Card } from '../../Cards/components/Card'
 import { GameActions } from '../GameSlice'
-import { CardProps } from '../../Cards/components/types'
+import { CardProps, CardState } from '../../Cards/components/types'
 import { Overlay } from './Overlay'
 import { useAppDispatch, useAppSelector } from '../../state'
 import { useSelector } from 'react-redux'
@@ -28,6 +28,12 @@ import { compPlayTurn } from '../ComputerPlayerUtils'
 import { useTheme } from 'styled-components'
 import { numberChangeAnimation } from '../../utils/animations'
 import { usePrevious } from '../../utils/customHooks'
+import {
+  BOTTOM_BOARD_ELEMENT_ID,
+  BOTTOM_HAND_ELEMENT_ID,
+  TOP_BOARD_ELEMENT_ID,
+  TOP_HAND_ELEMENT_ID
+} from '../constants'
 
 export interface BoardProps {
   shouldDisableOverlay?: boolean
@@ -135,30 +141,28 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
         </CoinsElement>
       </TopPlayerInfo>
 
-      <TopPlayerHand>
-        {topPlayer?.hand.map(card => (
-          <Card key={card.id} card={card} isFaceDown />
-        ))}
-      </TopPlayerHand>
-
-      <TopPlayField>
-        {topPlayer?.field.map(card => (
-          <Card key={card.id} card={card} isOnTheBoard />
-        ))}
-      </TopPlayField>
-
-      <BottomPlayField>
-        {bottomPlayer?.field.map(card => (
-          <Card key={card.id} card={card} isOnTheBoard />
-        ))}
-      </BottomPlayField>
-
-      <BottomPlayerHand>
-        {bottomPlayer?.hand.map(card => (
+      <TopPlayerHand id={TOP_HAND_ELEMENT_ID}>
+        {topPlayer.cards.map(card => (
           <Card
             key={card.id}
             card={card}
+            isFaceDown={card.state !== CardState.OnBoard}
+          />
+        ))}
+      </TopPlayerHand>
+
+      <TopPlayerBoard id={TOP_BOARD_ELEMENT_ID} />
+
+      <BottomPlayerBoard id={BOTTOM_BOARD_ELEMENT_ID} />
+
+      <BottomPlayerHand id={BOTTOM_HAND_ELEMENT_ID}>
+        {bottomPlayer.cards.map(card => (
+          <Card
+            key={card.id}
+            card={card}
+            isPlayerCard
             isPlayable={
+              card.state === CardState.InHand &&
               card.cost <= bottomPlayer.coins &&
               isPlayerTurn &&
               !isCardPlayedThisTurn
