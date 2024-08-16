@@ -40,7 +40,8 @@ export const enum CardType {
 export type CardAbilityFunction = (state: GameState) => void
 
 export const enum OnPlayAbility {
-  BrotherSachelmanOnPlay = 'BrotherSachelmanOnPlay'
+  BrotherSachelmanOnPlay = 'BrotherSachelmanOnPlay',
+  HammeriteNoviceOnPlay = 'HammeriteNoviceOnPlay'
 }
 
 type EnumKeys = keyof typeof OnPlayAbility

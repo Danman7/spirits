@@ -5,7 +5,7 @@ import {
   yourTurnMessage,
   opponentTurnMessage
 } from './messages'
-import { Player } from './types'
+import { GameState, Player } from './types'
 
 export const getOverlayMessage = (
   isPlayerTurn: boolean,
@@ -36,3 +36,8 @@ export const getCardsInHand = (player: Player) =>
 
 export const getCardsOnBoard = (player: Player) =>
   player.cards.filter(card => card.state === CardState.OnBoard)
+
+export const getAllCardsOnBoard = (state: GameState) =>
+  [...state.topPlayer.cards, ...state.bottomPlayer.cards].filter(
+    card => card.state === CardState.OnBoard
+  )

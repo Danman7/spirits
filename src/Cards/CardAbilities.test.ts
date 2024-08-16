@@ -1,7 +1,7 @@
-import { baseGameMockedState } from '../utils/mocks'
-import { BrotherSachelmanOnPlay } from './CardAbilities'
+import { baseGameMockedState, emptyGameMockedState } from '../utils/mocks'
+import { BrotherSachelmanOnPlay, HammeriteNoviceOnPlay } from './CardAbilities'
 import { GameState } from '../Game/types'
-import { HammeriteNovice, TempleGuardsman } from './AllCards'
+import { HammeriteNovice, TempleGuard } from './AllCards'
 import { ELEVATED_ACOLYTE_BOOST } from './constants'
 import { createPlayCardFromPrototype } from './utils'
 import { CardState } from './components/types'
@@ -12,7 +12,7 @@ const baseGameState = baseGameMockedState.game
 describe('Card abilities', () => {
   it('Brother Sachelman should boost other Hammerite cards with lower strength', () => {
     const cardOnBoard = createPlayCardFromPrototype(
-      TempleGuardsman,
+      TempleGuard,
       CardState.OnBoard
     )
 
@@ -44,6 +44,44 @@ describe('Card abilities', () => {
         strength:
           (boostableField[1].strength as number) + ELEVATED_ACOLYTE_BOOST
       }
+    ])
+  })
+
+  it('should spawn all Hammerite Novice copies if a Hammerite Novice is played and there is another allied Hammerite card on the board', () => {
+    const state: GameState = emptyGameMockedState
+
+    const hammeriteInPlay = createPlayCardFromPrototype(
+      TempleGuard,
+      CardState.OnBoard
+    )
+    const noviceInDeck = createPlayCardFromPrototype(HammeriteNovice)
+
+    state.bottomPlayer.cards = [hammeriteInPlay, noviceInDeck]
+
+    HammeriteNoviceOnPlay(state)
+
+    expect(state.bottomPlayer.cards).toEqual([
+      hammeriteInPlay,
+      { ...noviceInDeck, state: CardState.OnBoard }
+    ])
+  })
+
+  it('should spawn all Hammerite Novice copies if a Hammerite Novice is played and there is another opponent Hammerite card on the board', () => {
+    const state: GameState = emptyGameMockedState
+
+    const hammeriteInPlay = createPlayCardFromPrototype(
+      TempleGuard,
+      CardState.OnBoard
+    )
+    const noviceInDeck = createPlayCardFromPrototype(HammeriteNovice)
+
+    state.topPlayer.cards = [hammeriteInPlay]
+    state.bottomPlayer.cards = [noviceInDeck]
+
+    HammeriteNoviceOnPlay(state)
+
+    expect(state.bottomPlayer.cards).toEqual([
+      { ...noviceInDeck, state: CardState.OnBoard }
     ])
   })
 })

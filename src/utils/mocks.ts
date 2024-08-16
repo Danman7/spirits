@@ -10,7 +10,7 @@ import {
 import { PlayCard } from '../Cards/types'
 import { createPlayCardFromPrototype } from '../Cards/utils'
 import { DEFAULT_COINS_AMOUNT } from '../Game/constants'
-import { Player } from '../Game/types'
+import { GameState, Player } from '../Game/types'
 import { store } from '../state'
 import { MainState } from '../state/types'
 
@@ -79,4 +79,12 @@ export const baseGameMockedState: MainState = {
     bottomPlayer: MockPlayer2,
     activePlayerId: MockPlayer2.id
   }
+}
+
+export const emptyGameMockedState: GameState = {
+  ...initialState.game,
+  turn: 1,
+  topPlayer: { ...MockPlayer1, cards: [] },
+  bottomPlayer: { ...MockPlayer2, cards: [] },
+  activePlayerId: MockPlayer2.id
 }

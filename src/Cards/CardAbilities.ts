@@ -1,8 +1,9 @@
 import { GameState, Player } from '../Game/types'
 import { CardAbilityFunction, CardType, OnPlayAbilitiesMap } from './types'
 import { BROTHER_SACHELMAN_BOOST } from './constants'
-import { ElevatedAcolyte } from './AllCards'
+import { ElevatedAcolyte, HammeriteNovice } from './AllCards'
 import { CardState } from './components/types'
+import { getAllCardsOnBoard } from '../Game/utils'
 
 export const BrotherSachelmanOnPlay: CardAbilityFunction = (
   state: GameState
@@ -39,33 +40,44 @@ export const BrotherSachelmanOnPlay: CardAbilityFunction = (
   state.bottomPlayer = updatePlayer(bottomPlayer)
 }
 
-// export const HammeriteNoviceOnPlay: CardAbilityFunction = (
-//   state: GameState
-// ) => {
-//   const { topPlayer, bottomPlayer } = state
+export const HammeriteNoviceOnPlay: CardAbilityFunction = (
+  state: GameState
+) => {
+  const { topPlayer, bottomPlayer } = state
 
-//   const isHammeriteInPlay = getAllCardsOnBoard(state).filter(card =>
-//     card.types.includes(CardType.Hammerite)
-//   )
+  const isHammeriteInPlay = getAllCardsOnBoard(state).filter(card =>
+    card.types.includes(CardType.Hammerite)
+  )
 
-//   const updatePlayer = (player: Player) => {
-//     if (isHammeriteInPlay) {
-//       const noviceInHand = player.hand.find(
-//         card => card.name === HammeriteNovice.name
-//       )
+  const updatePlayer = (player: Player) => {
+    if (isHammeriteInPlay) {
+      return {
+        ...player,
+        cards: player.cards.map(card => {
+          if (
+            (card.state === CardState.InHand ||
+              card.state === CardState.InDeck) &&
+            card.name === HammeriteNovice.name
+          ) {
+            return {
+              ...card,
+              state: CardState.OnBoard
+            }
+          }
 
-//       if (noviceInHand) {
-//         return player
-//       }
-//     }
+          return card
+        })
+      }
+    }
 
-//     return player
-//   }
+    return player
+  }
 
-//   state.topPlayer = updatePlayer(topPlayer)
-//   state.bottomPlayer = updatePlayer(bottomPlayer)
-// }
+  state.topPlayer = updatePlayer(topPlayer)
+  state.bottomPlayer = updatePlayer(bottomPlayer)
+}
 
 export const OnPlayCardAbilitiesMap: OnPlayAbilitiesMap = {
-  BrotherSachelmanOnPlay: BrotherSachelmanOnPlay
+  BrotherSachelmanOnPlay: BrotherSachelmanOnPlay,
+  HammeriteNoviceOnPlay: HammeriteNoviceOnPlay
 }

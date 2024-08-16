@@ -41,7 +41,8 @@ export const HammeriteNovice: Card = {
   description:
     'On play if any hammerite is on the table, play all Hammerite Novice cards you have.',
   flavor:
-    'This novice has been instructed in the rules and strictures of the Order and has sworn his warrants to be silent in his vigils.'
+    'This novice has been instructed in the rules and strictures of the Order and has sworn his warrants to be silent in his vigils.',
+  onPlayAbility: OnPlayAbility.HammeriteNoviceOnPlay
 }
 
 export const ElevatedAcolyte: Card = {
@@ -55,8 +56,8 @@ export const ElevatedAcolyte: Card = {
     'He will endure a standard three-year contract of service, at the end of which he will be considered for indoctrination as an Elevated Acolyte.'
 }
 
-export const TempleGuardsman: Card = {
-  name: 'Temple Guardsman',
+export const TempleGuard: Card = {
+  name: 'Temple Guard',
   strength: 5,
   cost: 4,
   factions: [CardFaction.Order],
