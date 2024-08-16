@@ -5,7 +5,8 @@ import {
   ElevatedAcolyte,
   HammeriteNovice,
   DownwinderThief,
-  BrotherSachelman
+  BrotherSachelman,
+  TempleGuard
 } from '../Cards/AllCards'
 import { PlayCard } from '../Cards/types'
 import { createPlayCardFromPrototype } from '../Cards/utils'
@@ -19,8 +20,8 @@ export const MockPlayer1: Player = {
   name: 'Garret',
   coins: DEFAULT_COINS_AMOUNT,
   cards: [
-    createPlayCardFromPrototype(HammeriteNovice),
-    createPlayCardFromPrototype(ElevatedAcolyte)
+    createPlayCardFromPrototype(HammeriteNovice, CardState.InHand),
+    createPlayCardFromPrototype(ElevatedAcolyte, CardState.InHand)
   ]
 }
 
@@ -29,8 +30,8 @@ export const MockPlayer2: Player = {
   name: 'Karras',
   coins: DEFAULT_COINS_AMOUNT - 1,
   cards: [
-    createPlayCardFromPrototype(Zombie),
-    createPlayCardFromPrototype(Haunt)
+    createPlayCardFromPrototype(Zombie, CardState.InHand),
+    createPlayCardFromPrototype(Haunt, CardState.InHand)
   ]
 }
 
@@ -38,7 +39,7 @@ export const MockCPUPlayer: Player = {
   id: 'playerCPU',
   name: 'Constantine',
   coins: DEFAULT_COINS_AMOUNT,
-  cards: [createPlayCardFromPrototype(DownwinderThief)],
+  cards: [createPlayCardFromPrototype(DownwinderThief, CardState.InHand)],
   isNonHuman: true
 }
 
@@ -47,8 +48,11 @@ export const PlayTestPlayer1: Player = {
   name: 'Victoria',
   coins: DEFAULT_COINS_AMOUNT,
   cards: [
-    createPlayCardFromPrototype(BrotherSachelman),
+    createPlayCardFromPrototype(BrotherSachelman, CardState.InHand),
+    createPlayCardFromPrototype(ElevatedAcolyte, CardState.InHand),
     createPlayCardFromPrototype(ElevatedAcolyte),
+    createPlayCardFromPrototype(TempleGuard),
+    createPlayCardFromPrototype(TempleGuard),
     createPlayCardFromPrototype(HammeriteNovice, CardState.OnBoard),
     createPlayCardFromPrototype(HammeriteNovice, CardState.OnBoard)
   ]
@@ -61,12 +65,16 @@ export const PlayTestPlayer2: Player = {
   isNonHuman: true,
   cards: [
     createPlayCardFromPrototype(Zombie),
-    createPlayCardFromPrototype(Zombie),
-    createPlayCardFromPrototype(Haunt)
+    createPlayCardFromPrototype(Zombie, CardState.InHand),
+    createPlayCardFromPrototype(Haunt),
+    createPlayCardFromPrototype(Haunt, CardState.InHand)
   ]
 }
 
-export const mockCard: PlayCard = createPlayCardFromPrototype(Haunt)
+export const mockCard: PlayCard = createPlayCardFromPrototype(
+  Haunt,
+  CardState.InHand
+)
 
 const initialState = store.getState()
 

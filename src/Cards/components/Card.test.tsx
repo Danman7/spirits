@@ -45,7 +45,7 @@ describe('Card Component', () => {
   it('should fire on click event passing card id', async () => {
     const onCardClick = jest.fn()
 
-    render(<Card card={mockCard} onClick={onCardClick} />)
+    render(<Card card={mockCard} onClickCard={onCardClick} />)
 
     await userEvent.click(screen.getByText(mockCard.name))
 

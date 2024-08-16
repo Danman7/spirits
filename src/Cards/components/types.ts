@@ -9,10 +9,14 @@ export const enum CardState {
 
 export interface CardProps {
   card: PlayCard
-  isPlayerCard?: boolean
   isPlayable?: boolean
   isFaceDown?: boolean
-  onClick?: (cardId: PlayCard['id']) => void
+  onClickCard?: (cardId: PlayCard['id']) => void
+}
+
+export interface CardPortalProps {
+  card: PlayCard
+  isPlayerCard?: boolean
 }
 
 export interface PositiveNegativeNumberProps {

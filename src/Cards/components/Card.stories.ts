@@ -20,7 +20,7 @@ const meta = {
   tags: ['autodocs'],
   args: {
     card: mockCard,
-    onClick: fn(),
+    onClickCard: fn(),
     isFaceDown: false,
     isPlayable: false
   }
@@ -39,7 +39,7 @@ export const OnTheBoard: Story = {
 
 export const NotClickable: Story = {
   args: {
-    onClick: undefined
+    onClickCard: undefined
   }
 }
 
@@ -84,7 +84,7 @@ export const MultipleFactions: Story = {
 
 export const ChaosFaceDown: Story = {
   args: {
-    onClick: undefined,
+    onClickCard: undefined,
     isFaceDown: true
   }
 }
@@ -92,7 +92,7 @@ export const ChaosFaceDown: Story = {
 export const OrderFaceDown: Story = {
   args: {
     card: createPlayCardFromPrototype(HammeriteNovice),
-    onClick: undefined,
+    onClickCard: undefined,
     isFaceDown: true
   }
 }
@@ -100,7 +100,7 @@ export const OrderFaceDown: Story = {
 export const ShadowFaceDown: Story = {
   args: {
     card: createPlayCardFromPrototype(GarrettMasterThief),
-    onClick: undefined,
+    onClickCard: undefined,
     isFaceDown: true
   }
 }

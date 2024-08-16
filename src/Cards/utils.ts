@@ -1,7 +1,9 @@
 import {
   BOTTOM_BOARD_ELEMENT_ID,
+  BOTTOM_DECK_ELEMENT_ID,
   BOTTOM_HAND_ELEMENT_ID,
   TOP_BOARD_ELEMENT_ID,
+  TOP_DECK_ELEMENT_ID,
   TOP_HAND_ELEMENT_ID
 } from '../Game/constants'
 import { generateUUID } from '../utils/gameUtils'
@@ -42,7 +44,7 @@ export const createPlayCardFromPrototype = (
     ...cardPrototype,
     id: generateUUID(),
     prototype,
-    state: cardState || CardState.InHand
+    state: cardState || CardState.InDeck
   }
 }
 
@@ -58,9 +60,15 @@ export const getCardPortalElements = (
     BOTTOM_BOARD_ELEMENT_ID
   ) as HTMLElement
 
+  const bottomDeck = document.getElementById(
+    BOTTOM_DECK_ELEMENT_ID
+  ) as HTMLElement
+
   const topBoard = document.getElementById(TOP_BOARD_ELEMENT_ID) as HTMLElement
 
   const topHand = document.getElementById(TOP_HAND_ELEMENT_ID) as HTMLElement
+
+  const topDeck = document.getElementById(TOP_DECK_ELEMENT_ID) as HTMLElement
 
   if (isPlayerCard && cardState === CardState.InHand && bottomHand) {
     return bottomHand
@@ -70,12 +78,20 @@ export const getCardPortalElements = (
     return bottomBoard
   }
 
+  if (isPlayerCard && cardState === CardState.InDeck && bottomDeck) {
+    return bottomDeck
+  }
+
   if (!isPlayerCard && cardState === CardState.InHand && topHand) {
     return topHand
   }
 
   if (!isPlayerCard && cardState === CardState.OnBoard && topBoard) {
     return topBoard
+  }
+
+  if (!isPlayerCard && cardState === CardState.InDeck && topDeck) {
+    return topDeck
   }
 
   return document.body

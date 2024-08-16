@@ -33,33 +33,25 @@ export const BottomPlayerBoard = styled(PlayerBoard)`
   }
 `
 
-const PlayerHand = styled.div`
+export const PlayerHand = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  position: fixed;
-  left: 0;
-  right: 0;
   z-index: 2;
+  flex-grow: 2;
 
   ${StyledCard} {
     margin: 0 -${({ theme }) => theme.cardHeight / 4}px;
   }
 `
 
-export const TopPlayerHand = styled(PlayerHand)`
-  top: -275px;
-`
-
 export const BottomPlayerHand = styled(PlayerHand)`
-  bottom: 0;
-
   ${StyledCard} {
     position: relative;
-    bottom: -250px;
+    bottom: 0;
 
     &:hover {
-      bottom: 0;
+      bottom: 275px;
     }
   }
 `
@@ -160,4 +152,29 @@ export const EndTurnButton = styled(Button)`
 
 export const CoinsElement = styled.div`
   display: inline-block;
+`
+
+export const FaceDownStack = styled.div`
+  width: ${({ theme }) => theme.cardWidth}px;
+  height: ${({ theme }) => theme.cardHeight}px;
+  position: relative;
+
+  ${StyledCard} {
+    position: absolute;
+  }
+`
+
+const PlayerNonBoard = styled.div`
+  display: flex;
+  position: fixed;
+  left: 0;
+  right: 0;
+`
+
+export const TopPlayerNonBoard = styled(PlayerNonBoard)`
+  top: -300px;
+`
+
+export const BottomPlayerNonBoard = styled(PlayerNonBoard)`
+  bottom: -275px;
 `

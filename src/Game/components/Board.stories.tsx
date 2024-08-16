@@ -11,6 +11,7 @@ import {
   ViktoriaThiefPawn
 } from '../../Cards/AllCards'
 import { createPlayCardFromPrototype } from '../../Cards/utils'
+import { CardState } from '../../Cards/components/types'
 
 const meta = {
   title: 'Board',
@@ -57,9 +58,18 @@ export const LimitedBudget: Story = {
                 ...baseGameMockedState.game.bottomPlayer,
                 coins: 3,
                 hand: [
-                  createPlayCardFromPrototype(DownwinderThief),
-                  createPlayCardFromPrototype(ViktoriaThiefPawn),
-                  createPlayCardFromPrototype(GarrettMasterThief)
+                  createPlayCardFromPrototype(
+                    DownwinderThief,
+                    CardState.InHand
+                  ),
+                  createPlayCardFromPrototype(
+                    ViktoriaThiefPawn,
+                    CardState.InHand
+                  ),
+                  createPlayCardFromPrototype(
+                    GarrettMasterThief,
+                    CardState.InHand
+                  )
                 ]
               }
             }
