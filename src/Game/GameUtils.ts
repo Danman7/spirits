@@ -1,11 +1,11 @@
-import { CardState } from '../Cards/components/types'
+import { CardState } from '../Cards/CardTypes'
 import {
   playerFirstMessage,
   opponentFirstMessage,
   yourTurnMessage,
   opponentTurnMessage
 } from './messages'
-import { GameState, Player } from './types'
+import { GameState, Player } from './GameTypes'
 
 export const getOverlayMessage = (
   isPlayerTurn: boolean,

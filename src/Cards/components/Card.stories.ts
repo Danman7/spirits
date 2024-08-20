@@ -8,8 +8,8 @@ import {
   HammeriteNovice,
   ViktoriaThiefPawn
 } from '../AllCards'
-import { createPlayCardFromPrototype } from '../utils'
-import { CardState } from './types'
+import { createPlayCardFromPrototype } from '../CardUtils'
+import { CardState } from '../CardTypes'
 
 const meta = {
   title: 'Card',

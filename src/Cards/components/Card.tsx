@@ -9,10 +9,9 @@ import {
   CardFlavor,
   CardFooter,
   CardPaper
-} from './styles'
-import { CardProps } from './types'
+} from './CardStyles'
 import { Lead } from '../../styles'
-import { getFactionColor, joinCardTypes } from '../utils'
+import { getFactionColor, joinCardTypes } from '../CardUtils'
 import { PositiveNegativeNumber } from './PositiveNegativeNumber'
 import { useTheme } from 'styled-components'
 import {
@@ -21,6 +20,7 @@ import {
   playableCardAnimation
 } from '../../utils/animations'
 import { usePrevious } from '../../utils/customHooks'
+import { CardProps } from '../CardTypes'
 
 export const Card: FC<CardProps> = ({
   card,
@@ -29,7 +29,6 @@ export const Card: FC<CardProps> = ({
   onClickCard
 }) => {
   const {
-    id,
     name,
     strength,
     description,
@@ -71,7 +70,7 @@ export const Card: FC<CardProps> = ({
 
   return (
     <StyledCard
-      onClick={onClickCard ? () => onClickCard(id) : undefined}
+      onClick={onClickCard ? () => onClickCard(card) : undefined}
       $cardState={state}
       $isFaceDown={isFaceDown}
     >

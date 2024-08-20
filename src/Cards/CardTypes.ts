@@ -1,5 +1,4 @@
-import { GameState } from '../Game/types'
-import { CardState } from './components/types'
+import { GameState } from '../Game/GameTypes'
 
 export interface Card {
   name: string
@@ -9,7 +8,7 @@ export interface Card {
   strength?: number
   description?: string
   flavor?: string
-  onPlayAbility?: OnPlayAbility
+  onPlay?: OnPlayAbility
 }
 
 export interface PlayCard extends Card {
@@ -48,4 +47,28 @@ type EnumKeys = keyof typeof OnPlayAbility
 
 export type OnPlayAbilitiesMap = {
   [P in EnumKeys]: CardAbilityFunction
+}
+
+export const enum CardState {
+  InDeck = 'In Deck',
+  InHand = 'In Hand',
+  OnBoard = 'On Board',
+  InGraveyard = 'In Graveyard'
+}
+
+export interface CardProps {
+  card: PlayCard
+  isPlayable?: boolean
+  isFaceDown?: boolean
+  onClickCard?: (cardId: PlayCard) => void
+}
+
+export interface CardPortalProps {
+  card: PlayCard
+  isPlayerCard?: boolean
+}
+
+export interface PositiveNegativeNumberProps {
+  base: number
+  current: number
 }

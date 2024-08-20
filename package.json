@@ -17,7 +17,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^2.0.1",
+    "@reduxjs/toolkit": "^2.2.7",
     "@storybook/addon-themes": "^8.2.2",
     "animejs": "^3.2.2",
     "react": "^18.3.1",

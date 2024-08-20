@@ -1,12 +1,12 @@
 import { MockPlayer1, MockPlayer2 } from '../utils/mocks'
 import { GameActions, GameReducer, initialState } from './GameSlice'
-import { GameState } from './types'
+import { GameState } from './GameTypes'
 import { BrotherSachelman, HammeriteNovice } from '../Cards/AllCards'
 import { BROTHER_SACHELMAN_BOOST } from '../Cards/constants'
-import { createPlayCardFromPrototype } from '../Cards/utils'
-import { getCardsInHand, getCardsOnBoard } from './utils'
-import { CardState } from '../Cards/components/types'
-import { OnPlayAbility } from '../Cards/types'
+import { createPlayCardFromPrototype } from '../Cards/CardUtils'
+import { getCardsInHand, getCardsOnBoard } from './GameUtils'
+import { CardState } from '../Cards/CardTypes'
+import { OnPlayAbility } from '../Cards/CardTypes'
 
 const playersStartingTheGame = {
   topPlayer: MockPlayer1,
@@ -75,7 +75,7 @@ describe('Game State Slice', () => {
 
     const state = GameReducer(
       gameStartedState,
-      GameActions.playCard(playerHand[0].id)
+      GameActions.playCard(playerHand[0])
     )
 
     const { topPlayer } = state
@@ -92,7 +92,7 @@ describe('Game State Slice', () => {
 
     const state = GameReducer(
       gameStartedState,
-      GameActions.playCard(playerHand[0].id)
+      GameActions.playCard(playerHand[0])
     )
 
     const { bottomPlayer } = state

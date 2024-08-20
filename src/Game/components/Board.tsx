@@ -12,7 +12,7 @@ import {
   FaceDownStack,
   TopPlayerNonBoard,
   BottomPlayerNonBoard
-} from './styles'
+} from './GameStyles'
 import {
   getActivePlayerId,
   getTopPlayer,
@@ -21,7 +21,6 @@ import {
   getIsCardPlayedThisTurn
 } from '../GameSelectors'
 import { GameActions } from '../GameSlice'
-import { CardProps } from '../../Cards/components/types'
 import { Overlay } from './Overlay'
 import { useAppDispatch, useAppSelector } from '../../state'
 import { endTurnMessage, passButtonMessage } from '../messages'
@@ -40,6 +39,7 @@ import {
   TOP_HAND_ELEMENT_ID
 } from '../constants'
 import { CardPortal } from '../../Cards/components/CardPortal'
+import { CardProps, PlayCard } from '../../Cards/CardTypes'
 
 export interface BoardProps {
   shouldDisableOverlay?: boolean
@@ -78,8 +78,8 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
   )
 
   const onPlayCard: CardProps['onClickCard'] = useCallback(
-    (cardId: string) => {
-      dispatch(GameActions.playCard(cardId))
+    (card: PlayCard) => {
+      dispatch(GameActions.playCard(card))
     },
     [dispatch]
   )

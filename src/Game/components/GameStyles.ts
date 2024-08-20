@@ -1,4 +1,4 @@
-import { StyledCard } from '../../Cards/components/styles'
+import { StyledCard } from '../../Cards/components/CardStyles'
 import styled, { css, keyframes } from 'styled-components'
 
 export const StyledBoard = styled.div`

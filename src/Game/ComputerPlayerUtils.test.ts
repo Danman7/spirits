@@ -1,10 +1,10 @@
 import { MockPlayer1, MockPlayer2 } from '../utils/mocks'
 import { compPlayRandomCard, compPlayTurn } from './ComputerPlayerUtils'
 import { GarrettMasterThief, ViktoriaThiefPawn } from '../Cards/AllCards'
-import { PlayCard } from '../Cards/types'
-import { createPlayCardFromPrototype } from '../Cards/utils'
-import { getCardsInHand } from './utils'
-import { Player } from './types'
+import { PlayCard } from '../Cards/CardTypes'
+import { createPlayCardFromPrototype } from '../Cards/CardUtils'
+import { getCardsInHand } from './GameUtils'
+import { Player } from './GameTypes'
 
 describe('Computer Player utils', () => {
   it('should be able to play a random card from hand within budget', () => {
@@ -16,7 +16,7 @@ describe('Computer Player utils', () => {
 
     expect(getCardsInHand(mockPlayer)).toContain(playedCard)
     expect(playedCard.cost).toBeLessThanOrEqual(mockPlayer.coins)
-    expect(mockPlayCard).toHaveBeenCalledWith(playedCard.id)
+    expect(mockPlayCard).toHaveBeenCalledWith(playedCard)
   })
 
   it('should not play a card if it doesn not have enough coins', () => {
@@ -42,7 +42,7 @@ describe('Computer Player utils', () => {
 
     compPlayTurn(mockPlayer, mockPlayCard, mockEndTurn)
 
-    expect(mockPlayCard).toHaveBeenCalledWith(getCardsInHand(mockPlayer)[0].id)
+    expect(mockPlayCard).toHaveBeenCalledWith(getCardsInHand(mockPlayer)[0])
     expect(mockEndTurn).toHaveBeenCalled()
   })
 })

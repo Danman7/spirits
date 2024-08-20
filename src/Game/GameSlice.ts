@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { GameState, Player, StartGamePayload } from './types'
-import { OnPlayAbility, PlayCard } from '../Cards/types'
+import { GameState, Player, StartGamePayload } from './GameTypes'
+import { OnPlayAbility, PlayCard } from '../Cards/CardTypes'
 import { EMPTY_PLAYER } from './constants'
-import { coinToss } from '../utils/gameUtils'
-import { CardState } from '../Cards/components/types'
+import { coinToss } from '../utils/utils'
+import { CardState } from '../Cards/CardTypes'
 import { OnPlayCardAbilitiesMap } from '../Cards/CardAbilities'
 
 export const initialState: GameState = {
@@ -42,21 +42,23 @@ export const gameSlice = createSlice({
         : bottomPlayer.id
       state.isCardPlayedThisTurn = false
     },
-    playCard: (state, action: PayloadAction<PlayCard['id']>) => {
+    playCard: (state, action: PayloadAction<PlayCard>) => {
       const { topPlayer, bottomPlayer, activePlayerId } = state
-      const { payload: playedCardId } = action
+      const {
+        payload: { id }
+      } = action
 
       const updatePlayer = (player: Player) => {
         const { cards } = player
 
-        const playedCard = cards.find(card => card.id === playedCardId)
+        const playedCard = cards.find(card => card.id === id)
 
         if (playedCard && player.id === activePlayerId) {
           return {
             ...player,
             coins: player.coins - playedCard.cost,
             cards: cards.map(card => {
-              if (card.id === playedCardId) {
+              if (card.id === id) {
                 return {
                   ...card,
                   state: CardState.OnBoard

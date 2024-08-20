@@ -1,4 +1,4 @@
-import { PlayCard } from '../Cards/types'
+import { PlayCard } from '../Cards/CardTypes'
 
 export interface GameState extends StartGamePayload {
   turn: number

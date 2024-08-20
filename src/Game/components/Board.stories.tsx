@@ -10,8 +10,8 @@ import {
   GarrettMasterThief,
   ViktoriaThiefPawn
 } from '../../Cards/AllCards'
-import { createPlayCardFromPrototype } from '../../Cards/utils'
-import { CardState } from '../../Cards/components/types'
+import { createPlayCardFromPrototype } from '../../Cards/CardUtils'
+import { CardState } from '../../Cards/CardTypes'
 
 const meta = {
   title: 'Board',

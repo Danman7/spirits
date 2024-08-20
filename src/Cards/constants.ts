@@ -1,4 +1,4 @@
-import { CardFaction } from './types'
+import { CardFaction } from './CardTypes'
 
 export const ORDER_COLOR = '#802'
 export const CHAOS_COLOR = '#093'

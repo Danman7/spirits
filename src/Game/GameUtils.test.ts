@@ -4,8 +4,11 @@ import {
   yourTurnMessage,
   opponentTurnMessage
 } from './messages'
-import { getOverlayMessage } from './components/utils'
-import { getCardsInHand, getPlayableCards } from './utils'
+import {
+  getCardsInHand,
+  getOverlayMessage,
+  getPlayableCards
+} from './GameUtils'
 import { MockPlayer1 } from '../utils/mocks'
 
 describe('Game utils', () => {

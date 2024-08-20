@@ -9,7 +9,7 @@ import { ThemeProvider } from 'styled-components'
 
 import { GlobalStyles } from '../styles'
 import { defaultTheme } from '../theme'
-import { MainState } from '../state/types'
+import { MainState } from '../state/StateTypes'
 import { reducer, store } from '../state'
 
 interface customRenderOptions extends RenderOptions {

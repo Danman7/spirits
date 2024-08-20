@@ -6,10 +6,10 @@ import {
   TOP_DECK_ELEMENT_ID,
   TOP_HAND_ELEMENT_ID
 } from '../Game/constants'
-import { generateUUID } from '../utils/gameUtils'
-import { CardState } from './components/types'
+import { generateUUID } from '../utils/utils'
+import { CardState } from './CardTypes'
 import { FACTION_COLOR_MAP } from './constants'
-import { Card, PlayCard } from './types'
+import { Card, PlayCard } from './CardTypes'
 
 export const joinCardTypes = (types: Card['types']) => types.join(', ')
 

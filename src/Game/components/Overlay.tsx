@@ -1,12 +1,12 @@
 import { FC } from 'react'
-import { StyledOverlay } from './styles'
+import { StyledOverlay } from './GameStyles'
 import { useSelector } from 'react-redux'
 import {
   getActivePlayerId,
   getBottomPlayer,
   getGameTurn
 } from '../GameSelectors'
-import { getOverlayMessage } from './utils'
+import { getOverlayMessage } from '../GameUtils'
 
 export interface OverlayProps {
   isAnimated?: boolean

@@ -1,4 +1,4 @@
-import { CardState } from '../Cards/components/types'
+import { CardState } from '../Cards/CardTypes'
 import {
   Haunt,
   Zombie,
@@ -8,12 +8,12 @@ import {
   BrotherSachelman,
   TempleGuard
 } from '../Cards/AllCards'
-import { PlayCard } from '../Cards/types'
-import { createPlayCardFromPrototype } from '../Cards/utils'
+import { PlayCard } from '../Cards/CardTypes'
+import { createPlayCardFromPrototype } from '../Cards/CardUtils'
 import { DEFAULT_COINS_AMOUNT } from '../Game/constants'
-import { GameState, Player } from '../Game/types'
+import { GameState, Player } from '../Game/GameTypes'
 import { store } from '../state'
-import { MainState } from '../state/types'
+import { MainState } from '../state/StateTypes'
 
 export const MockPlayer1: Player = {
   id: 'player1',

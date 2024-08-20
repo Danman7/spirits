@@ -10,7 +10,7 @@ import {
 } from '../messages'
 import { act } from 'react'
 import { MockCPUPlayer } from '../../utils/mocks'
-import { getCardsInHand } from '../utils'
+import { getCardsInHand } from '../GameUtils'
 
 describe('Board Component', () => {
   it('should show the initial UI elements', async () => {

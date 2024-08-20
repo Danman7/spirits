@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { render, screen } from '../../utils/test-utils'
 import { Card } from './Card'
 import { mockCard } from '../../utils/mocks'
-import { joinCardTypes } from '../utils'
+import { joinCardTypes } from '../CardUtils'
 
 describe('Card Component', () => {
   it('should display all shared UI segments of a card when face up', async () => {
@@ -49,7 +49,7 @@ describe('Card Component', () => {
 
     await userEvent.click(screen.getByText(mockCard.name))
 
-    expect(onCardClick).toHaveBeenCalledWith(mockCard.id)
+    expect(onCardClick).toHaveBeenCalledWith(mockCard)
   })
 
   // it('should trigger boost animation if card is boosted', async () => {

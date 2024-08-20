@@ -1,4 +1,4 @@
-import { coinToss, generateUUID, getRandomArrayItem } from './gameUtils'
+import { coinToss, generateUUID, getRandomArrayItem } from './utils'
 
 describe('Game Utils', () => {
   it('should generate a UUID', () => {

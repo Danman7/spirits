@@ -1,11 +1,11 @@
 import { baseGameMockedState, emptyGameMockedState } from '../utils/mocks'
 import { BrotherSachelmanOnPlay, HammeriteNoviceOnPlay } from './CardAbilities'
-import { GameState } from '../Game/types'
+import { GameState } from '../Game/GameTypes'
 import { HammeriteNovice, TempleGuard } from './AllCards'
 import { ELEVATED_ACOLYTE_BOOST } from './constants'
-import { createPlayCardFromPrototype } from './utils'
-import { CardState } from './components/types'
-import { getCardsOnBoard } from '../Game/utils'
+import { createPlayCardFromPrototype } from './CardUtils'
+import { getCardsOnBoard } from '../Game/GameUtils'
+import { CardState } from './CardTypes'
 
 const baseGameState = baseGameMockedState.game
 

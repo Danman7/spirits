@@ -1,8 +1,8 @@
-import { FC, useCallback, useEffect } from 'react'
+import { FC, useCallback } from 'react'
 import { createPortal } from 'react-dom'
-import { CardPortalProps, CardProps, CardState } from './types'
+import { CardPortalProps, CardProps, CardState } from '../CardTypes'
 import { Card } from './Card'
-import { getCardPortalElements } from '../utils'
+import { getCardPortalElements } from '../CardUtils'
 import { useAppDispatch, useAppSelector } from '../../state'
 import {
   getActivePlayerId,
@@ -10,10 +10,10 @@ import {
   getIsCardPlayedThisTurn
 } from '../../Game/GameSelectors'
 import { GameActions } from '../../Game/GameSlice'
-import { usePrevious } from '../../utils/customHooks'
+import { PlayCard } from '../CardTypes'
 
 export const CardPortal: FC<CardPortalProps> = ({ card, isPlayerCard }) => {
-  const { cost, state, onPlayAbility } = card
+  const { cost, state } = card
 
   const dispatch = useAppDispatch()
 
@@ -22,8 +22,8 @@ export const CardPortal: FC<CardPortalProps> = ({ card, isPlayerCard }) => {
   const isCardPlayedThisTurn = useAppSelector(getIsCardPlayedThisTurn)
 
   const onPlayCard: CardProps['onClickCard'] = useCallback(
-    (cardId: string) => {
-      dispatch(GameActions.playCard(cardId))
+    (card: PlayCard) => {
+      dispatch(GameActions.playCard(card))
     },
     [dispatch]
   )
@@ -43,18 +43,6 @@ export const CardPortal: FC<CardPortalProps> = ({ card, isPlayerCard }) => {
     isPlayerTurn && !isCardPlayedThisTurn && state === CardState.InHand
       ? onPlayCard
       : undefined
-
-  const prevState = usePrevious(state)
-
-  useEffect(() => {
-    if (
-      prevState === CardState.InHand &&
-      state === CardState.OnBoard &&
-      onPlayAbility
-    ) {
-      dispatch(GameActions.triggerOnPlayAbility(onPlayAbility))
-    }
-  }, [prevState, state, dispatch, onPlayAbility])
 
   return createPortal(
     <Card

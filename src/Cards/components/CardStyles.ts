@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { CardState } from './types'
+import { CardState } from '../CardTypes'
 
 export const StyledCard = styled.div<{
   $cardState: CardState

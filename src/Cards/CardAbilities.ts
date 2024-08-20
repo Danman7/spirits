@@ -1,9 +1,9 @@
-import { GameState, Player } from '../Game/types'
-import { CardAbilityFunction, CardType, OnPlayAbilitiesMap } from './types'
+import { GameState, Player } from '../Game/GameTypes'
+import { CardAbilityFunction, CardType, OnPlayAbilitiesMap } from './CardTypes'
 import { BROTHER_SACHELMAN_BOOST } from './constants'
 import { ElevatedAcolyte, HammeriteNovice } from './AllCards'
-import { CardState } from './components/types'
-import { getAllCardsOnBoard } from '../Game/utils'
+import { CardState } from './CardTypes'
+import { getAllCardsOnBoard } from '../Game/GameUtils'
 
 export const BrotherSachelmanOnPlay: CardAbilityFunction = (
   state: GameState

@@ -1,11 +1,11 @@
-import { Player } from './types'
-import { getPlayableCards } from './utils'
-import { getRandomArrayItem } from '../utils/gameUtils'
-import { PlayCard } from '../Cards/types'
+import { Player } from './GameTypes'
+import { getPlayableCards } from './GameUtils'
+import { getRandomArrayItem } from '../utils/utils'
+import { PlayCard } from '../Cards/CardTypes'
 
 export const compPlayRandomCard = (
   player: Player,
-  onPlayCard: (cardId: PlayCard['id']) => void
+  onPlayCard: (cardId: PlayCard) => void
 ) => {
   // check for which cards there is a budget
   const playableCards = getPlayableCards(player)
@@ -15,7 +15,7 @@ export const compPlayRandomCard = (
   } else {
     const randomCard = getRandomArrayItem(playableCards) as PlayCard
 
-    onPlayCard(randomCard.id)
+    onPlayCard(randomCard)
 
     return randomCard
   }
@@ -23,7 +23,7 @@ export const compPlayRandomCard = (
 
 export const compPlayTurn = (
   player: Player,
-  onPlayCard: (cardId: PlayCard['id']) => void,
+  onPlayCard: (cardId: PlayCard) => void,
   onEndTurn: () => void
 ) => {
   // for now only play a random card
