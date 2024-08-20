@@ -10,7 +10,6 @@ import {
 } from '../messages'
 import { act } from 'react'
 import { MockCPUPlayer } from '../../utils/mocks'
-import { getCardsInHand } from '../GameUtils'
 
 describe('Board Component', () => {
   it('should show the initial UI elements', async () => {
@@ -40,7 +39,7 @@ describe('Board Component', () => {
 
     const { coins } = bottomPlayer
 
-    const { name, cost } = getCardsInHand(bottomPlayer)[0]
+    const { name, cost } = bottomPlayer.hand[0]
 
     render(<Board shouldDisableOverlay />, {
       preloadedState: baseGameMockedState
@@ -79,15 +78,13 @@ describe('Board Component', () => {
       }
     })
 
-    const playedCPUCard = getCardsInHand(MockCPUPlayer)[0]
+    const playedCPUCard = MockCPUPlayer.hand[0]
 
     expect(await screen.queryByText(playedCPUCard.name)).not.toBeInTheDocument()
 
     await act(async () => {
       await userEvent.click(
-        screen.getByText(
-          getCardsInHand(baseGameMockedState.game.bottomPlayer)[0].name
-        )
+        screen.getByText(baseGameMockedState.game.bottomPlayer.hand[0].name)
       )
       await userEvent.click(screen.getByText(passButtonMessage))
     })

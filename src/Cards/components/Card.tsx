@@ -24,6 +24,7 @@ import { CardProps } from '../CardTypes'
 
 export const Card: FC<CardProps> = ({
   card,
+  isOnBoard,
   isFaceDown,
   isPlayable,
   onClickCard
@@ -36,8 +37,7 @@ export const Card: FC<CardProps> = ({
     types,
     factions,
     cost,
-    prototype,
-    state
+    prototype
   } = card
 
   const theme = useTheme()
@@ -71,7 +71,7 @@ export const Card: FC<CardProps> = ({
   return (
     <StyledCard
       onClick={onClickCard ? () => onClickCard(card) : undefined}
-      $cardState={state}
+      $isOnBoard={isOnBoard}
       $isFaceDown={isFaceDown}
     >
       <CardPaper ref={cardElement}>

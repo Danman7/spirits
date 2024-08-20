@@ -3,7 +3,6 @@ import { GameState, Player, StartGamePayload } from './GameTypes'
 import { OnPlayAbility, PlayCard } from '../Cards/CardTypes'
 import { EMPTY_PLAYER } from './constants'
 import { coinToss } from '../utils/utils'
-import { CardState } from '../Cards/CardTypes'
 import { OnPlayCardAbilitiesMap } from '../Cards/CardAbilities'
 
 export const initialState: GameState = {
@@ -45,28 +44,20 @@ export const gameSlice = createSlice({
     playCard: (state, action: PayloadAction<PlayCard>) => {
       const { topPlayer, bottomPlayer, activePlayerId } = state
       const {
-        payload: { id }
+        payload: { id: cardId }
       } = action
 
-      const updatePlayer = (player: Player) => {
-        const { cards } = player
+      const updatePlayer = (player: Player): Player => {
+        const { id, hand, board, coins } = player
 
-        const playedCard = cards.find(card => card.id === id)
+        const playedCard = hand.find(card => card.id === cardId)
 
-        if (playedCard && player.id === activePlayerId) {
+        if (playedCard && id === activePlayerId) {
           return {
             ...player,
-            coins: player.coins - playedCard.cost,
-            cards: cards.map(card => {
-              if (card.id === id) {
-                return {
-                  ...card,
-                  state: CardState.OnBoard
-                }
-              }
-
-              return card
-            })
+            coins: coins - playedCard.cost,
+            hand: hand.filter(card => card.id !== cardId),
+            board: [...board, playedCard]
           } as Player
         }
 

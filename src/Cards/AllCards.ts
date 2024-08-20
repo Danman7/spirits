@@ -16,7 +16,7 @@ export const Zombie: Card = {
   factions: [CardFaction.Chaos],
   types: [CardType.Undead],
   description:
-    'If this card is in the graveyard when a Necromancer is played, put it on the table.',
+    'If this card is in your discard pile when a Necromancer is played, bring it back to your board.',
   flavor:
     "The zombie's antipathy for all living creatures is both its strength and weakness."
 }

@@ -1,9 +1,8 @@
 import styled, { css } from 'styled-components'
-import { CardState } from '../CardTypes'
 
 export const StyledCard = styled.div<{
-  $cardState: CardState
   $isFaceDown?: boolean
+  $isOnBoard?: boolean
 }>`
   width: ${({ theme }) => theme.cardWidth}px;
   height: ${({ theme }) => theme.cardHeight}px;
@@ -12,11 +11,9 @@ export const StyledCard = styled.div<{
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'not-allowed')};
   box-shadow: 1px 1px 1px ${({ theme }) => theme.colors.shadow};
   transition: all ${({ theme }) => theme.quickAnimationDuration}ms ease;
-  scale: ${({ $cardState, theme }) =>
-    $cardState === CardState.OnBoard ? theme.onBoardCardScale : 1};
-  margin: ${({ $cardState }) =>
-    $cardState === CardState.OnBoard ? '0 -50px' : '0'};
-  grid-row: ${({ $cardState }) => ($cardState === CardState.InHand ? 2 : 1)};
+  scale: ${({ $isOnBoard, theme }) =>
+    $isOnBoard ? theme.onBoardCardScale : 1};
+  margin: ${({ $isOnBoard }) => ($isOnBoard ? '0 -50px' : '0')};
 
   ${({ $isFaceDown }) =>
     !$isFaceDown &&

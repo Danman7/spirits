@@ -1,26 +1,23 @@
 import { GameState, Player } from '../Game/GameTypes'
 import { CardAbilityFunction, CardType, OnPlayAbilitiesMap } from './CardTypes'
 import { BROTHER_SACHELMAN_BOOST } from './constants'
-import { ElevatedAcolyte, HammeriteNovice } from './AllCards'
-import { CardState } from './CardTypes'
-import { getAllCardsOnBoard } from '../Game/GameUtils'
+import { BrotherSachelman, HammeriteNovice } from './AllCards'
 
 export const BrotherSachelmanOnPlay: CardAbilityFunction = (
   state: GameState
 ) => {
   const { activePlayerId, topPlayer, bottomPlayer } = state
 
-  const updatePlayer = (player: Player) => {
+  const updatePlayer = (player: Player): Player => {
     if (player.id === activePlayerId) {
       return {
         ...player,
-        cards: player.cards.map(card => {
+        board: player.board.map(card => {
           if (
-            card.state === CardState.OnBoard &&
             card.types.includes(CardType.Hammerite) &&
             card.strength &&
-            ElevatedAcolyte.strength &&
-            card.strength < ElevatedAcolyte.strength
+            BrotherSachelman.strength &&
+            card.strength < BrotherSachelman.strength
           ) {
             return {
               ...card,
@@ -45,28 +42,22 @@ export const HammeriteNoviceOnPlay: CardAbilityFunction = (
 ) => {
   const { topPlayer, bottomPlayer } = state
 
-  const isHammeriteInPlay = getAllCardsOnBoard(state).filter(card =>
-    card.types.includes(CardType.Hammerite)
-  )
+  const updatePlayer = (player: Player): Player => {
+    const { board, hand, deck } = player
 
-  const updatePlayer = (player: Player) => {
-    if (isHammeriteInPlay) {
-      return {
-        ...player,
-        cards: player.cards.map(card => {
-          if (
-            (card.state === CardState.InHand ||
-              card.state === CardState.InDeck) &&
-            card.name === HammeriteNovice.name
-          ) {
-            return {
-              ...card,
-              state: CardState.OnBoard
-            }
-          }
+    if (board.find(card => card.types.includes(CardType.Hammerite))) {
+      const noviceInDeck = deck.find(card => card.name === HammeriteNovice.name)
+      const noviceInHand = hand.find(card => card.name === HammeriteNovice.name)
 
-          return card
-        })
+      if (noviceInDeck) {
+        player.deck = deck.filter(card => card.id !== noviceInDeck.id)
+        player.board = [...board, noviceInDeck]
+      }
+
+      if (noviceInHand) {
+        player.hand = hand.filter(card => card.id !== noviceInHand.id)
+        player.board = [...board, noviceInHand]
+        // TODO: also draw a card once drawing logic is in
       }
     }
 

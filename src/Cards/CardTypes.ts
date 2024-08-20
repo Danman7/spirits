@@ -1,4 +1,4 @@
-import { GameState } from '../Game/GameTypes'
+import { CardState, GameState } from '../Game/GameTypes'
 
 export interface Card {
   name: string
@@ -18,7 +18,6 @@ export interface PlayCard extends Card {
     strength?: Card['strength']
     cost: Card['cost']
   }
-  state: CardState
 }
 
 export const enum CardFaction {
@@ -49,15 +48,9 @@ export type OnPlayAbilitiesMap = {
   [P in EnumKeys]: CardAbilityFunction
 }
 
-export const enum CardState {
-  InDeck = 'In Deck',
-  InHand = 'In Hand',
-  OnBoard = 'On Board',
-  InGraveyard = 'In Graveyard'
-}
-
 export interface CardProps {
   card: PlayCard
+  isOnBoard?: boolean
   isPlayable?: boolean
   isFaceDown?: boolean
   onClickCard?: (cardId: PlayCard) => void
@@ -65,6 +58,7 @@ export interface CardProps {
 
 export interface CardPortalProps {
   card: PlayCard
+  cardState?: CardState
   isPlayerCard?: boolean
 }
 

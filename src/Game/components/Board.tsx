@@ -28,18 +28,9 @@ import { compPlayTurn } from '../ComputerPlayerUtils'
 import { useTheme } from 'styled-components'
 import { numberChangeAnimation } from '../../utils/animations'
 import { usePrevious } from '../../utils/customHooks'
-import {
-  BOTTOM_BOARD_ELEMENT_ID,
-  BOTTOM_DECK_ELEMENT_ID,
-  BOTTOM_GRAVEYARD_ELEMENT_ID,
-  BOTTOM_HAND_ELEMENT_ID,
-  TOP_BOARD_ELEMENT_ID,
-  TOP_DECK_ELEMENT_ID,
-  TOP_GRAVEYARD_ELEMENT_ID,
-  TOP_HAND_ELEMENT_ID
-} from '../constants'
 import { CardPortal } from '../../Cards/components/CardPortal'
 import { CardProps, PlayCard } from '../../Cards/CardTypes'
+import { CardState } from '../GameTypes'
 
 export interface BoardProps {
   shouldDisableOverlay?: boolean
@@ -148,29 +139,85 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
       </TopPlayerInfo>
 
       <TopPlayerNonBoard>
-        <FaceDownStack id={TOP_GRAVEYARD_ELEMENT_ID} />
+        <FaceDownStack>
+          {topPlayer.discard.map(card => (
+            <CardPortal
+              key={card.id}
+              card={card}
+              cardState={CardState.InDiscard}
+            />
+          ))}
+        </FaceDownStack>
 
-        <PlayerHand id={TOP_HAND_ELEMENT_ID} />
+        <PlayerHand>
+          {topPlayer.hand.map(card => (
+            <CardPortal
+              key={card.id}
+              card={card}
+              cardState={CardState.InHand}
+            />
+          ))}
+        </PlayerHand>
 
-        <FaceDownStack id={TOP_DECK_ELEMENT_ID}>
-          {topPlayer.cards.map(card => (
-            <CardPortal key={card.id} card={card} />
+        <FaceDownStack>
+          {topPlayer.deck.map(card => (
+            <CardPortal
+              key={card.id}
+              card={card}
+              cardState={CardState.InDeck}
+            />
           ))}
         </FaceDownStack>
       </TopPlayerNonBoard>
 
-      <TopPlayerBoard id={TOP_BOARD_ELEMENT_ID} />
+      <TopPlayerBoard>
+        {topPlayer.board.map(card => (
+          <CardPortal key={card.id} card={card} cardState={CardState.OnBoard} />
+        ))}
+      </TopPlayerBoard>
 
-      <BottomPlayerBoard id={BOTTOM_BOARD_ELEMENT_ID} />
+      <BottomPlayerBoard>
+        {bottomPlayer.board.map(card => (
+          <CardPortal
+            key={card.id}
+            card={card}
+            isPlayerCard
+            cardState={CardState.OnBoard}
+          />
+        ))}
+      </BottomPlayerBoard>
 
       <BottomPlayerNonBoard>
-        <FaceDownStack id={BOTTOM_GRAVEYARD_ELEMENT_ID} />
+        <FaceDownStack>
+          {bottomPlayer.discard.map(card => (
+            <CardPortal
+              key={card.id}
+              card={card}
+              isPlayerCard
+              cardState={CardState.InDiscard}
+            />
+          ))}
+        </FaceDownStack>
 
-        <BottomPlayerHand id={BOTTOM_HAND_ELEMENT_ID} />
+        <BottomPlayerHand>
+          {bottomPlayer.hand.map(card => (
+            <CardPortal
+              key={card.id}
+              card={card}
+              isPlayerCard
+              cardState={CardState.InHand}
+            />
+          ))}
+        </BottomPlayerHand>
 
-        <FaceDownStack id={BOTTOM_DECK_ELEMENT_ID}>
-          {bottomPlayer.cards.map(card => (
-            <CardPortal key={card.id} card={card} isPlayerCard />
+        <FaceDownStack>
+          {bottomPlayer.deck.map(card => (
+            <CardPortal
+              key={card.id}
+              card={card}
+              isPlayerCard
+              cardState={CardState.InDeck}
+            />
           ))}
         </FaceDownStack>
       </BottomPlayerNonBoard>

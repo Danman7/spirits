@@ -3,7 +3,6 @@ import { compPlayRandomCard, compPlayTurn } from './ComputerPlayerUtils'
 import { GarrettMasterThief, ViktoriaThiefPawn } from '../Cards/AllCards'
 import { PlayCard } from '../Cards/CardTypes'
 import { createPlayCardFromPrototype } from '../Cards/CardUtils'
-import { getCardsInHand } from './GameUtils'
 import { Player } from './GameTypes'
 
 describe('Computer Player utils', () => {
@@ -14,7 +13,7 @@ describe('Computer Player utils', () => {
 
     const playedCard = compPlayRandomCard(mockPlayer, mockPlayCard) as PlayCard
 
-    expect(getCardsInHand(mockPlayer)).toContain(playedCard)
+    expect(mockPlayer.hand).toContain(playedCard)
     expect(playedCard.cost).toBeLessThanOrEqual(mockPlayer.coins)
     expect(mockPlayCard).toHaveBeenCalledWith(playedCard)
   })
@@ -24,7 +23,7 @@ describe('Computer Player utils', () => {
 
     const mockPlayer: Player = {
       ...MockPlayer1,
-      cards: [
+      hand: [
         createPlayCardFromPrototype(ViktoriaThiefPawn),
         createPlayCardFromPrototype(GarrettMasterThief)
       ],
@@ -42,7 +41,7 @@ describe('Computer Player utils', () => {
 
     compPlayTurn(mockPlayer, mockPlayCard, mockEndTurn)
 
-    expect(mockPlayCard).toHaveBeenCalledWith(getCardsInHand(mockPlayer)[0])
+    expect(mockPlayCard).toHaveBeenCalledWith(mockPlayer.hand[0])
     expect(mockEndTurn).toHaveBeenCalled()
   })
 })

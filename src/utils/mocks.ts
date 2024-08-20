@@ -1,4 +1,3 @@
-import { CardState } from '../Cards/CardTypes'
 import {
   Haunt,
   Zombie,
@@ -10,71 +9,79 @@ import {
 } from '../Cards/AllCards'
 import { PlayCard } from '../Cards/CardTypes'
 import { createPlayCardFromPrototype } from '../Cards/CardUtils'
-import { DEFAULT_COINS_AMOUNT } from '../Game/constants'
+import { DEFAULT_COINS_AMOUNT, EMPTY_PLAYER } from '../Game/constants'
 import { GameState, Player } from '../Game/GameTypes'
 import { store } from '../state'
 import { MainState } from '../state/StateTypes'
 
 export const MockPlayer1: Player = {
+  ...EMPTY_PLAYER,
   id: 'player1',
   name: 'Garret',
   coins: DEFAULT_COINS_AMOUNT,
-  cards: [
-    createPlayCardFromPrototype(HammeriteNovice, CardState.InHand),
-    createPlayCardFromPrototype(ElevatedAcolyte, CardState.InHand)
+  hand: [
+    createPlayCardFromPrototype(HammeriteNovice),
+    createPlayCardFromPrototype(ElevatedAcolyte)
   ]
 }
 
 export const MockPlayer2: Player = {
+  ...EMPTY_PLAYER,
   id: 'player2',
   name: 'Karras',
   coins: DEFAULT_COINS_AMOUNT - 1,
-  cards: [
-    createPlayCardFromPrototype(Zombie, CardState.InHand),
-    createPlayCardFromPrototype(Haunt, CardState.InHand)
+  hand: [
+    createPlayCardFromPrototype(Zombie),
+    createPlayCardFromPrototype(Haunt)
   ]
 }
 
 export const MockCPUPlayer: Player = {
+  ...EMPTY_PLAYER,
   id: 'playerCPU',
   name: 'Constantine',
   coins: DEFAULT_COINS_AMOUNT,
-  cards: [createPlayCardFromPrototype(DownwinderThief, CardState.InHand)],
+  hand: [createPlayCardFromPrototype(DownwinderThief)],
   isNonHuman: true
 }
 
 export const PlayTestPlayer1: Player = {
+  ...EMPTY_PLAYER,
   id: 'player1',
   name: 'Victoria',
   coins: DEFAULT_COINS_AMOUNT,
-  cards: [
-    createPlayCardFromPrototype(BrotherSachelman, CardState.InHand),
-    createPlayCardFromPrototype(ElevatedAcolyte, CardState.InHand),
+  hand: [
+    createPlayCardFromPrototype(BrotherSachelman),
+    createPlayCardFromPrototype(ElevatedAcolyte)
+  ],
+  board: [
+    createPlayCardFromPrototype(HammeriteNovice),
+    createPlayCardFromPrototype(HammeriteNovice)
+  ],
+  deck: [
     createPlayCardFromPrototype(ElevatedAcolyte),
     createPlayCardFromPrototype(TempleGuard),
-    createPlayCardFromPrototype(TempleGuard),
-    createPlayCardFromPrototype(HammeriteNovice, CardState.OnBoard),
-    createPlayCardFromPrototype(HammeriteNovice, CardState.OnBoard)
+    createPlayCardFromPrototype(TempleGuard)
   ]
 }
 
 export const PlayTestPlayer2: Player = {
+  ...EMPTY_PLAYER,
   id: 'player2',
   name: 'Hume',
   coins: DEFAULT_COINS_AMOUNT,
   isNonHuman: true,
-  cards: [
+  hand: [
     createPlayCardFromPrototype(Zombie),
-    createPlayCardFromPrototype(Zombie, CardState.InHand),
-    createPlayCardFromPrototype(Haunt),
-    createPlayCardFromPrototype(Haunt, CardState.InHand)
+    createPlayCardFromPrototype(Haunt)
+  ],
+  deck: [
+    createPlayCardFromPrototype(Zombie),
+    createPlayCardFromPrototype(Haunt)
   ]
 }
 
-export const mockCard: PlayCard = createPlayCardFromPrototype(
-  Haunt,
-  CardState.InHand
-)
+export const mockCard: PlayCard = createPlayCardFromPrototype(Haunt)
 
 const initialState = store.getState()
 
@@ -92,7 +99,7 @@ export const baseGameMockedState: MainState = {
 export const emptyGameMockedState: GameState = {
   ...initialState.game,
   turn: 1,
-  topPlayer: { ...MockPlayer1, cards: [] },
-  bottomPlayer: { ...MockPlayer2, cards: [] },
+  topPlayer: { ...MockPlayer1, hand: [] },
+  bottomPlayer: { ...MockPlayer2, hand: [] },
   activePlayerId: MockPlayer2.id
 }

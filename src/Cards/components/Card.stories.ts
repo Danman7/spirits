@@ -9,7 +9,6 @@ import {
   ViktoriaThiefPawn
 } from '../AllCards'
 import { createPlayCardFromPrototype } from '../CardUtils'
-import { CardState } from '../CardTypes'
 
 const meta = {
   title: 'Card',
@@ -22,7 +21,8 @@ const meta = {
     card: mockCard,
     onClickCard: fn(),
     isFaceDown: false,
-    isPlayable: false
+    isPlayable: false,
+    isOnBoard: false
   }
 } satisfies Meta<typeof Card>
 
@@ -33,7 +33,8 @@ export const Default: Story = {}
 
 export const OnTheBoard: Story = {
   args: {
-    card: { ...mockCard, state: CardState.OnBoard }
+    card: { ...mockCard },
+    isOnBoard: true
   }
 }
 

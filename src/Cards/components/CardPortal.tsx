@@ -1,8 +1,6 @@
 import { FC, useCallback } from 'react'
-import { createPortal } from 'react-dom'
-import { CardPortalProps, CardProps, CardState } from '../CardTypes'
+import { CardPortalProps, CardProps } from '../CardTypes'
 import { Card } from './Card'
-import { getCardPortalElements } from '../CardUtils'
 import { useAppDispatch, useAppSelector } from '../../state'
 import {
   getActivePlayerId,
@@ -11,9 +9,14 @@ import {
 } from '../../Game/GameSelectors'
 import { GameActions } from '../../Game/GameSlice'
 import { PlayCard } from '../CardTypes'
+import { CardState } from '../../Game/GameTypes'
 
-export const CardPortal: FC<CardPortalProps> = ({ card, isPlayerCard }) => {
-  const { cost, state } = card
+export const CardPortal: FC<CardPortalProps> = ({
+  card,
+  isPlayerCard,
+  cardState
+}) => {
+  const { cost } = card
 
   const dispatch = useAppDispatch()
 
@@ -30,27 +33,28 @@ export const CardPortal: FC<CardPortalProps> = ({ card, isPlayerCard }) => {
 
   const isPlayerTurn = bottomPlayer?.id === activePlayerId
   const isFaceDown =
-    (!isPlayerCard && state !== CardState.OnBoard) || state === CardState.InDeck
+    (!isPlayerCard && cardState !== CardState.OnBoard) ||
+    cardState === CardState.InDeck
 
   const isPlayable =
     isPlayerCard &&
-    state === CardState.InHand &&
+    cardState === CardState.InHand &&
     cost <= bottomPlayer.coins &&
     isPlayerTurn &&
     !isCardPlayedThisTurn
 
   const onClickCard =
-    isPlayerTurn && !isCardPlayedThisTurn && state === CardState.InHand
+    isPlayerTurn && !isCardPlayedThisTurn && cardState === CardState.InHand
       ? onPlayCard
       : undefined
 
-  return createPortal(
+  return (
     <Card
       card={card}
       isFaceDown={isFaceDown}
       isPlayable={isPlayable}
+      isOnBoard={cardState === CardState.OnBoard}
       onClickCard={onClickCard}
-    />,
-    getCardPortalElements(state, isPlayerCard)
+    />
   )
 }
