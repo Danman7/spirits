@@ -83,24 +83,8 @@ export const MultipleFactions: Story = {
   }
 }
 
-export const ChaosFaceDown: Story = {
+export const FaceDown: Story = {
   args: {
-    onClickCard: undefined,
-    isFaceDown: true
-  }
-}
-
-export const OrderFaceDown: Story = {
-  args: {
-    card: createPlayCardFromPrototype(HammeriteNovice),
-    onClickCard: undefined,
-    isFaceDown: true
-  }
-}
-
-export const ShadowFaceDown: Story = {
-  args: {
-    card: createPlayCardFromPrototype(GarrettMasterThief),
     onClickCard: undefined,
     isFaceDown: true
   }

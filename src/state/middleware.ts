@@ -11,11 +11,11 @@ export const startAppListening = listenerMiddleware.startListening.withTypes<
 
 startAppListening({
   actionCreator: GameActions.playCard,
-  effect: async (action, listenerApi) => {
+  effect: async (action, { dispatch }) => {
     const { onPlay } = action.payload
 
     if (onPlay) {
-      listenerApi.dispatch(GameActions.triggerOnPlayAbility(onPlay))
+      dispatch(GameActions.triggerOnPlayAbility(onPlay))
     }
   }
 })

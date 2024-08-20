@@ -90,7 +90,7 @@ export const Card: FC<CardProps> = ({
                   y="0"
                   x2="0"
                   y2="12"
-                  stroke={getFactionColor([factions[0]])}
+                  stroke={theme.colors.line}
                   strokeWidth="8"
                 />
               </pattern>
