@@ -4,8 +4,7 @@ import {
   ElevatedAcolyte,
   HammeriteNovice,
   DownwinderThief,
-  BrotherSachelman,
-  TempleGuard
+  AzaranTheCruel
 } from '../Cards/AllCards'
 import { PlayCard } from '../Cards/CardTypes'
 import { createPlayCardFromPrototype } from '../Cards/CardUtils'
@@ -50,19 +49,11 @@ export const PlayTestPlayer1: Player = {
   id: 'player1',
   name: 'Victoria',
   coins: DEFAULT_COINS_AMOUNT,
-  hand: [
-    createPlayCardFromPrototype(BrotherSachelman),
-    createPlayCardFromPrototype(ElevatedAcolyte)
+  discard: [
+    createPlayCardFromPrototype(Zombie),
+    createPlayCardFromPrototype(Zombie)
   ],
-  board: [
-    createPlayCardFromPrototype(HammeriteNovice),
-    createPlayCardFromPrototype(HammeriteNovice)
-  ],
-  deck: [
-    createPlayCardFromPrototype(ElevatedAcolyte),
-    createPlayCardFromPrototype(TempleGuard),
-    createPlayCardFromPrototype(TempleGuard)
-  ]
+  hand: [createPlayCardFromPrototype(AzaranTheCruel)]
 }
 
 export const PlayTestPlayer2: Player = {

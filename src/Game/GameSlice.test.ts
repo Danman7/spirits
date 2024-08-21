@@ -113,7 +113,7 @@ describe('Game State Slice', () => {
 
     const state = GameReducer(
       mockGameState,
-      GameActions.triggerOnPlayAbility('BrotherSachelmanOnPlay')
+      GameActions.triggerCardAbility('BrotherSachelmanOnPlay')
     )
 
     expect(state.topPlayer.board).toEqual([

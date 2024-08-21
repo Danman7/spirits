@@ -1,4 +1,5 @@
 import {
+  AZARAN_BOOST,
   BROTHER_SACHELMAN_BOOST,
   DOWNWINDER_BOOST,
   ELEVATED_ACOLYTE_BOOST,
@@ -113,4 +114,15 @@ export const DownwinderThief: Card = {
   description: `When stealing coins from opponent boost self by ${DOWNWINDER_BOOST}.`,
   flavor:
     "We chose our profession in defiance of the greed of the monarchy. We will not live for the sake of taxes to fatten the noble's pockets. -- excerpt from the Downwinders Creed"
+}
+
+export const AzaranTheCruel: Card = {
+  name: 'Azaran the Cruel',
+  strength: 5,
+  cost: 5,
+  factions: [CardFaction.Chaos],
+  types: [CardType.Necromancer],
+  description: `On playOn play boost self by ${AZARAN_BOOST} for each Undead card in the discard pile.`,
+  flavor:
+    "Be warned! The truth is hidden from the unworthy. Blacken thy heart, or face the prisoners of flesh. -- Azaran's last mortal written words"
 }

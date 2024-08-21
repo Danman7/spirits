@@ -34,7 +34,8 @@ export const CardPortal: FC<CardPortalProps> = ({
   const isPlayerTurn = bottomPlayer?.id === activePlayerId
   const isFaceDown =
     (!isPlayerCard && cardState !== CardState.OnBoard) ||
-    cardState === CardState.InDeck
+    cardState === CardState.InDeck ||
+    cardState === CardState.InDiscard
 
   const isPlayable =
     isPlayerCard &&

@@ -1,6 +1,7 @@
 import { createListenerMiddleware } from '@reduxjs/toolkit'
 import { GameActions } from '../Game/GameSlice'
 import { AppDispatch, RootState } from '.'
+import { checkForImplicitOnPlay } from '../Cards/CardUtils'
 
 export const listenerMiddleware = createListenerMiddleware()
 
@@ -11,11 +12,13 @@ export const startAppListening = listenerMiddleware.startListening.withTypes<
 
 startAppListening({
   actionCreator: GameActions.playCard,
-  effect: async (action, { dispatch }) => {
-    const { onPlay } = action.payload
+  effect: async ({ payload: playedCard }, { dispatch }) => {
+    const { onPlay } = playedCard
+
+    checkForImplicitOnPlay(playedCard, dispatch)
 
     if (onPlay) {
-      dispatch(GameActions.triggerOnPlayAbility(onPlay))
+      dispatch(GameActions.triggerCardAbility(onPlay))
     }
   }
 })

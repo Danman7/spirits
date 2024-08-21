@@ -1,7 +1,7 @@
 import { GameState, Player } from '../Game/GameTypes'
 import { CardAbilityFunction, CardType } from './CardTypes'
 import { BROTHER_SACHELMAN_BOOST } from './constants'
-import { BrotherSachelman, HammeriteNovice } from './AllCards'
+import { BrotherSachelman, HammeriteNovice, Zombie } from './AllCards'
 
 export const BrotherSachelmanOnPlay: CardAbilityFunction = (
   state: GameState
@@ -58,6 +58,29 @@ export const HammeriteNoviceOnPlay: CardAbilityFunction = (
         player.hand = hand.filter(card => card.id !== noviceInHand.id)
         player.board = [...board, noviceInHand]
         // TODO: also draw a card once drawing logic is in
+      }
+    }
+
+    return player
+  }
+
+  state.topPlayer = updatePlayer(topPlayer)
+  state.bottomPlayer = updatePlayer(bottomPlayer)
+}
+
+export const NecromancerOnPlay: CardAbilityFunction = (state: GameState) => {
+  const { activePlayerId, topPlayer, bottomPlayer } = state
+
+  const updatePlayer = (player: Player): Player => {
+    const { discard, board, id } = player
+
+    const zombiesInDiscard = discard.filter(card => card.name === Zombie.name)
+
+    if (id === activePlayerId && zombiesInDiscard) {
+      return {
+        ...player,
+        discard: discard.filter(card => card.name !== Zombie.name),
+        board: [...board, ...zombiesInDiscard]
       }
     }
 

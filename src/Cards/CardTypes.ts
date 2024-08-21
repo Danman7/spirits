@@ -35,7 +35,8 @@ export const enum CardType {
   Fence = 'Fence',
   Pagan = 'Pagan',
   Thief = 'Thief',
-  Guard = 'Guard'
+  Guard = 'Guard',
+  Necromancer = 'Necromancer'
 }
 
 export type CardAbilityFunction = (state: GameState) => void

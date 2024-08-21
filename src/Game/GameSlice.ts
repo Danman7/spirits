@@ -68,7 +68,7 @@ export const gameSlice = createSlice({
       state.bottomPlayer = updatePlayer(bottomPlayer)
       state.isCardPlayedThisTurn = true
     },
-    triggerOnPlayAbility: (state, action: PayloadAction<CardAbility>) =>
+    triggerCardAbility: (state, action: PayloadAction<CardAbility>) =>
       CardAbilities[action.payload](state)
   }
 })

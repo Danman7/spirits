@@ -16,3 +16,4 @@ export const BROTHER_SACHELMAN_BOOST = 1
 export const VIKTORIA_COIN_GAIN = 1
 export const GARRETT_COIN_GAIN = 1
 export const DOWNWINDER_BOOST = 1
+export const AZARAN_BOOST = 1

@@ -1,6 +1,8 @@
 import { generateUUID } from '../utils/utils'
 import { FACTION_COLOR_MAP } from './constants'
-import { Card, PlayCard } from './CardTypes'
+import { Card, CardType, PlayCard } from './CardTypes'
+import { Dispatch } from '@reduxjs/toolkit'
+import { GameActions } from '../Game/GameSlice'
 
 export const joinCardTypes = (types: Card['types']) => types.join(', ')
 
@@ -32,5 +34,13 @@ export const createPlayCardFromPrototype = (cardPrototype: Card): PlayCard => {
     ...cardPrototype,
     id: generateUUID(),
     prototype
+  }
+}
+
+export const checkForImplicitOnPlay = (card: PlayCard, dispatch: Dispatch) => {
+  const { types } = card
+
+  if (types.includes(CardType.Necromancer)) {
+    dispatch(GameActions.triggerCardAbility('NecromancerOnPlay'))
   }
 }
