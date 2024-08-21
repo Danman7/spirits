@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { GameState, Player, StartGamePayload } from './GameTypes'
-import { OnPlayAbility, PlayCard } from '../Cards/CardTypes'
+import { CardAbility, PlayCard } from '../Cards/CardTypes'
 import { EMPTY_PLAYER } from './constants'
 import { coinToss } from '../utils/utils'
-import { OnPlayCardAbilitiesMap } from '../Cards/CardAbilities'
+import * as CardAbilities from '../Cards/CardAbilities'
 
 export const initialState: GameState = {
   turn: 0,
@@ -68,8 +68,8 @@ export const gameSlice = createSlice({
       state.bottomPlayer = updatePlayer(bottomPlayer)
       state.isCardPlayedThisTurn = true
     },
-    triggerOnPlayAbility: (state, action: PayloadAction<OnPlayAbility>) =>
-      OnPlayCardAbilitiesMap[action.payload](state)
+    triggerOnPlayAbility: (state, action: PayloadAction<CardAbility>) =>
+      CardAbilities[action.payload](state)
   }
 })
 

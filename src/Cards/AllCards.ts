@@ -6,7 +6,7 @@ import {
   HAUNT_DAMAGE,
   VIKTORIA_COIN_GAIN
 } from './constants'
-import { Card, CardFaction, CardType, OnPlayAbility } from './CardTypes'
+import { Card, CardFaction, CardType } from './CardTypes'
 import { getCoinsMessage } from './CardUtils'
 
 export const Zombie: Card = {
@@ -42,7 +42,7 @@ export const HammeriteNovice: Card = {
     'On play if any hammerite is on the table, play all Hammerite Novice cards you have.',
   flavor:
     'This novice has been instructed in the rules and strictures of the Order and has sworn his warrants to be silent in his vigils.',
-  onPlay: OnPlayAbility.HammeriteNoviceOnPlay
+  onPlay: 'HammeriteNoviceOnPlay'
 }
 
 export const ElevatedAcolyte: Card = {
@@ -75,7 +75,7 @@ export const BrotherSachelman: Card = {
   types: [CardType.Hammerite],
   description: `On play boost any Hammerite in play with lower strength than Brother Scahelman by ${BROTHER_SACHELMAN_BOOST}`,
   flavor: '',
-  onPlay: OnPlayAbility.BrotherSachelmanOnPlay
+  onPlay: 'BrotherSachelmanOnPlay'
 }
 
 export const ViktoriaThiefPawn: Card = {

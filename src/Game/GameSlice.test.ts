@@ -4,7 +4,6 @@ import { GameState, Player } from './GameTypes'
 import { HammeriteNovice } from '../Cards/AllCards'
 import { BROTHER_SACHELMAN_BOOST } from '../Cards/constants'
 import { createPlayCardFromPrototype } from '../Cards/CardUtils'
-import { OnPlayAbility } from 'src/Cards/CardTypes'
 
 const playersStartingTheGame = {
   topPlayer: MockPlayer1,
@@ -114,7 +113,7 @@ describe('Game State Slice', () => {
 
     const state = GameReducer(
       mockGameState,
-      GameActions.triggerOnPlayAbility(OnPlayAbility.BrotherSachelmanOnPlay)
+      GameActions.triggerOnPlayAbility('BrotherSachelmanOnPlay')
     )
 
     expect(state.topPlayer.board).toEqual([

@@ -1,5 +1,5 @@
 import { GameState, Player } from '../Game/GameTypes'
-import { CardAbilityFunction, CardType, OnPlayAbilitiesMap } from './CardTypes'
+import { CardAbilityFunction, CardType } from './CardTypes'
 import { BROTHER_SACHELMAN_BOOST } from './constants'
 import { BrotherSachelman, HammeriteNovice } from './AllCards'
 
@@ -66,9 +66,4 @@ export const HammeriteNoviceOnPlay: CardAbilityFunction = (
 
   state.topPlayer = updatePlayer(topPlayer)
   state.bottomPlayer = updatePlayer(bottomPlayer)
-}
-
-export const OnPlayCardAbilitiesMap: OnPlayAbilitiesMap = {
-  BrotherSachelmanOnPlay: BrotherSachelmanOnPlay,
-  HammeriteNoviceOnPlay: HammeriteNoviceOnPlay
 }
