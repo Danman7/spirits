@@ -19,18 +19,10 @@ const PlayerBoard = styled.div`
 export const TopPlayerBoard = styled(PlayerBoard)`
   border-bottom: 1px dashed ${({ theme }) => theme.colors.pale};
   align-items: flex-end;
-
-  ${StyledCard} {
-    transform-origin: bottom;
-  }
 `
 
 export const BottomPlayerBoard = styled(PlayerBoard)`
   align-items: flex-start;
-
-  ${StyledCard} {
-    transform-origin: top;
-  }
 `
 
 export const PlayerHand = styled.div`
@@ -126,19 +118,16 @@ const Button = styled.button`
     inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
     1px 1px 1px ${({ theme }) => theme.colors.shadow};
   border-radius: ${({ theme }) => theme.borderRadius};
-  transition: all ${({ theme }) => theme.quickAnimationDuration}ms ease;
   cursor: pointer;
   transform-origin: center;
 
   &:hover {
-    transform: scale(1.1);
     box-shadow:
       inset 3px 3px 3px 0px rgba(255, 255, 255, 0.5),
       3px 3px 3px ${({ theme }) => theme.colors.shadow};
   }
 
   &:active {
-    transform: scale(0.95);
     box-shadow: none;
   }
 `

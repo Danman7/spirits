@@ -52,17 +52,4 @@ describe('Card Component', () => {
     expect(onCardClick).toHaveBeenCalledWith(mockCard)
   })
 
-  // it('should trigger boost animation if card is boosted', async () => {
-  //   const useDispatchSpy = jest.spyOn(reactRedux, 'useDispatch')
-
-  //   const { rerender } = render(<Card card={mockCard} />)
-
-  //   rerender(
-  //     <Card
-  //       card={{ ...mockCard, strength: (mockCard.strength as number) + 1 }}
-  //     />
-  //   )
-
-  //   expect(useDispatchSpy).toHaveBeenCalledWith(mockCard.id)
-  // })
 })

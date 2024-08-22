@@ -11,7 +11,7 @@ export const GlobalStyles = createGlobalStyle`
 `
 
 export const Lead = styled.div`
-  font-size: 20px;
+  font-size: 1.25em;
 `
 
 export const PositiveText = styled.span`

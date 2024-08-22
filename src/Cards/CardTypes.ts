@@ -43,8 +43,8 @@ export type CardAbilityFunction = (state: GameState) => void
 
 export interface CardProps {
   card: PlayCard
-  isOnBoard?: boolean
-  isPlayable?: boolean
+  isSmaller?: boolean
+  isActive?: boolean
   isFaceDown?: boolean
   onClickCard?: (cardId: PlayCard) => void
 }

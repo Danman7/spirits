@@ -1,4 +1,5 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
+
 import {
   BottomPlayerHand,
   StyledBoard,
@@ -26,11 +27,9 @@ import { useAppDispatch, useAppSelector } from '../../state'
 import { endTurnMessage, passButtonMessage } from '../messages'
 import { compPlayTurn } from '../ComputerPlayerUtils'
 import { useTheme } from 'styled-components'
-import { numberChangeAnimation } from '../../utils/animations'
 import { usePrevious } from '../../utils/customHooks'
-import { CardPortal } from '../../Cards/components/CardPortal'
 import { CardProps, PlayCard } from '../../Cards/CardTypes'
-import { CardState } from '../GameTypes'
+import { Card } from '../../Cards/components/Card'
 
 export interface BoardProps {
   shouldDisableOverlay?: boolean
@@ -57,16 +56,6 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
 
   const topPlayerCoinsElement = useRef<HTMLDivElement>(null)
   const bottomPlayerCoinsElement = useRef<HTMLDivElement>(null)
-
-  const topPlayerCoinChangeAnimation = numberChangeAnimation(
-    topPlayerCoinsElement.current,
-    theme
-  )
-
-  const bottomPlayerCoinChangeAnimation = numberChangeAnimation(
-    bottomPlayerCoinsElement.current,
-    theme
-  )
 
   const onPlayCard: CardProps['onClickCard'] = useCallback(
     (card: PlayCard) => {
@@ -106,28 +95,16 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
   }, [activePlayerId, onEndTurn, onPlayCard, prevActivePlayerId, topPlayer])
 
   useEffect(() => {
-    if (
-      prevTopPlayerCoins &&
-      prevTopPlayerCoins !== topPlayer.coins &&
-      topPlayerCoinChangeAnimation.play
-    ) {
-      topPlayerCoinChangeAnimation.play()
+    if (prevTopPlayerCoins && prevTopPlayerCoins !== topPlayer.coins) {
+      // TODO: top coin change animation
     }
-  }, [prevTopPlayerCoins, topPlayerCoinChangeAnimation, topPlayer.coins])
+  }, [prevTopPlayerCoins, topPlayer.coins])
 
   useEffect(() => {
-    if (
-      prevBottomPlayerCoins &&
-      prevBottomPlayerCoins !== bottomPlayer.coins &&
-      bottomPlayerCoinChangeAnimation.play
-    ) {
-      bottomPlayerCoinChangeAnimation.play()
+    if (prevBottomPlayerCoins && prevBottomPlayerCoins !== bottomPlayer.coins) {
+      // TODO: bottom coin change animation
     }
-  }, [
-    prevBottomPlayerCoins,
-    bottomPlayer.coins,
-    bottomPlayerCoinChangeAnimation
-  ])
+  }, [prevBottomPlayerCoins, bottomPlayer.coins])
 
   return (
     <StyledBoard>
@@ -141,83 +118,62 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
       <TopPlayerNonBoard>
         <FaceDownStack>
           {topPlayer.discard.map(card => (
-            <CardPortal
-              key={card.id}
-              card={card}
-              cardState={CardState.InDiscard}
-            />
+            <Card key={card.id} card={card} isFaceDown isSmaller />
           ))}
         </FaceDownStack>
 
         <PlayerHand>
           {topPlayer.hand.map(card => (
-            <CardPortal
-              key={card.id}
-              card={card}
-              cardState={CardState.InHand}
-            />
+            <Card key={card.id} card={card} isFaceDown />
           ))}
         </PlayerHand>
 
         <FaceDownStack>
           {topPlayer.deck.map(card => (
-            <CardPortal
-              key={card.id}
-              card={card}
-              cardState={CardState.InDeck}
-            />
+            <Card key={card.id} card={card} isFaceDown isSmaller />
           ))}
         </FaceDownStack>
       </TopPlayerNonBoard>
 
       <TopPlayerBoard>
         {topPlayer.board.map(card => (
-          <CardPortal key={card.id} card={card} cardState={CardState.OnBoard} />
+          <Card key={card.id} card={card} isSmaller />
         ))}
       </TopPlayerBoard>
 
       <BottomPlayerBoard>
         {bottomPlayer.board.map(card => (
-          <CardPortal
-            key={card.id}
-            card={card}
-            isPlayerCard
-            cardState={CardState.OnBoard}
-          />
+          <Card key={card.id} card={card} isSmaller />
         ))}
       </BottomPlayerBoard>
 
       <BottomPlayerNonBoard>
         <FaceDownStack>
           {bottomPlayer.discard.map(card => (
-            <CardPortal
-              key={card.id}
-              card={card}
-              isPlayerCard
-              cardState={CardState.InDiscard}
-            />
+            <Card key={card.id} card={card} isFaceDown isSmaller />
           ))}
         </FaceDownStack>
 
         <BottomPlayerHand>
           {bottomPlayer.hand.map(card => (
-            <CardPortal
+            <Card
               key={card.id}
               card={card}
-              isPlayerCard
-              cardState={CardState.InHand}
+              isActive={
+                card.cost <= bottomPlayer.coins &&
+                isPlayerTurn &&
+                !isCardPlayedThisTurn
+              }
+              onClickCard={
+                isPlayerTurn && !isCardPlayedThisTurn ? onPlayCard : undefined
+              }
             />
           ))}
         </BottomPlayerHand>
 
         <FaceDownStack>
           {bottomPlayer.deck.map(card => (
-            <CardPortal
-              key={card.id}
-              card={card}
-              isPlayerCard
-              cardState={CardState.InDeck}
-            />
+            <Card key={card.id} card={card} isFaceDown isSmaller />
           ))}
         </FaceDownStack>
       </BottomPlayerNonBoard>

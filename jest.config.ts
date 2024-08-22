@@ -4,7 +4,6 @@ const config: Config = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   moduleDirectories: ['node_modules', 'src'],
-  setupFiles: ['<rootDir>/src/utils/jest.mock.ts'],
   transform: {
     '^.+\\.jsx?$': 'babel-jest'
   },

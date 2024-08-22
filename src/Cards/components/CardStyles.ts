@@ -1,19 +1,20 @@
+import { motion } from 'framer-motion'
 import styled, { css } from 'styled-components'
 
-export const StyledCard = styled.div<{
+export const StyledCard = styled(motion.div)<{
   $isFaceDown?: boolean
-  $isOnBoard?: boolean
+  $isSmaller?: boolean
 }>`
-  width: ${({ theme }) => theme.cardWidth}px;
-  height: ${({ theme }) => theme.cardHeight}px;
+  display: flex;
+  flex-direction: column;
+  background-color: ${({ theme }) => theme.colors.background};
+  width: ${({ theme, $isSmaller }) => ($isSmaller ? 150 : theme.cardWidth)}px;
+  height: ${({ theme, $isSmaller }) => ($isSmaller ? 210 : theme.cardHeight)}px;
+  font-size: ${({ $isSmaller }) => ($isSmaller ? 10 : 16)}px;
   border-radius: ${({ theme }) => theme.borderRadius};
   border: 1px solid ${({ theme }) => theme.colors.line};
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'not-allowed')};
   box-shadow: 1px 1px 1px ${({ theme }) => theme.colors.shadow};
-  transition: all ${({ theme }) => theme.quickAnimationDuration}ms ease;
-  scale: ${({ $isOnBoard, theme }) =>
-    $isOnBoard ? theme.onBoardCardScale : 1};
-  margin: ${({ $isOnBoard }) => ($isOnBoard ? '0 -50px' : '0')};
 
   ${({ $isFaceDown }) =>
     !$isFaceDown &&
@@ -32,23 +33,12 @@ export const StyledCard = styled.div<{
     `};
 `
 
-export const CardPaper = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: ${({ theme }) => theme.colors.background};
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-`
-
 interface CardHeaderProps {
   $factionColor: string
 }
 
 export const CardHeader = styled.div<CardHeaderProps>`
-  padding: ${({ theme }) => theme.spacing}px;
+  padding: 0.5em;
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid ${({ theme }) => theme.colors.line};
@@ -57,13 +47,15 @@ export const CardHeader = styled.div<CardHeaderProps>`
 `
 
 export const CardFooter = styled.div`
-  padding: ${({ theme }) => theme.spacing}px;
+  bottom: 0;
+  padding: 0.5em;
   display: flex;
   flex-direction: column;
   border-top: 1px solid ${({ theme }) => theme.colors.line};
 `
 
 export const CardTitle = styled.div`
+  top: 0;
   display: flex;
   justify-content: space-between;
 `
@@ -72,15 +64,16 @@ export const CardTypes = styled.div`
   display: flex;
   justify-content: center;
   font-style: italic;
-  font-size: 14px;
+  font-size: 0.875em;
 `
 
 export const CardContent = styled.div`
-  padding: ${({ theme }) => theme.spacing}px;
+  overflow: auto;
+  padding: 0.5em;
   flex-grow: 2;
 `
 
-export const CardFlavor = styled.p`
+export const CardFlavor = styled.div`
   font-style: italic;
-  font-size: 14px;
+  font-size: 0.875em;
 `

@@ -21,8 +21,8 @@ const meta = {
     card: mockCard,
     onClickCard: fn(),
     isFaceDown: false,
-    isPlayable: false,
-    isOnBoard: false
+    isActive: false,
+    isSmaller: false
   }
 } satisfies Meta<typeof Card>
 
@@ -34,7 +34,7 @@ export const Default: Story = {}
 export const OnTheBoard: Story = {
   args: {
     card: { ...mockCard },
-    isOnBoard: true
+    isSmaller: true
   }
 }
 
@@ -44,9 +44,9 @@ export const NotClickable: Story = {
   }
 }
 
-export const IsPlayable: Story = {
+export const IsActive: Story = {
   args: {
-    isPlayable: true
+    isActive: true
   }
 }
 

@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react'
+import { FC, useEffect } from 'react'
 
 import {
   CardHeader,
@@ -7,29 +7,24 @@ import {
   CardTitle,
   CardTypes,
   CardFlavor,
-  CardFooter,
-  CardPaper
+  CardFooter
 } from './CardStyles'
 import { Lead } from '../../styles'
 import { getFactionColor, joinCardTypes } from '../CardUtils'
 import { PositiveNegativeNumber } from './PositiveNegativeNumber'
 import { useTheme } from 'styled-components'
-import {
-  boostCardAnimation,
-  numberChangeAnimation,
-  playableCardAnimation
-} from '../../utils/animations'
 import { usePrevious } from '../../utils/customHooks'
 import { CardProps } from '../CardTypes'
 
 export const Card: FC<CardProps> = ({
   card,
-  isOnBoard,
+  isSmaller,
   isFaceDown,
-  isPlayable,
+  isActive,
   onClickCard
 }) => {
   const {
+    id,
     name,
     strength,
     description,
@@ -44,84 +39,73 @@ export const Card: FC<CardProps> = ({
 
   const prevStrength = usePrevious(strength)
 
-  const strengthElement = useRef<HTMLDivElement>(null)
-  const cardElement = useRef<HTMLDivElement>(null)
-
-  const strengthChangeAnimation = numberChangeAnimation(
-    strengthElement.current,
-    theme
-  )
-
-  const boostAnimation = boostCardAnimation(cardElement.current, theme)
-
   useEffect(() => {
     if (prevStrength !== strength) {
-      strengthChangeAnimation.play()
+      // TODO: strength change animation
     }
 
     if ((prevStrength as number) < (strength as number)) {
-      boostAnimation.play()
+      // TODO: boost animation
     }
-  }, [strength, strengthChangeAnimation, prevStrength, boostAnimation])
+  }, [prevStrength, strength])
 
   useEffect(() => {
-    playableCardAnimation(cardElement.current, theme, isPlayable)
-  }, [isPlayable, theme])
+    // TODO: card active animation
+  }, [isActive, theme])
 
   return (
     <StyledCard
+      layoutId={id}
       onClick={onClickCard ? () => onClickCard(card) : undefined}
-      $isOnBoard={isOnBoard}
+      $isSmaller={isSmaller}
       $isFaceDown={isFaceDown}
     >
-      <CardPaper ref={cardElement}>
-        {isFaceDown ? (
-          <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-            <defs>
-              <pattern
-                id="pattern_rkKfx"
-                patternUnits="userSpaceOnUse"
-                width="12"
-                height="12"
-                patternTransform="rotate(45)"
-              >
-                <line
-                  x1="0"
-                  y="0"
-                  x2="0"
-                  y2="12"
-                  stroke={theme.colors.line}
-                  strokeWidth="8"
-                />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#pattern_rkKfx)" />
-          </svg>
-        ) : (
-          <>
-            <CardHeader $factionColor={getFactionColor(factions)}>
-              <CardTitle>
-                <Lead>{name}</Lead>
-                <Lead ref={strengthElement}>
-                  {strength && prototype.strength && (
-                    <PositiveNegativeNumber
-                      current={strength}
-                      base={prototype.strength}
-                    />
-                  )}
-                </Lead>
-              </CardTitle>
-              <CardTypes>{joinCardTypes(types)}</CardTypes>
-            </CardHeader>
-            <CardContent>
-              {description}
-              <br />
-              <CardFlavor>{flavor}</CardFlavor>
-            </CardContent>
-            <CardFooter>Cost: {cost}</CardFooter>
-          </>
-        )}
-      </CardPaper>
+      {isFaceDown ? (
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+          <defs>
+            <pattern
+              id="pattern_rkKfx"
+              patternUnits="userSpaceOnUse"
+              width="12"
+              height="12"
+              patternTransform="rotate(45)"
+            >
+              <line
+                x1="0"
+                y="0"
+                x2="0"
+                y2="12"
+                stroke={theme.colors.line}
+                strokeWidth="8"
+              />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#pattern_rkKfx)" />
+        </svg>
+      ) : (
+        <>
+          <CardHeader $factionColor={getFactionColor(factions)}>
+            <CardTitle>
+              <Lead>{name}</Lead>
+              <Lead>
+                {strength && prototype.strength && (
+                  <PositiveNegativeNumber
+                    current={strength}
+                    base={prototype.strength}
+                  />
+                )}
+              </Lead>
+            </CardTitle>
+            <CardTypes>{joinCardTypes(types)}</CardTypes>
+          </CardHeader>
+          <CardContent>
+            {description}
+            <br />
+            <CardFlavor>{flavor}</CardFlavor>
+          </CardContent>
+          <CardFooter>Cost: {cost}</CardFooter>
+        </>
+      )}
     </StyledCard>
   )
 }
