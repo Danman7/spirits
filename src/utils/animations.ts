@@ -19,7 +19,7 @@ export const slideLeftToRight: AnimationProps = {
 
 export const numberChange: AnimationDefinition = {
   scale: [null, 2],
-  color: [null, styles.hilightColor],
+  color: [null, '#ffd700'],
   transition: {
     repeat: 1,
     repeatType: 'reverse',

@@ -8,6 +8,7 @@ import { configureStore } from '@reduxjs/toolkit'
 
 import { MainState } from '../state/StateTypes'
 import { reducer, store } from '../state'
+import { listenerMiddleware } from '../state/middleware'
 
 interface customRenderOptions extends RenderOptions {
   preloadedState?: MainState
@@ -25,6 +26,8 @@ const customRender = (
         preloadedState
           ? configureStore({
               reducer,
+              middleware: getDefaultMiddleware =>
+                getDefaultMiddleware().prepend(listenerMiddleware.middleware),
               preloadedState
             })
           : store

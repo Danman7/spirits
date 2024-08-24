@@ -2,7 +2,7 @@ import { baseGameMockedState, emptyGameMockedState } from '../utils/mocks'
 import { BrotherSachelmanOnPlay, HammeriteNoviceOnPlay } from './CardAbilities'
 import { GameState } from '../Game/GameTypes'
 import { HammeriteNovice, TempleGuard } from './AllCards'
-import { ELEVATED_ACOLYTE_BOOST } from './constants'
+import { BROTHER_SACHELMAN_BOOST } from './constants'
 import { createPlayCardFromPrototype } from './CardUtils'
 const baseGameState = baseGameMockedState.game
 
@@ -27,18 +27,14 @@ describe('Card abilities', () => {
 
     BrotherSachelmanOnPlay(state)
 
-    expect(state.bottomPlayer.board).toEqual([
-      {
-        ...boostableBoard[0],
-        strength:
-          (boostableBoard[0].strength as number) + ELEVATED_ACOLYTE_BOOST
-      },
-      {
-        ...boostableBoard[1],
-        strength:
-          (boostableBoard[1].strength as number) + ELEVATED_ACOLYTE_BOOST
-      }
-    ])
+    const { board } = state.bottomPlayer
+
+    expect(board[0].strength).toBe(
+      (board[0].prototype.strength as number) + BROTHER_SACHELMAN_BOOST
+    )
+    expect(board[1].strength).toBe(
+      (board[1].prototype.strength as number) + BROTHER_SACHELMAN_BOOST
+    )
   })
 
   it('should spawn all Hammerite Novice copies if a Hammerite Novice is played and there is another allied Hammerite card on the board', () => {

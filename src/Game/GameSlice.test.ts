@@ -1,9 +1,6 @@
 import { MockPlayer1, MockPlayer2 } from '../utils/mocks'
 import { GameActions, GameReducer, initialState } from './GameSlice'
-import { GameState, Player } from './GameTypes'
-import { HammeriteNovice } from '../Cards/AllCards'
-import { BROTHER_SACHELMAN_BOOST } from '../Cards/constants'
-import { createPlayCardFromPrototype } from '../Cards/CardUtils'
+import { GameState } from './GameTypes'
 
 const playersStartingTheGame = {
   topPlayer: MockPlayer1,
@@ -95,38 +92,5 @@ describe('Game State Slice', () => {
     expect(bottomPlayer.board).toEqual([])
 
     expect(bottomPlayer.hand).toEqual(playerHand)
-  })
-
-  it('should trigger on play effect on card if one is present', () => {
-    const topPlayerBoard: Player['board'] = [
-      createPlayCardFromPrototype(HammeriteNovice),
-      createPlayCardFromPrototype(HammeriteNovice)
-    ]
-
-    const mockGameState: GameState = {
-      ...gameStartedState,
-      topPlayer: {
-        ...gameStartedState.topPlayer,
-        board: topPlayerBoard
-      }
-    }
-
-    const state = GameReducer(
-      mockGameState,
-      GameActions.triggerCardAbility('BrotherSachelmanOnPlay')
-    )
-
-    expect(state.topPlayer.board).toEqual([
-      {
-        ...topPlayerBoard[0],
-        strength:
-          (topPlayerBoard[0].strength as number) + BROTHER_SACHELMAN_BOOST
-      },
-      {
-        ...topPlayerBoard[1],
-        strength:
-          (topPlayerBoard[1].strength as number) + BROTHER_SACHELMAN_BOOST
-      }
-    ])
   })
 })

@@ -6,47 +6,41 @@ import { mockCard } from '../../utils/mocks'
 import { joinCardTypes } from '../CardUtils'
 
 describe('Card Component', () => {
-  it('should display all shared UI segments of a card when face up', async () => {
+  it('should display all shared UI segments of a card when face up', () => {
     render(<Card card={mockCard} />)
 
-    expect(await screen.queryByText(mockCard.name)).toBeInTheDocument()
+    expect(screen.queryByText(mockCard.name)).toBeInTheDocument()
+
+    expect(screen.queryByText(`Cost: ${mockCard.cost}`)).toBeInTheDocument()
+
+    expect(screen.queryByText(mockCard.strength as number)).toBeInTheDocument()
 
     expect(
-      await screen.queryByText(`Cost: ${mockCard.cost}`)
+      screen.queryByText(joinCardTypes(mockCard.types))
     ).toBeInTheDocument()
 
     expect(
-      await screen.queryByText(mockCard.strength as number)
+      screen.queryByText(mockCard.description as string)
     ).toBeInTheDocument()
 
-    expect(
-      await screen.queryByText(joinCardTypes(mockCard.types))
-    ).toBeInTheDocument()
-
-    expect(
-      await screen.queryByText(mockCard.description as string)
-    ).toBeInTheDocument()
-
-    expect(
-      await screen.queryByText(mockCard.flavor as string)
-    ).toBeInTheDocument()
+    expect(screen.queryByText(mockCard.flavor as string)).toBeInTheDocument()
   })
 
-  it('should card back when face down', async () => {
+  it('should card back when face down', () => {
     render(<Card card={mockCard} isFaceDown />)
 
-    expect(await screen.queryByText(mockCard.name)).not.toBeInTheDocument()
+    expect(screen.queryByText(mockCard.name)).not.toBeInTheDocument()
     expect(
-      await screen.queryByText(mockCard.strength as number)
+      screen.queryByText(mockCard.strength as number)
     ).not.toBeInTheDocument()
   })
 
-  it('should fire on click event passing card id', async () => {
+  it('should fire on click event passing card id', () => {
     const onCardClick = jest.fn()
 
     render(<Card card={mockCard} onClickCard={onCardClick} />)
 
-    await fireEvent.click(screen.getByText(mockCard.name))
+    fireEvent.click(screen.getByText(mockCard.name))
 
     expect(onCardClick).toHaveBeenCalledWith(mockCard)
   })
