@@ -73,7 +73,7 @@ export const Board: FC = () => {
         className={`${styles.topPlayerInfo} ${!isPlayerTurn ? styles.activePlayerInfo : ''}`}
       >
         <span>{topPlayer?.name}</span> /{' '}
-        <motion.span className={styles.inlineBlock}>
+        <motion.span className={styles.inlineBlock} animate={topCoinsAnimation}>
           {topPlayer?.coins}
         </motion.span>
       </div>

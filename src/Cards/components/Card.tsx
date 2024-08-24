@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useAnimationControls } from 'framer-motion'
 
 import styles from '../../styles.module.css'
 import * as Animations from '../../utils/animations'
@@ -36,6 +36,9 @@ export const Card: FC<CardProps> = ({
 
   const prevStrength = usePrevious(strength)
 
+  const strengthChangeAnimation = useAnimationControls()
+  const cardBoostAnimation = useAnimationControls()
+
   const [cardPaperVariant, setCardPaperVariant] = useState('')
   const [showCardFace, setShowCardFace] = useState(
     isFaceDown ? ShowCardFace.BACK : ShowCardFace.FRONT
@@ -59,14 +62,14 @@ export const Card: FC<CardProps> = ({
   }
 
   useEffect(() => {
-    if (prevStrength !== strength) {
-      // TODO: strength change animation
+    if (prevStrength && prevStrength !== strength) {
+      strengthChangeAnimation.start(Animations.numberChange)
     }
 
     if ((prevStrength as number) < (strength as number)) {
-      // TODO: boost animation
+      cardBoostAnimation.start(Animations.cardBoost)
     }
-  }, [prevStrength, strength])
+  }, [prevStrength, strength, strengthChangeAnimation, cardBoostAnimation])
 
   useEffect(() => {
     if (isFaceDown) {
@@ -79,6 +82,7 @@ export const Card: FC<CardProps> = ({
   return (
     <motion.div
       layoutId={id}
+      animate={cardBoostAnimation}
       onClick={onClickCard ? () => onClickCard(card) : undefined}
       className={`${styles.card} ${isSmaller ? styles.smallCard : ''} ${isActive ? styles.activeCard : ''}`}
     >
@@ -92,21 +96,23 @@ export const Card: FC<CardProps> = ({
       >
         {(showCardFace === ShowCardFace.BOTH ||
           showCardFace === ShowCardFace.FRONT) && (
-          <div className={styles.cardFront}>
+          <div
+            className={`${styles.cardFront}  ${isActive ? styles.activeCardFront : ''}`}
+          >
             <div
               className={styles.cardHeader}
               style={{ background: getFactionColor(factions) }}
             >
               <div className={styles.cardTitle}>
                 <div>{name}</div>
-                <div>
-                  {strength && prototype.strength && (
+                {strength && prototype.strength && (
+                  <motion.div animate={strengthChangeAnimation}>
                     <PositiveNegativeNumber
                       current={strength}
                       base={prototype.strength}
                     />
-                  )}
-                </div>
+                  </motion.div>
+                )}
               </div>
               <div className={styles.cardTypes}>{joinCardTypes(types)}</div>
             </div>
