@@ -1,8 +1,7 @@
 import '@testing-library/jest-dom'
-import { render, screen, waitFor } from '../../utils/test-utils'
+import { fireEvent, render, screen, waitFor } from '../../utils/test-utils'
 import { Board } from './Board'
 import { baseGameMockedState } from '../../utils/mocks'
-import { userEvent } from '@storybook/test'
 import {
   endTurnMessage,
   opponentTurnMessage,
@@ -49,7 +48,7 @@ describe('Board Component', () => {
     expect(await screen.queryByText(passButtonMessage)).toBeInTheDocument()
 
     await act(async () => {
-      await userEvent.click(screen.getByText(name))
+      await fireEvent.click(screen.getByText(name))
     })
 
     expect(await screen.queryByText(coins - cost)).toBeInTheDocument()
@@ -65,7 +64,7 @@ describe('Board Component', () => {
     expect(await screen.queryByRole('button')).toBeInTheDocument()
 
     await act(async () => {
-      await userEvent.click(screen.getByText(passButtonMessage))
+      await fireEvent.click(screen.getByText(passButtonMessage))
     })
 
     expect(await screen.queryByRole('button')).not.toBeInTheDocument()
@@ -84,7 +83,7 @@ describe('Board Component', () => {
     expect(await screen.queryByText(playedCPUCard.name)).not.toBeInTheDocument()
 
     await act(async () => {
-      await userEvent.click(screen.getByText(passButtonMessage))
+      await fireEvent.click(screen.getByText(passButtonMessage))
     })
 
     expect(await screen.queryByText(opponentTurnMessage)).toBeInTheDocument()

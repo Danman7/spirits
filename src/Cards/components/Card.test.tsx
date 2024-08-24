@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom'
 
-import userEvent from '@testing-library/user-event'
-import { render, screen } from '../../utils/test-utils'
+import { fireEvent, render, screen } from '../../utils/test-utils'
 import { Card } from './Card'
 import { mockCard } from '../../utils/mocks'
 import { joinCardTypes } from '../CardUtils'
@@ -47,7 +46,7 @@ describe('Card Component', () => {
 
     render(<Card card={mockCard} onClickCard={onCardClick} />)
 
-    await userEvent.click(screen.getByText(mockCard.name))
+    await fireEvent.click(screen.getByText(mockCard.name))
 
     expect(onCardClick).toHaveBeenCalledWith(mockCard)
   })

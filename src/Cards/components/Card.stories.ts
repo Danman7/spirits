@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { fn } from '@storybook/test'
 import { Card } from './Card'
 import { mockCard } from '../../utils/mocks'
 import {
@@ -14,12 +13,12 @@ const meta = {
   title: 'Card',
   component: Card,
   parameters: {
-    layout: 'centered'
+    layout: 'centered',
+    actions: { argTypesRegex: '^on.*' }
   },
   tags: ['autodocs'],
   args: {
     card: mockCard,
-    onClickCard: fn(),
     isFaceDown: false,
     isActive: false,
     isSmaller: false
