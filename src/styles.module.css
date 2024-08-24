@@ -10,41 +10,41 @@
   font-size: 1.25em;
 }
 
-.positiveText {
-  color: positiveColor;
+.shadowedText {
   text-shadow: 1px 1px 1px #000;
+}
+
+.positiveText {
+  composes: shadowedText;
+  color: positiveColor;
 }
 
 .negativeText {
+  composes: shadowedText;
   color: negativeColor;
-  text-shadow: 1px 1px 1px #000;
 }
 
 .card {
-  backgroundcolor: transparent;
   width: 250px;
   height: 350px;
-  font-size: 16px;
   perspective: 1000px;
 }
 
 .cardPaper {
-  position: relative;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
 }
 
 .cardSide {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
   width: 100%;
   height: 100%;
+  position: absolute;
   backface-visibility: hidden;
-  border-radius: 4px;
+  border-radius: 12px;
   border: 1px solid lineColor;
   box-shadow: 1px 1px 1px shadowColor;
+  overflow: hidden;
 }
 
 @keyframes activeGlow {
@@ -59,6 +59,8 @@
 
 .cardFront {
   composes: cardSide;
+  display: flex;
+  flex-direction: column;
   background: #fff;
 }
 
@@ -94,6 +96,16 @@
   width: 150px;
   height: 210px;
   font-size: 10px;
+
+  .cardBack {
+    background: repeating-linear-gradient(
+      45deg,
+      #fff,
+      #fff 5px,
+      #999 5px,
+      #999 10px
+    );
+  }
 }
 
 .cardHeader {
@@ -268,8 +280,8 @@
 .playerSide {
   display: flex;
   position: fixed;
-  left: 0;
-  right: 0;
+  left: 8px;
+  right: 8px;
 }
 
 .topPlayerSide {
