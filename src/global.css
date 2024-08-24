@@ -30,6 +30,7 @@ body {
   min-height: 100vh;
   text-rendering: optimizeSpeed;
   line-height: 1.5;
+  font-family: 'Noto Serif', serif;
 }
 
 a:not([class]) {
@@ -47,6 +48,10 @@ button,
 textarea,
 select {
   font: inherit;
+}
+
+p {
+  margin-bottom: 1em;
 }
 
 @media (prefers-reduced-motion: reduce) {

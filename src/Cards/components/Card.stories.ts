@@ -31,16 +31,10 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 
-export const OnTheBoard: Story = {
+export const SmallerVariant: Story = {
   args: {
     card: { ...mockCard },
     isSmaller: true
-  }
-}
-
-export const NotClickable: Story = {
-  args: {
-    onClickCard: undefined
   }
 }
 

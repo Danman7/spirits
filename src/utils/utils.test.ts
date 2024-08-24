@@ -1,4 +1,9 @@
-import { coinToss, generateUUID, getRandomArrayItem } from './utils'
+import {
+  coinToss,
+  generateUUID,
+  getCoinsMessage,
+  getRandomArrayItem
+} from './utils'
 
 describe('Game Utils', () => {
   it('should generate a UUID', () => {
@@ -15,5 +20,10 @@ describe('Game Utils', () => {
 
     expect(array).toContain(getRandomArrayItem(array))
     expect(getRandomArrayItem([])).toBeNull()
+  })
+
+  it('should show the proper coins message', () => {
+    expect(getCoinsMessage(1)).toBe('1 coin')
+    expect(getCoinsMessage(2)).toBe('2 coins')
   })
 })

@@ -19,9 +19,6 @@ const meta = {
     layout: 'fullscreen'
   },
   tags: ['autodocs'],
-  args: {
-    shouldDisableOverlay: true
-  },
   argTypes: {}
 } satisfies Meta<typeof Board>
 

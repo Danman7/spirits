@@ -1,10 +1,11 @@
 import '@testing-library/jest-dom'
-import { render, screen } from '../../utils/test-utils'
+import { render, screen, waitFor } from '../../utils/test-utils'
 import { Board } from './Board'
 import { baseGameMockedState } from '../../utils/mocks'
 import { userEvent } from '@storybook/test'
 import {
   endTurnMessage,
+  opponentTurnMessage,
   passButtonMessage,
   playerFirstMessage
 } from '../messages'
@@ -15,7 +16,7 @@ describe('Board Component', () => {
   it('should show the initial UI elements', async () => {
     const { topPlayer, bottomPlayer } = baseGameMockedState.game
 
-    render(<Board shouldDisableOverlay />, {
+    render(<Board />, {
       preloadedState: baseGameMockedState
     })
 
@@ -41,7 +42,7 @@ describe('Board Component', () => {
 
     const { name, cost } = bottomPlayer.hand[0]
 
-    render(<Board shouldDisableOverlay />, {
+    render(<Board />, {
       preloadedState: baseGameMockedState
     })
 
@@ -57,7 +58,7 @@ describe('Board Component', () => {
   })
 
   it('should be able to end the turn', async () => {
-    render(<Board shouldDisableOverlay />, {
+    render(<Board />, {
       preloadedState: baseGameMockedState
     })
 
@@ -71,7 +72,7 @@ describe('Board Component', () => {
   })
 
   it('should play a card as CPU and end the turn', async () => {
-    render(<Board shouldDisableOverlay />, {
+    render(<Board />, {
       preloadedState: {
         ...baseGameMockedState,
         game: { ...baseGameMockedState.game, topPlayer: MockCPUPlayer }
@@ -83,14 +84,21 @@ describe('Board Component', () => {
     expect(await screen.queryByText(playedCPUCard.name)).not.toBeInTheDocument()
 
     await act(async () => {
-      await userEvent.click(
-        screen.getByText(baseGameMockedState.game.bottomPlayer.hand[0].name)
-      )
       await userEvent.click(screen.getByText(passButtonMessage))
     })
 
-    expect(await screen.queryByText(playedCPUCard.name)).toBeInTheDocument()
+    expect(await screen.queryByText(opponentTurnMessage)).toBeInTheDocument()
 
-    expect(await screen.queryByText(passButtonMessage)).toBeInTheDocument()
+    await waitFor(
+      async () =>
+        expect(
+          await screen.queryByText(opponentTurnMessage)
+        ).not.toBeInTheDocument(),
+      {
+        timeout: 3000
+      }
+    )
+
+    expect(await screen.queryByText(playedCPUCard.name)).toBeInTheDocument()
   })
 })

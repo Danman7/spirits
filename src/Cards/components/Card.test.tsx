@@ -51,5 +51,4 @@ describe('Card Component', () => {
 
     expect(onCardClick).toHaveBeenCalledWith(mockCard)
   })
-
 })

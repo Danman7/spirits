@@ -1,7 +1,7 @@
 import { Haunt } from './AllCards'
 import { CHAOS_COLOR, ORDER_COLOR, SHADOW_COLOR } from './constants'
 import { CardFaction, CardType } from './CardTypes'
-import { getCoinsMessage, getFactionColor, joinCardTypes } from './CardUtils'
+import { getFactionColor, joinCardTypes } from './CardUtils'
 
 describe('Card utils', () => {
   it('should join the card types in a string', () => {
@@ -17,10 +17,5 @@ describe('Card utils', () => {
     expect(getFactionColor([CardFaction.Chaos, CardFaction.Shadow])).toBe(
       `linear-gradient(300deg, ${CHAOS_COLOR}, ${SHADOW_COLOR})`
     )
-  })
-
-  it('should show the proper coins message', () => {
-    expect(getCoinsMessage(1)).toBe('1 coin')
-    expect(getCoinsMessage(2)).toBe('2 coins')
   })
 })

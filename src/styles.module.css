@@ -1,0 +1,265 @@
+@value negative-color: #e81c4f;
+@value positive-color: #4fe81c;
+@value hilight-color: #ffd700;
+@value line-color: #999;
+@value pale-color: #ccc;
+@value background-color: #fff;
+@value shadow-color: #333;
+
+.lead {
+  font-size: 1.25em;
+}
+
+.positiveText {
+  color: positive-color;
+  text-shadow: 1px 1px 1px #000;
+}
+
+.negativeText {
+  color: negative-color;
+  text-shadow: 1px 1px 1px #000;
+}
+
+.card {
+  background-color: transparent;
+  width: 250px;
+  height: 350px;
+  font-size: 16px;
+  perspective: 1000px;
+}
+
+.cardPaper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.cardSide {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 4px;
+  border: 1px solid line-color;
+  box-shadow: 1px 1px 1px shadow-color;
+}
+
+.cardFront {
+  composes: cardSide;
+  background: #fff;
+}
+
+.cardBack {
+  composes: cardSide;
+  transform: rotateY(180deg);
+  background: repeating-linear-gradient(
+    45deg,
+    #fff,
+    #fff 10px,
+    #999 10px,
+    #999 20px
+  );
+}
+
+.card:hover {
+  box-shadow: 5px 5px 5px shadow-color;
+}
+
+.activeCard {
+  cursor: pointer;
+}
+
+.smallCard {
+  width: 150px;
+  height: 210px;
+  font-size: 10px;
+}
+
+.cardHeader {
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid line-color;
+  color: #fff;
+}
+
+.cardTitle {
+  composes: lead;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cardFooter {
+  bottom: 0;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid line-color;
+}
+
+.cardTypes {
+  display: flex;
+  justify-content: center;
+  font-style: italic;
+  font-size: 0.875em;
+}
+
+.cardContent {
+  overflow: auto;
+  padding: 0.5em;
+  flex-grow: 2;
+}
+
+.cardFlavor {
+  font-style: italic;
+  font-size: 0.875em;
+}
+
+.board {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.playerBoard {
+  height: 50vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 0.5rem;
+  gap: 0.5rem;
+  z-index: 1;
+}
+
+.topPlayerBoard {
+  composes: playerBoard;
+  border-bottom: 1px dashed pale-color;
+  align-items: flex-end;
+}
+
+.bottomPlayerBoard {
+  composes: playerBoard;
+  align-items: flex-start;
+}
+
+.playerHand {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  z-index: 2;
+  flex-grow: 2;
+
+  .card {
+    margin: 0 -80px;
+  }
+}
+
+.bottomPlayerHand {
+  composes: playerHand;
+
+  .card {
+    position: relative;
+    bottom: 0;
+
+    &:hover {
+      z-index: 2;
+      bottom: 275px;
+    }
+  }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  opacity: 0;
+}
+
+.playerInfo {
+  position: fixed;
+  left: 8px;
+}
+
+.activePlayerInfo {
+  font-weight: 800;
+}
+
+.topPlayerInfo {
+  composes: playerInfo;
+  top: 8px;
+}
+
+.bottomPlayerInfo {
+  composes: playerInfo;
+  bottom: 8px;
+}
+
+.button {
+  background: positive-color;
+  border: none;
+  padding: 8px 16px;
+  box-shadow:
+    inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
+    1px 1px 1px shadow-color;
+  border-radius: 6px;
+  cursor: pointer;
+  transform-origin: center;
+
+  &:hover {
+    box-shadow:
+      inset 3px 3px 3px 0px rgba(255, 255, 255, 0.5),
+      3px 3px 3px shadow-color;
+  }
+
+  &:active {
+    box-shadow: none;
+  }
+}
+
+.endTurnButton {
+  composes: button;
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+}
+
+.faceDownStack {
+  width: 150px;
+  height: 210px;
+  position: relative;
+}
+
+.inlineBlock {
+  display: inline-block;
+}
+
+.playerSide {
+  display: flex;
+  position: fixed;
+  left: 0;
+  right: 0;
+}
+
+.topPlayerSide {
+  composes: playerSide;
+  top: -300px;
+}
+
+.bottomPlayerSide {
+  composes: playerSide;
+  bottom: -275px;
+}

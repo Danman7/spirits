@@ -1,5 +1,6 @@
 import { FC } from 'react'
-import { NegativeText, PositiveText } from '../../styles'
+
+import styles from '../../styles.module.css'
 import { PositiveNegativeNumberProps } from '../CardTypes'
 
 export const PositiveNegativeNumber: FC<PositiveNegativeNumberProps> = ({
@@ -7,11 +8,11 @@ export const PositiveNegativeNumber: FC<PositiveNegativeNumberProps> = ({
   current
 }) => {
   if (current > base) {
-    return <PositiveText>{current}</PositiveText>
+    return <div className={styles.positiveText}>{current}</div>
   }
 
   if (current < base) {
-    return <NegativeText>{current}</NegativeText>
+    return <div className={styles.negativeText}>{current}</div>
   }
 
   return <>{current}</>

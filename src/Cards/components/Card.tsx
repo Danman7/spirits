@@ -1,26 +1,25 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 
-import {
-  CardHeader,
-  CardContent,
-  StyledCard,
-  CardTitle,
-  CardTypes,
-  CardFlavor,
-  CardFooter
-} from './CardStyles'
-import { Lead } from '../../styles'
+import styles from '../../styles.module.css'
+import * as Animations from '../../utils/animations'
+
 import { getFactionColor, joinCardTypes } from '../CardUtils'
 import { PositiveNegativeNumber } from './PositiveNegativeNumber'
-import { useTheme } from 'styled-components'
 import { usePrevious } from '../../utils/customHooks'
 import { CardProps } from '../CardTypes'
 
+const enum ShowCardFace {
+  FRONT,
+  BACK,
+  BOTH
+}
+
 export const Card: FC<CardProps> = ({
   card,
-  isSmaller,
   isFaceDown,
   isActive,
+  isSmaller,
   onClickCard
 }) => {
   const {
@@ -35,9 +34,29 @@ export const Card: FC<CardProps> = ({
     prototype
   } = card
 
-  const theme = useTheme()
-
   const prevStrength = usePrevious(strength)
+
+  const [cardPaperVariant, setCardPaperVariant] = useState('')
+  const [showCardFace, setShowCardFace] = useState(
+    isFaceDown ? ShowCardFace.BACK : ShowCardFace.FRONT
+  )
+
+  const onCardFlipStart = () => {
+    if (
+      (isFaceDown && showCardFace !== ShowCardFace.BACK) ||
+      (!isFaceDown && showCardFace !== ShowCardFace.FRONT)
+    ) {
+      setShowCardFace(ShowCardFace.BOTH)
+    }
+  }
+
+  const onCardFlipEnd = () => {
+    if (isFaceDown) {
+      return setShowCardFace(ShowCardFace.BACK)
+    }
+
+    setShowCardFace(ShowCardFace.FRONT)
+  }
 
   useEffect(() => {
     if (prevStrength !== strength) {
@@ -50,62 +69,59 @@ export const Card: FC<CardProps> = ({
   }, [prevStrength, strength])
 
   useEffect(() => {
-    // TODO: card active animation
-  }, [isActive, theme])
+    if (isFaceDown) {
+      return setCardPaperVariant('faceDown')
+    }
+
+    setCardPaperVariant('faceUp')
+  }, [isFaceDown])
 
   return (
-    <StyledCard
+    <motion.div
       layoutId={id}
       onClick={onClickCard ? () => onClickCard(card) : undefined}
-      $isSmaller={isSmaller}
-      $isFaceDown={isFaceDown}
+      className={`${styles.card} ${isSmaller ? styles.smallCard : ''} ${isActive ? styles.activeCard : ''}`}
     >
-      {isFaceDown ? (
-        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-          <defs>
-            <pattern
-              id="pattern_rkKfx"
-              patternUnits="userSpaceOnUse"
-              width="12"
-              height="12"
-              patternTransform="rotate(45)"
+      <motion.div
+        className={styles.cardPaper}
+        initial={isFaceDown ? 'faceDown' : 'faceUp'}
+        variants={Animations.cardPaperVariants}
+        animate={cardPaperVariant}
+        onAnimationStart={onCardFlipStart}
+        onAnimationComplete={onCardFlipEnd}
+      >
+        {(showCardFace === ShowCardFace.BOTH ||
+          showCardFace === ShowCardFace.FRONT) && (
+          <div className={styles.cardFront}>
+            <div
+              className={styles.cardHeader}
+              style={{ background: getFactionColor(factions) }}
             >
-              <line
-                x1="0"
-                y="0"
-                x2="0"
-                y2="12"
-                stroke={theme.colors.line}
-                strokeWidth="8"
-              />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#pattern_rkKfx)" />
-        </svg>
-      ) : (
-        <>
-          <CardHeader $factionColor={getFactionColor(factions)}>
-            <CardTitle>
-              <Lead>{name}</Lead>
-              <Lead>
-                {strength && prototype.strength && (
-                  <PositiveNegativeNumber
-                    current={strength}
-                    base={prototype.strength}
-                  />
-                )}
-              </Lead>
-            </CardTitle>
-            <CardTypes>{joinCardTypes(types)}</CardTypes>
-          </CardHeader>
-          <CardContent>
-            {description}
-            <br />
-            <CardFlavor>{flavor}</CardFlavor>
-          </CardContent>
-          <CardFooter>Cost: {cost}</CardFooter>
-        </>
-      )}
-    </StyledCard>
+              <div className={styles.cardTitle}>
+                <div>{name}</div>
+                <div>
+                  {strength && prototype.strength && (
+                    <PositiveNegativeNumber
+                      current={strength}
+                      base={prototype.strength}
+                    />
+                  )}
+                </div>
+              </div>
+              <div className={styles.cardTypes}>{joinCardTypes(types)}</div>
+            </div>
+            <div className={styles.cardContent}>
+              <p>{description}</p>
+              <div className={styles.cardFlavor}>{flavor}</div>
+            </div>
+            <div className={styles.cardFooter}>Cost: {cost}</div>
+          </div>
+        )}
+        {(showCardFace === ShowCardFace.BOTH ||
+          showCardFace === ShowCardFace.BACK) && (
+          <div className={styles.cardBack}></div>
+        )}
+      </motion.div>
+    </motion.div>
   )
 }

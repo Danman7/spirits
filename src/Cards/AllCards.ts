@@ -8,7 +8,7 @@ import {
   VIKTORIA_COIN_GAIN
 } from './constants'
 import { Card, CardFaction, CardType } from './CardTypes'
-import { getCoinsMessage } from './CardUtils'
+import { getCoinsMessage } from '../utils/utils'
 
 export const Zombie: Card = {
   name: 'Zombie',

@@ -7,7 +7,7 @@ import { MockPlayer1 } from '../../utils/mocks'
 
 describe('Overlay component', () => {
   it('should show the correct message when player is first', async () => {
-    render(<Overlay isAnimated={false} />, {
+    render(<Overlay />, {
       preloadedState: baseGameMockedState
     })
 

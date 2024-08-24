@@ -1,19 +1,10 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
+import { motion, useAnimationControls } from 'framer-motion'
 
-import {
-  BottomPlayerHand,
-  StyledBoard,
-  TopPlayerBoard,
-  BottomPlayerBoard,
-  PlayerHand,
-  TopPlayerInfo,
-  BottomPlayerInfo,
-  EndTurnButton,
-  CoinsElement,
-  FaceDownStack,
-  TopPlayerNonBoard,
-  BottomPlayerNonBoard
-} from './GameStyles'
+import styles from '../../styles.module.css'
+
+import * as Animations from '../../utils/animations'
+
 import {
   getActivePlayerId,
   getTopPlayer,
@@ -26,21 +17,16 @@ import { Overlay } from './Overlay'
 import { useAppDispatch, useAppSelector } from '../../state'
 import { endTurnMessage, passButtonMessage } from '../messages'
 import { compPlayTurn } from '../ComputerPlayerUtils'
-import { useTheme } from 'styled-components'
-import { usePrevious } from '../../utils/customHooks'
 import { CardProps, PlayCard } from '../../Cards/CardTypes'
 import { Card } from '../../Cards/components/Card'
 
-export interface BoardProps {
-  shouldDisableOverlay?: boolean
-}
-
-export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
+export const Board: FC = () => {
   const dispatch = useAppDispatch()
 
-  const theme = useTheme()
-
   const [shouldShowOverlay, setShouldShowOverlay] = useState(false)
+
+  const topCoinsAnimation = useAnimationControls()
+  const bottomCoinsAnimation = useAnimationControls()
 
   const topPlayer = useAppSelector(getTopPlayer)
   const bottomPlayer = useAppSelector(getBottomPlayer)
@@ -49,13 +35,6 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
   const isCardPlayedThisTurn = useAppSelector(getIsCardPlayedThisTurn)
 
   const isPlayerTurn = bottomPlayer?.id === activePlayerId
-
-  const prevTopPlayerCoins = usePrevious(topPlayer.coins)
-  const prevBottomPlayerCoins = usePrevious(bottomPlayer.coins)
-  const prevActivePlayerId = usePrevious(activePlayerId)
-
-  const topPlayerCoinsElement = useRef<HTMLDivElement>(null)
-  const bottomPlayerCoinsElement = useRef<HTMLDivElement>(null)
 
   const onPlayCard: CardProps['onClickCard'] = useCallback(
     (card: PlayCard) => {
@@ -69,92 +48,76 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
   }, [dispatch])
 
   useEffect(() => {
-    if (shouldDisableOverlay) {
-      return
-    }
-
     setShouldShowOverlay(true)
+  }, [turn])
 
-    const overlayCloseTimer = setTimeout(() => {
-      setShouldShowOverlay(false)
-    }, theme.slowAnimationDuration)
+  const onAnimationComplete = () => {
+    setShouldShowOverlay(false)
 
-    return () => {
-      clearTimeout(overlayCloseTimer)
-    }
-  }, [turn, shouldDisableOverlay, theme.slowAnimationDuration])
-
-  useEffect(() => {
-    if (
-      topPlayer.isNonHuman &&
-      prevActivePlayerId !== activePlayerId &&
-      activePlayerId === topPlayer.id
-    ) {
+    if (topPlayer.isNonHuman && activePlayerId === topPlayer.id) {
       compPlayTurn(topPlayer, onPlayCard, onEndTurn)
     }
-  }, [activePlayerId, onEndTurn, onPlayCard, prevActivePlayerId, topPlayer])
+  }
 
   useEffect(() => {
-    if (prevTopPlayerCoins && prevTopPlayerCoins !== topPlayer.coins) {
-      // TODO: top coin change animation
-    }
-  }, [prevTopPlayerCoins, topPlayer.coins])
+    topCoinsAnimation.start(Animations.numberChange)
+  }, [topCoinsAnimation, topPlayer.coins])
 
   useEffect(() => {
-    if (prevBottomPlayerCoins && prevBottomPlayerCoins !== bottomPlayer.coins) {
-      // TODO: bottom coin change animation
-    }
-  }, [prevBottomPlayerCoins, bottomPlayer.coins])
+    bottomCoinsAnimation.start(Animations.numberChange)
+  }, [bottomCoinsAnimation, bottomPlayer.coins])
 
   return (
-    <StyledBoard>
-      <TopPlayerInfo $isActivePlayer={!isPlayerTurn}>
+    <div className={styles.board}>
+      <div
+        className={`${styles.topPlayerInfo} ${!isPlayerTurn ? styles.activePlayerInfo : ''}`}
+      >
         <span>{topPlayer?.name}</span> /{' '}
-        <CoinsElement ref={topPlayerCoinsElement}>
+        <motion.span className={styles.inlineBlock}>
           {topPlayer?.coins}
-        </CoinsElement>
-      </TopPlayerInfo>
+        </motion.span>
+      </div>
 
-      <TopPlayerNonBoard>
-        <FaceDownStack>
+      <div className={styles.topPlayerSide}>
+        <div className={styles.faceDownStack}>
           {topPlayer.discard.map(card => (
             <Card key={card.id} card={card} isFaceDown isSmaller />
           ))}
-        </FaceDownStack>
+        </div>
 
-        <PlayerHand>
+        <div className={styles.playerHand}>
           {topPlayer.hand.map(card => (
             <Card key={card.id} card={card} isFaceDown />
           ))}
-        </PlayerHand>
+        </div>
 
-        <FaceDownStack>
+        <div className={styles.faceDownStack}>
           {topPlayer.deck.map(card => (
             <Card key={card.id} card={card} isFaceDown isSmaller />
           ))}
-        </FaceDownStack>
-      </TopPlayerNonBoard>
+        </div>
+      </div>
 
-      <TopPlayerBoard>
+      <div className={styles.topPlayerBoard}>
         {topPlayer.board.map(card => (
           <Card key={card.id} card={card} isSmaller />
         ))}
-      </TopPlayerBoard>
+      </div>
 
-      <BottomPlayerBoard>
+      <div className={styles.bottomPlayerBoard}>
         {bottomPlayer.board.map(card => (
           <Card key={card.id} card={card} isSmaller />
         ))}
-      </BottomPlayerBoard>
+      </div>
 
-      <BottomPlayerNonBoard>
-        <FaceDownStack>
+      <div className={styles.bottomPlayerSide}>
+        <div className={styles.faceDownStack}>
           {bottomPlayer.discard.map(card => (
             <Card key={card.id} card={card} isFaceDown isSmaller />
           ))}
-        </FaceDownStack>
+        </div>
 
-        <BottomPlayerHand>
+        <div className={styles.bottomPlayerHand}>
           {bottomPlayer.hand.map(card => (
             <Card
               key={card.id}
@@ -169,29 +132,36 @@ export const Board: FC<BoardProps> = ({ shouldDisableOverlay = false }) => {
               }
             />
           ))}
-        </BottomPlayerHand>
+        </div>
 
-        <FaceDownStack>
+        <div className={styles.faceDownStack}>
           {bottomPlayer.deck.map(card => (
             <Card key={card.id} card={card} isFaceDown isSmaller />
           ))}
-        </FaceDownStack>
-      </BottomPlayerNonBoard>
+        </div>
+      </div>
 
-      <BottomPlayerInfo $isActivePlayer={isPlayerTurn}>
+      <div
+        className={`${styles.bottomPlayerInfo} ${isPlayerTurn ? styles.activePlayerInfo : ''}`}
+      >
         <span>{bottomPlayer?.name}</span> /{' '}
-        <CoinsElement ref={bottomPlayerCoinsElement}>
+        <motion.span
+          animate={bottomCoinsAnimation}
+          className={styles.inlineBlock}
+        >
           {bottomPlayer?.coins}
-        </CoinsElement>
-      </BottomPlayerInfo>
+        </motion.span>
+      </div>
 
-      {shouldShowOverlay && <Overlay />}
+      {shouldShowOverlay && (
+        <Overlay onAnimationComplete={onAnimationComplete} />
+      )}
 
       {isPlayerTurn && (
-        <EndTurnButton onClick={onEndTurn}>
+        <button className={styles.endTurnButton} onClick={onEndTurn}>
           {isCardPlayedThisTurn ? endTurnMessage : passButtonMessage}
-        </EndTurnButton>
+        </button>
       )}
-    </StyledBoard>
+    </div>
   )
 }

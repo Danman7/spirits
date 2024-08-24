@@ -12,9 +12,6 @@ const meta = {
     layout: 'fullscreen'
   },
   tags: ['autodocs'],
-  args: {
-    isAnimated: false
-  },
   argTypes: {}
 } satisfies Meta<typeof Overlay>
 

@@ -18,9 +18,6 @@ export const getFactionColor = (factions: Card['factions']) => {
   })`
 }
 
-export const getCoinsMessage = (coins: number) =>
-  `${coins} ${coins > 1 ? 'coins' : 'coin'}`
-
 export const createPlayCardFromPrototype = (cardPrototype: Card): PlayCard => {
   const prototype: PlayCard['prototype'] = {
     cost: cardPrototype.cost
