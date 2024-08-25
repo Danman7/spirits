@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { PositiveNegativeNumber } from './PositiveNegativeNumber'
+
+import { PositiveNegativeNumber } from 'src/shared/components/PositiveNegativeNumber'
 
 const meta = {
   title: 'PositiveNegativeNumber',

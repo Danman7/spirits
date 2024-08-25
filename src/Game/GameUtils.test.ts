@@ -3,9 +3,9 @@ import {
   opponentFirstMessage,
   yourTurnMessage,
   opponentTurnMessage
-} from './messages'
-import { getOverlayMessage, getPlayableCards } from './GameUtils'
-import { MockPlayer1 } from '../utils/mocks'
+} from 'src/Game/messages'
+import { getOverlayMessage, getPlayableCards } from 'src/Game/GameUtils'
+import { MockPlayer1 } from 'src/shared/__mocks__/players'
 
 describe('Game utils', () => {
   it('should return the correct overlay message', () => {

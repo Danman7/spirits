@@ -6,9 +6,9 @@ import {
   GARRETT_COIN_GAIN,
   HAUNT_DAMAGE,
   VIKTORIA_COIN_GAIN
-} from './constants'
-import { Card, CardFaction, CardType } from './CardTypes'
-import { getCoinsMessage } from '../utils/utils'
+} from 'src/Cards/constants'
+import { Card, CardFaction, CardType } from 'src/Cards/CardTypes'
+import { getCoinsMessage } from 'src/shared/utils/utils'
 
 export const Zombie: Card = {
   name: 'Zombie',
@@ -75,7 +75,8 @@ export const BrotherSachelman: Card = {
   factions: [CardFaction.Order],
   types: [CardType.Hammerite],
   description: `On play boost any Hammerite in play with lower strength than Brother Scahelman by ${BROTHER_SACHELMAN_BOOST}`,
-  flavor: '',
+  flavor:
+    'May the Hammer fall on the unrighteous. Officially, Brother Sachelman',
   onPlay: 'BrotherSachelmanOnPlay'
 }
 

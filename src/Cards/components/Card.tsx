@@ -1,13 +1,16 @@
 import { FC, useEffect, useState } from 'react'
 import { motion, useAnimationControls } from 'framer-motion'
 
-import styles from '../../styles.module.css'
-import * as Animations from '../../utils/animations'
-
-import { getFactionColor, joinCardTypes } from '../CardUtils'
-import { PositiveNegativeNumber } from './PositiveNegativeNumber'
-import { usePrevious } from '../../utils/customHooks'
-import { CardProps } from '../CardTypes'
+import styles from 'src/shared/styles/styles.module.css'
+import { CardProps } from 'src/Cards/CardTypes'
+import { usePrevious } from 'src/shared/utils/customHooks'
+import {
+  cardBoost,
+  cardPaperVariants,
+  numberChange
+} from 'src/shared/utils/animations'
+import { getFactionColor, joinCardTypes } from 'src/Cards/CardUtils'
+import { PositiveNegativeNumber } from 'src/shared/components/PositiveNegativeNumber'
 
 const enum ShowCardFace {
   FRONT,
@@ -15,7 +18,7 @@ const enum ShowCardFace {
   BOTH
 }
 
-export const Card: FC<CardProps> = ({
+const Card: FC<CardProps> = ({
   card,
   isFaceDown,
   isActive,
@@ -39,7 +42,9 @@ export const Card: FC<CardProps> = ({
   const strengthChangeAnimation = useAnimationControls()
   const cardBoostAnimation = useAnimationControls()
 
-  const [cardPaperVariant, setCardPaperVariant] = useState('')
+  const [cardPaperVariant, setCardPaperVariant] = useState(
+    isFaceDown ? 'faceDown' : 'faceUp'
+  )
   const [showCardFace, setShowCardFace] = useState(
     isFaceDown ? ShowCardFace.BACK : ShowCardFace.FRONT
   )
@@ -63,11 +68,11 @@ export const Card: FC<CardProps> = ({
 
   useEffect(() => {
     if (prevStrength && prevStrength !== strength) {
-      strengthChangeAnimation.start(Animations.numberChange)
+      strengthChangeAnimation.start(numberChange)
     }
 
     if ((prevStrength as number) < (strength as number)) {
-      cardBoostAnimation.start(Animations.cardBoost)
+      cardBoostAnimation.start(cardBoost)
     }
   }, [prevStrength, strength, strengthChangeAnimation, cardBoostAnimation])
 
@@ -81,22 +86,23 @@ export const Card: FC<CardProps> = ({
 
   return (
     <motion.div
+      initial={false}
       layoutId={id}
-      animate={cardBoostAnimation}
       onClick={onClickCard ? () => onClickCard(card) : undefined}
       className={`${styles.card} ${isSmaller ? styles.smallCard : ''} ${isActive ? styles.activeCard : ''}`}
     >
       <motion.div
         className={styles.cardPaper}
         initial={isFaceDown ? 'faceDown' : 'faceUp'}
-        variants={Animations.cardPaperVariants}
+        variants={cardPaperVariants}
         animate={cardPaperVariant}
         onAnimationStart={onCardFlipStart}
         onAnimationComplete={onCardFlipEnd}
       >
         {(showCardFace === ShowCardFace.BOTH ||
           showCardFace === ShowCardFace.FRONT) && (
-          <div
+          <motion.div
+            animate={cardBoostAnimation}
             className={`${styles.cardFront}  ${isActive ? styles.activeCardFront : ''}`}
           >
             <div
@@ -121,7 +127,7 @@ export const Card: FC<CardProps> = ({
               <div className={styles.cardFlavor}>{flavor}</div>
             </div>
             <div className={styles.cardFooter}>Cost: {cost}</div>
-          </div>
+          </motion.div>
         )}
         {(showCardFace === ShowCardFace.BOTH ||
           showCardFace === ShowCardFace.BACK) && (
@@ -131,3 +137,5 @@ export const Card: FC<CardProps> = ({
     </motion.div>
   )
 }
+
+export default Card

@@ -1,5 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { MainState } from '../state/StateTypes'
+
+import { MainState } from 'src/shared/redux/StateTypes'
 
 export const getGameState = (state: MainState) => state.game
 

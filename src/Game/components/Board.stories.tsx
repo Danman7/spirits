@@ -1,16 +1,17 @@
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 import type { Meta, StoryObj } from '@storybook/react'
-import { reducer } from '../../state'
-import { Board } from './Board'
-import { baseGameMockedState } from '../../utils/mocks'
-import { MockCPUPlayer } from '../../utils/mocks'
+
+import Board from 'src/Game/components/Board'
 import {
   DownwinderThief,
   GarrettMasterThief,
   ViktoriaThiefPawn
-} from '../../Cards/AllCards'
-import { createPlayCardFromPrototype } from '../../Cards/CardUtils'
+} from 'src/Cards/CardPrototypes'
+import { createPlayCardFromPrototype } from 'src/Cards/CardUtils'
+import { reducer } from 'src/shared/redux/reducer'
+import { baseGameMockedState } from 'src/shared/__mocks__/state'
+import { MockCPUPlayer } from 'src/shared/__mocks__/players'
 
 const meta = {
   title: 'Board',

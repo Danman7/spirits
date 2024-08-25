@@ -1,7 +1,7 @@
-import { Player } from './GameTypes'
-import { getPlayableCards } from './GameUtils'
-import { getRandomArrayItem } from '../utils/utils'
-import { PlayCard } from '../Cards/CardTypes'
+import { Player } from 'src/Game/GameTypes'
+import { getPlayableCards } from 'src/Game/GameUtils'
+import { getRandomArrayItem } from 'src/shared/utils/utils'
+import { PlayCard } from 'src/Cards/CardTypes'
 
 export const compPlayRandomCard = (
   player: Player,

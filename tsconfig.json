@@ -2,9 +2,9 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "src/*": ["./*"]
+      "src/*": ["./src/*"]
     },
     "allowJs": true,
     "skipLibCheck": true,

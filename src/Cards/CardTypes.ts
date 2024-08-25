@@ -1,5 +1,5 @@
-import { CardState, GameState } from '../Game/GameTypes'
-import * as CardAbilities from '../Cards/CardAbilities'
+import * as CardAbilities from 'src/Cards/CardAbilities'
+import { CardState, GameState } from 'src/Game/GameTypes'
 
 export type CardAbility = keyof typeof CardAbilities
 
@@ -53,9 +53,4 @@ export interface CardPortalProps {
   card: PlayCard
   cardState?: CardState
   isPlayerCard?: boolean
-}
-
-export interface PositiveNegativeNumberProps {
-  base: number
-  current: number
 }

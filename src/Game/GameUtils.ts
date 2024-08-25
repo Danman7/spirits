@@ -3,8 +3,8 @@ import {
   opponentFirstMessage,
   yourTurnMessage,
   opponentTurnMessage
-} from './messages'
-import { Player } from './GameTypes'
+} from 'src/Game/messages'
+import { Player } from 'src/Game/GameTypes'
 
 export const getOverlayMessage = (
   isPlayerTurn: boolean,

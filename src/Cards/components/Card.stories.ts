@@ -1,13 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Card } from './Card'
-import { mockCard } from '../../utils/mocks'
+
+import Card from 'src/Cards/components/Card'
 import {
   ElevatedAcolyte,
   GarrettMasterThief,
   HammeriteNovice,
+  Haunt,
   ViktoriaThiefPawn
-} from '../AllCards'
-import { createPlayCardFromPrototype } from '../CardUtils'
+} from 'src/Cards/CardPrototypes'
+import { PlayCard } from 'src/Cards/CardTypes'
+import { createPlayCardFromPrototype } from 'src/Cards/CardUtils'
+
+const mockCard: PlayCard = createPlayCardFromPrototype(Haunt)
 
 const meta = {
   title: 'Card',

@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { GameState, Player, StartGamePayload } from './GameTypes'
-import { CardAbility, PlayCard } from '../Cards/CardTypes'
-import { EMPTY_PLAYER } from './constants'
-import { coinToss } from '../utils/utils'
-import * as CardAbilities from '../Cards/CardAbilities'
+
+import { GameState, Player, StartGamePayload } from 'src/Game/GameTypes'
+import { EMPTY_PLAYER } from 'src/Game/constants'
+import * as CardAbilities from 'src/Cards/CardAbilities'
+import { CardAbility, PlayCard } from 'src/Cards/CardTypes'
+import { coinToss } from 'src/shared/utils/utils'
 
 export const initialState: GameState = {
   turn: 0,

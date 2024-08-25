@@ -1,8 +1,9 @@
-import { generateUUID } from '../utils/utils'
-import { FACTION_COLOR_MAP } from './constants'
-import { Card, CardType, PlayCard } from './CardTypes'
 import { Dispatch } from '@reduxjs/toolkit'
-import { GameActions } from '../Game/GameSlice'
+
+import { FACTION_COLOR_MAP } from 'src/Cards/constants'
+import { Card, CardType, PlayCard } from 'src/Cards/CardTypes'
+import { GameActions } from 'src/Game/GameSlice'
+import { generateUUID } from 'src/shared/utils/utils'
 
 export const joinCardTypes = (types: Card['types']) => types.join(', ')
 

@@ -1,9 +1,16 @@
-import { baseGameMockedState, emptyGameMockedState } from '../utils/mocks'
-import { BrotherSachelmanOnPlay, HammeriteNoviceOnPlay } from './CardAbilities'
-import { GameState } from '../Game/GameTypes'
-import { HammeriteNovice, TempleGuard } from './AllCards'
-import { BROTHER_SACHELMAN_BOOST } from './constants'
-import { createPlayCardFromPrototype } from './CardUtils'
+import {
+  BrotherSachelmanOnPlay,
+  HammeriteNoviceOnPlay
+} from 'src/Cards/CardAbilities'
+import { HammeriteNovice, TempleGuard } from 'src/Cards/CardPrototypes'
+import { createPlayCardFromPrototype } from 'src/Cards/CardUtils'
+import { BROTHER_SACHELMAN_BOOST } from 'src/Cards/constants'
+import { GameState } from 'src/Game/GameTypes'
+import {
+  baseGameMockedState,
+  emptyGameMockedState
+} from 'src/shared/__mocks__/state'
+
 const baseGameState = baseGameMockedState.game
 
 describe('Card abilities', () => {

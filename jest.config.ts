@@ -5,10 +5,8 @@ const config: Config = {
   testEnvironment: 'jsdom',
   moduleDirectories: ['node_modules', 'src'],
   moduleNameMapper: {
-    '\\.(css|less|scss|sss|styl)$': '<rootDir>/node_modules/jest-css-modules'
-  },
-  transform: {
-    '^.+\\.jsx?$': 'babel-jest'
+    '\\.(css|less|scss|sss|styl)$': '<rootDir>/node_modules/jest-css-modules',
+    'src/(.*)': '<rootDir>/src/$1'
   },
   coverageThreshold: {
     global: {

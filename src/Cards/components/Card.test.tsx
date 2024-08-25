@@ -1,9 +1,12 @@
 import '@testing-library/jest-dom'
 
-import { fireEvent, render, screen } from '../../utils/test-utils'
-import { Card } from './Card'
-import { mockCard } from '../../utils/mocks'
-import { joinCardTypes } from '../CardUtils'
+import Card from 'src/Cards/components/Card'
+import { createPlayCardFromPrototype, joinCardTypes } from 'src/Cards/CardUtils'
+import { fireEvent, render, screen } from 'src/shared/utils/test-utils'
+import { BrotherSachelman } from 'src/Cards/CardPrototypes'
+import { PlayCard } from 'src/Cards/CardTypes'
+
+const mockCard: PlayCard = createPlayCardFromPrototype(BrotherSachelman)
 
 describe('Card Component', () => {
   it('should display all shared UI segments of a card when face up', () => {

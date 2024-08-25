@@ -1,6 +1,7 @@
 import { Reducer } from '@reduxjs/toolkit'
-import { GameState } from '../Game/GameTypes'
-import { store } from '.'
+
+import { GameState } from 'src/Game/GameTypes'
+import store from 'src/shared/redux/store'
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

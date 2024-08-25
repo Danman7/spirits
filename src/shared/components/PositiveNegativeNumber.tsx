@@ -1,7 +1,11 @@
 import { FC } from 'react'
 
-import styles from '../../styles.module.css'
-import { PositiveNegativeNumberProps } from '../CardTypes'
+import styles from 'src/shared/styles/styles.module.css'
+
+interface PositiveNegativeNumberProps {
+  base: number
+  current: number
+}
 
 export const PositiveNegativeNumber: FC<PositiveNegativeNumberProps> = ({
   base,

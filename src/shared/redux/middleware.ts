@@ -1,7 +1,8 @@
-import { createListenerMiddleware } from '@reduxjs/toolkit'
-import { GameActions } from '../Game/GameSlice'
-import { AppDispatch, RootState } from '.'
-import { checkForImplicitOnPlay } from '../Cards/CardUtils'
+import { addListener, createListenerMiddleware } from '@reduxjs/toolkit'
+
+import { checkForImplicitOnPlay } from 'src/Cards/CardUtils'
+import { GameActions } from 'src/Game/GameSlice'
+import { AppDispatch, RootState } from 'src/shared/redux/StateTypes'
 
 export const listenerMiddleware = createListenerMiddleware()
 
@@ -22,3 +23,5 @@ startAppListening({
     }
   }
 })
+
+export const addAppListener = addListener.withTypes<RootState, AppDispatch>()

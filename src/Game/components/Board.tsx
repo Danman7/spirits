@@ -1,9 +1,11 @@
 import { FC, useCallback, useEffect, useState } from 'react'
 import { motion, useAnimationControls } from 'framer-motion'
 
-import styles from '../../styles.module.css'
+import styles from 'src/shared/styles/styles.module.css'
+import * as Animations from 'src/shared/utils/animations'
 
-import * as Animations from '../../utils/animations'
+import Overlay from 'src/Game/components/Overlay'
+import Card from 'src/Cards/components/Card'
 
 import {
   getActivePlayerId,
@@ -11,16 +13,14 @@ import {
   getBottomPlayer,
   getGameTurn,
   getIsCardPlayedThisTurn
-} from '../GameSelectors'
-import { GameActions } from '../GameSlice'
-import { Overlay } from './Overlay'
-import { useAppDispatch, useAppSelector } from '../../state'
-import { endTurnMessage, passButtonMessage } from '../messages'
-import { compPlayTurn } from '../ComputerPlayerUtils'
-import { CardProps, PlayCard } from '../../Cards/CardTypes'
-import { Card } from '../../Cards/components/Card'
+} from 'src/Game/GameSelectors'
+import { GameActions } from 'src/Game/GameSlice'
+import { endTurnMessage, passButtonMessage } from 'src/Game/messages'
+import { compPlayTurn } from 'src/Game/ComputerPlayerUtils'
+import { CardProps, PlayCard } from 'src/Cards/CardTypes'
+import { useAppDispatch, useAppSelector } from 'src/shared/redux/hooks'
 
-export const Board: FC = () => {
+const Board: FC = () => {
   const dispatch = useAppDispatch()
 
   const [shouldShowOverlay, setShouldShowOverlay] = useState(false)
@@ -73,7 +73,11 @@ export const Board: FC = () => {
         className={`${styles.topPlayerInfo} ${!isPlayerTurn ? styles.activePlayerInfo : ''}`}
       >
         <span>{topPlayer?.name}</span> /{' '}
-        <motion.span className={styles.inlineBlock} animate={topCoinsAnimation}>
+        <motion.span
+          className={styles.inlineBlock}
+          initial={false}
+          animate={topCoinsAnimation}
+        >
           {topPlayer?.coins}
         </motion.span>
       </div>
@@ -146,6 +150,7 @@ export const Board: FC = () => {
       >
         <span>{bottomPlayer?.name}</span> /{' '}
         <motion.span
+          initial={false}
           animate={bottomCoinsAnimation}
           className={styles.inlineBlock}
         >
@@ -165,3 +170,5 @@ export const Board: FC = () => {
     </div>
   )
 }
+
+export default Board

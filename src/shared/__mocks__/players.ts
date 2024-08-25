@@ -1,18 +1,15 @@
 import {
-  Haunt,
-  Zombie,
+  BrotherSachelman,
+  DownwinderThief,
   ElevatedAcolyte,
   HammeriteNovice,
-  DownwinderThief,
-  BrotherSachelman,
-  TempleGuard
-} from '../Cards/AllCards'
-import { PlayCard } from '../Cards/CardTypes'
-import { createPlayCardFromPrototype } from '../Cards/CardUtils'
-import { DEFAULT_COINS_AMOUNT, EMPTY_PLAYER } from '../Game/constants'
-import { GameState, Player } from '../Game/GameTypes'
-import { store } from '../state'
-import { MainState } from '../state/StateTypes'
+  Haunt,
+  TempleGuard,
+  Zombie
+} from 'src/Cards/CardPrototypes'
+import { createPlayCardFromPrototype } from 'src/Cards/CardUtils'
+import { DEFAULT_COINS_AMOUNT, EMPTY_PLAYER } from 'src/Game/constants'
+import { Player } from 'src/Game/GameTypes'
 
 export const MockPlayer1: Player = {
   ...EMPTY_PLAYER,
@@ -79,27 +76,4 @@ export const PlayTestPlayer2: Player = {
     createPlayCardFromPrototype(Zombie),
     createPlayCardFromPrototype(Haunt)
   ]
-}
-
-export const mockCard: PlayCard = createPlayCardFromPrototype(Haunt)
-
-const initialState = store.getState()
-
-export const baseGameMockedState: MainState = {
-  ...initialState,
-  game: {
-    ...initialState.game,
-    turn: 1,
-    topPlayer: MockPlayer1,
-    bottomPlayer: MockPlayer2,
-    activePlayerId: MockPlayer2.id
-  }
-}
-
-export const emptyGameMockedState: GameState = {
-  ...initialState.game,
-  turn: 1,
-  topPlayer: { ...MockPlayer1, hand: [] },
-  bottomPlayer: { ...MockPlayer2, hand: [] },
-  activePlayerId: MockPlayer2.id
 }

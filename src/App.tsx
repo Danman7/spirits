@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
-import { Board } from './Game/components/Board'
-import { GameActions } from './Game/GameSlice'
-import { PlayTestPlayer1, PlayTestPlayer2 } from './utils/mocks'
-import { useAppDispatch } from './state'
+
+import Board from 'src/Game/components/Board'
+import { GameActions } from 'src/Game/GameSlice'
+import { PlayTestPlayer1, PlayTestPlayer2 } from 'src/shared/__mocks__/players'
+import { useAppDispatch } from 'src/shared/redux/hooks'
 
 export const App = () => {
   const dispatch = useAppDispatch()

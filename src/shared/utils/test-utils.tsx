@@ -6,9 +6,10 @@ import {
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 
-import { MainState } from '../state/StateTypes'
-import { reducer, store } from '../state'
-import { listenerMiddleware } from '../state/middleware'
+import store from 'src/shared/redux/store'
+import { reducer } from 'src/shared/redux/reducer'
+import { MainState } from 'src/shared/redux/StateTypes'
+import { listenerMiddleware } from 'src/shared/redux/middleware'
 
 interface customRenderOptions extends RenderOptions {
   preloadedState?: MainState

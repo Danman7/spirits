@@ -1,6 +1,6 @@
-import { MockPlayer1, MockPlayer2 } from '../utils/mocks'
-import { GameActions, GameReducer, initialState } from './GameSlice'
-import { GameState } from './GameTypes'
+import { GameActions, GameReducer, initialState } from 'src/Game/GameSlice'
+import { GameState } from 'src/Game/GameTypes'
+import { MockPlayer1, MockPlayer2 } from 'src/shared/__mocks__/players'
 
 const playersStartingTheGame = {
   topPlayer: MockPlayer1,
@@ -46,6 +46,13 @@ describe('Game State Slice', () => {
 
     expect(nextState.activePlayerId).toBe(nextState.bottomPlayer.id)
   })
+
+  // it('should be able to draw a card', () => {
+  //   const state = GameReducer(
+  //     initialState,
+  //     GameActions.startGame({ ...playersStartingTheGame, isPlayerFirst: false })
+  //   )
+  // })
 
   it('should change the active player on turn end', () => {
     const state = GameReducer(gameStartedState, GameActions.endTurn())

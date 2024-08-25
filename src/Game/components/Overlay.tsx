@@ -2,20 +2,20 @@ import { FC } from 'react'
 import { useSelector } from 'react-redux'
 import { motion } from 'framer-motion'
 
-import styles from '../../styles.module.css'
 import {
   getActivePlayerId,
   getBottomPlayer,
   getGameTurn
-} from '../GameSelectors'
-import { getOverlayMessage } from '../GameUtils'
-import * as Animations from '../../utils/animations'
+} from 'src/Game/GameSelectors'
+import { getOverlayMessage } from 'src/Game/GameUtils'
+import styles from 'src/shared/styles/styles.module.css'
+import * as Animations from 'src/shared/utils/animations'
 
 interface OverlayProps {
   onAnimationComplete?: () => void
 }
 
-export const Overlay: FC<OverlayProps> = ({ onAnimationComplete }) => {
+const Overlay: FC<OverlayProps> = ({ onAnimationComplete }) => {
   const bottomPlayer = useSelector(getBottomPlayer)
   const activePlayerId = useSelector(getActivePlayerId)
   const turn = useSelector(getGameTurn)
@@ -35,3 +35,5 @@ export const Overlay: FC<OverlayProps> = ({ onAnimationComplete }) => {
     </motion.div>
   )
 }
+
+export default Overlay

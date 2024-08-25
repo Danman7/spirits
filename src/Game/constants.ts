@@ -1,4 +1,4 @@
-import { Player } from './GameTypes'
+import { Player } from 'src/Game/GameTypes'
 
 export const EMPTY_PLAYER: Player = {
   id: '',

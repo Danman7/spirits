@@ -1,22 +1,26 @@
 import '@testing-library/jest-dom'
-import { fireEvent, render, screen, waitFor } from '../../utils/test-utils'
-import { Board } from './Board'
-import { baseGameMockedState } from '../../utils/mocks'
+
+import Board from 'src/Game/components/Board'
 import {
   endTurnMessage,
   opponentTurnMessage,
   passButtonMessage,
   playerFirstMessage
-} from '../messages'
-import { MockCPUPlayer } from '../../utils/mocks'
-import { MainState } from '../../state/StateTypes'
-import { createPlayCardFromPrototype } from '../../Cards/CardUtils'
-import { BrotherSachelman, HammeriteNovice } from '../../Cards/AllCards'
-import { BROTHER_SACHELMAN_BOOST } from '../../Cards/constants'
+} from 'src/Game/messages'
+import { createPlayCardFromPrototype } from 'src/Cards/CardUtils'
+import { BrotherSachelman, HammeriteNovice } from 'src/Cards/CardPrototypes'
+import { BROTHER_SACHELMAN_BOOST } from 'src/Cards/constants'
+import { fireEvent, render, screen, waitFor } from 'src/shared/utils/test-utils'
+import { baseGameMockedState } from 'src/shared/__mocks__/state'
+import { MockCPUPlayer } from 'src/shared/__mocks__/players'
+import { MainState } from 'src/shared/redux/StateTypes'
+import { GameState } from 'src/Game/GameTypes'
+
+const baseGameState = baseGameMockedState.game
 
 describe('Board Component', () => {
   it('should show the initial UI elements', () => {
-    const { topPlayer, bottomPlayer } = baseGameMockedState.game
+    const { topPlayer, bottomPlayer } = baseGameState
 
     render(<Board />, {
       preloadedState: baseGameMockedState
@@ -38,7 +42,7 @@ describe('Board Component', () => {
   })
 
   it('should be able to play a card from hand', () => {
-    const { bottomPlayer } = baseGameMockedState.game
+    const { bottomPlayer } = baseGameState
 
     const { coins } = bottomPlayer
 
@@ -73,7 +77,7 @@ describe('Board Component', () => {
     render(<Board />, {
       preloadedState: {
         ...baseGameMockedState,
-        game: { ...baseGameMockedState.game, topPlayer: MockCPUPlayer }
+        game: { ...baseGameState, topPlayer: MockCPUPlayer }
       }
     })
 
@@ -101,19 +105,21 @@ describe('Board Component', () => {
   it('should play a card witn an on play ability', () => {
     const playedCard = createPlayCardFromPrototype(BrotherSachelman)
 
+    const gameState: GameState = {
+      ...baseGameState,
+      bottomPlayer: {
+        ...baseGameState.bottomPlayer,
+        hand: [playedCard],
+        board: [
+          createPlayCardFromPrototype(HammeriteNovice),
+          createPlayCardFromPrototype(HammeriteNovice)
+        ]
+      }
+    }
+
     const mockState: MainState = {
       ...baseGameMockedState,
-      game: {
-        ...baseGameMockedState.game,
-        bottomPlayer: {
-          ...baseGameMockedState.game.bottomPlayer,
-          hand: [playedCard],
-          board: [
-            createPlayCardFromPrototype(HammeriteNovice),
-            createPlayCardFromPrototype(HammeriteNovice)
-          ]
-        }
-      }
+      game: gameState
     }
 
     render(<Board />, {

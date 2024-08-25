@@ -3,7 +3,7 @@ import {
   generateUUID,
   getCoinsMessage,
   getRandomArrayItem
-} from './utils'
+} from 'src/shared/utils/utils'
 
 describe('Game Utils', () => {
   it('should generate a UUID', () => {
