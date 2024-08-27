@@ -264,6 +264,10 @@
   width: 150px;
   height: 210px;
   position: relative;
+
+  .card {
+    position: absolute;
+  }
 }
 
 .inlineBlock {
@@ -275,11 +279,13 @@
   position: fixed;
   left: 8px;
   right: 8px;
+  z-index: 2;
 }
 
 .topPlayerSide {
   composes: playerSide;
   top: -300px;
+  align-items: flex-end;
 }
 
 .bottomPlayerSide {

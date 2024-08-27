@@ -1,10 +1,6 @@
-import { Provider } from 'react-redux'
-import { configureStore } from '@reduxjs/toolkit'
 import type { Meta, StoryObj } from '@storybook/react'
 
 import Overlay from 'src/Game/components/Overlay'
-import { reducer } from 'src/shared/redux/reducer'
-import { baseGameMockedState } from 'src/shared/__mocks__/state'
 
 const meta = {
   title: 'Overlay',
@@ -13,94 +9,12 @@ const meta = {
     layout: 'fullscreen'
   },
   tags: ['autodocs'],
-  argTypes: {}
+  args: {
+    message: 'Test message'
+  }
 } satisfies Meta<typeof Overlay>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const PlayerFirst: Story = {
-  decorators: [
-    story => (
-      <Provider
-        store={configureStore({
-          reducer,
-          preloadedState: baseGameMockedState
-        })}
-      >
-        <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
-          {story()}
-        </div>
-      </Provider>
-    )
-  ]
-}
-
-export const OpponentFirst: Story = {
-  decorators: [
-    story => (
-      <Provider
-        store={configureStore({
-          reducer,
-          preloadedState: {
-            ...baseGameMockedState,
-            game: {
-              ...baseGameMockedState.game,
-              activePlayerId: baseGameMockedState.game.topPlayer.id
-            }
-          }
-        })}
-      >
-        <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
-          {story()}
-        </div>
-      </Provider>
-    )
-  ]
-}
-
-export const PlayerTurn: Story = {
-  decorators: [
-    story => (
-      <Provider
-        store={configureStore({
-          reducer,
-          preloadedState: {
-            ...baseGameMockedState,
-            game: {
-              ...baseGameMockedState.game,
-              turn: 2
-            }
-          }
-        })}
-      >
-        <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
-          {story()}
-        </div>
-      </Provider>
-    )
-  ]
-}
-export const OpponentTurn: Story = {
-  decorators: [
-    story => (
-      <Provider
-        store={configureStore({
-          reducer,
-          preloadedState: {
-            ...baseGameMockedState,
-            game: {
-              ...baseGameMockedState.game,
-              turn: 2,
-              activePlayerId: baseGameMockedState.game.topPlayer.id
-            }
-          }
-        })}
-      >
-        <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
-          {story()}
-        </div>
-      </Provider>
-    )
-  ]
-}
+export const Default: Story = {}

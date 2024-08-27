@@ -127,3 +127,13 @@ export const AzaranTheCruel: Card = {
   flavor:
     "Be warned! The truth is hidden from the unworthy. Blacken thy heart, or face the prisoners of flesh. -- Azaran's last mortal written words"
 }
+
+export const BookOfAsh: Card = {
+  name: 'The Book of Ash',
+  cost: 5,
+  factions: [CardFaction.Chaos],
+  types: [CardType.Artifact],
+  description: 'Summon 2 zombies.',
+  flavor:
+    'I owe my transcendence to the Book of Ash, that tome of legend I recovered so long ago from the sands of long forgotten kings. Within its pages lie the secrets of life, death ...and undeath. -- Azaran the Cruel'
+}

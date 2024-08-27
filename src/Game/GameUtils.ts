@@ -4,7 +4,7 @@ import {
   yourTurnMessage,
   opponentTurnMessage
 } from 'src/Game/messages'
-import { Player } from 'src/Game/GameTypes'
+import { Player } from 'src/shared/redux/StateTypes'
 
 export const getOverlayMessage = (
   isPlayerTurn: boolean,

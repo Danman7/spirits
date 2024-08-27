@@ -8,8 +8,8 @@ import { configureStore } from '@reduxjs/toolkit'
 
 import store from 'src/shared/redux/store'
 import { reducer } from 'src/shared/redux/reducer'
-import { MainState } from 'src/shared/redux/StateTypes'
 import { listenerMiddleware } from 'src/shared/redux/middleware'
+import { MainState } from 'src/shared/redux/StateTypes'
 
 interface customRenderOptions extends RenderOptions {
   preloadedState?: MainState

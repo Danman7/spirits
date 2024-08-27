@@ -1,4 +1,4 @@
-import { Player } from 'src/Game/GameTypes'
+import { Player } from 'src/shared/redux/StateTypes'
 import { getPlayableCards } from 'src/Game/GameUtils'
 import { getRandomArrayItem } from 'src/shared/utils/utils'
 import { PlayCard } from 'src/Cards/CardTypes'

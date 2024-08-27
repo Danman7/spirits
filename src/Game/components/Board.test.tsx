@@ -1,139 +1,153 @@
 import '@testing-library/jest-dom'
 
 import Board from 'src/Game/components/Board'
-import {
-  endTurnMessage,
-  opponentTurnMessage,
-  passButtonMessage,
-  playerFirstMessage
-} from 'src/Game/messages'
+import { endTurnMessage, passButtonMessage } from 'src/Game/messages'
 import { createPlayCardFromPrototype } from 'src/Cards/CardUtils'
-import { BrotherSachelman, HammeriteNovice } from 'src/Cards/CardPrototypes'
+import {
+  BrotherSachelman,
+  HammeriteNovice,
+  Haunt
+} from 'src/Cards/CardPrototypes'
 import { BROTHER_SACHELMAN_BOOST } from 'src/Cards/constants'
 import { fireEvent, render, screen, waitFor } from 'src/shared/utils/test-utils'
-import { baseGameMockedState } from 'src/shared/__mocks__/state'
-import { MockCPUPlayer } from 'src/shared/__mocks__/players'
-import { MainState } from 'src/shared/redux/StateTypes'
-import { GameState } from 'src/Game/GameTypes'
+import { MockPlayer1, MockPlayer2 } from 'src/shared/__mocks__/players'
+import {
+  GamePhase,
+  MainState,
+  PlayerState,
+  GameState,
+  Player
+} from 'src/shared/redux/StateTypes'
 
-const baseGameState = baseGameMockedState.game
+const initialPlayers: PlayerState = [
+  {
+    ...MockPlayer1,
+    isActive: true,
+    hand: [createPlayCardFromPrototype(BrotherSachelman)]
+  },
+  { ...MockPlayer2, hand: [createPlayCardFromPrototype(Haunt)] }
+]
 
-describe('Board Component', () => {
-  it('should show the initial UI elements', () => {
-    const { topPlayer, bottomPlayer } = baseGameState
+const mockState: MainState = {
+  game: {
+    turn: 1,
+    players: initialPlayers,
+    phase: GamePhase.PLAYER_TURN
+  }
+}
 
-    render(<Board />, {
-      preloadedState: baseGameMockedState
-    })
+test('should show the general UI elements', () => {
+  const { players } = mockState.game
 
-    expect(screen.queryByText(topPlayer.name)).toBeInTheDocument()
-    expect(screen.queryByText(bottomPlayer.name)).toBeInTheDocument()
-
-    expect(screen.queryByText(topPlayer.coins)).toBeInTheDocument()
-    expect(screen.queryByText(bottomPlayer.coins)).toBeInTheDocument()
+  render(<Board />, {
+    preloadedState: mockState
   })
 
-  it('should show overlay', () => {
-    render(<Board />, {
-      preloadedState: baseGameMockedState
-    })
+  expect(screen.getByText(players[0].name)).toBeInTheDocument()
+  expect(screen.getByText(players[1].name)).toBeInTheDocument()
 
-    expect(screen.queryByText(playerFirstMessage)).toBeInTheDocument()
+  expect(screen.getByText(players[0].coins)).toBeInTheDocument()
+  expect(screen.getByText(players[1].coins)).toBeInTheDocument()
+})
+
+test('should be able to play a card from hand', async () => {
+  const { players } = mockState.game
+
+  const activePlayer = players.find(({ isActive }) => isActive) as Player
+
+  const { coins } = activePlayer
+
+  const { name, cost } = activePlayer.hand[0]
+
+  render(<Board />, {
+    preloadedState: mockState
   })
 
-  it('should be able to play a card from hand', () => {
-    const { bottomPlayer } = baseGameState
+  expect(screen.queryByText(passButtonMessage)).toBeInTheDocument()
 
-    const { coins } = bottomPlayer
+  fireEvent.click(screen.getByText(name))
 
-    const { name, cost } = bottomPlayer.hand[0]
+  expect(screen.getByText(coins - cost)).toBeInTheDocument()
 
-    render(<Board />, {
-      preloadedState: baseGameMockedState
-    })
+  expect(screen.queryByText(endTurnMessage)).toBeInTheDocument()
+})
 
-    expect(screen.queryByText(passButtonMessage)).toBeInTheDocument()
-
-    fireEvent.click(screen.getByText(name))
-
-    expect(screen.queryByText(coins - cost)).toBeInTheDocument()
-
-    expect(screen.queryByText(endTurnMessage)).toBeInTheDocument()
+test('should be able to end the turn', async () => {
+  render(<Board />, {
+    preloadedState: mockState
   })
 
-  it('should be able to end the turn', () => {
-    render(<Board />, {
-      preloadedState: baseGameMockedState
-    })
+  expect(screen.queryByRole('button')).toBeInTheDocument()
 
-    expect(screen.queryByRole('button')).toBeInTheDocument()
+  fireEvent.click(screen.getByText(passButtonMessage))
 
-    fireEvent.click(screen.getByText(passButtonMessage))
+  await waitFor(
+    async () =>
+      expect(
+        await expect(screen.queryByRole('button')).not.toBeInTheDocument()
+      ),
+    {
+      timeout: 3000
+    }
+  )
+})
 
-    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+test('should play a card as CPU and end the turn', async () => {
+  const mockGameState: GameState = {
+    ...mockState.game,
+    players: [initialPlayers[0], { ...initialPlayers[1], isCPU: true }]
+  }
+
+  render(<Board />, {
+    preloadedState: {
+      ...mockState,
+      game: mockGameState
+    }
   })
 
-  it('should play a card as CPU and end the turn', async () => {
-    render(<Board />, {
-      preloadedState: {
-        ...baseGameMockedState,
-        game: { ...baseGameState, topPlayer: MockCPUPlayer }
-      }
-    })
+  const playedCPUCard = mockGameState.players[1].hand[0]
 
-    const playedCPUCard = MockCPUPlayer.hand[0]
+  expect(screen.queryByText(playedCPUCard.name)).not.toBeInTheDocument()
 
-    expect(screen.queryByText(playedCPUCard.name)).not.toBeInTheDocument()
+  fireEvent.click(screen.getByText(passButtonMessage))
 
-    fireEvent.click(screen.getByText(passButtonMessage))
+  await waitFor(
+    async () =>
+      expect(
+        await screen.queryByText(playedCPUCard.name)
+      ).not.toBeInTheDocument(),
+    {
+      timeout: 3000
+    }
+  )
+})
 
-    expect(screen.queryByText(opponentTurnMessage)).toBeInTheDocument()
-
-    await waitFor(
-      async () =>
-        expect(
-          await screen.queryByText(opponentTurnMessage)
-        ).not.toBeInTheDocument(),
+test('should play a card witn an on play ability', () => {
+  const mockGameState: GameState = {
+    ...mockState.game,
+    players: [
+      initialPlayers[1],
       {
-        timeout: 3000
-      }
-    )
-
-    expect(screen.queryByText(playedCPUCard.name)).toBeInTheDocument()
-  })
-
-  it('should play a card witn an on play ability', () => {
-    const playedCard = createPlayCardFromPrototype(BrotherSachelman)
-
-    const gameState: GameState = {
-      ...baseGameState,
-      bottomPlayer: {
-        ...baseGameState.bottomPlayer,
-        hand: [playedCard],
+        ...initialPlayers[0],
         board: [
           createPlayCardFromPrototype(HammeriteNovice),
           createPlayCardFromPrototype(HammeriteNovice)
         ]
       }
-    }
+    ]
+  }
 
-    const mockState: MainState = {
-      ...baseGameMockedState,
-      game: gameState
-    }
-
-    render(<Board />, {
-      preloadedState: mockState
-    })
-
-    expect(screen.queryAllByText(HammeriteNovice.name)).toHaveLength(2)
-
-    fireEvent.click(screen.getByText(playedCard.name))
-
-    expect(
-      screen.queryAllByText(
-        (HammeriteNovice.strength as number) + BROTHER_SACHELMAN_BOOST
-      )
-    ).toHaveLength(2)
+  render(<Board />, {
+    preloadedState: { ...mockState, game: mockGameState }
   })
+
+  expect(screen.queryAllByText(HammeriteNovice.name)).toHaveLength(2)
+
+  fireEvent.click(screen.getByText(initialPlayers[0].hand[0].name))
+
+  expect(
+    screen.queryAllByText(
+      (HammeriteNovice.strength as number) + BROTHER_SACHELMAN_BOOST
+    )
+  ).toHaveLength(2)
 })

@@ -5,7 +5,7 @@ const config: Config = {
   testEnvironment: 'jsdom',
   moduleDirectories: ['node_modules', 'src'],
   moduleNameMapper: {
-    '\\.(css|less|scss|sss|styl)$': '<rootDir>/node_modules/jest-css-modules',
+    '.+\\.(css|styl|less|sass|scss)$': 'identity-obj-proxy',
     'src/(.*)': '<rootDir>/src/$1'
   },
   coverageThreshold: {

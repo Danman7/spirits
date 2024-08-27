@@ -5,49 +5,48 @@ import {
 } from 'src/Cards/CardPrototypes'
 import { CardAbilityFunction, CardType } from 'src/Cards/CardTypes'
 import { BROTHER_SACHELMAN_BOOST } from 'src/Cards/constants'
-import { GameState, Player } from 'src/Game/GameTypes'
+import { GameState, PlayerState } from 'src/shared/redux/StateTypes'
 
 export const BrotherSachelmanOnPlay: CardAbilityFunction = (
   state: GameState
 ) => {
-  const { activePlayerId, topPlayer, bottomPlayer } = state
+  const { players } = state
 
-  const updatePlayer = (player: Player): Player => {
-    if (player.id === activePlayerId) {
-      return {
-        ...player,
-        board: player.board.map(card => {
-          if (
-            card.types.includes(CardType.Hammerite) &&
-            card.strength &&
-            BrotherSachelman.strength &&
-            card.strength < BrotherSachelman.strength
-          ) {
-            return {
-              ...card,
-              strength: card.strength + BROTHER_SACHELMAN_BOOST
-            }
+  state.players = players.map(player => {
+    const { board, isActive } = player
+
+    if (!isActive) return player
+
+    return {
+      ...player,
+      board: board.map(card => {
+        if (
+          card.types.includes(CardType.Hammerite) &&
+          card.strength &&
+          BrotherSachelman.strength &&
+          card.strength < BrotherSachelman.strength
+        ) {
+          return {
+            ...card,
+            strength: card.strength + BROTHER_SACHELMAN_BOOST
           }
+        }
 
-          return card
-        })
-      }
+        return card
+      })
     }
-
-    return player
-  }
-
-  state.topPlayer = updatePlayer(topPlayer)
-  state.bottomPlayer = updatePlayer(bottomPlayer)
+  }) as PlayerState
 }
 
 export const HammeriteNoviceOnPlay: CardAbilityFunction = (
   state: GameState
 ) => {
-  const { topPlayer, bottomPlayer } = state
+  const { players } = state
 
-  const updatePlayer = (player: Player): Player => {
-    const { board, hand, deck } = player
+  state.players = players.map(player => {
+    const { board, hand, deck, isActive } = player
+
+    if (!isActive) return player
 
     if (board.find(card => card.types.includes(CardType.Hammerite))) {
       const noviceInDeck = deck.find(card => card.name === HammeriteNovice.name)
@@ -66,31 +65,23 @@ export const HammeriteNoviceOnPlay: CardAbilityFunction = (
     }
 
     return player
-  }
-
-  state.topPlayer = updatePlayer(topPlayer)
-  state.bottomPlayer = updatePlayer(bottomPlayer)
+  }) as PlayerState
 }
 
 export const NecromancerOnPlay: CardAbilityFunction = (state: GameState) => {
-  const { activePlayerId, topPlayer, bottomPlayer } = state
+  const { players } = state
 
-  const updatePlayer = (player: Player): Player => {
-    const { discard, board, id } = player
+  state.players = players.map(player => {
+    const { board, discard, isActive } = player
+
+    if (!isActive) return player
 
     const zombiesInDiscard = discard.filter(card => card.name === Zombie.name)
 
-    if (id === activePlayerId && zombiesInDiscard) {
-      return {
-        ...player,
-        discard: discard.filter(card => card.name !== Zombie.name),
-        board: [...board, ...zombiesInDiscard]
-      }
+    return {
+      ...player,
+      discard: discard.filter(card => card.name !== Zombie.name),
+      board: [...board, ...zombiesInDiscard]
     }
-
-    return player
-  }
-
-  state.topPlayer = updatePlayer(topPlayer)
-  state.bottomPlayer = updatePlayer(bottomPlayer)
+  }) as PlayerState
 }

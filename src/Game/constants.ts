@@ -1,4 +1,4 @@
-import { Player } from 'src/Game/GameTypes'
+import { Player } from 'src/shared/redux/StateTypes'
 
 export const EMPTY_PLAYER: Player = {
   id: '',
@@ -7,7 +7,10 @@ export const EMPTY_PLAYER: Player = {
   deck: [],
   hand: [],
   board: [],
-  discard: []
+  discard: [],
+  isActive: false,
+  hasPlayedCardThisTurn: false,
+  isPlayerPrespective: false
 }
 
 export const DEFAULT_COINS_AMOUNT = 30

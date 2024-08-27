@@ -2,7 +2,7 @@ import { Dispatch } from '@reduxjs/toolkit'
 
 import { FACTION_COLOR_MAP } from 'src/Cards/constants'
 import { Card, CardType, PlayCard } from 'src/Cards/CardTypes'
-import { GameActions } from 'src/Game/GameSlice'
+import { GameActions } from 'src/shared/redux/reducers/GameReducer'
 import { generateUUID } from 'src/shared/utils/utils'
 
 export const joinCardTypes = (types: Card['types']) => types.join(', ')

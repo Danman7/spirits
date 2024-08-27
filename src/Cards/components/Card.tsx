@@ -5,9 +5,9 @@ import styles from 'src/shared/styles/styles.module.css'
 import { CardProps } from 'src/Cards/CardTypes'
 import { usePrevious } from 'src/shared/utils/customHooks'
 import {
-  cardBoost,
-  cardPaperVariants,
-  numberChange
+  CardBoostAnimation,
+  CardPaperVariants,
+  NumberChangeAnimation
 } from 'src/shared/utils/animations'
 import { getFactionColor, joinCardTypes } from 'src/Cards/CardUtils'
 import { PositiveNegativeNumber } from 'src/shared/components/PositiveNegativeNumber'
@@ -68,11 +68,11 @@ const Card: FC<CardProps> = ({
 
   useEffect(() => {
     if (prevStrength && prevStrength !== strength) {
-      strengthChangeAnimation.start(numberChange)
+      strengthChangeAnimation.start(NumberChangeAnimation)
     }
 
     if ((prevStrength as number) < (strength as number)) {
-      cardBoostAnimation.start(cardBoost)
+      cardBoostAnimation.start(CardBoostAnimation)
     }
   }, [prevStrength, strength, strengthChangeAnimation, cardBoostAnimation])
 
@@ -86,7 +86,6 @@ const Card: FC<CardProps> = ({
 
   return (
     <motion.div
-      initial={false}
       layoutId={id}
       onClick={onClickCard ? () => onClickCard(card) : undefined}
       className={`${styles.card} ${isSmaller ? styles.smallCard : ''} ${isActive ? styles.activeCard : ''}`}
@@ -94,7 +93,7 @@ const Card: FC<CardProps> = ({
       <motion.div
         className={styles.cardPaper}
         initial={isFaceDown ? 'faceDown' : 'faceUp'}
-        variants={cardPaperVariants}
+        variants={CardPaperVariants}
         animate={cardPaperVariant}
         onAnimationStart={onCardFlipStart}
         onAnimationComplete={onCardFlipEnd}

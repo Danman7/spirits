@@ -1,10 +1,10 @@
 import * as CardAbilities from 'src/Cards/CardAbilities'
-import { CardState, GameState } from 'src/Game/GameTypes'
+import { GameState } from 'src/shared/redux/StateTypes'
 
 export type CardAbility = keyof typeof CardAbilities
 
 export interface Card {
-  name: string
+  readonly name: string
   cost: number
   factions: CardFaction[]
   types: CardType[]
@@ -36,7 +36,8 @@ export const enum CardType {
   Pagan = 'Pagan',
   Thief = 'Thief',
   Guard = 'Guard',
-  Necromancer = 'Necromancer'
+  Necromancer = 'Necromancer',
+  Artifact = 'Artifact'
 }
 
 export type CardAbilityFunction = (state: GameState) => void
@@ -47,10 +48,4 @@ export interface CardProps {
   isActive?: boolean
   isFaceDown?: boolean
   onClickCard?: (cardId: PlayCard) => void
-}
-
-export interface CardPortalProps {
-  card: PlayCard
-  cardState?: CardState
-  isPlayerCard?: boolean
 }

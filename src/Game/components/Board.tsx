@@ -1,170 +1,93 @@
 import { FC, useCallback, useEffect, useState } from 'react'
-import { motion, useAnimationControls } from 'framer-motion'
 
-import styles from 'src/shared/styles/styles.module.css'
-import * as Animations from 'src/shared/utils/animations'
+import * as styles from 'src/shared/styles/styles.module.css'
 
 import Overlay from 'src/Game/components/Overlay'
-import Card from 'src/Cards/components/Card'
 
 import {
-  getActivePlayerId,
-  getTopPlayer,
-  getBottomPlayer,
-  getGameTurn,
-  getIsCardPlayedThisTurn
-} from 'src/Game/GameSelectors'
-import { GameActions } from 'src/Game/GameSlice'
-import { endTurnMessage, passButtonMessage } from 'src/Game/messages'
+  getActivePlayer,
+  getHasActivePlayerPlayedACardThisTurn,
+  getIsActivePlayerNonHuman,
+  getIsPlayerPrespectiveTurn,
+  getPhase,
+  getPlayers
+} from 'src/shared/redux/selectors/GameSelectors'
+import { GameActions } from 'src/shared/redux/reducers/GameReducer'
+import {
+  endTurnMessage,
+  passButtonMessage,
+  redrawMessage
+} from 'src/Game/messages'
 import { compPlayTurn } from 'src/Game/ComputerPlayerUtils'
 import { CardProps, PlayCard } from 'src/Cards/CardTypes'
 import { useAppDispatch, useAppSelector } from 'src/shared/redux/hooks'
+import PlayerHalfBoard from 'src/Game/components/PlayerHalfBoard'
+import { GamePhase } from 'src/shared/redux/StateTypes'
 
 const Board: FC = () => {
   const dispatch = useAppDispatch()
 
-  const [shouldShowOverlay, setShouldShowOverlay] = useState(false)
+  const [overlayMessage, setOverlayMessage] = useState('')
 
-  const topCoinsAnimation = useAnimationControls()
-  const bottomCoinsAnimation = useAnimationControls()
-
-  const topPlayer = useAppSelector(getTopPlayer)
-  const bottomPlayer = useAppSelector(getBottomPlayer)
-  const activePlayerId = useAppSelector(getActivePlayerId)
-  const turn = useAppSelector(getGameTurn)
-  const isCardPlayedThisTurn = useAppSelector(getIsCardPlayedThisTurn)
-
-  const isPlayerTurn = bottomPlayer?.id === activePlayerId
+  const players = useAppSelector(getPlayers)
+  const phase = useAppSelector(getPhase)
+  const activePlayer = useAppSelector(getActivePlayer)
+  const isActivePlayerNonHuman = useAppSelector(getIsActivePlayerNonHuman)
+  const isPlayerPrespectiveTurn = useAppSelector(getIsPlayerPrespectiveTurn)
+  const hasActivePlayerPlayedACardThisTurn = useAppSelector(
+    getHasActivePlayerPlayedACardThisTurn
+  )
 
   const onPlayCard: CardProps['onClickCard'] = useCallback(
     (card: PlayCard) => {
-      dispatch(GameActions.playCard(card))
+      dispatch(GameActions.playCardFromHand(card))
     },
     [dispatch]
   )
 
-  const onEndTurn = useCallback(() => {
+  const onPassOrEndTurn = useCallback(() => {
     dispatch(GameActions.endTurn())
   }, [dispatch])
 
-  useEffect(() => {
-    setShouldShowOverlay(true)
-  }, [turn])
-
   const onAnimationComplete = () => {
-    setShouldShowOverlay(false)
-
-    if (topPlayer.isNonHuman && activePlayerId === topPlayer.id) {
-      compPlayTurn(topPlayer, onPlayCard, onEndTurn)
+    if (isActivePlayerNonHuman && activePlayer) {
+      compPlayTurn(activePlayer, onPlayCard, onPassOrEndTurn)
     }
   }
 
-  useEffect(() => {
-    topCoinsAnimation.start(Animations.numberChange)
-  }, [topCoinsAnimation, topPlayer.coins])
+  const orderedPlayers = [...players].sort(
+    (a, b) => Number(a.isPlayerPrespective) - Number(b.isPlayerPrespective)
+  )
+
+  const hasPlayerPlayedCardThisTurn = hasActivePlayerPlayedACardThisTurn
+
+  const onClickCard =
+    isPlayerPrespectiveTurn && !hasPlayerPlayedCardThisTurn
+      ? onPlayCard
+      : undefined
 
   useEffect(() => {
-    bottomCoinsAnimation.start(Animations.numberChange)
-  }, [bottomCoinsAnimation, bottomPlayer.coins])
+    if (phase === GamePhase.REDRAW) setOverlayMessage(redrawMessage)
+  }, [phase])
 
   return (
     <div className={styles.board}>
-      <div
-        className={`${styles.topPlayerInfo} ${!isPlayerTurn ? styles.activePlayerInfo : ''}`}
-      >
-        <span>{topPlayer?.name}</span> /{' '}
-        <motion.span
-          className={styles.inlineBlock}
-          initial={false}
-          animate={topCoinsAnimation}
-        >
-          {topPlayer?.coins}
-        </motion.span>
-      </div>
+      {orderedPlayers.map((player, index) => (
+        <PlayerHalfBoard
+          player={player}
+          isOnTop={!index}
+          onClickCard={index ? onClickCard : undefined}
+        />
+      ))}
 
-      <div className={styles.topPlayerSide}>
-        <div className={styles.faceDownStack}>
-          {topPlayer.discard.map(card => (
-            <Card key={card.id} card={card} isFaceDown isSmaller />
-          ))}
-        </div>
+      <Overlay
+        message={overlayMessage}
+        onAnimationComplete={onAnimationComplete}
+      />
 
-        <div className={styles.playerHand}>
-          {topPlayer.hand.map(card => (
-            <Card key={card.id} card={card} isFaceDown />
-          ))}
-        </div>
-
-        <div className={styles.faceDownStack}>
-          {topPlayer.deck.map(card => (
-            <Card key={card.id} card={card} isFaceDown isSmaller />
-          ))}
-        </div>
-      </div>
-
-      <div className={styles.topPlayerBoard}>
-        {topPlayer.board.map(card => (
-          <Card key={card.id} card={card} isSmaller />
-        ))}
-      </div>
-
-      <div className={styles.bottomPlayerBoard}>
-        {bottomPlayer.board.map(card => (
-          <Card key={card.id} card={card} isSmaller />
-        ))}
-      </div>
-
-      <div className={styles.bottomPlayerSide}>
-        <div className={styles.faceDownStack}>
-          {bottomPlayer.discard.map(card => (
-            <Card key={card.id} card={card} isFaceDown isSmaller />
-          ))}
-        </div>
-
-        <div className={styles.bottomPlayerHand}>
-          {bottomPlayer.hand.map(card => (
-            <Card
-              key={card.id}
-              card={card}
-              isActive={
-                card.cost <= bottomPlayer.coins &&
-                isPlayerTurn &&
-                !isCardPlayedThisTurn
-              }
-              onClickCard={
-                isPlayerTurn && !isCardPlayedThisTurn ? onPlayCard : undefined
-              }
-            />
-          ))}
-        </div>
-
-        <div className={styles.faceDownStack}>
-          {bottomPlayer.deck.map(card => (
-            <Card key={card.id} card={card} isFaceDown isSmaller />
-          ))}
-        </div>
-      </div>
-
-      <div
-        className={`${styles.bottomPlayerInfo} ${isPlayerTurn ? styles.activePlayerInfo : ''}`}
-      >
-        <span>{bottomPlayer?.name}</span> /{' '}
-        <motion.span
-          initial={false}
-          animate={bottomCoinsAnimation}
-          className={styles.inlineBlock}
-        >
-          {bottomPlayer?.coins}
-        </motion.span>
-      </div>
-
-      {shouldShowOverlay && (
-        <Overlay onAnimationComplete={onAnimationComplete} />
-      )}
-
-      {isPlayerTurn && (
-        <button className={styles.endTurnButton} onClick={onEndTurn}>
-          {isCardPlayedThisTurn ? endTurnMessage : passButtonMessage}
+      {isPlayerPrespectiveTurn && (
+        <button className={styles.endTurnButton} onClick={onPassOrEndTurn}>
+          {hasPlayerPlayedCardThisTurn ? endTurnMessage : passButtonMessage}
         </button>
       )}
     </div>

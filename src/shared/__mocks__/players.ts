@@ -1,24 +1,32 @@
 import {
+  AzaranTheCruel,
+  BookOfAsh,
   BrotherSachelman,
-  DownwinderThief,
   ElevatedAcolyte,
   HammeriteNovice,
   Haunt,
   TempleGuard,
+  ViktoriaThiefPawn,
   Zombie
 } from 'src/Cards/CardPrototypes'
 import { createPlayCardFromPrototype } from 'src/Cards/CardUtils'
 import { DEFAULT_COINS_AMOUNT, EMPTY_PLAYER } from 'src/Game/constants'
-import { Player } from 'src/Game/GameTypes'
+import { Player } from 'src/shared/redux/StateTypes'
 
 export const MockPlayer1: Player = {
   ...EMPTY_PLAYER,
   id: 'player1',
   name: 'Garret',
   coins: DEFAULT_COINS_AMOUNT,
-  hand: [
+  isPlayerPrespective: true,
+  deck: [
     createPlayCardFromPrototype(HammeriteNovice),
-    createPlayCardFromPrototype(ElevatedAcolyte)
+    createPlayCardFromPrototype(HammeriteNovice),
+    createPlayCardFromPrototype(ElevatedAcolyte),
+    createPlayCardFromPrototype(ElevatedAcolyte),
+    createPlayCardFromPrototype(TempleGuard),
+    createPlayCardFromPrototype(TempleGuard),
+    createPlayCardFromPrototype(BrotherSachelman)
   ]
 }
 
@@ -27,19 +35,26 @@ export const MockPlayer2: Player = {
   id: 'player2',
   name: 'Karras',
   coins: DEFAULT_COINS_AMOUNT - 1,
-  hand: [
+  deck: [
     createPlayCardFromPrototype(Zombie),
-    createPlayCardFromPrototype(Haunt)
+    createPlayCardFromPrototype(Zombie),
+    createPlayCardFromPrototype(Haunt),
+    createPlayCardFromPrototype(Haunt),
+    createPlayCardFromPrototype(ViktoriaThiefPawn),
+    createPlayCardFromPrototype(AzaranTheCruel),
+    createPlayCardFromPrototype(BookOfAsh)
   ]
 }
 
-export const MockCPUPlayer: Player = {
+export const mockBudgetPlayer: Player = {
   ...EMPTY_PLAYER,
-  id: 'playerCPU',
-  name: 'Constantine',
+  id: 'player3',
+  name: 'Hume',
   coins: DEFAULT_COINS_AMOUNT,
-  hand: [createPlayCardFromPrototype(DownwinderThief)],
-  isNonHuman: true
+  hand: [
+    createPlayCardFromPrototype(TempleGuard),
+    createPlayCardFromPrototype(HammeriteNovice)
+  ]
 }
 
 export const PlayTestPlayer1: Player = {
@@ -47,6 +62,8 @@ export const PlayTestPlayer1: Player = {
   id: 'player1',
   name: 'Victoria',
   coins: DEFAULT_COINS_AMOUNT,
+  isActive: true,
+  isPlayerPrespective: true,
   deck: [
     createPlayCardFromPrototype(ElevatedAcolyte),
     createPlayCardFromPrototype(TempleGuard)
@@ -67,7 +84,7 @@ export const PlayTestPlayer2: Player = {
   id: 'player2',
   name: 'Hume',
   coins: DEFAULT_COINS_AMOUNT,
-  isNonHuman: true,
+  isCPU: true,
   hand: [
     createPlayCardFromPrototype(Zombie),
     createPlayCardFromPrototype(Haunt)
