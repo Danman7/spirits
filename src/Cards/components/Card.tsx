@@ -10,7 +10,7 @@ import {
   NumberChangeAnimation
 } from 'src/shared/utils/animations'
 import { getFactionColor, joinCardTypes } from 'src/Cards/CardUtils'
-import { PositiveNegativeNumber } from 'src/shared/components/PositiveNegativeNumber'
+import PositiveNegativeNumber from 'src/shared/components/PositiveNegativeNumber'
 
 const enum ShowCardFace {
   FRONT,
@@ -108,7 +108,7 @@ const Card: FC<CardProps> = ({
               className={styles.cardHeader}
               style={{ background: getFactionColor(factions) }}
             >
-              <div className={styles.cardTitle}>
+              <h3 className={styles.cardTitle}>
                 <div>{name}</div>
                 {strength && prototype.strength && (
                   <motion.div animate={strengthChangeAnimation}>
@@ -118,7 +118,7 @@ const Card: FC<CardProps> = ({
                     />
                   </motion.div>
                 )}
-              </div>
+              </h3>
               <div className={styles.cardTypes}>{joinCardTypes(types)}</div>
             </div>
             <div className={styles.cardContent}>

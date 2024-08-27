@@ -2,7 +2,9 @@ import {
   playerFirstMessage,
   opponentFirstMessage,
   yourTurnMessage,
-  opponentTurnMessage
+  opponentTurnMessage,
+  passButtonMessage,
+  endTurnMessage
 } from 'src/Game/messages'
 import { Player } from 'src/shared/redux/StateTypes'
 
@@ -23,6 +25,26 @@ export const getOverlayMessage = (
   }
 
   return opponentTurnMessage
+}
+
+interface GetPlayerButtonTextProps {
+  hasActivePlayerPlayedACardThisTurn?: boolean
+  isPlayerPrespectiveTurn?: boolean
+}
+
+export const getPlayerButtonText = ({
+  hasActivePlayerPlayedACardThisTurn,
+  isPlayerPrespectiveTurn
+}: GetPlayerButtonTextProps) => {
+  if (isPlayerPrespectiveTurn && !hasActivePlayerPlayedACardThisTurn) {
+    return passButtonMessage
+  }
+
+  if (isPlayerPrespectiveTurn && hasActivePlayerPlayedACardThisTurn) {
+    return endTurnMessage
+  }
+
+  return ''
 }
 
 export const getPlayableCards = (player: Player) =>

@@ -3,8 +3,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 import styles from 'src/shared/styles/styles.module.css'
 import {
-  FadeInAndOutAnimation,
-  SlideLeftToRightAnimation
+  SlideInOutContentVariants,
+  ScaleInOutVariants
 } from 'src/shared/utils/animations'
 
 interface OverlayProps {
@@ -15,13 +15,18 @@ interface OverlayProps {
 const Overlay: FC<OverlayProps> = ({ message, onAnimationComplete }) => (
   <AnimatePresence>
     {message && (
-      <motion.div
-        className={styles.overlay}
-        onAnimationComplete={onAnimationComplete}
-        {...FadeInAndOutAnimation}
-      >
-        <motion.h1 {...SlideLeftToRightAnimation}>{message}</motion.h1>
-      </motion.div>
+      <div className={styles.overlayWrapper}>
+        <motion.div
+          className={styles.overlay}
+          initial="closed"
+          animate={message ? 'open' : 'closed'}
+          variants={ScaleInOutVariants}
+          onAnimationComplete={onAnimationComplete}
+          exit="closed"
+        >
+          <motion.h2 variants={SlideInOutContentVariants}>{message}</motion.h2>
+        </motion.div>
+      </div>
     )}
   </AnimatePresence>
 )

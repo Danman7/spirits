@@ -1,9 +1,5 @@
-.lead {
-  font-size: 1.25em;
-}
-
 .shadowedText {
-  text-shadow: 1px 1px 1px #000;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
 }
 
 .positiveText {
@@ -110,7 +106,6 @@
 }
 
 .cardTitle {
-  composes: lead;
   top: 0;
   display: flex;
   justify-content: space-between;
@@ -195,19 +190,27 @@
   }
 }
 
-.overlay {
+.overlayWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+}
+
+.overlay {
+  overflow: hidden;
+  box-shadow: 2px 2px 2px var(--shadow-color);
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  background: var(--background-color);
+  color: var(--text-color);
   z-index: 10;
-  opacity: 0;
+  scale: 1;
 }
 
 .playerInfo {
@@ -216,7 +219,7 @@
 }
 
 .activePlayerInfo {
-  font-weight: 800;
+  font-weight: bold;
 }
 
 .topPlayerInfo {
@@ -229,30 +232,27 @@
   bottom: 8px;
 }
 
-.button {
-  background: var(--positive-color);
-  border: none;
-  padding: 8px 16px;
-  box-shadow:
-    inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5),
-    1px 1px 1px var(--shadow-color);
-  border-radius: 6px;
+.defaultButton {
   cursor: pointer;
-  transform-origin: center;
+  overflow: hidden;
+  padding: 0.5em 2em;
+  border-radius: 6px;
+  text-align: center;
+  background: var(--background-color);
+  color: var(--text-color);
+  border-width: 1px;
+  border-color: var(--line-color);
+  border-bottom-width: 4px;
+  border-bottom-color: var(--line-color);
+}
 
-  &:hover {
-    box-shadow:
-      inset 3px 3px 3px 0px rgba(255, 255, 255, 0.5),
-      3px 3px 3px var(--shadow-color);
-  }
-
-  &:active {
-    box-shadow: none;
-  }
+.positiveButton {
+  composes: defaultButton;
+  background: var(--positive-color);
+  color: white;
 }
 
 .endTurnButton {
-  composes: button;
   position: absolute;
   left: 8px;
   top: 50%;

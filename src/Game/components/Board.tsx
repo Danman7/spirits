@@ -13,16 +13,14 @@ import {
   getPlayers
 } from 'src/shared/redux/selectors/GameSelectors'
 import { GameActions } from 'src/shared/redux/reducers/GameReducer'
-import {
-  endTurnMessage,
-  passButtonMessage,
-  redrawMessage
-} from 'src/Game/messages'
+import { redrawMessage } from 'src/Game/messages'
 import { compPlayTurn } from 'src/Game/ComputerPlayerUtils'
 import { CardProps, PlayCard } from 'src/Cards/CardTypes'
 import { useAppDispatch, useAppSelector } from 'src/shared/redux/hooks'
 import PlayerHalfBoard from 'src/Game/components/PlayerHalfBoard'
 import { GamePhase } from 'src/shared/redux/StateTypes'
+import Button from 'src/shared/components/Button'
+import { getPlayerButtonText } from 'src/Game/GameUtils'
 
 const Board: FC = () => {
   const dispatch = useAppDispatch()
@@ -59,10 +57,8 @@ const Board: FC = () => {
     (a, b) => Number(a.isPlayerPrespective) - Number(b.isPlayerPrespective)
   )
 
-  const hasPlayerPlayedCardThisTurn = hasActivePlayerPlayedACardThisTurn
-
   const onClickCard =
-    isPlayerPrespectiveTurn && !hasPlayerPlayedCardThisTurn
+    isPlayerPrespectiveTurn && !hasActivePlayerPlayedACardThisTurn
       ? onPlayCard
       : undefined
 
@@ -74,6 +70,7 @@ const Board: FC = () => {
     <div className={styles.board}>
       {orderedPlayers.map((player, index) => (
         <PlayerHalfBoard
+          key={player.id}
           player={player}
           isOnTop={!index}
           onClickCard={index ? onClickCard : undefined}
@@ -85,11 +82,15 @@ const Board: FC = () => {
         onAnimationComplete={onAnimationComplete}
       />
 
-      {isPlayerPrespectiveTurn && (
-        <button className={styles.endTurnButton} onClick={onPassOrEndTurn}>
-          {hasPlayerPlayedCardThisTurn ? endTurnMessage : passButtonMessage}
-        </button>
-      )}
+      <div className={styles.endTurnButton}>
+        <Button
+          label={getPlayerButtonText({
+            hasActivePlayerPlayedACardThisTurn,
+            isPlayerPrespectiveTurn
+          })}
+          onClick={onPassOrEndTurn}
+        />
+      </div>
     </div>
   )
 }

@@ -1,19 +1,4 @@
-import { AnimationDefinition, AnimationProps, Variants } from 'framer-motion'
-
-export const FadeInAndOutAnimation: AnimationProps = {
-  animate: {
-    opacity: [0, 1, 1, 0]
-  },
-  transition: { duration: 2.7, times: [0, 0.2, 0.8, 1] }
-}
-
-export const SlideLeftToRightAnimation: AnimationProps = {
-  animate: {
-    x: [-200, 0, 0, 200],
-    opacity: [0, 1, 1, 0]
-  },
-  transition: { duration: 1.8, delay: 0.2, times: [0, 0.2, 0.8, 1] }
-}
+import { AnimationDefinition, Variants } from 'framer-motion'
 
 export const NumberChangeAnimation: AnimationDefinition = {
   scale: [null, 1.4],
@@ -39,5 +24,40 @@ export const CardPaperVariants: Variants = {
   },
   faceDown: {
     rotateY: 180
+  }
+}
+
+export const ScaleInOutVariants: Variants = {
+  open: {
+    scale: 1,
+    transition: {
+      when: 'beforeChildren'
+    }
+  },
+  closed: {
+    scale: 0,
+    transition: {
+      when: 'afterChildren'
+    }
+  }
+}
+
+export const SlideInOutContentVariants: Variants = {
+  open: {
+    opacity: 1,
+    x: ['-100%', 0]
+  },
+  closed: {
+    opacity: 0,
+    x: [0, '100%']
+  }
+}
+
+export const FadeInOutVariants: Variants = {
+  open: {
+    opacity: 1
+  },
+  closed: {
+    opacity: 0
   }
 }

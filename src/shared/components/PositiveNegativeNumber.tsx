@@ -7,7 +7,7 @@ interface PositiveNegativeNumberProps {
   current: number
 }
 
-export const PositiveNegativeNumber: FC<PositiveNegativeNumberProps> = ({
+const PositiveNegativeNumber: FC<PositiveNegativeNumberProps> = ({
   base,
   current
 }) => {
@@ -21,3 +21,5 @@ export const PositiveNegativeNumber: FC<PositiveNegativeNumberProps> = ({
 
   return <>{current}</>
 }
+
+export default PositiveNegativeNumber

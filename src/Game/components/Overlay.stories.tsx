@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
 import Overlay from 'src/Game/components/Overlay'
+import { redrawMessage } from 'src/Game/messages'
 
 const meta = {
   title: 'Overlay',
@@ -10,7 +11,7 @@ const meta = {
   },
   tags: ['autodocs'],
   args: {
-    message: 'Test message'
+    message: redrawMessage
   }
 } satisfies Meta<typeof Overlay>
 
