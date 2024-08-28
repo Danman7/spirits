@@ -6,7 +6,7 @@ import {
   passButtonMessage,
   endTurnMessage
 } from 'src/Game/messages'
-import { Player } from 'src/shared/redux/StateTypes'
+import { GamePhase, Player } from 'src/shared/redux/StateTypes'
 
 export const getOverlayMessage = (
   isPlayerTurn: boolean,
@@ -28,19 +28,30 @@ export const getOverlayMessage = (
 }
 
 interface GetPlayerButtonTextProps {
+  phase: GamePhase
   hasActivePlayerPlayedACardThisTurn?: boolean
   isPlayerPrespectiveTurn?: boolean
 }
 
 export const getPlayerButtonText = ({
+  phase,
   hasActivePlayerPlayedACardThisTurn,
   isPlayerPrespectiveTurn
 }: GetPlayerButtonTextProps) => {
-  if (isPlayerPrespectiveTurn && !hasActivePlayerPlayedACardThisTurn) {
+  console.log(phase)
+  if (
+    phase === GamePhase.PLAYER_TURN &&
+    isPlayerPrespectiveTurn &&
+    !hasActivePlayerPlayedACardThisTurn
+  ) {
     return passButtonMessage
   }
 
-  if (isPlayerPrespectiveTurn && hasActivePlayerPlayedACardThisTurn) {
+  if (
+    phase === GamePhase.PLAYER_TURN &&
+    isPlayerPrespectiveTurn &&
+    hasActivePlayerPlayedACardThisTurn
+  ) {
     return endTurnMessage
   }
 

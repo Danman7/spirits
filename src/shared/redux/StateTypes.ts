@@ -48,4 +48,5 @@ export interface MainState {
 export interface StartGamePayload {
   players: PlayerState
   firstPlayerId?: Player['id']
+  phase?: GamePhase
 }

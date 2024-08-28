@@ -20,10 +20,16 @@ export const CardBoostAnimation: AnimationDefinition = {
 
 export const CardPaperVariants: Variants = {
   faceUp: {
-    rotateY: 0
+    transform: 'rotateY(0)',
+    transition: {
+      duration: 0.5
+    }
   },
   faceDown: {
-    rotateY: 180
+    transform: 'rotateY(180deg)',
+    transition: {
+      duration: 0.5
+    }
   }
 }
 

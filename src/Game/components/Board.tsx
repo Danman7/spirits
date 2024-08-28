@@ -63,8 +63,18 @@ const Board: FC = () => {
       : undefined
 
   useEffect(() => {
-    if (phase === GamePhase.REDRAW) setOverlayMessage(redrawMessage)
+    switch (phase) {
+      case GamePhase.REDRAW:
+        setOverlayMessage(redrawMessage)
+        break
+
+      default:
+        setOverlayMessage('')
+        break
+    }
   }, [phase])
+
+  if (phase === GamePhase.PRE_GAME) return null
 
   return (
     <div className={styles.board}>
@@ -85,6 +95,7 @@ const Board: FC = () => {
       <div className={styles.endTurnButton}>
         <Button
           label={getPlayerButtonText({
+            phase,
             hasActivePlayerPlayedACardThisTurn,
             isPlayerPrespectiveTurn
           })}

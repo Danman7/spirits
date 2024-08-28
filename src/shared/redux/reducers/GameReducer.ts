@@ -23,7 +23,7 @@ export const gameSlice = createSlice({
   initialState,
   reducers: {
     initializeGame: (state, action: PayloadAction<StartGamePayload>) => {
-      const { players, firstPlayerId } = action.payload
+      const { players, firstPlayerId, phase } = action.payload
 
       let startingPlayerId: Player['id']
 
@@ -46,7 +46,7 @@ export const gameSlice = createSlice({
         isActive: startingPlayerId === player.id
       })) as PlayerState
 
-      state.phase = GamePhase.INITIAL_DRAW
+      state.phase = phase || GamePhase.INITIAL_DRAW
     },
     drawCardFromDeck: (state, action: PayloadAction<Player['id']>) => {
       const { players } = state
@@ -56,9 +56,12 @@ export const gameSlice = createSlice({
         ...player,
         hand:
           player.id === playerToDrawACardId && player.deck.length
-            ? [...player.hand, player.deck.pop()]
+            ? [...player.hand, player.deck.shift()]
             : player.hand
       })) as PlayerState
+    },
+    startRedraw: state => {
+      state.phase = GamePhase.REDRAW
     },
     startGame: state => {
       state.phase = GamePhase.PLAYER_TURN

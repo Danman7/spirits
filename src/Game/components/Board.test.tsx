@@ -1,7 +1,11 @@
 import '@testing-library/jest-dom'
 
 import Board from 'src/Game/components/Board'
-import { endTurnMessage, passButtonMessage } from 'src/Game/messages'
+import {
+  endTurnMessage,
+  passButtonMessage,
+  redrawMessage
+} from 'src/Game/messages'
 import { createPlayCardFromPrototype } from 'src/Cards/CardUtils'
 import {
   BrotherSachelman,
@@ -18,6 +22,7 @@ import {
   GameState,
   Player
 } from 'src/shared/redux/StateTypes'
+import { initialState } from 'src/shared/redux/reducers/GameReducer'
 
 const initialPlayers: PlayerState = [
   {
@@ -36,7 +41,7 @@ const mockState: MainState = {
   }
 }
 
-test('should show the general UI elements', () => {
+test('show the general UI elements', () => {
   const { players } = mockState.game
 
   render(<Board />, {
@@ -50,7 +55,23 @@ test('should show the general UI elements', () => {
   expect(screen.getByText(players[1].coins)).toBeInTheDocument()
 })
 
-test('should be able to play a card from hand', async () => {
+test('initial draw of cards', () => {
+  const preloadedState: MainState = {
+    game: {
+      ...initialState,
+      players: [MockPlayer1, MockPlayer2],
+      phase: GamePhase.INITIAL_DRAW
+    }
+  }
+
+  render(<Board />, {
+    preloadedState
+  })
+
+  expect(screen.getByText(redrawMessage)).toBeInTheDocument()
+})
+
+test('play a card from hand', async () => {
   const { players } = mockState.game
 
   const activePlayer = players.find(({ isActive }) => isActive) as Player
@@ -69,10 +90,10 @@ test('should be able to play a card from hand', async () => {
 
   expect(screen.getByText(coins - cost)).toBeInTheDocument()
 
-  expect(screen.queryByText(endTurnMessage)).toBeInTheDocument()
+  expect(screen.getByText(endTurnMessage)).toBeInTheDocument()
 })
 
-test('should be able to end the turn', async () => {
+test('end the turn', async () => {
   render(<Board />, {
     preloadedState: mockState
   })
@@ -92,7 +113,7 @@ test('should be able to end the turn', async () => {
   )
 })
 
-test('should play a card as CPU and end the turn', async () => {
+test('play a card as CPU and end the turn', async () => {
   const mockGameState: GameState = {
     ...mockState.game,
     players: [initialPlayers[0], { ...initialPlayers[1], isCPU: true }]
@@ -122,7 +143,7 @@ test('should play a card as CPU and end the turn', async () => {
   )
 })
 
-test('should play a card witn an on play ability', () => {
+test('play a card witn an on play ability', () => {
   const mockGameState: GameState = {
     ...mockState.game,
     players: [

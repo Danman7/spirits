@@ -81,9 +81,7 @@ test("draw a card from a player's deck if it has cards", () => {
 
   expect(drawingPlayer.deck).toHaveLength(mockDrawingPlayer.deck.length - 1)
   expect(drawingPlayer.hand).toHaveLength(mockDrawingPlayer.hand.length + 1)
-  expect(drawingPlayer.hand).toContain(
-    mockDrawingPlayer.deck[mockDrawingPlayer.deck.length - 1]
-  )
+  expect(drawingPlayer.hand).toContain(mockDrawingPlayer.deck[0])
 })
 
 test('should draw no card if deck has no cards', () => {
