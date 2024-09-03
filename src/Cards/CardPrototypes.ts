@@ -74,7 +74,7 @@ export const BrotherSachelman: Card = {
   cost: 3,
   factions: [CardFaction.Order],
   types: [CardType.Hammerite],
-  description: `On play boost any Hammerite in play with lower strength than Brother Scahelman by ${BROTHER_SACHELMAN_BOOST}`,
+  description: `On play boost any allied Hammerite on board with lower strength than this card's strength by ${BROTHER_SACHELMAN_BOOST}`,
   flavor:
     'May the Hammer fall on the unrighteous. Officially, Brother Sachelman',
   onPlay: 'BrotherSachelmanOnPlay'
@@ -131,6 +131,7 @@ export const AzaranTheCruel: Card = {
 export const BookOfAsh: Card = {
   name: 'The Book of Ash',
   cost: 5,
+  strength: 0,
   factions: [CardFaction.Chaos],
   types: [CardType.Artifact],
   description: 'Summon 2 zombies.',

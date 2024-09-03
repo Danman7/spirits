@@ -1,27 +1,50 @@
-import { compPlayRandomCard, compPlayTurn } from 'src/Game/ComputerPlayerUtils'
-import { Player } from 'src/shared/redux/StateTypes'
-import { GarrettMasterThief, ViktoriaThiefPawn } from 'src/Cards/CardPrototypes'
-import { PlayCard } from 'src/Cards/CardTypes'
+import {
+  compPlayRandomCard,
+  compPlayTurn,
+  compSkipRedraw
+} from 'src/Game/ComputerPlayerUtils'
+import { Player, PlayerIndex } from 'src/shared/redux/StateTypes'
+import {
+  GarrettMasterThief,
+  HammeriteNovice,
+  TempleGuard,
+  ViktoriaThiefPawn
+} from 'src/Cards/CardPrototypes'
 import { createPlayCardFromPrototype } from 'src/Cards/CardUtils'
-import { mockBudgetPlayer } from 'src/shared/__mocks__/players'
+import { EMPTY_PLAYER } from 'src/Game/constants'
+import { GameActions } from 'src/shared/redux/reducers/GameReducer'
+
+const playedCard = createPlayCardFromPrototype(HammeriteNovice)
+
+const mockPlayer: Player = {
+  ...EMPTY_PLAYER,
+  name: 'CPU Player',
+  hand: [createPlayCardFromPrototype(TempleGuard), playedCard],
+  coins: 2
+}
+
+const playerIndex: PlayerIndex = 1
 
 it('should be able to play a random card from hand within budget', () => {
-  const mockPlayCard = jest.fn()
+  const mockDispatch = jest.fn()
 
-  const mockPlayer = { ...mockBudgetPlayer, coins: 2 }
+  const player: Player = { ...mockPlayer }
 
-  const playedCard = compPlayRandomCard(mockPlayer, mockPlayCard) as PlayCard
+  expect(player.board).toHaveLength(0)
+  expect(player.hand).toHaveLength(2)
 
-  expect(mockPlayer.hand).toContain(playedCard)
-  expect(playedCard.cost).toBeLessThanOrEqual(mockPlayer.coins)
-  expect(mockPlayCard).toHaveBeenCalledWith(playedCard)
+  compPlayRandomCard(player, playerIndex, mockDispatch)
+
+  expect(mockDispatch).toHaveBeenCalledWith(
+    GameActions.playCardFromHand({ playedCard, playerIndex })
+  )
 })
 
 it('should not play a card if it doesn not have enough coins', () => {
-  const mockPlayCard = jest.fn()
+  const mockDispatch = jest.fn()
 
-  const mockPlayer: Player = {
-    ...mockBudgetPlayer,
+  const player: Player = {
+    ...mockPlayer,
     hand: [
       createPlayCardFromPrototype(ViktoriaThiefPawn),
       createPlayCardFromPrototype(GarrettMasterThief)
@@ -29,20 +52,31 @@ it('should not play a card if it doesn not have enough coins', () => {
     coins: 3
   }
 
-  expect(compPlayRandomCard(mockPlayer, mockPlayCard)).toBeNull()
+  compPlayRandomCard(player, playerIndex, mockDispatch)
+
+  expect(mockDispatch).not.toHaveBeenCalled()
 })
 
 it('should be able to play computer turn', () => {
-  const mockPlayCard = jest.fn()
-  const mockEndTurn = jest.fn()
+  const mockDispatch = jest.fn()
 
-  const mockPlayer = {
-    ...mockBudgetPlayer,
-    coins: 1
-  }
+  const player: Player = { ...mockPlayer }
 
-  compPlayTurn(mockPlayer, mockPlayCard, mockEndTurn)
+  compPlayTurn(player, playerIndex, mockDispatch)
 
-  expect(mockPlayCard).toHaveBeenCalledWith(mockPlayer.hand[1])
-  expect(mockEndTurn).toHaveBeenCalled()
+  expect(mockDispatch).toHaveBeenCalledWith(
+    GameActions.playCardFromHand({ playedCard, playerIndex })
+  )
+
+  expect(mockDispatch).toHaveBeenCalledWith(GameActions.endTurn())
+})
+
+it('should be able to skip redraw', () => {
+  const mockDispatch = jest.fn()
+
+  compSkipRedraw(playerIndex, mockDispatch)
+
+  expect(mockDispatch).toHaveBeenCalledWith(
+    GameActions.completeRedraw(playerIndex)
+  )
 })

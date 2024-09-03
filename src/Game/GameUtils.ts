@@ -2,60 +2,27 @@ import {
   playerFirstMessage,
   opponentFirstMessage,
   yourTurnMessage,
-  opponentTurnMessage,
-  passButtonMessage,
-  endTurnMessage
+  opponentTurnMessage
 } from 'src/Game/messages'
-import { GamePhase, Player } from 'src/shared/redux/StateTypes'
+import { Player } from 'src/shared/redux/StateTypes'
 
-export const getOverlayMessage = (
-  isPlayerTurn: boolean,
+export const getPlayerTurnModalContent = (
+  isPlayerPrespective: boolean,
   isFirstTurn: boolean
 ): string => {
-  if (isPlayerTurn && isFirstTurn) {
+  if (isPlayerPrespective && isFirstTurn) {
     return playerFirstMessage
   }
 
-  if (!isPlayerTurn && isFirstTurn) {
+  if (!isPlayerPrespective && isFirstTurn) {
     return opponentFirstMessage
   }
 
-  if (isPlayerTurn && !isFirstTurn) {
+  if (isPlayerPrespective && !isFirstTurn) {
     return yourTurnMessage
   }
 
   return opponentTurnMessage
-}
-
-interface GetPlayerButtonTextProps {
-  phase: GamePhase
-  hasActivePlayerPlayedACardThisTurn?: boolean
-  isPlayerPrespectiveTurn?: boolean
-}
-
-export const getPlayerButtonText = ({
-  phase,
-  hasActivePlayerPlayedACardThisTurn,
-  isPlayerPrespectiveTurn
-}: GetPlayerButtonTextProps) => {
-  console.log(phase)
-  if (
-    phase === GamePhase.PLAYER_TURN &&
-    isPlayerPrespectiveTurn &&
-    !hasActivePlayerPlayedACardThisTurn
-  ) {
-    return passButtonMessage
-  }
-
-  if (
-    phase === GamePhase.PLAYER_TURN &&
-    isPlayerPrespectiveTurn &&
-    hasActivePlayerPlayedACardThisTurn
-  ) {
-    return endTurnMessage
-  }
-
-  return ''
 }
 
 export const getPlayableCards = (player: Player) =>

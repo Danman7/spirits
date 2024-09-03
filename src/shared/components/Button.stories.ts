@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
 
 import Button from 'src/shared/components/Button'
 import { ButtonType } from 'src/shared/components/SharedComponentTypes'
@@ -13,7 +14,7 @@ const meta = {
   args: {
     label: 'This is a button',
     type: ButtonType.defaultButton,
-    onClick: e => console.log(e)
+    onClick: fn()
   },
   argTypes: {
     type: {

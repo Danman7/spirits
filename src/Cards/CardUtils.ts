@@ -1,8 +1,5 @@
-import { Dispatch } from '@reduxjs/toolkit'
-
 import { FACTION_COLOR_MAP } from 'src/Cards/constants'
-import { Card, CardType, PlayCard } from 'src/Cards/CardTypes'
-import { GameActions } from 'src/shared/redux/reducers/GameReducer'
+import { Card, PlayCard } from 'src/Cards/CardTypes'
 import { generateUUID } from 'src/shared/utils/utils'
 
 export const joinCardTypes = (types: Card['types']) => types.join(', ')
@@ -21,24 +18,13 @@ export const getFactionColor = (factions: Card['factions']) => {
 
 export const createPlayCardFromPrototype = (cardPrototype: Card): PlayCard => {
   const prototype: PlayCard['prototype'] = {
-    cost: cardPrototype.cost
-  }
-
-  if (cardPrototype.strength) {
-    prototype.strength = cardPrototype.strength
+    cost: cardPrototype.cost,
+    strength: cardPrototype.strength
   }
 
   return {
     ...cardPrototype,
     id: generateUUID(),
     prototype
-  }
-}
-
-export const checkForImplicitOnPlay = (card: PlayCard, dispatch: Dispatch) => {
-  const { types } = card
-
-  if (types.includes(CardType.Necromancer)) {
-    dispatch(GameActions.triggerCardAbility('NecromancerOnPlay'))
   }
 }

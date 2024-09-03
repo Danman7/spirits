@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
 
 import Card from 'src/Cards/components/Card'
 import {
@@ -24,8 +25,8 @@ const meta = {
   args: {
     card: mockCard,
     isFaceDown: false,
-    isActive: false,
-    isSmaller: false
+    isSmaller: false,
+    onClickCard: undefined
   }
 } satisfies Meta<typeof Card>
 
@@ -43,13 +44,13 @@ export const SmallerVariant: Story = {
 
 export const IsActive: Story = {
   args: {
-    isActive: true
+    onClickCard: fn()
   }
 }
 
 export const Boosted: Story = {
   args: {
-    card: { ...mockCard, strength: (mockCard.strength as number) + 2 }
+    card: { ...mockCard, strength: mockCard.strength + 2 }
   }
 }
 
@@ -57,7 +58,7 @@ export const Damaged: Story = {
   args: {
     card: {
       ...createPlayCardFromPrototype(ElevatedAcolyte),
-      strength: (ElevatedAcolyte.strength as number) - 1
+      strength: ElevatedAcolyte.strength - 1
     }
   }
 }

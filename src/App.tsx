@@ -1,21 +1,18 @@
-import { useEffect } from 'react'
-
 import Board from 'src/Game/components/Board'
+import { PlayTestPlayer1, PlayTestPlayer2 } from 'src/shared/__mocks__/players'
 import { GameActions } from 'src/shared/redux/reducers/GameReducer'
-import { MockPlayer1, MockPlayer2 } from 'src/shared/__mocks__/players'
-import { useAppDispatch } from 'src/shared/redux/hooks'
+import store from 'src/shared/redux/store'
 
-export const App = () => {
-  const dispatch = useAppDispatch()
-
-  useEffect(() => {
-    dispatch(
-      GameActions.initializeGame({
-        players: [MockPlayer1, MockPlayer2],
-        firstPlayerId: MockPlayer1.id
-      })
-    )
-  }, [dispatch])
-
-  return <Board />
+if (typeof window !== 'undefined') {
+  store.dispatch(
+    GameActions.initializeGame({
+      players: [PlayTestPlayer1, PlayTestPlayer2],
+      loggedInPlayerId: PlayTestPlayer1.id,
+      firstPlayerId: PlayTestPlayer1.id
+    })
+  )
 }
+
+const App = () => <Board />
+
+export default App

@@ -1,5 +1,5 @@
 import * as CardAbilities from 'src/Cards/CardAbilities'
-import { GameState } from 'src/shared/redux/StateTypes'
+import { GameState, PlayerIndex } from 'src/shared/redux/StateTypes'
 
 export type CardAbility = keyof typeof CardAbilities
 
@@ -8,7 +8,7 @@ export interface Card {
   cost: number
   factions: CardFaction[]
   types: CardType[]
-  strength?: number
+  strength: number
   description?: string
   flavor?: string
   onPlay?: CardAbility
@@ -16,9 +16,8 @@ export interface Card {
 
 export interface PlayCard extends Card {
   id: string
-  strength?: number
   prototype: {
-    strength?: Card['strength']
+    strength: Card['strength']
     cost: Card['cost']
   }
 }
@@ -40,12 +39,19 @@ export const enum CardType {
   Artifact = 'Artifact'
 }
 
-export type CardAbilityFunction = (state: GameState) => void
+export type CardAbilityFunction = ({
+  state,
+  playedCard,
+  playerIndex
+}: {
+  state: GameState
+  playedCard: PlayCard
+  playerIndex: PlayerIndex
+}) => void
 
 export interface CardProps {
   card: PlayCard
   isSmaller?: boolean
-  isActive?: boolean
   isFaceDown?: boolean
-  onClickCard?: (cardId: PlayCard) => void
+  onClickCard?: (card: PlayCard) => void
 }

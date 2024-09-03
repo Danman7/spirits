@@ -4,7 +4,9 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 import Board from 'src/Game/components/Board'
 import { reducer } from 'src/shared/redux/reducer'
-import { mockState } from 'src/shared/__mocks__/state'
+import { initialPlayers } from 'src/shared/__mocks__/state'
+import { GamePhase } from 'src/shared/redux/StateTypes'
+import { initialState } from 'src/shared/redux/reducers/GameReducer'
 
 const meta = {
   title: 'Board',
@@ -25,7 +27,14 @@ export const Default: Story = {
       <Provider
         store={configureStore({
           reducer,
-          preloadedState: mockState
+          preloadedState: {
+            game: {
+              turn: 1,
+              players: initialPlayers,
+              phase: GamePhase.PLAYER_TURN,
+              loggedInPlayerId: initialState.loggedInPlayerId
+            }
+          }
         })}
       >
         {story()}

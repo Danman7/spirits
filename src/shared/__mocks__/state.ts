@@ -1,4 +1,4 @@
-import { GamePhase, MainState, PlayerState } from 'src/shared/redux/StateTypes'
+import { PlayersInGame } from 'src/shared/redux/StateTypes'
 import { MockPlayer1, MockPlayer2 } from 'src/shared/__mocks__/players'
 import {
   AzaranTheCruel,
@@ -13,11 +13,10 @@ import {
 } from 'src/Cards/CardPrototypes'
 import { createPlayCardFromPrototype } from 'src/Cards/CardUtils'
 
-export const initialPlayers: PlayerState = [
+export const initialPlayers: PlayersInGame = [
   {
     ...MockPlayer1,
     isActive: true,
-    isPlayerPrespective: true,
     deck: [
       createPlayCardFromPrototype(TempleGuard),
       createPlayCardFromPrototype(TempleGuard),
@@ -46,11 +45,3 @@ export const initialPlayers: PlayerState = [
     board: [createPlayCardFromPrototype(Zombie)]
   }
 ]
-
-export const mockState: MainState = {
-  game: {
-    turn: 1,
-    players: initialPlayers,
-    phase: GamePhase.PLAYER_TURN
-  }
-}

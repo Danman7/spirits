@@ -18,21 +18,6 @@ export const CardBoostAnimation: AnimationDefinition = {
   }
 }
 
-export const CardPaperVariants: Variants = {
-  faceUp: {
-    transform: 'rotateY(0)',
-    transition: {
-      duration: 0.5
-    }
-  },
-  faceDown: {
-    transform: 'rotateY(180deg)',
-    transition: {
-      duration: 0.5
-    }
-  }
-}
-
 export const ScaleInOutVariants: Variants = {
   open: {
     scale: 1,
@@ -51,19 +36,27 @@ export const ScaleInOutVariants: Variants = {
 export const SlideInOutContentVariants: Variants = {
   open: {
     opacity: 1,
-    x: ['-100%', 0]
+    x: [-50, 0]
   },
   closed: {
     opacity: 0,
-    x: [0, '100%']
+    x: [0, 50]
   }
 }
 
 export const FadeInOutVariants: Variants = {
   open: {
-    opacity: 1
+    opacity: 1,
+    transition: {
+      when: 'beforeChildren',
+      staggerChildren: 0.3
+    }
   },
   closed: {
-    opacity: 0
+    opacity: 0,
+    transition: {
+      when: 'afterChildren',
+      staggerChildren: 0.3
+    }
   }
 }

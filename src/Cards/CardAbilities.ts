@@ -1,87 +1,74 @@
-import {
-  BrotherSachelman,
-  HammeriteNovice,
-  Zombie
-} from 'src/Cards/CardPrototypes'
+import { HammeriteNovice, Zombie } from 'src/Cards/CardPrototypes'
 import { CardAbilityFunction, CardType } from 'src/Cards/CardTypes'
 import { BROTHER_SACHELMAN_BOOST } from 'src/Cards/constants'
-import { GameState, PlayerState } from 'src/shared/redux/StateTypes'
 
-export const BrotherSachelmanOnPlay: CardAbilityFunction = (
-  state: GameState
-) => {
+export const BrotherSachelmanOnPlay: CardAbilityFunction = ({
+  state,
+  playedCard,
+  playerIndex
+}) => {
   const { players } = state
 
-  state.players = players.map(player => {
-    const { board, isActive } = player
-
-    if (!isActive) return player
-
-    return {
-      ...player,
-      board: board.map(card => {
-        if (
-          card.types.includes(CardType.Hammerite) &&
-          card.strength &&
-          BrotherSachelman.strength &&
-          card.strength < BrotherSachelman.strength
-        ) {
-          return {
-            ...card,
-            strength: card.strength + BROTHER_SACHELMAN_BOOST
-          }
-        }
-
-        return card
-      })
+  players[playerIndex].board.forEach(card => {
+    if (
+      card.types.includes(CardType.Hammerite) &&
+      card.strength < playedCard.strength
+    ) {
+      card.strength += BROTHER_SACHELMAN_BOOST
     }
-  }) as PlayerState
+  })
 }
 
-export const HammeriteNoviceOnPlay: CardAbilityFunction = (
-  state: GameState
-) => {
+export const HammeriteNoviceOnPlay: CardAbilityFunction = ({
+  state,
+  playerIndex
+}) => {
   const { players } = state
 
-  state.players = players.map(player => {
-    const { board, hand, deck, isActive } = player
+  if (
+    players[playerIndex].board.find(card =>
+      card.types.includes(CardType.Hammerite)
+    )
+  ) {
+    const noviceInDeck = players[playerIndex].deck.find(
+      card => card.name === HammeriteNovice.name
+    )
+    const noviceInHand = players[playerIndex].hand.find(
+      card => card.name === HammeriteNovice.name
+    )
 
-    if (!isActive) return player
-
-    if (board.find(card => card.types.includes(CardType.Hammerite))) {
-      const noviceInDeck = deck.find(card => card.name === HammeriteNovice.name)
-      const noviceInHand = hand.find(card => card.name === HammeriteNovice.name)
-
-      if (noviceInDeck) {
-        player.deck = deck.filter(card => card.id !== noviceInDeck.id)
-        player.board = [...board, noviceInDeck]
-      }
-
-      if (noviceInHand) {
-        player.hand = hand.filter(card => card.id !== noviceInHand.id)
-        player.board = [...board, noviceInHand]
-        // TODO: also draw a card once drawing logic is in
-      }
+    if (noviceInDeck) {
+      players[playerIndex].deck = players[playerIndex].deck.filter(
+        card => card.id !== noviceInDeck.id
+      )
+      players[playerIndex].board = [...players[playerIndex].board, noviceInDeck]
     }
 
-    return player
-  }) as PlayerState
+    if (noviceInHand) {
+      players[playerIndex].hand = players[playerIndex].hand.filter(
+        card => card.id !== noviceInHand.id
+      )
+      players[playerIndex].board = [...players[playerIndex].board, noviceInHand]
+    }
+  }
 }
 
-export const NecromancerOnPlay: CardAbilityFunction = (state: GameState) => {
+export const NecromancerOnPlay: CardAbilityFunction = ({
+  state,
+  playerIndex
+}) => {
   const { players } = state
 
-  state.players = players.map(player => {
-    const { board, discard, isActive } = player
+  const zombiesInDiscard = players[playerIndex].discard.filter(
+    card => card.name === Zombie.name
+  )
 
-    if (!isActive) return player
+  players[playerIndex].discard = players[playerIndex].discard.filter(
+    card => card.name !== Zombie.name
+  )
 
-    const zombiesInDiscard = discard.filter(card => card.name === Zombie.name)
-
-    return {
-      ...player,
-      discard: discard.filter(card => card.name !== Zombie.name),
-      board: [...board, ...zombiesInDiscard]
-    }
-  }) as PlayerState
+  players[playerIndex].board = [
+    ...players[playerIndex].board,
+    ...zombiesInDiscard
+  ]
 }

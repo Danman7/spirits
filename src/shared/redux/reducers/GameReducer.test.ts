@@ -8,17 +8,16 @@ import {
   GamePhase,
   GameState,
   PlayerIndex,
-  PlayerState
+  PlayersInGame
 } from 'src/shared/redux/StateTypes'
 import { createPlayCardFromPrototype } from 'src/Cards/CardUtils'
 import { HammeriteNovice, Haunt } from 'src/Cards/CardPrototypes'
-import { BrotherSachelmanOnPlay } from 'src/Cards/CardAbilities'
 
-const initialPlayers: PlayerState = [MockPlayer1, MockPlayer2]
+const initialPlayers: PlayersInGame = [MockPlayer1, MockPlayer2]
 
 test('initialize a new game with a random first player', () => {
   const state = GameReducer(
-    initialState,
+    { ...initialState },
     GameActions.initializeGame({ players: initialPlayers })
   )
 
@@ -31,7 +30,7 @@ test('initialize a new game with a random first player', () => {
 
 test('initialize a new game with a preset first player', () => {
   const state = GameReducer(
-    initialState,
+    { ...initialState },
     GameActions.initializeGame({
       players: initialPlayers,
       firstPlayerId: initialPlayers[0].id
@@ -51,7 +50,7 @@ test('initialize a new game with a preset first player', () => {
 test('throw an error when initializing game if firstPlayerId is set to a non existent player', () => {
   expect(() => {
     GameReducer(
-      initialState,
+      { ...initialState },
       GameActions.initializeGame({
         players: initialPlayers,
         firstPlayerId: 'random-id'
@@ -72,7 +71,7 @@ test("draw a card from a player's deck if it has cards", () => {
 
   const state = GameReducer(
     mockState,
-    GameActions.drawCardFromDeck(mockState.players[drawingPlayerIndex].id)
+    GameActions.drawCardFromDeck(drawingPlayerIndex)
   )
 
   const { players } = state
@@ -107,7 +106,7 @@ test('should draw no card if deck has no cards', () => {
 
   const state = GameReducer(
     mockState,
-    GameActions.drawCardFromDeck(mockState.players[drawingPlayerIndex].id)
+    GameActions.drawCardFromDeck(drawingPlayerIndex)
   )
 
   const { players } = state
@@ -149,7 +148,8 @@ test('end of turn', () => {
   const mockState: GameState = {
     turn: 1,
     phase: GamePhase.RESOLVING_END_TURN,
-    players: [{ ...initialPlayers[0], isActive: true }, initialPlayers[1]]
+    players: [{ ...initialPlayers[0], isActive: true }, initialPlayers[1]],
+    loggedInPlayerId: initialState.loggedInPlayerId
   }
 
   const state = GameReducer(mockState, GameActions.endTurn())
@@ -177,63 +177,26 @@ const mockPlayCardState: GameState = {
 }
 
 test('play card from hand if active player', () => {
-  const playCardPlayerIndex: PlayerIndex = 0
+  const playerIndex: PlayerIndex = 0
 
-  const mockPlayingPlayer = mockPlayCardState.players[playCardPlayerIndex]
+  const mockPlayingPlayer = mockPlayCardState.players[playerIndex]
   mockPlayingPlayer.isActive = true
 
   const playedCard = mockPlayingPlayer.hand[0]
 
   const state = GameReducer(
     mockPlayCardState,
-    GameActions.playCardFromHand(playedCard)
+    GameActions.playCardFromHand({
+      playedCard,
+      playerIndex
+    })
   )
 
   const { players } = state
 
-  const playingPlayer = players[playCardPlayerIndex]
+  const playingPlayer = players[playerIndex]
 
   expect(playingPlayer.hand).toHaveLength(mockPlayingPlayer.hand.length - 1)
   expect(playingPlayer.board).toHaveLength(mockPlayingPlayer.board.length + 1)
   expect(playingPlayer.board).toContain(playedCard)
-})
-
-test('should throw an error if non active player tries to play a card', () => {
-  const playCardPlayerIndex: PlayerIndex = 0
-
-  const mockNonActivePlayer =
-    mockPlayCardState.players[playCardPlayerIndex ? 0 : 1]
-  mockNonActivePlayer.isActive = true
-
-  const playedCard = mockNonActivePlayer.hand[0]
-
-  expect(() => {
-    GameReducer(initialState, GameActions.playCardFromHand(playedCard))
-  }).toThrow()
-})
-
-test('trigger a card ability', () => {
-  const mockState: GameState = {
-    ...initialState,
-    players: [
-      {
-        ...initialPlayers[0],
-        hand: [
-          createPlayCardFromPrototype(HammeriteNovice),
-          createPlayCardFromPrototype(HammeriteNovice)
-        ]
-      },
-      initialPlayers[1]
-    ]
-  }
-
-  const expectedState = { ...mockState }
-  BrotherSachelmanOnPlay(expectedState)
-
-  const state = GameReducer(
-    mockState,
-    GameActions.triggerCardAbility('BrotherSachelmanOnPlay')
-  )
-
-  expect(state).toEqual(expectedState)
 })

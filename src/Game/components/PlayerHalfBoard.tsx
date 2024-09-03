@@ -1,25 +1,79 @@
-import { FC, useEffect } from 'react'
+import { FC, ReactNode, useEffect } from 'react'
 import { motion, useAnimationControls } from 'framer-motion'
 
 import Card from 'src/Cards/components/Card'
 import styles from 'src/shared/styles/styles.module.css'
-import { GamePhase, Player } from 'src/shared/redux/StateTypes'
+import GameButton from 'src/Game/components/GameButton'
+import RedrawPhaseModal from 'src/shared/components/ModalVariants/RedrawPhaseModal'
+import { GamePhase, Player, PlayerIndex } from 'src/shared/redux/StateTypes'
 import { NumberChangeAnimation } from 'src/shared/utils/animations'
-import { CardProps } from 'src/Cards/CardTypes'
+import { CardProps, PlayCard } from 'src/Cards/CardTypes'
 import { useAppDispatch, useAppSelector } from 'src/shared/redux/hooks'
-import { getPhase } from 'src/shared/redux/selectors/GameSelectors'
-import { INITIAL_CARD_DRAW_AMOUNT } from 'src/Game/constants'
 import { GameActions } from 'src/shared/redux/reducers/GameReducer'
+import { INITIAL_CARD_DRAW_AMOUNT } from 'src/Game/constants'
+import { compSkipRedraw } from 'src/Game/ComputerPlayerUtils'
+import { getLoggedInPlayerId } from 'src/shared/redux/selectors/GameSelectors'
 
 const PlayerHalfBoard: FC<{
   player: Player
-  isOnTop?: boolean
-  onClickCard?: CardProps['onClickCard']
-}> = ({ player, isOnTop, onClickCard }) => {
-  const { id, isActive, name, coins, deck, hand, board, discard } = player
+  playerIndex: PlayerIndex
+  phase: GamePhase
+  setOverlayContent: React.Dispatch<React.SetStateAction<ReactNode>>
+}> = ({ player, playerIndex, phase, setOverlayContent }) => {
+  const {
+    id,
+    isActive,
+    name,
+    coins,
+    deck,
+    hand,
+    board,
+    discard,
+    isReady,
+    hasPlayedCardThisTurn,
+    isCPU
+  } = player
 
   const dispatch = useAppDispatch()
-  const phase = useAppSelector(getPhase)
+
+  const loggedInPlayerId = useAppSelector(getLoggedInPlayerId)
+
+  const isPlayerPrespective = loggedInPlayerId === id
+  const isOnTop = playerIndex === 0
+
+  const onPlayCard: CardProps['onClickCard'] = (playedCard: PlayCard) => {
+    dispatch(GameActions.playCardFromHand({ playedCard, playerIndex }))
+  }
+
+  const onRedrawCard: CardProps['onClickCard'] = (card: PlayCard) => {
+    dispatch(
+      GameActions.putCardAtBottomOfDeck({
+        card,
+        playerIndex
+      })
+    )
+
+    dispatch(GameActions.drawCardFromDeck(playerIndex))
+
+    dispatch(GameActions.completeRedraw(playerIndex))
+  }
+
+  const getOnClickCard = (): CardProps['onClickCard'] => {
+    if (
+      phase === GamePhase.PLAYER_TURN &&
+      isActive &&
+      isPlayerPrespective &&
+      !hasPlayedCardThisTurn
+    ) {
+      return onPlayCard
+    }
+
+    if (phase === GamePhase.REDRAW && !isReady && isPlayerPrespective) {
+      return onRedrawCard
+    }
+
+    return undefined
+  }
 
   const coinsChangeAnimation = useAnimationControls()
 
@@ -28,21 +82,36 @@ const PlayerHalfBoard: FC<{
   }, [coins, coinsChangeAnimation])
 
   useEffect(() => {
-    if (
-      phase === GamePhase.INITIAL_DRAW &&
-      hand.length < INITIAL_CARD_DRAW_AMOUNT
-    ) {
-      dispatch(GameActions.drawCardFromDeck(id))
-    } else if (
-      phase === GamePhase.INITIAL_DRAW &&
-      hand.length === INITIAL_CARD_DRAW_AMOUNT
-    ) {
-      dispatch(GameActions.startRedraw())
+    if (hand.length) {
+      if (
+        phase === GamePhase.INITIAL_DRAW &&
+        hand.length < INITIAL_CARD_DRAW_AMOUNT
+      ) {
+        setTimeout(() => {
+          dispatch(GameActions.drawCardFromDeck(playerIndex))
+        }, 500)
+      }
     }
-  }, [phase, hand.length, dispatch, id])
+  }, [dispatch, hand.length, phase, playerIndex])
+
+  useEffect(() => {
+    if (phase === GamePhase.REDRAW && isCPU && !isReady) {
+      compSkipRedraw(playerIndex, dispatch)
+    }
+  }, [dispatch, playerIndex, isCPU, isReady, phase])
+
+  useEffect(() => {
+    if (isPlayerPrespective) {
+      switch (phase) {
+        case GamePhase.REDRAW:
+          setOverlayContent(<RedrawPhaseModal playerIndex={playerIndex} />)
+          break
+      }
+    }
+  }, [phase, playerIndex, isPlayerPrespective, setOverlayContent])
 
   return (
-    <div>
+    <>
       <div
         className={`${isOnTop ? styles.topPlayerInfo : styles.bottomPlayerInfo} ${isActive ? styles.activePlayerInfo : ''}`}
       >
@@ -64,14 +133,14 @@ const PlayerHalfBoard: FC<{
         </div>
 
         <motion.div
-          className={isOnTop ? styles.playerHand : styles.bottomPlayerHand}
+          className={isOnTop ? styles.topPlayerHand : styles.bottomPlayerHand}
         >
           {hand.map(card => (
             <Card
               key={card.id}
               card={card}
               isFaceDown={isOnTop}
-              onClickCard={onClickCard}
+              onClickCard={getOnClickCard()}
             />
           ))}
         </motion.div>
@@ -90,7 +159,9 @@ const PlayerHalfBoard: FC<{
           <Card key={card.id} card={card} isSmaller />
         ))}
       </div>
-    </div>
+
+      {isPlayerPrespective && isActive && <GameButton />}
+    </>
   )
 }
 

@@ -4,26 +4,34 @@ import {
   GamePhase,
   GameState,
   Player,
-  PlayerState,
-  StartGamePayload
+  PlayerIndex,
+  PlayersInGame
 } from 'src/shared/redux/StateTypes'
-import * as CardAbilities from 'src/Cards/CardAbilities'
-import { CardAbility, PlayCard } from 'src/Cards/CardTypes'
+import { PlayCard } from 'src/Cards/CardTypes'
 import { EMPTY_PLAYER } from 'src/Game/constants'
 import { getRandomArrayItem } from 'src/shared/utils/utils'
 
 export const initialState: GameState = {
   turn: 0,
   phase: GamePhase.PRE_GAME,
-  players: [EMPTY_PLAYER, EMPTY_PLAYER]
+  players: [EMPTY_PLAYER, EMPTY_PLAYER],
+  loggedInPlayerId: ''
 }
 
 export const gameSlice = createSlice({
   name: 'game',
   initialState,
   reducers: {
-    initializeGame: (state, action: PayloadAction<StartGamePayload>) => {
-      const { players, firstPlayerId, phase } = action.payload
+    initializeGame: (
+      state,
+      action: PayloadAction<{
+        players: PlayersInGame
+        loggedInPlayerId?: Player['id']
+        firstPlayerId?: Player['id']
+        phase?: GamePhase
+      }>
+    ) => {
+      const { players, firstPlayerId, loggedInPlayerId, phase } = action.payload
 
       let startingPlayerId: Player['id']
 
@@ -41,27 +49,55 @@ export const gameSlice = createSlice({
         startingPlayerId = getRandomArrayItem(players).id
       }
 
-      state.players = players.map(player => ({
-        ...player,
-        isActive: startingPlayerId === player.id
-      })) as PlayerState
+      state.players = players
+        .map(player => ({
+          ...player,
+          isActive: startingPlayerId === player.id
+        }))
+        .sort(
+          (playerA, playerB) =>
+            Number(playerA.id === loggedInPlayerId) -
+            Number(playerB.id === loggedInPlayerId)
+        ) as PlayersInGame
 
       state.phase = phase || GamePhase.INITIAL_DRAW
-    },
-    drawCardFromDeck: (state, action: PayloadAction<Player['id']>) => {
-      const { players } = state
-      const playerToDrawACardId = action.payload
 
-      state.players = players.map(player => ({
-        ...player,
-        hand:
-          player.id === playerToDrawACardId && player.deck.length
-            ? [...player.hand, player.deck.shift()]
-            : player.hand
-      })) as PlayerState
+      if (loggedInPlayerId) {
+        state.loggedInPlayerId = loggedInPlayerId
+      }
+    },
+    drawCardFromDeck: (state, action: PayloadAction<PlayerIndex>) => {
+      const { players } = state
+
+      const drawingPlayer = players[action.payload]
+
+      if (drawingPlayer.deck.length) {
+        players[action.payload].hand = [
+          ...drawingPlayer.hand,
+          players[action.payload].deck.shift() as PlayCard
+        ]
+      }
     },
     startRedraw: state => {
       state.phase = GamePhase.REDRAW
+    },
+    putCardAtBottomOfDeck: (
+      state,
+      action: PayloadAction<{
+        card: PlayCard
+        playerIndex: PlayerIndex
+      }>
+    ) => {
+      const { card, playerIndex } = action.payload
+
+      const { players } = state
+
+      players[playerIndex].deck.push(card)
+    },
+    completeRedraw: (state, action: PayloadAction<PlayerIndex>) => {
+      const { players } = state
+
+      players[action.payload].isReady = true
     },
     startGame: state => {
       state.phase = GamePhase.PLAYER_TURN
@@ -79,38 +115,25 @@ export const gameSlice = createSlice({
         ...player,
         isActive: !player.isActive,
         hasPlayedCardThisTurn: false
-      })) as PlayerState
+      })) as PlayersInGame
     },
-    playCardFromHand: (state, action: PayloadAction<PlayCard>) => {
+    playCardFromHand: (
+      state,
+      action: PayloadAction<{
+        playedCard: PlayCard
+        playerIndex: PlayerIndex
+      }>
+    ) => {
+      const { playedCard, playerIndex } = action.payload
       const { players } = state
-      const playedCard = action.payload
 
-      if (
-        !players
-          .find(player => player.isActive)
-          ?.hand.find(card => card.id === playedCard.id)
-      ) {
-        throw new Error(
-          'Active player does not have card marked for play in thier hand.'
-        )
-      }
-
-      state.players = players.map(player => ({
-        ...player,
-        coins: player.isActive ? player.coins - playedCard.cost : player.coins,
-        hand: player.isActive
-          ? player.hand.filter(card => card.id !== playedCard.id)
-          : player.hand,
-        board: player.isActive
-          ? [...player.board, action.payload]
-          : player.board,
-        hasPlayedCardThisTurn: player.isActive
-          ? true
-          : player.hasPlayedCardThisTurn
-      })) as PlayerState
-    },
-    triggerCardAbility: (state, action: PayloadAction<CardAbility>) =>
-      CardAbilities[action.payload](state)
+      players[playerIndex].coins = players[playerIndex].coins - playedCard.cost
+      players[playerIndex].hasPlayedCardThisTurn = true
+      players[playerIndex].hand = players[playerIndex].hand.filter(
+        card => card.id !== playedCard.id
+      )
+      players[playerIndex].board = [...players[playerIndex].board, playedCard]
+    }
   }
 })
 

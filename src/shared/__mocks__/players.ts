@@ -18,7 +18,6 @@ export const MockPlayer1: Player = {
   id: 'player1',
   name: 'Garret',
   coins: DEFAULT_COINS_AMOUNT,
-  isPlayerPrespective: true,
   deck: [
     createPlayCardFromPrototype(HammeriteNovice),
     createPlayCardFromPrototype(HammeriteNovice),
@@ -46,51 +45,14 @@ export const MockPlayer2: Player = {
   ]
 }
 
-export const mockBudgetPlayer: Player = {
-  ...EMPTY_PLAYER,
-  id: 'player3',
-  name: 'Hume',
-  coins: DEFAULT_COINS_AMOUNT,
-  hand: [
-    createPlayCardFromPrototype(TempleGuard),
-    createPlayCardFromPrototype(HammeriteNovice)
-  ]
-}
-
 export const PlayTestPlayer1: Player = {
-  ...EMPTY_PLAYER,
-  id: 'player1',
-  name: 'Victoria',
+  ...MockPlayer1,
   coins: DEFAULT_COINS_AMOUNT,
-  isActive: true,
-  isPlayerPrespective: true,
-  deck: [
-    createPlayCardFromPrototype(ElevatedAcolyte),
-    createPlayCardFromPrototype(TempleGuard)
-  ],
-  hand: [
-    createPlayCardFromPrototype(BrotherSachelman),
-    createPlayCardFromPrototype(ElevatedAcolyte),
-    createPlayCardFromPrototype(TempleGuard)
-  ],
-  board: [
-    createPlayCardFromPrototype(HammeriteNovice),
-    createPlayCardFromPrototype(HammeriteNovice)
-  ]
+  isActive: true
 }
 
 export const PlayTestPlayer2: Player = {
-  ...EMPTY_PLAYER,
-  id: 'player2',
-  name: 'Hume',
+  ...MockPlayer2,
   coins: DEFAULT_COINS_AMOUNT,
-  isCPU: true,
-  hand: [
-    createPlayCardFromPrototype(Zombie),
-    createPlayCardFromPrototype(Haunt)
-  ],
-  deck: [
-    createPlayCardFromPrototype(Zombie),
-    createPlayCardFromPrototype(Haunt)
-  ]
+  isCPU: true
 }

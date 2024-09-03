@@ -11,13 +11,7 @@ import {
 import { getFactionColor, joinCardTypes } from 'src/Cards/CardUtils'
 import PositiveNegativeNumber from 'src/shared/components/PositiveNegativeNumber'
 
-const Card: FC<CardProps> = ({
-  card,
-  isFaceDown,
-  isActive,
-  isSmaller,
-  onClickCard
-}) => {
+const Card: FC<CardProps> = ({ card, isFaceDown, isSmaller, onClickCard }) => {
   const {
     id,
     name,
@@ -40,8 +34,13 @@ const Card: FC<CardProps> = ({
       strengthChangeAnimation.start(NumberChangeAnimation)
     }
 
-    if ((prevStrength as number) < (strength as number)) {
+    if (prevStrength < strength) {
       cardBoostAnimation.start(CardBoostAnimation)
+    }
+
+    return () => {
+      strengthChangeAnimation.stop()
+      cardBoostAnimation.stop()
     }
   }, [prevStrength, strength, strengthChangeAnimation, cardBoostAnimation])
 
@@ -50,7 +49,7 @@ const Card: FC<CardProps> = ({
       layoutId={id}
       animate={cardBoostAnimation}
       onClick={onClickCard ? () => onClickCard(card) : undefined}
-      className={`${styles.card} ${isSmaller ? styles.smallCard : ''} ${isActive ? styles.activeCard : ''}`}
+      className={`${styles.card} ${isSmaller ? styles.smallCard : ''} ${onClickCard ? styles.activeCard : ''}`}
     >
       {isFaceDown ? (
         <div className={styles.cardBack} />

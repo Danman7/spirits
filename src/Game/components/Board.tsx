@@ -1,107 +1,103 @@
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 
 import * as styles from 'src/shared/styles/styles.module.css'
-
-import Overlay from 'src/Game/components/Overlay'
-
+import Modal from 'src/shared/components/Modal'
 import {
   getActivePlayer,
-  getHasActivePlayerPlayedACardThisTurn,
-  getIsActivePlayerNonHuman,
-  getIsPlayerPrespectiveTurn,
   getPhase,
   getPlayers
 } from 'src/shared/redux/selectors/GameSelectors'
-import { GameActions } from 'src/shared/redux/reducers/GameReducer'
-import { redrawMessage } from 'src/Game/messages'
-import { compPlayTurn } from 'src/Game/ComputerPlayerUtils'
-import { CardProps, PlayCard } from 'src/Cards/CardTypes'
 import { useAppDispatch, useAppSelector } from 'src/shared/redux/hooks'
 import PlayerHalfBoard from 'src/Game/components/PlayerHalfBoard'
-import { GamePhase } from 'src/shared/redux/StateTypes'
-import Button from 'src/shared/components/Button'
-import { getPlayerButtonText } from 'src/Game/GameUtils'
+import { GamePhase, PlayerIndex } from 'src/shared/redux/StateTypes'
+import { GameActions } from 'src/shared/redux/reducers/GameReducer'
+import InitialPhaseModal from 'src/shared/components/ModalVariants/InitialPhaseModal'
+import PlayerTurnModal from 'src/shared/components/ModalVariants/PlayerTurnModal'
+import {
+  INITIAL_CARD_DRAW_AMOUNT,
+  LONG_ANIMATION_CYCLE
+} from 'src/Game/constants'
+import { compPlayTurn } from 'src/Game/ComputerPlayerUtils'
+import { getTurn } from 'src/shared/redux/selectors/GameSelectors'
 
 const Board: FC = () => {
   const dispatch = useAppDispatch()
 
-  const [overlayMessage, setOverlayMessage] = useState('')
+  const [overlayContent, setOverlayContent] = useState<ReactNode>(null)
 
   const players = useAppSelector(getPlayers)
   const phase = useAppSelector(getPhase)
+  const turn = useAppSelector(getTurn)
   const activePlayer = useAppSelector(getActivePlayer)
-  const isActivePlayerNonHuman = useAppSelector(getIsActivePlayerNonHuman)
-  const isPlayerPrespectiveTurn = useAppSelector(getIsPlayerPrespectiveTurn)
-  const hasActivePlayerPlayedACardThisTurn = useAppSelector(
-    getHasActivePlayerPlayedACardThisTurn
-  )
-
-  const onPlayCard: CardProps['onClickCard'] = useCallback(
-    (card: PlayCard) => {
-      dispatch(GameActions.playCardFromHand(card))
-    },
-    [dispatch]
-  )
-
-  const onPassOrEndTurn = useCallback(() => {
-    dispatch(GameActions.endTurn())
-  }, [dispatch])
 
   const onAnimationComplete = () => {
-    if (isActivePlayerNonHuman && activePlayer) {
-      compPlayTurn(activePlayer, onPlayCard, onPassOrEndTurn)
+    if (phase === GamePhase.INITIAL_DRAW) {
+      players.forEach((_, playerIndex) =>
+        dispatch(GameActions.drawCardFromDeck(playerIndex as PlayerIndex))
+      )
     }
   }
 
-  const orderedPlayers = [...players].sort(
-    (a, b) => Number(a.isPlayerPrespective) - Number(b.isPlayerPrespective)
-  )
+  const onExitComplete = () => {
+    if (activePlayer.isCPU && phase === GamePhase.PLAYER_TURN) {
+      compPlayTurn(
+        activePlayer,
+        players.indexOf(activePlayer) as PlayerIndex,
+        dispatch
+      )
+    }
+  }
 
-  const onClickCard =
-    isPlayerPrespectiveTurn && !hasActivePlayerPlayedACardThisTurn
-      ? onPlayCard
-      : undefined
+  useEffect(() => {
+    if (
+      phase === GamePhase.INITIAL_DRAW &&
+      players.every(({ hand }) => hand.length === INITIAL_CARD_DRAW_AMOUNT)
+    ) {
+      dispatch(GameActions.startRedraw())
+    }
+
+    if (phase === GamePhase.REDRAW && players.every(({ isReady }) => isReady)) {
+      dispatch(GameActions.startGame())
+    }
+  }, [phase, players, dispatch])
 
   useEffect(() => {
     switch (phase) {
-      case GamePhase.REDRAW:
-        setOverlayMessage(redrawMessage)
+      case GamePhase.INITIAL_DRAW:
+        setOverlayContent(<InitialPhaseModal />)
+
         break
 
-      default:
-        setOverlayMessage('')
+      case GamePhase.PLAYER_TURN:
+        setOverlayContent(<PlayerTurnModal />)
+
+        setTimeout(() => {
+          setOverlayContent(null)
+        }, LONG_ANIMATION_CYCLE)
         break
     }
-  }, [phase])
+  }, [phase, turn, dispatch])
 
   if (phase === GamePhase.PRE_GAME) return null
 
   return (
     <div className={styles.board}>
-      {orderedPlayers.map((player, index) => (
+      {players.map((player, index) => (
         <PlayerHalfBoard
           key={player.id}
           player={player}
-          isOnTop={!index}
-          onClickCard={index ? onClickCard : undefined}
+          phase={phase}
+          playerIndex={index as PlayerIndex}
+          setOverlayContent={setOverlayContent}
         />
       ))}
 
-      <Overlay
-        message={overlayMessage}
+      <Modal
         onAnimationComplete={onAnimationComplete}
-      />
-
-      <div className={styles.endTurnButton}>
-        <Button
-          label={getPlayerButtonText({
-            phase,
-            hasActivePlayerPlayedACardThisTurn,
-            isPlayerPrespectiveTurn
-          })}
-          onClick={onPassOrEndTurn}
-        />
-      </div>
+        onExitComplete={onExitComplete}
+      >
+        {overlayContent}
+      </Modal>
     </div>
   )
 }

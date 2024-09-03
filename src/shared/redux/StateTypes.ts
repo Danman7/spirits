@@ -5,7 +5,6 @@ import { PlayCard } from 'src/Cards/CardTypes'
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
-export type PlayerIndex = 0 | 1
 
 export interface Player {
   id: string
@@ -17,14 +16,14 @@ export interface Player {
   discard: PlayCard[]
   isActive: boolean
   hasPlayedCardThisTurn: boolean
-  isPlayerPrespective: boolean
   isCPU?: boolean
+  isReady?: boolean
 }
 
 export const enum GamePhase {
   PRE_GAME = 'Pre-game',
   INITIAL_DRAW = 'Initial Draw',
-  REDRAW = 'Redraw',
+  REDRAW = 'Redrawing Phase',
   PLAYER_TURN = 'Player Turn',
   RESOLVING_END_TURN = 'Resolving end of turn'
 }
@@ -32,10 +31,13 @@ export const enum GamePhase {
 export interface GameState {
   turn: number
   phase: GamePhase
-  players: PlayerState
+  players: PlayersInGame
+  loggedInPlayerId: Player['id']
 }
 
-export type PlayerState = [Player, Player]
+export type PlayerIndex = 0 | 1
+
+export type PlayersInGame = [Player, Player]
 
 export interface MainReducer {
   game: Reducer<GameState>
@@ -43,10 +45,4 @@ export interface MainReducer {
 
 export interface MainState {
   game: GameState
-}
-
-export interface StartGamePayload {
-  players: PlayerState
-  firstPlayerId?: Player['id']
-  phase?: GamePhase
 }

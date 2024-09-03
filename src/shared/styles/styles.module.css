@@ -9,7 +9,7 @@
 
 .negativeText {
   composes: shadowedText;
-  color: var(--negative-color);
+  color: var(--primary-color);
 }
 
 .card {
@@ -19,7 +19,7 @@
   height: 350px;
   perspective: 1000px;
   background: transparent;
-  border: 1px solid var(--line-color);
+  border: 1px solid var(--shadow-color);
   box-shadow: 1px 1px 1px var(--shadow-color);
   overflow: hidden;
   background: var(--background-color);
@@ -74,12 +74,6 @@
       #999 5px,
       #999 10px
     );
-  }
-}
-
-.faceDown {
-  .cardPaper {
-    transform: rotateY(180deg);
   }
 }
 
@@ -138,29 +132,39 @@
   justify-content: center;
   padding: 0.5rem;
   gap: 0.5rem;
-  z-index: 1;
 }
 
 .topPlayerBoard {
   composes: playerBoard;
-  border-bottom: 1px dashed var(--pale-color);
+  border-bottom: 1px dashed var(--line-color);
   align-items: flex-end;
+  padding-bottom: 2em;
 }
 
 .bottomPlayerBoard {
   composes: playerBoard;
   align-items: flex-start;
+  padding-top: 2em;
 }
 
 .playerHand {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  z-index: 2;
+
   flex-grow: 2;
 
   .card {
     margin: 0 -80px;
+  }
+}
+
+.topPlayerHand {
+  composes: playerHand;
+
+  .card {
+    position: relative;
+    top: -120px;
   }
 }
 
@@ -169,38 +173,30 @@
 
   .card {
     position: relative;
-    bottom: 0;
+    bottom: -120px;
 
     &:hover {
       z-index: 2;
-      bottom: 275px;
+      bottom: 170px;
     }
   }
 }
 
-.overlayWrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  pointer-events: none;
+.modal {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-
-.overlay {
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   text-align: center;
-  max-width: 50em;
+  width: 50em;
   overflow: hidden;
   box-shadow: 2px 2px 2px var(--shadow-color);
-  padding: 1rem 2rem;
+  padding: 1em;
   border-radius: 8px;
   background: var(--background-color);
   color: var(--text-color);
-  z-index: 10;
   scale: 1;
+  z-index: 3;
 }
 
 .playerInfo {
@@ -234,20 +230,22 @@
   border-color: var(--line-color);
   border-bottom-width: 4px;
   border-bottom-color: var(--line-color);
+  box-shadow: 2px 2px 2px #777;
 }
 
 .positiveButton {
   composes: defaultButton;
-  background: var(--positive-color);
+  background: var(--secondary-color);
   color: white;
 }
 
-.endTurnButton {
+.gameButtonWrapper {
   position: absolute;
-  left: 8px;
+  position: absolute;
   top: 50%;
-  transform: translateY(-50%);
-  z-index: 3;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
 }
 
 .faceDownStack {
@@ -257,6 +255,10 @@
 
   .card {
     position: absolute;
+
+    &:hover {
+      box-shadow: 1px 1px 1px var(--shadow-color);
+    }
   }
 }
 
@@ -270,17 +272,22 @@
   position: fixed;
   left: 8px;
   right: 8px;
-  z-index: 2;
+  z-index: 3;
 }
 
 .topPlayerSide {
   composes: playerSide;
-  top: -100px;
+  top: -170px;
   align-items: flex-start;
 }
 
 .bottomPlayerSide {
   composes: playerSide;
-  bottom: -100px;
+  bottom: -170px;
   align-items: flex-end;
+}
+
+.link {
+  cursor: pointer;
+  color: var(--primary-color);
 }
