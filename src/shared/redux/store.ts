@@ -1,3 +1,6 @@
+import 'src/shared/redux/listeners/gameFlow'
+import 'src/shared/redux/listeners/computerPlayer'
+
 import { configureStore } from '@reduxjs/toolkit'
 import { reducer } from 'src/shared/redux/reducer'
 import { listenerMiddleware } from 'src/shared/redux/middleware'

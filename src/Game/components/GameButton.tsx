@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC } from 'react'
 
 import * as styles from 'src/shared/styles/styles.module.css'
 import Button, { ButtonProps } from 'src/shared/components/Button'
@@ -17,46 +17,34 @@ const GameButton: FC = () => {
   const activePlayer = useAppSelector(getActivePlayer)
   const phase = useAppSelector(getPhase)
 
-  const [label, setLabel] = useState<ButtonProps['label']>('')
-
   const onPassOrEndTurn: ButtonProps['onClick'] = () => {
     dispatch(GameActions.endTurn())
   }
 
-  const getOnClickCard = (): ButtonProps['onClick'] => {
-    if (phase === GamePhase.PLAYER_TURN) {
-      return onPassOrEndTurn
+  const onClickButton: ButtonProps['onClick'] =
+    phase === GamePhase.PLAYER_TURN ? onPassOrEndTurn : undefined
+
+  let buttonLabel = ''
+
+  if (activePlayer) {
+    if (
+      phase === GamePhase.PLAYER_TURN &&
+      !activePlayer.hasPlayedCardThisTurn
+    ) {
+      buttonLabel = passButtonMessage
     }
 
-    return undefined
+    if (phase === GamePhase.PLAYER_TURN && activePlayer.hasPlayedCardThisTurn) {
+      buttonLabel = endTurnMessage
+    }
   }
-
-  useEffect(() => {
-    if (activePlayer) {
-      if (
-        phase === GamePhase.PLAYER_TURN &&
-        !activePlayer.hasPlayedCardThisTurn
-      ) {
-        return setLabel(passButtonMessage)
-      }
-
-      if (
-        phase === GamePhase.PLAYER_TURN &&
-        activePlayer.hasPlayedCardThisTurn
-      ) {
-        return setLabel(endTurnMessage)
-      }
-    }
-
-    setLabel('')
-  }, [activePlayer, phase])
 
   if (!activePlayer) return null
 
   return (
-    label && (
+    buttonLabel && (
       <div className={styles.gameButtonWrapper}>
-        <Button label={label} onClick={getOnClickCard()} />
+        <Button label={buttonLabel} onClick={onClickButton} />
       </div>
     )
   )

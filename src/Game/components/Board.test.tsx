@@ -4,10 +4,22 @@ import Board from 'src/Game/components/Board'
 import {
   endTurnMessage,
   initialDrawMessage,
-  passButtonMessage
+  passButtonMessage,
+  playerFirstMessage,
+  redrawMessage,
+  skipRedrawMessage
 } from 'src/Game/messages'
 import { createPlayCardFromPrototype } from 'src/Cards/CardUtils'
-import { BrotherSachelman, Haunt } from 'src/Cards/CardPrototypes'
+import {
+  AzaranTheCruel,
+  BookOfAsh,
+  BrotherSachelman,
+  ElevatedAcolyte,
+  HammeriteNovice,
+  Haunt,
+  TempleGuard,
+  Zombie
+} from 'src/Cards/CardPrototypes'
 import { fireEvent, render, screen, waitFor } from 'src/shared/utils/test-utils'
 import { MockPlayer1, MockPlayer2 } from 'src/shared/__mocks__/players'
 import {
@@ -19,11 +31,16 @@ import {
 } from 'src/shared/redux/StateTypes'
 
 const initialPlayers: PlayersInGame = [
-  { ...MockPlayer2, hand: [createPlayCardFromPrototype(Haunt)] },
+  {
+    ...MockPlayer2,
+    hand: [createPlayCardFromPrototype(Haunt)],
+    discard: [createPlayCardFromPrototype(BookOfAsh)]
+  },
   {
     ...MockPlayer1,
     isActive: true,
-    hand: [createPlayCardFromPrototype(BrotherSachelman)]
+    hand: [createPlayCardFromPrototype(BrotherSachelman)],
+    discard: [createPlayCardFromPrototype(BookOfAsh)]
   }
 ]
 
@@ -35,7 +52,7 @@ const mockGameState: GameState = {
 }
 
 test('show the general UI elements', () => {
-  const gameState = { ...mockGameState }
+  const gameState: GameState = { ...mockGameState }
 
   render(<Board />, {
     preloadedState: {
@@ -68,8 +85,50 @@ test('initial draw of cards', () => {
   expect(screen.getByText(initialDrawMessage)).toBeInTheDocument()
 })
 
+test('redraw a card', async () => {
+  const gameState: GameState = {
+    ...mockGameState,
+    phase: GamePhase.REDRAW,
+    players: [
+      {
+        ...initialPlayers[0],
+        isReady: true,
+        hand: [
+          createPlayCardFromPrototype(Haunt),
+          createPlayCardFromPrototype(Zombie),
+          createPlayCardFromPrototype(Zombie),
+          createPlayCardFromPrototype(AzaranTheCruel)
+        ]
+      },
+      {
+        ...initialPlayers[1],
+        deck: [createPlayCardFromPrototype(ElevatedAcolyte)],
+        hand: [
+          createPlayCardFromPrototype(HammeriteNovice),
+          createPlayCardFromPrototype(HammeriteNovice),
+          createPlayCardFromPrototype(TempleGuard),
+          createPlayCardFromPrototype(BrotherSachelman)
+        ]
+      }
+    ]
+  }
+
+  render(<Board />, {
+    preloadedState: {
+      game: gameState
+    }
+  })
+
+  expect(screen.getByText(redrawMessage)).toBeInTheDocument()
+  expect(screen.getByText(skipRedrawMessage)).toBeInTheDocument()
+
+  fireEvent.click(screen.getByText(TempleGuard.name))
+
+  expect(screen.getByText(ElevatedAcolyte.name)).toBeInTheDocument()
+})
+
 test('play a card from hand', async () => {
-  const gameState = { ...mockGameState }
+  const gameState: GameState = { ...mockGameState }
 
   const { players } = gameState
 
@@ -85,7 +144,19 @@ test('play a card from hand', async () => {
     }
   })
 
+  expect(screen.getByText(playerFirstMessage)).toBeInTheDocument()
+
   expect(screen.queryByText(passButtonMessage)).toBeInTheDocument()
+
+  await waitFor(
+    async () =>
+      expect(
+        await screen.queryByText(playerFirstMessage)
+      ).not.toBeInTheDocument(),
+    {
+      timeout: 3000
+    }
+  )
 
   fireEvent.click(screen.getByText(name))
 

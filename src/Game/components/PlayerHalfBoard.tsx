@@ -1,25 +1,21 @@
-import { FC, ReactNode, useEffect } from 'react'
+import { FC, useEffect } from 'react'
 import { motion, useAnimationControls } from 'framer-motion'
 
 import Card from 'src/Cards/components/Card'
 import styles from 'src/shared/styles/styles.module.css'
 import GameButton from 'src/Game/components/GameButton'
-import RedrawPhaseModal from 'src/shared/components/ModalVariants/RedrawPhaseModal'
 import { GamePhase, Player, PlayerIndex } from 'src/shared/redux/StateTypes'
 import { NumberChangeAnimation } from 'src/shared/utils/animations'
 import { CardProps, PlayCard } from 'src/Cards/CardTypes'
 import { useAppDispatch, useAppSelector } from 'src/shared/redux/hooks'
 import { GameActions } from 'src/shared/redux/reducers/GameReducer'
-import { INITIAL_CARD_DRAW_AMOUNT } from 'src/Game/constants'
-import { compSkipRedraw } from 'src/Game/ComputerPlayerUtils'
 import { getLoggedInPlayerId } from 'src/shared/redux/selectors/GameSelectors'
 
 const PlayerHalfBoard: FC<{
   player: Player
   playerIndex: PlayerIndex
   phase: GamePhase
-  setOverlayContent: React.Dispatch<React.SetStateAction<ReactNode>>
-}> = ({ player, playerIndex, phase, setOverlayContent }) => {
+}> = ({ player, playerIndex, phase }) => {
   const {
     id,
     isActive,
@@ -30,8 +26,7 @@ const PlayerHalfBoard: FC<{
     board,
     discard,
     isReady,
-    hasPlayedCardThisTurn,
-    isCPU
+    hasPlayedCardThisTurn
   } = player
 
   const dispatch = useAppDispatch()
@@ -80,35 +75,6 @@ const PlayerHalfBoard: FC<{
   useEffect(() => {
     coinsChangeAnimation.start(NumberChangeAnimation)
   }, [coins, coinsChangeAnimation])
-
-  useEffect(() => {
-    if (hand.length) {
-      if (
-        phase === GamePhase.INITIAL_DRAW &&
-        hand.length < INITIAL_CARD_DRAW_AMOUNT
-      ) {
-        setTimeout(() => {
-          dispatch(GameActions.drawCardFromDeck(playerIndex))
-        }, 500)
-      }
-    }
-  }, [dispatch, hand.length, phase, playerIndex])
-
-  useEffect(() => {
-    if (phase === GamePhase.REDRAW && isCPU && !isReady) {
-      compSkipRedraw(playerIndex, dispatch)
-    }
-  }, [dispatch, playerIndex, isCPU, isReady, phase])
-
-  useEffect(() => {
-    if (isPlayerPrespective) {
-      switch (phase) {
-        case GamePhase.REDRAW:
-          setOverlayContent(<RedrawPhaseModal playerIndex={playerIndex} />)
-          break
-      }
-    }
-  }, [phase, playerIndex, isPlayerPrespective, setOverlayContent])
 
   return (
     <>

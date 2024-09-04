@@ -6,23 +6,16 @@ import { FadeInOutVariants } from 'src/shared/utils/animations'
 
 interface ModalProps {
   children?: ReactNode
-  onAnimationComplete?: () => void
-  onExitComplete?: () => void
 }
 
-const Modal: FC<ModalProps> = ({
-  children,
-  onAnimationComplete,
-  onExitComplete
-}) => (
-  <AnimatePresence onExitComplete={onExitComplete}>
+const Modal: FC<ModalProps> = ({ children }) => (
+  <AnimatePresence>
     {children && (
       <motion.div
         className={styles.modal}
         initial="closed"
         animate={children ? 'open' : 'closed'}
         variants={FadeInOutVariants}
-        onAnimationComplete={onAnimationComplete}
         exit="closed"
       >
         {children}

@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 
-import { MainState, Player } from 'src/shared/redux/StateTypes'
+import { MainState } from 'src/shared/redux/StateTypes'
 
 export const getGameState = (state: MainState) => state.game
 
@@ -22,6 +22,10 @@ export const getPlayers = createSelector(
 )
 
 export const getActivePlayer = createSelector(
-  getGameState,
-  gameState => gameState.players.find(({ isActive }) => isActive) as Player
+  getPlayers,
+  ([Player1, Player2]) => (Player1.isActive ? Player1 : Player2)
+)
+
+export const getActivePlayerIndex = createSelector(getPlayers, ([Player1]) =>
+  Player1.isActive ? 0 : 1
 )
