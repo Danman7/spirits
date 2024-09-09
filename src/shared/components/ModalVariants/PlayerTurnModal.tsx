@@ -19,7 +19,7 @@ const PlayerTurnModal: FC = () => {
     <>
       <motion.h1 variants={SlideInOutContentVariants}>
         {getPlayerTurnModalContent(
-          activePlayer.id === loggedInPlayerId,
+          activePlayer?.id === loggedInPlayerId,
           turn === 1
         )}
       </motion.h1>

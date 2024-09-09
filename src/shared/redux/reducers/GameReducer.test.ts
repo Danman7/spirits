@@ -18,7 +18,10 @@ const initialPlayers: PlayersInGame = [MockPlayer1, MockPlayer2]
 test('initialize a new game with a random first player', () => {
   const state = GameReducer(
     { ...initialState },
-    GameActions.initializeGame({ players: initialPlayers })
+    GameActions.initializeGame({
+      players: initialPlayers,
+      loggedInPlayerId: MockPlayer2.id
+    })
   )
 
   const { turn, players, phase } = state
@@ -129,6 +132,17 @@ test('start the game', () => {
 
   expect(turn).toBe(1)
   expect(phase).toBe(GamePhase.PLAYER_TURN)
+})
+
+test('start redraw phase', () => {
+  const mockState: GameState = {
+    ...initialState,
+    players: initialPlayers
+  }
+
+  const state = GameReducer(mockState, GameActions.startRedraw())
+
+  expect(state.phase).toBe(GamePhase.REDRAW)
 })
 
 test('initialize end of turn resolution', () => {

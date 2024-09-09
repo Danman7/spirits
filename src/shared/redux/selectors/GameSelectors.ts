@@ -23,7 +23,8 @@ export const getPlayers = createSelector(
 
 export const getActivePlayer = createSelector(
   getPlayers,
-  ([Player1, Player2]) => (Player1.isActive ? Player1 : Player2)
+  ([Player1, Player2]) =>
+    Player1.isActive ? Player1 : Player2.isActive ? Player2 : null
 )
 
 export const getActivePlayerIndex = createSelector(getPlayers, ([Player1]) =>

@@ -4,6 +4,7 @@ import Board from 'src/Game/components/Board'
 import {
   endTurnMessage,
   initialDrawMessage,
+  opponentTurnMessage,
   passButtonMessage,
   playerFirstMessage,
   redrawMessage,
@@ -146,7 +147,7 @@ test('play a card from hand', async () => {
 
   expect(screen.getByText(playerFirstMessage)).toBeInTheDocument()
 
-  expect(screen.queryByText(passButtonMessage)).toBeInTheDocument()
+  expect(screen.getByText(passButtonMessage)).toBeInTheDocument()
 
   await waitFor(
     async () =>
@@ -188,20 +189,9 @@ test('end the turn', async () => {
 })
 
 test('play a card as CPU and end the turn', async () => {
-  const CPUPlayerIndex = 0
-
   const state: GameState = {
     ...mockGameState,
-    players: mockGameState.players.map((player, playerIndex) => {
-      if (playerIndex === CPUPlayerIndex) {
-        return {
-          ...player,
-          isCPU: true
-        }
-      }
-
-      return player
-    }) as PlayersInGame
+    players: [{ ...initialPlayers[0], isCPU: true }, initialPlayers[1]]
   }
 
   render(<Board />, {
@@ -216,13 +206,19 @@ test('play a card as CPU and end the turn', async () => {
 
   fireEvent.click(screen.getByText(passButtonMessage))
 
+  expect(screen.getByText(opponentTurnMessage)).toBeInTheDocument()
+
   await waitFor(
     async () =>
       expect(
-        await screen.queryByText(playedCPUCard.name)
-      ).not.toBeInTheDocument(),
+        await expect(
+          screen.queryByText(opponentTurnMessage)
+        ).not.toBeInTheDocument()
+      ),
     {
       timeout: 3000
     }
   )
+
+  expect(screen.getByText(playedCPUCard.name)).toBeInTheDocument()
 })
