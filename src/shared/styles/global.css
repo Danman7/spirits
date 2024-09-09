@@ -7,6 +7,9 @@
   --background-color: #fafaf9;
   --shadow-color: #333;
   --text-color: #3d2c29;
+  --order-faction-color: #802;
+  --chaos-faction-color: #093;
+  --shadow-faction-color: #419;
 }
 
 body *,

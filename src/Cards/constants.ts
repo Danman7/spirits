@@ -1,13 +1,9 @@
 import { CardFaction } from 'src/Cards/CardTypes'
 
-export const ORDER_COLOR = '#802'
-export const CHAOS_COLOR = '#093'
-export const SHADOW_COLOR = '#419'
-
 export const FACTION_COLOR_MAP = {
-  [CardFaction.Order]: ORDER_COLOR,
-  [CardFaction.Chaos]: CHAOS_COLOR,
-  [CardFaction.Shadow]: SHADOW_COLOR
+  [CardFaction.Order]: 'var(--order-faction-color)',
+  [CardFaction.Chaos]: 'var(--chaos-faction-color)',
+  [CardFaction.Shadow]: 'var(--shadow-faction-color)'
 }
 
 export const HAUNT_DAMAGE = 1
