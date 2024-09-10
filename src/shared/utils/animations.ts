@@ -40,20 +40,13 @@ export const CardVariants: Variants = {
   },
   small: { width: '150px', height: '210px', fontSize: '10px' },
   active: {
+    cursor: 'pointer',
     boxShadow: [
       '0 0 2px 2px var(--positive-color)',
       '0 0 4px 4px var(--positive-color)'
     ],
     transition: {
       repeat: Infinity,
-      repeatType: 'reverse'
-    }
-  },
-  boosted: {
-    scale: [null, 1.1],
-    boxShadow: [null, `0 0 4px 4px var(--hilight-color)`],
-    transition: {
-      repeat: 1,
       repeatType: 'reverse'
     }
   }
@@ -68,10 +61,6 @@ export const CardBackVariants: Variants = {
     background:
       'repeating-linear-gradient(45deg,#fff,#fff 5px,#999 5px,#999 10px)'
   }
-}
-
-export const CardStrengthVariants: Variants = {
-  boosted: NumberChangeAnimation
 }
 
 export const FadeInOutVariants: Variants = {

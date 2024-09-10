@@ -1,3 +1,4 @@
+import { HTMLMotionProps } from 'framer-motion'
 import * as CardAbilities from 'src/Cards/CardAbilities'
 import { GameState, PlayerIndex } from 'src/shared/redux/StateTypes'
 
@@ -49,9 +50,8 @@ export type CardAbilityFunction = ({
   playerIndex: PlayerIndex
 }) => void
 
-export interface CardProps {
+export interface CardProps extends HTMLMotionProps<'div'> {
   card: PlayCard
-  isSmaller?: boolean
   isFaceDown?: boolean
   onClickCard?: (card: PlayCard) => void
 }

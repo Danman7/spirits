@@ -25,8 +25,14 @@ const meta = {
   args: {
     card: mockCard,
     isFaceDown: false,
-    isSmaller: false,
+    animate: 'default',
     onClickCard: undefined
+  },
+  argTypes: {
+    animate: {
+      control: 'select',
+      options: ['normal', 'small', 'active']
+    }
   }
 } satisfies Meta<typeof Card>
 
@@ -38,13 +44,14 @@ export const Default: Story = {}
 export const SmallerVariant: Story = {
   args: {
     card: { ...mockCard },
-    isSmaller: true
+    animate: 'small'
   }
 }
 
 export const IsActive: Story = {
   args: {
-    onClickCard: fn()
+    onClickCard: fn(),
+    animate: 'active'
   }
 }
 

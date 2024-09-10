@@ -129,7 +129,6 @@
 
     &:hover {
       z-index: 2;
-      bottom: 170px;
     }
   }
 }
