@@ -94,7 +94,7 @@ const PlayerHalfBoard: FC<{
       <div className={isOnTop ? styles.topPlayerSide : styles.bottomPlayerSide}>
         <div className={styles.faceDownStack}>
           {discard.map(card => (
-            <Card key={card.id} card={card} isFaceDown animate={['small']} />
+            <Card key={card.id} card={card} animate={['small', 'faceDown']} />
           ))}
         </div>
 
@@ -105,17 +105,19 @@ const PlayerHalfBoard: FC<{
             <Card
               key={card.id}
               card={card}
-              isFaceDown={isOnTop}
               onClickCard={getOnClickCard()}
               whileHover={!isOnTop ? { bottom: 170 } : {}}
-              animate={[getOnClickCard() ? 'active' : 'normal']}
+              animate={[
+                getOnClickCard() ? 'active' : 'normal',
+                isOnTop ? 'faceDown' : ''
+              ]}
             />
           ))}
         </motion.div>
 
         <div className={styles.faceDownStack}>
           {deck.map(card => (
-            <Card key={card.id} card={card} isFaceDown animate={['small']} />
+            <Card key={card.id} card={card} animate={['small', 'faceDown']} />
           ))}
         </div>
       </div>

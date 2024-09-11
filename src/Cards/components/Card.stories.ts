@@ -24,14 +24,13 @@ const meta = {
   tags: ['autodocs'],
   args: {
     card: mockCard,
-    isFaceDown: false,
-    animate: 'default',
+    animate: 'normal',
     onClickCard: undefined
   },
   argTypes: {
     animate: {
-      control: 'select',
-      options: ['normal', 'small', 'active']
+      control: 'multi-select',
+      options: ['normal', 'small', 'active', 'faceDown']
     }
   }
 } satisfies Meta<typeof Card>
@@ -91,6 +90,6 @@ export const MultipleFactions: Story = {
 export const FaceDown: Story = {
   args: {
     onClickCard: undefined,
-    isFaceDown: true
+    animate: ['normal', 'faceDown']
   }
 }

@@ -52,6 +52,5 @@ export type CardAbilityFunction = ({
 
 export interface CardProps extends HTMLMotionProps<'div'> {
   card: PlayCard
-  isFaceDown?: boolean
   onClickCard?: (card: PlayCard) => void
 }

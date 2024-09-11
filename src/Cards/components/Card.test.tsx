@@ -31,7 +31,7 @@ it('should display all shared UI segments of a card when face up', () => {
 })
 
 it('should card back when face down', () => {
-  render(<Card card={mockCard} isFaceDown />)
+  render(<Card card={mockCard} animate="faceDown" />)
 
   expect(screen.queryByText(mockCard.name)).not.toBeInTheDocument()
   expect(screen.queryByText(mockCard.strength)).not.toBeInTheDocument()

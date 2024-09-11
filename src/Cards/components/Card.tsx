@@ -1,4 +1,4 @@
-import { forwardRef, useEffect } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import { motion, useAnimationControls } from 'framer-motion'
 
 import styles from 'src/shared/styles/styles.module.css'
@@ -8,15 +8,21 @@ import {
   CardBackVariants,
   CardBoostAnimation,
   CardDamageAnimation,
+  CardPaperVariants,
   CardVariants,
   NumberChangeAnimation
 } from 'src/shared/utils/animations'
 import { getFactionColor, joinCardTypes } from 'src/Cards/CardUtils'
 import PositiveNegativeNumber from 'src/shared/components/PositiveNegativeNumber'
 
+const enum CardSide {
+  FRONT = 'FRONT',
+  BACK = 'BACK'
+}
+
 const Card = motion.create(
   forwardRef<HTMLDivElement, CardProps>(
-    ({ card, isFaceDown, animate, onClickCard }, ref) => {
+    ({ card, animate, onClickCard }, ref) => {
       const {
         id,
         name,
@@ -28,6 +34,12 @@ const Card = motion.create(
         cost,
         prototype
       } = card
+
+      const isCardFaceDown = animate?.toString().includes('faceDown')
+
+      const [activeSide, setActiveSide] = useState<CardSide>(
+        isCardFaceDown ? CardSide.BACK : CardSide.FRONT
+      )
 
       const prevStrength = usePrevious(strength)
 
@@ -69,38 +81,49 @@ const Card = motion.create(
             variants={CardVariants}
             className={styles.card}
           >
-            {isFaceDown ? (
+            <motion.div
+              className={styles.cardPaper}
+              onAnimationStart={() => setActiveSide(CardSide.FRONT)}
+              onAnimationComplete={() =>
+                setActiveSide(isCardFaceDown ? CardSide.BACK : CardSide.FRONT)
+              }
+              variants={CardPaperVariants}
+            >
+              {activeSide === CardSide.FRONT && (
+                <div className={styles.cardFront}>
+                  <div
+                    className={styles.cardHeader}
+                    style={{ background: getFactionColor(factions) }}
+                  >
+                    <h3 className={styles.cardTitle}>
+                      <div>{name}</div>
+                      {strength && prototype.strength && (
+                        <motion.div animate={strengthChangeAnimation}>
+                          <PositiveNegativeNumber
+                            current={strength}
+                            base={prototype.strength}
+                          />
+                        </motion.div>
+                      )}
+                    </h3>
+                    <div className={styles.cardTypes}>
+                      {joinCardTypes(types)}
+                    </div>
+                  </div>
+                  <div className={styles.cardContent}>
+                    <p>{description}</p>
+                    <div className={styles.cardFlavor}>{flavor}</div>
+                  </div>
+                  <div className={styles.cardFooter}>Cost: {cost}</div>
+                </div>
+              )}
+
               <motion.div
                 initial={false}
                 className={styles.cardBack}
                 variants={CardBackVariants}
               />
-            ) : (
-              <>
-                <div
-                  className={styles.cardHeader}
-                  style={{ background: getFactionColor(factions) }}
-                >
-                  <h3 className={styles.cardTitle}>
-                    <div>{name}</div>
-                    {strength && prototype.strength && (
-                      <motion.div animate={strengthChangeAnimation}>
-                        <PositiveNegativeNumber
-                          current={strength}
-                          base={prototype.strength}
-                        />
-                      </motion.div>
-                    )}
-                  </h3>
-                  <div className={styles.cardTypes}>{joinCardTypes(types)}</div>
-                </div>
-                <div className={styles.cardContent}>
-                  <p>{description}</p>
-                  <div className={styles.cardFlavor}>{flavor}</div>
-                </div>
-                <div className={styles.cardFooter}>Cost: {cost}</div>
-              </>
-            )}
+            </motion.div>
           </motion.div>
         </motion.div>
       )

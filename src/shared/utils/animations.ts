@@ -35,8 +35,7 @@ export const CardVariants: Variants = {
   normal: {
     width: '250px',
     height: '350px',
-    fontSize: '16px',
-    boxShadow: '1px 1px 1px var(--shadow-color)'
+    fontSize: '16px'
   },
   small: { width: '150px', height: '210px', fontSize: '10px' },
   active: {
@@ -49,6 +48,15 @@ export const CardVariants: Variants = {
       repeat: Infinity,
       repeatType: 'reverse'
     }
+  }
+}
+
+export const CardPaperVariants: Variants = {
+  normal: {
+    rotateY: 0
+  },
+  faceDown: {
+    rotateY: 180
   }
 }
 

@@ -13,20 +13,36 @@
 }
 
 .card {
-  display: flex;
-  flex-direction: column;
   width: 250px;
   height: 350px;
   perspective: 1000px;
   background: transparent;
+  position: relative;
+}
+
+.cardPaper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
   border: 1px solid var(--shadow-color);
-  overflow: hidden;
+}
+
+.cardFront {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  height: 100%;
+  width: 100%;
   background: var(--background-color);
+  backface-visibility: hidden;
+  overflow: hidden;
+  box-shadow: 3px 3px 3px var(--shadow-color);
 }
 
 .cardBack {
-  width: 100%;
-  height: 100%;
+  composes: cardFront;
+  transform: rotateY(180deg);
 }
 
 .cardHeader {
