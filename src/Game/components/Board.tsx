@@ -3,13 +3,13 @@ import { FC, ReactNode, useEffect, useState } from 'react'
 import * as styles from 'src/shared/styles/styles.module.css'
 import Modal from 'src/shared/components/Modal'
 import {
-  getActivePlayerIndex,
   getPhase,
+  getPlayerOrder,
   getPlayers
 } from 'src/shared/redux/selectors/GameSelectors'
 import { useAppSelector } from 'src/shared/redux/hooks'
 import PlayerHalfBoard from 'src/Game/components/PlayerHalfBoard'
-import { GamePhase, PlayerIndex } from 'src/shared/redux/StateTypes'
+import { GamePhase } from 'src/shared/redux/StateTypes'
 import InitialPhaseModal from 'src/shared/components/ModalVariants/InitialPhaseModal'
 import PlayerTurnModal from 'src/shared/components/ModalVariants/PlayerTurnModal'
 import RedrawPhaseModal from 'src/shared/components/ModalVariants/RedrawPhaseModal'
@@ -17,8 +17,8 @@ import { LONG_ANIMATION_CYCLE } from 'src/Game/constants'
 
 const Board: FC = () => {
   const players = useAppSelector(getPlayers)
+  const playerOrder = useAppSelector(getPlayerOrder)
   const phase = useAppSelector(getPhase)
-  const activePlayerIndex = useAppSelector(getActivePlayerIndex)
 
   const [modalContent, setModalContent] = useState<ReactNode>(null)
 
@@ -37,19 +37,19 @@ const Board: FC = () => {
         break
 
       case GamePhase.REDRAW:
-        setModalContent(<RedrawPhaseModal playerIndex={activePlayerIndex} />)
+        setModalContent(<RedrawPhaseModal playerId={playerOrder[1]} />)
         break
     }
-  }, [activePlayerIndex, phase])
+  }, [phase, playerOrder])
 
   return (
     <div className={styles.board}>
-      {players.map((player, index) => (
+      {playerOrder.map((playerId, index) => (
         <PlayerHalfBoard
-          key={player.id}
-          player={player}
+          key={playerId}
+          player={players[playerId]}
           phase={phase}
-          playerIndex={index as PlayerIndex}
+          isOnTop={!index}
         />
       ))}
 

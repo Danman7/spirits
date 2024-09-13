@@ -1,20 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import {
-  GamePhase,
-  GameState,
-  Player,
-  PlayerIndex,
-  PlayersInGame
-} from 'src/shared/redux/StateTypes'
+import { GamePhase, GameState, Player } from 'src/shared/redux/StateTypes'
 import { PlayCard } from 'src/Cards/CardTypes'
-import { EMPTY_PLAYER } from 'src/Game/constants'
 import { getRandomArrayItem } from 'src/shared/utils/utils'
 
 export const initialState: GameState = {
   turn: 0,
   phase: GamePhase.PRE_GAME,
-  players: [EMPTY_PLAYER, EMPTY_PLAYER],
+  players: {},
+  playerOrder: [],
   loggedInPlayerId: ''
 }
 
@@ -25,7 +19,7 @@ export const gameSlice = createSlice({
     initializeGame: (
       state,
       action: PayloadAction<{
-        players: PlayersInGame
+        players: Player[]
         loggedInPlayerId?: Player['id']
         firstPlayerId?: Player['id']
         phase?: GamePhase
@@ -49,16 +43,25 @@ export const gameSlice = createSlice({
         startingPlayerId = getRandomArrayItem(players).id
       }
 
-      state.players = players
-        .map(player => ({
-          ...player,
-          isActive: startingPlayerId === player.id
-        }))
+      state.players = players.reduce(
+        (statePlayers: GameState['players'], player) => {
+          statePlayers[player.id] = {
+            ...player,
+            isActive: startingPlayerId === player.id
+          }
+
+          return statePlayers
+        },
+        {}
+      )
+
+      state.playerOrder = players
         .sort(
           (playerA, playerB) =>
             Number(playerA.id === loggedInPlayerId) -
             Number(playerB.id === loggedInPlayerId)
-        ) as PlayersInGame
+        )
+        .map(({ id }) => id)
 
       state.phase = phase || GamePhase.INITIAL_DRAW
 
@@ -66,16 +69,17 @@ export const gameSlice = createSlice({
         state.loggedInPlayerId = loggedInPlayerId
       }
     },
-    drawCardFromDeck: (state, action: PayloadAction<PlayerIndex>) => {
+    drawCardFromDeck: (state, action: PayloadAction<Player['id']>) => {
       const { players } = state
 
       const drawingPlayer = players[action.payload]
 
       if (drawingPlayer.deck.length) {
-        players[action.payload].hand = [
-          ...drawingPlayer.hand,
-          players[action.payload].deck.shift() as PlayCard
-        ]
+        const drawnCardId = drawingPlayer.deck.shift()
+
+        if (drawnCardId) {
+          drawingPlayer.hand.push(drawnCardId)
+        }
       }
     },
     startRedraw: state => {
@@ -84,17 +88,17 @@ export const gameSlice = createSlice({
     putCardAtBottomOfDeck: (
       state,
       action: PayloadAction<{
-        card: PlayCard
-        playerIndex: PlayerIndex
+        cardId: PlayCard['id']
+        playerId: Player['id']
       }>
     ) => {
-      const { card, playerIndex } = action.payload
+      const { cardId, playerId } = action.payload
 
       const { players } = state
 
-      players[playerIndex].deck.push(card)
+      players[playerId].deck.push(cardId)
     },
-    completeRedraw: (state, action: PayloadAction<PlayerIndex>) => {
+    completeRedraw: (state, action: PayloadAction<Player['id']>) => {
       const { players } = state
 
       players[action.payload].isReady = true
@@ -107,32 +111,33 @@ export const gameSlice = createSlice({
       state.phase = GamePhase.RESOLVING_END_TURN
     },
     endTurn: state => {
-      const { players } = state
-
       state.turn += 1
       state.phase = GamePhase.PLAYER_TURN
-      state.players = players.map(player => ({
-        ...player,
-        isActive: !player.isActive,
-        hasPlayedCardThisTurn: false
-      })) as PlayersInGame
+
+      state.playerOrder.forEach(playerId => {
+        state.players[playerId].isActive = !state.players[playerId].isActive
+        state.players[playerId].hasPlayedCardThisTurn = false
+      })
     },
     playCardFromHand: (
       state,
       action: PayloadAction<{
-        playedCard: PlayCard
-        playerIndex: PlayerIndex
+        card: PlayCard
+        playerId: Player['id']
       }>
     ) => {
-      const { playedCard, playerIndex } = action.payload
+      const {
+        card: { id, cost },
+        playerId
+      } = action.payload
       const { players } = state
 
-      players[playerIndex].coins = players[playerIndex].coins - playedCard.cost
-      players[playerIndex].hasPlayedCardThisTurn = true
-      players[playerIndex].hand = players[playerIndex].hand.filter(
-        card => card.id !== playedCard.id
+      players[playerId].coins = players[playerId].coins - cost
+      players[playerId].hasPlayedCardThisTurn = true
+      players[playerId].hand = players[playerId].hand.filter(
+        cardId => cardId !== id
       )
-      players[playerIndex].board = [...players[playerIndex].board, playedCard]
+      players[playerId].board = [...players[playerId].board, id]
     }
   }
 })

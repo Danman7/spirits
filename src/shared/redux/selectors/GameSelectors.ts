@@ -21,12 +21,13 @@ export const getPlayers = createSelector(
   gameState => gameState.players
 )
 
-export const getActivePlayer = createSelector(
-  getPlayers,
-  ([Player1, Player2]) =>
-    Player1.isActive ? Player1 : Player2.isActive ? Player2 : null
+export const getPlayerOrder = createSelector(
+  getGameState,
+  gameState => gameState.playerOrder
 )
 
-export const getActivePlayerIndex = createSelector(getPlayers, ([Player1]) =>
-  Player1.isActive ? 0 : 1
+export const getPlayerPrespective = createSelector(
+  getPlayers,
+  getPlayerOrder,
+  (players, playerOrder) => players[playerOrder[1]]
 )

@@ -10,10 +10,11 @@ export interface Player {
   id: string
   name: string
   coins: number
-  deck: PlayCard[]
-  hand: PlayCard[]
-  board: PlayCard[]
-  discard: PlayCard[]
+  deck: PlayCard['id'][]
+  hand: PlayCard['id'][]
+  board: PlayCard['id'][]
+  discard: PlayCard['id'][]
+  cards: { [index: PlayCard['id']]: PlayCard }
   isActive: boolean
   hasPlayedCardThisTurn: boolean
   isCPU?: boolean
@@ -31,13 +32,12 @@ export const enum GamePhase {
 export interface GameState {
   turn: number
   phase: GamePhase
-  players: PlayersInGame
+  playerOrder: Player['id'][]
+  players: {
+    [index: Player['id']]: Player
+  }
   loggedInPlayerId: Player['id']
 }
-
-export type PlayerIndex = 0 | 1
-
-export type PlayersInGame = [Player, Player]
 
 export interface MainReducer {
   game: Reducer<GameState>

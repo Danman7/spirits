@@ -8,6 +8,7 @@ export const EMPTY_PLAYER: Player = {
   hand: [],
   board: [],
   discard: [],
+  cards: {},
   isActive: false,
   hasPlayedCardThisTurn: false
 }

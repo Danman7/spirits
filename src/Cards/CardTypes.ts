@@ -1,8 +1,5 @@
 import { HTMLMotionProps } from 'framer-motion'
-import * as CardAbilities from 'src/Cards/CardAbilities'
-import { GameState, PlayerIndex } from 'src/shared/redux/StateTypes'
-
-export type CardAbility = keyof typeof CardAbilities
+import { GameState, Player } from 'src/shared/redux/StateTypes'
 
 export interface Card {
   readonly name: string
@@ -12,7 +9,6 @@ export interface Card {
   strength: number
   description?: string
   flavor?: string
-  onPlay?: CardAbility
 }
 
 export interface PlayCard extends Card {
@@ -43,11 +39,11 @@ export const enum CardType {
 export type CardAbilityFunction = ({
   state,
   playedCard,
-  playerIndex
+  playerId
 }: {
   state: GameState
   playedCard: PlayCard
-  playerIndex: PlayerIndex
+  playerId: Player['id']
 }) => void
 
 export interface CardProps extends HTMLMotionProps<'div'> {

@@ -4,20 +4,18 @@ import {
 } from 'src/Game/constants'
 import { startAppListening } from 'src/shared/redux/middleware'
 import { GameActions } from 'src/shared/redux/reducers/GameReducer'
-import { GamePhase, PlayerIndex } from 'src/shared/redux/StateTypes'
+import { GamePhase } from 'src/shared/redux/StateTypes'
 
 // Handle initial draw
 startAppListening({
   actionCreator: GameActions.initializeGame,
   effect: async (_, listenerApi) => {
-    const { players } = listenerApi.getState().game
+    const { players, playerOrder } = listenerApi.getState().game
 
-    if (players.every(({ hand }) => !hand.length)) {
-      players.forEach((_, playerIndex) =>
+    if (playerOrder.every(playerId => !players[playerId].hand.length)) {
+      playerOrder.forEach(playerId =>
         setTimeout(() => {
-          listenerApi.dispatch(
-            GameActions.drawCardFromDeck(playerIndex as PlayerIndex)
-          )
+          listenerApi.dispatch(GameActions.drawCardFromDeck(playerId))
         }, SHORT_ANIMATION_CYCLE)
       )
     }
@@ -27,23 +25,25 @@ startAppListening({
 startAppListening({
   actionCreator: GameActions.drawCardFromDeck,
   effect: async (action, listenerApi) => {
-    const playerIndex = action.payload
-    const { players, phase } = listenerApi.getState().game
+    const playerId = action.payload
+    const { players, phase, playerOrder } = listenerApi.getState().game
 
-    const player = players[playerIndex]
+    const player = players[playerId]
 
     if (
       phase === GamePhase.INITIAL_DRAW &&
       player.hand.length < INITIAL_CARD_DRAW_AMOUNT
     ) {
       setTimeout(() => {
-        listenerApi.dispatch(GameActions.drawCardFromDeck(playerIndex))
+        listenerApi.dispatch(GameActions.drawCardFromDeck(playerId))
       }, SHORT_ANIMATION_CYCLE)
     }
 
     if (
       phase === GamePhase.INITIAL_DRAW &&
-      players.every(({ hand }) => hand.length === INITIAL_CARD_DRAW_AMOUNT)
+      playerOrder.every(
+        playerId => players[playerId].hand.length === INITIAL_CARD_DRAW_AMOUNT
+      )
     ) {
       listenerApi.dispatch(GameActions.startRedraw())
     }
@@ -54,9 +54,12 @@ startAppListening({
 startAppListening({
   actionCreator: GameActions.completeRedraw,
   effect: async (_, listenerApi) => {
-    const { players, phase } = listenerApi.getState().game
+    const { players, phase, playerOrder } = listenerApi.getState().game
 
-    if (phase === GamePhase.REDRAW && players.every(({ isReady }) => isReady)) {
+    if (
+      phase === GamePhase.REDRAW &&
+      playerOrder.every(playerId => players[playerId].isReady)
+    ) {
       listenerApi.dispatch(GameActions.startGame())
     }
   }

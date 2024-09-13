@@ -42,8 +42,7 @@ export const HammeriteNovice: Card = {
   description:
     'On play if any hammerite is on the table, play all Hammerite Novice cards you have.',
   flavor:
-    'This novice has been instructed in the rules and strictures of the Order and has sworn his warrants to be silent in his vigils.',
-  onPlay: 'HammeriteNoviceOnPlay'
+    'This novice has been instructed in the rules and strictures of the Order and has sworn his warrants to be silent in his vigils.'
 }
 
 export const ElevatedAcolyte: Card = {
@@ -76,8 +75,7 @@ export const BrotherSachelman: Card = {
   types: [CardType.Hammerite],
   description: `On play boost any allied Hammerite on board with lower strength than this card's strength by ${BROTHER_SACHELMAN_BOOST}`,
   flavor:
-    'May the Hammer fall on the unrighteous. Officially, Brother Sachelman',
-  onPlay: 'BrotherSachelmanOnPlay'
+    'May the Hammer fall on the unrighteous. Officially, Brother Sachelman'
 }
 
 export const ViktoriaThiefPawn: Card = {

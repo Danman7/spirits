@@ -25,5 +25,5 @@ export const getPlayerTurnModalContent = (
   return opponentTurnMessage
 }
 
-export const getPlayableCards = (player: Player) =>
-  player.hand.filter(card => card.cost <= player.coins)
+export const getPlayableCardIds = (player: Player) =>
+  player.hand.filter(cardId => player.cards[cardId].cost <= player.coins)

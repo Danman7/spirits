@@ -1,33 +1,23 @@
-import { PlayCard } from 'src/Cards/CardTypes'
 import { LONG_ANIMATION_CYCLE, SHORT_ANIMATION_CYCLE } from 'src/Game/constants'
-import { getPlayableCards } from 'src/Game/GameUtils'
+import { getPlayableCardIds } from 'src/Game/GameUtils'
 import { startAppListening } from 'src/shared/redux/middleware'
 import { GameActions } from 'src/shared/redux/reducers/GameReducer'
-import { GamePhase, PlayerIndex } from 'src/shared/redux/StateTypes'
+import { GamePhase } from 'src/shared/redux/StateTypes'
 import { getRandomArrayItem } from 'src/shared/utils/utils'
 
 // Handle CPU skipping redraw
 startAppListening({
   actionCreator: GameActions.startRedraw,
   effect: async (_, listenerApi) => {
-    const {
-      players: [Player1, Player2],
-      phase
-    } = listenerApi.getState().game
+    const { players, playerOrder, phase } = listenerApi.getState().game
 
-    const computerPlayer = Player1.isCPU
-      ? Player1
-      : Player2.isCPU
-        ? Player2
-        : null
+    playerOrder.forEach(playerId => {
+      const player = players[playerId]
 
-    if (computerPlayer) {
-      const playerIndex: PlayerIndex = Player1.isCPU ? 0 : 1
-
-      if (phase === GamePhase.REDRAW && !computerPlayer.isReady) {
-        listenerApi.dispatch(GameActions.completeRedraw(playerIndex))
+      if (player.isCPU && phase === GamePhase.REDRAW && !player.isReady) {
+        listenerApi.dispatch(GameActions.completeRedraw(player.id))
       }
-    }
+    })
   }
 })
 
@@ -35,43 +25,33 @@ startAppListening({
 startAppListening({
   actionCreator: GameActions.endTurn,
   effect: async (_, listenerApi) => {
-    const {
-      players: [Player1, Player2],
-      phase
-    } = listenerApi.getState().game
+    const { players, playerOrder, phase } = listenerApi.getState().game
 
-    const computerPlayer = Player1.isCPU
-      ? Player1
-      : Player2.isCPU
-        ? Player2
-        : null
+    playerOrder.forEach(playerId => {
+      const player = players[playerId]
+      const { cards, isCPU, isActive } = player
 
-    if (
-      computerPlayer &&
-      computerPlayer.isActive &&
-      phase === GamePhase.PLAYER_TURN
-    ) {
-      const playerIndex: PlayerIndex = Player1.isCPU ? 0 : 1
+      if (isCPU && isActive && phase === GamePhase.PLAYER_TURN) {
+        // Play random card for now
+        const playableCardIds = getPlayableCardIds(player)
 
-      // Play random card for now
-      const playableCards = getPlayableCards(computerPlayer)
+        if (playableCardIds.length) {
+          const randomCardId = getRandomArrayItem(playableCardIds)
 
-      if (playableCards.length) {
-        const randomCard = getRandomArrayItem(playableCards) as PlayCard
+          setTimeout(() => {
+            listenerApi.dispatch(
+              GameActions.playCardFromHand({
+                card: cards[randomCardId],
+                playerId
+              })
+            )
+          }, LONG_ANIMATION_CYCLE + SHORT_ANIMATION_CYCLE)
 
-        setTimeout(() => {
-          listenerApi.dispatch(
-            GameActions.playCardFromHand({
-              playedCard: randomCard,
-              playerIndex
-            })
-          )
-        }, LONG_ANIMATION_CYCLE + SHORT_ANIMATION_CYCLE)
-
-        setTimeout(() => {
-          listenerApi.dispatch(GameActions.endTurn())
-        }, LONG_ANIMATION_CYCLE * 2)
+          setTimeout(() => {
+            listenerApi.dispatch(GameActions.endTurn())
+          }, LONG_ANIMATION_CYCLE * 2)
+        }
       }
-    }
+    })
   }
 })

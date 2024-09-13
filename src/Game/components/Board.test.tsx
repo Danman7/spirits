@@ -12,7 +12,6 @@ import {
 } from 'src/Game/messages'
 import { createPlayCardFromPrototype } from 'src/Cards/CardUtils'
 import {
-  AzaranTheCruel,
   BookOfAsh,
   BrotherSachelman,
   ElevatedAcolyte,
@@ -23,31 +22,41 @@ import {
 } from 'src/Cards/CardPrototypes'
 import { fireEvent, render, screen, waitFor } from 'src/shared/utils/test-utils'
 import { MockPlayer1, MockPlayer2 } from 'src/shared/__mocks__/players'
-import {
-  GamePhase,
-  MainState,
-  PlayersInGame,
-  GameState,
-  Player
-} from 'src/shared/redux/StateTypes'
+import { GamePhase, MainState, GameState } from 'src/shared/redux/StateTypes'
 
-const initialPlayers: PlayersInGame = [
-  {
+const haunt = createPlayCardFromPrototype(Haunt)
+const book = createPlayCardFromPrototype(BookOfAsh)
+const brother = createPlayCardFromPrototype(BrotherSachelman)
+const novice = createPlayCardFromPrototype(HammeriteNovice)
+
+const mockPlayers: GameState['players'] = {
+  [MockPlayer2.id]: {
     ...MockPlayer2,
-    hand: [createPlayCardFromPrototype(Haunt)],
-    discard: [createPlayCardFromPrototype(BookOfAsh)]
+    cards: {
+      [haunt.id]: haunt,
+      [book.id]: book
+    },
+    deck: [],
+    hand: [haunt.id],
+    discard: [book.id]
   },
-  {
+  [MockPlayer1.id]: {
     ...MockPlayer1,
     isActive: true,
-    hand: [createPlayCardFromPrototype(BrotherSachelman)],
-    discard: [createPlayCardFromPrototype(BookOfAsh)]
+    cards: {
+      [brother.id]: brother,
+      [novice.id]: novice
+    },
+    deck: [],
+    hand: [brother.id],
+    discard: [novice.id]
   }
-]
+}
 
 const mockGameState: GameState = {
   turn: 1,
-  players: initialPlayers,
+  players: mockPlayers,
+  playerOrder: [MockPlayer2.id, MockPlayer1.id],
   phase: GamePhase.PLAYER_TURN,
   loggedInPlayerId: MockPlayer1.id
 }
@@ -61,20 +70,19 @@ test('show the general UI elements', () => {
     }
   })
 
-  const { players } = gameState
+  const { players, playerOrder } = gameState
 
-  expect(screen.getByText(players[0].name)).toBeInTheDocument()
-  expect(screen.getByText(players[1].name)).toBeInTheDocument()
+  expect(screen.getByText(players[playerOrder[0]].name)).toBeInTheDocument()
+  expect(screen.getByText(players[playerOrder[1]].name)).toBeInTheDocument()
 
-  expect(screen.getByText(players[0].coins)).toBeInTheDocument()
-  expect(screen.getByText(players[1].coins)).toBeInTheDocument()
+  expect(screen.getByText(players[playerOrder[0]].coins)).toBeInTheDocument()
+  expect(screen.getByText(players[playerOrder[1]].coins)).toBeInTheDocument()
 })
 
 test('initial draw of cards', () => {
   const preloadedState: MainState = {
     game: {
       ...mockGameState,
-      players: [MockPlayer1, MockPlayer2],
       phase: GamePhase.INITIAL_DRAW
     }
   }
@@ -87,31 +95,38 @@ test('initial draw of cards', () => {
 })
 
 test('redraw a card', async () => {
+  const zombie1 = createPlayCardFromPrototype(Zombie)
+  const zombie2 = createPlayCardFromPrototype(Zombie)
+  const acolyte = createPlayCardFromPrototype(ElevatedAcolyte)
+  const novice2 = createPlayCardFromPrototype(HammeriteNovice)
+  const guard = createPlayCardFromPrototype(TempleGuard)
+
   const gameState: GameState = {
     ...mockGameState,
     phase: GamePhase.REDRAW,
-    players: [
-      {
-        ...initialPlayers[0],
+    players: {
+      [MockPlayer2.id]: {
+        ...mockPlayers[MockPlayer2.id],
+        cards: {
+          ...mockPlayers[MockPlayer2.id].cards,
+          [zombie1.id]: zombie1,
+          [zombie2.id]: zombie2
+        },
         isReady: true,
-        hand: [
-          createPlayCardFromPrototype(Haunt),
-          createPlayCardFromPrototype(Zombie),
-          createPlayCardFromPrototype(Zombie),
-          createPlayCardFromPrototype(AzaranTheCruel)
-        ]
+        hand: [...mockPlayers[MockPlayer2.id].hand, zombie1.id, zombie2.id]
       },
-      {
-        ...initialPlayers[1],
-        deck: [createPlayCardFromPrototype(ElevatedAcolyte)],
-        hand: [
-          createPlayCardFromPrototype(HammeriteNovice),
-          createPlayCardFromPrototype(HammeriteNovice),
-          createPlayCardFromPrototype(TempleGuard),
-          createPlayCardFromPrototype(BrotherSachelman)
-        ]
+      [MockPlayer1.id]: {
+        ...mockPlayers[MockPlayer1.id],
+        cards: {
+          ...mockPlayers[MockPlayer1.id].cards,
+          [novice2.id]: novice2,
+          [guard.id]: guard,
+          [acolyte.id]: acolyte
+        },
+        deck: [acolyte.id],
+        hand: [...mockPlayers[MockPlayer1.id].hand, novice2.id, guard.id]
       }
-    ]
+    }
   }
 
   render(<Board />, {
@@ -123,7 +138,7 @@ test('redraw a card', async () => {
   expect(screen.getByText(redrawMessage)).toBeInTheDocument()
   expect(screen.getByText(skipRedrawMessage)).toBeInTheDocument()
 
-  fireEvent.click(screen.getByText(TempleGuard.name))
+  fireEvent.click(screen.getByText(guard.name))
 
   expect(screen.getByText(ElevatedAcolyte.name)).toBeInTheDocument()
 })
@@ -133,11 +148,11 @@ test('play a card from hand', async () => {
 
   const { players } = gameState
 
-  const activePlayer = players.find(({ isActive }) => isActive) as Player
+  const activePlayer = players[MockPlayer1.id]
 
   const { coins } = activePlayer
 
-  const { name, cost } = activePlayer.hand[0]
+  const { name, cost } = activePlayer.cards[activePlayer.hand[0]]
 
   render(<Board />, {
     preloadedState: {
@@ -191,7 +206,10 @@ test('end the turn', async () => {
 test('play a card as CPU and end the turn', async () => {
   const state: GameState = {
     ...mockGameState,
-    players: [{ ...initialPlayers[0], isCPU: true }, initialPlayers[1]]
+    players: {
+      [MockPlayer2.id]: { ...mockPlayers[MockPlayer2.id], isCPU: true },
+      [MockPlayer1.id]: mockPlayers[MockPlayer1.id]
+    }
   }
 
   render(<Board />, {
@@ -200,7 +218,8 @@ test('play a card as CPU and end the turn', async () => {
     }
   })
 
-  const playedCPUCard = mockGameState.players[0].hand[0]
+  const cpuPlayer = mockGameState.players[MockPlayer2.id]
+  const playedCPUCard = cpuPlayer.cards[cpuPlayer.hand[0]]
 
   expect(screen.queryByText(playedCPUCard.name)).not.toBeInTheDocument()
 

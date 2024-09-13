@@ -12,13 +12,14 @@ import {
 import { createPlayCardFromPrototype } from 'src/Cards/CardUtils'
 import { DEFAULT_COINS_AMOUNT, EMPTY_PLAYER } from 'src/Game/constants'
 import { Player } from 'src/shared/redux/StateTypes'
+import { initializeCardsAndDeck } from 'src/shared/utils/utils'
 
 export const MockPlayer1: Player = {
   ...EMPTY_PLAYER,
   id: 'player1',
   name: 'Garret',
   coins: DEFAULT_COINS_AMOUNT,
-  deck: [
+  ...initializeCardsAndDeck([
     createPlayCardFromPrototype(HammeriteNovice),
     createPlayCardFromPrototype(HammeriteNovice),
     createPlayCardFromPrototype(ElevatedAcolyte),
@@ -26,7 +27,7 @@ export const MockPlayer1: Player = {
     createPlayCardFromPrototype(TempleGuard),
     createPlayCardFromPrototype(TempleGuard),
     createPlayCardFromPrototype(BrotherSachelman)
-  ]
+  ])
 }
 
 export const MockPlayer2: Player = {
@@ -34,7 +35,7 @@ export const MockPlayer2: Player = {
   id: 'player2',
   name: 'Karras',
   coins: DEFAULT_COINS_AMOUNT - 1,
-  deck: [
+  ...initializeCardsAndDeck([
     createPlayCardFromPrototype(Zombie),
     createPlayCardFromPrototype(Zombie),
     createPlayCardFromPrototype(Haunt),
@@ -42,7 +43,7 @@ export const MockPlayer2: Player = {
     createPlayCardFromPrototype(ViktoriaThiefPawn),
     createPlayCardFromPrototype(AzaranTheCruel),
     createPlayCardFromPrototype(BookOfAsh)
-  ]
+  ])
 }
 
 export const PlayTestPlayer1: Player = {

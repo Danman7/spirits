@@ -4,7 +4,7 @@ import { motion, useAnimationControls } from 'framer-motion'
 import Card from 'src/Cards/components/Card'
 import styles from 'src/shared/styles/styles.module.css'
 import GameButton from 'src/Game/components/GameButton'
-import { GamePhase, Player, PlayerIndex } from 'src/shared/redux/StateTypes'
+import { GamePhase, Player } from 'src/shared/redux/StateTypes'
 import { NumberChangeAnimation } from 'src/shared/utils/animations'
 import { CardProps, PlayCard } from 'src/Cards/CardTypes'
 import { useAppDispatch, useAppSelector } from 'src/shared/redux/hooks'
@@ -13,14 +13,15 @@ import { getLoggedInPlayerId } from 'src/shared/redux/selectors/GameSelectors'
 
 const PlayerHalfBoard: FC<{
   player: Player
-  playerIndex: PlayerIndex
   phase: GamePhase
-}> = ({ player, playerIndex, phase }) => {
+  isOnTop: boolean
+}> = ({ player, phase, isOnTop }) => {
   const {
     id,
     isActive,
     name,
     coins,
+    cards,
     deck,
     hand,
     board,
@@ -34,23 +35,22 @@ const PlayerHalfBoard: FC<{
   const loggedInPlayerId = useAppSelector(getLoggedInPlayerId)
 
   const isPlayerPrespective = loggedInPlayerId === id
-  const isOnTop = playerIndex === 0
 
-  const onPlayCard: CardProps['onClickCard'] = (playedCard: PlayCard) => {
-    dispatch(GameActions.playCardFromHand({ playedCard, playerIndex }))
+  const onPlayCard: CardProps['onClickCard'] = (card: PlayCard) => {
+    dispatch(GameActions.playCardFromHand({ card, playerId: id }))
   }
 
   const onRedrawCard: CardProps['onClickCard'] = (card: PlayCard) => {
     dispatch(
       GameActions.putCardAtBottomOfDeck({
-        card,
-        playerIndex
+        cardId: card.id,
+        playerId: id
       })
     )
 
-    dispatch(GameActions.drawCardFromDeck(playerIndex))
+    dispatch(GameActions.drawCardFromDeck(id))
 
-    dispatch(GameActions.completeRedraw(playerIndex))
+    dispatch(GameActions.completeRedraw(id))
   }
 
   const getOnClickCard = (): CardProps['onClickCard'] => {
@@ -93,18 +93,22 @@ const PlayerHalfBoard: FC<{
 
       <div className={isOnTop ? styles.topPlayerSide : styles.bottomPlayerSide}>
         <div className={styles.faceDownStack}>
-          {discard.map(card => (
-            <Card key={card.id} card={card} animate={['small', 'faceDown']} />
+          {discard.map(cardId => (
+            <Card
+              key={cardId}
+              card={cards[cardId]}
+              animate={['small', 'faceDown']}
+            />
           ))}
         </div>
 
         <motion.div
           className={isOnTop ? styles.topPlayerHand : styles.bottomPlayerHand}
         >
-          {hand.map(card => (
+          {hand.map(cardId => (
             <Card
-              key={card.id}
-              card={card}
+              key={cardId}
+              card={cards[cardId]}
               onClickCard={getOnClickCard()}
               whileHover={!isOnTop ? { bottom: 170 } : {}}
               animate={[
@@ -116,8 +120,12 @@ const PlayerHalfBoard: FC<{
         </motion.div>
 
         <div className={styles.faceDownStack}>
-          {deck.map(card => (
-            <Card key={card.id} card={card} animate={['small', 'faceDown']} />
+          {deck.map(cardId => (
+            <Card
+              key={cardId}
+              card={cards[cardId]}
+              animate={['small', 'faceDown']}
+            />
           ))}
         </div>
       </div>
@@ -125,8 +133,8 @@ const PlayerHalfBoard: FC<{
       <div
         className={isOnTop ? styles.topPlayerBoard : styles.bottomPlayerBoard}
       >
-        {board.map(card => (
-          <Card key={card.id} card={card} animate={['small']} />
+        {board.map(cardId => (
+          <Card key={cardId} card={cards[cardId]} animate={['small']} />
         ))}
       </div>
 
