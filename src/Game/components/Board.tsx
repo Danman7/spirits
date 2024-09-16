@@ -5,7 +5,8 @@ import Modal from 'src/shared/components/Modal'
 import {
   getPhase,
   getPlayerOrder,
-  getPlayers
+  getPlayers,
+  getTurn
 } from 'src/shared/redux/selectors/GameSelectors'
 import { useAppSelector } from 'src/shared/redux/hooks'
 import PlayerHalfBoard from 'src/Game/components/PlayerHalfBoard'
@@ -19,6 +20,7 @@ const Board: FC = () => {
   const players = useAppSelector(getPlayers)
   const playerOrder = useAppSelector(getPlayerOrder)
   const phase = useAppSelector(getPhase)
+  const turn = useAppSelector(getTurn)
 
   const [modalContent, setModalContent] = useState<ReactNode>(null)
 
@@ -40,7 +42,7 @@ const Board: FC = () => {
         setModalContent(<RedrawPhaseModal playerId={playerOrder[1]} />)
         break
     }
-  }, [phase, playerOrder])
+  }, [phase, turn, playerOrder])
 
   return (
     <div className={styles.board}>

@@ -1,66 +1,55 @@
-import {
-  INITIAL_CARD_DRAW_AMOUNT,
-  SHORT_ANIMATION_CYCLE
-} from 'src/Game/constants'
-import { startAppListening } from 'src/shared/redux/middleware'
+import { Action, ListenerEffect, PayloadAction } from '@reduxjs/toolkit'
+import { SHORT_ANIMATION_CYCLE } from 'src/Game/constants'
 import { GameActions } from 'src/shared/redux/reducers/GameReducer'
-import { GamePhase } from 'src/shared/redux/StateTypes'
+import { AppDispatch, Player, RootState } from 'src/shared/redux/StateTypes'
 
 // Handle initial draw
-startAppListening({
-  actionCreator: GameActions.initializeGame,
-  effect: async (_, listenerApi) => {
-    const { players, playerOrder } = listenerApi.getState().game
+export const drawCardListener: ListenerEffect<
+  PayloadAction<Player['id'], typeof GameActions.drawCardFromDeck.type>,
+  RootState,
+  AppDispatch
+> = async (action, listenerApi) => {
+  const { playerOrder } = listenerApi.getState().game
 
-    if (playerOrder.every(playerId => !players[playerId].hand.length)) {
-      playerOrder.forEach(playerId =>
-        setTimeout(() => {
-          listenerApi.dispatch(GameActions.drawCardFromDeck(playerId))
-        }, SHORT_ANIMATION_CYCLE)
-      )
-    }
+  await listenerApi.delay(SHORT_ANIMATION_CYCLE)
+
+  if (action.type === GameActions.drawCardFromDeck.type) {
+    listenerApi.dispatch(GameActions.drawCardFromDeck(action.payload))
+  } else {
+    playerOrder.forEach(playerId =>
+      listenerApi.dispatch(GameActions.drawCardFromDeck(playerId))
+    )
   }
-})
+}
 
-startAppListening({
-  actionCreator: GameActions.drawCardFromDeck,
-  effect: async (action, listenerApi) => {
-    const playerId = action.payload
-    const { players, phase, playerOrder } = listenerApi.getState().game
+// Handle starting redraw and skipping redraw as a CPU player
+export const startRedrawListener: ListenerEffect<
+  PayloadAction<Player['id'], typeof GameActions.drawCardFromDeck.type>,
+  RootState,
+  AppDispatch
+> = (_, listenerApi) => {
+  listenerApi.unsubscribe()
 
+  listenerApi.dispatch(GameActions.startRedraw())
+
+  const { players, playerOrder } = listenerApi.getState().game
+
+  playerOrder.forEach(playerId => {
     const player = players[playerId]
 
-    if (
-      phase === GamePhase.INITIAL_DRAW &&
-      player.hand.length < INITIAL_CARD_DRAW_AMOUNT
-    ) {
-      setTimeout(() => {
-        listenerApi.dispatch(GameActions.drawCardFromDeck(playerId))
-      }, SHORT_ANIMATION_CYCLE)
+    if (player.isCPU && !player.isReady) {
+      listenerApi.dispatch(GameActions.completeRedraw(player.id))
     }
-
-    if (
-      phase === GamePhase.INITIAL_DRAW &&
-      playerOrder.every(
-        playerId => players[playerId].hand.length === INITIAL_CARD_DRAW_AMOUNT
-      )
-    ) {
-      listenerApi.dispatch(GameActions.startRedraw())
-    }
-  }
-})
+  })
+}
 
 // Handle starting game if both players are ready with redraw
-startAppListening({
-  actionCreator: GameActions.completeRedraw,
-  effect: async (_, listenerApi) => {
-    const { players, phase, playerOrder } = listenerApi.getState().game
+export const completeRedrawListener: ListenerEffect<
+  Action<typeof GameActions.completeRedraw.type>,
+  RootState,
+  AppDispatch
+> = (_, listenerApi) => {
+  listenerApi.unsubscribe()
 
-    if (
-      phase === GamePhase.REDRAW &&
-      playerOrder.every(playerId => players[playerId].isReady)
-    ) {
-      listenerApi.dispatch(GameActions.startGame())
-    }
-  }
-})
+  listenerApi.dispatch(GameActions.startGame())
+}

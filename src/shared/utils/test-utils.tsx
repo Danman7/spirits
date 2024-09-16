@@ -8,7 +8,7 @@ import { configureStore } from '@reduxjs/toolkit'
 
 import store from 'src/shared/redux/store'
 import { reducer } from 'src/shared/redux/reducer'
-import { listenerMiddleware } from 'src/shared/redux/middleware'
+import { listenerMiddleware } from 'src/shared/redux/listenerMiddleware'
 import { MainState } from 'src/shared/redux/StateTypes'
 
 interface customRenderOptions extends RenderOptions {

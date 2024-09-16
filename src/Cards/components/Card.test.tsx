@@ -28,6 +28,12 @@ it('should display all shared UI segments of a card when face up', () => {
   rerender(<Card card={{ ...mockCard, strength: boostedStrength }} />)
 
   expect(screen.queryByText(boostedStrength)).toBeInTheDocument()
+
+  const damagedStrength = mockCard.strength - 2
+
+  rerender(<Card card={{ ...mockCard, strength: damagedStrength }} />)
+
+  expect(screen.queryByText(damagedStrength)).toBeInTheDocument()
 })
 
 it('should card back when face down', () => {
