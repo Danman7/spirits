@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { motion } from 'framer-motion'
 
 import Modal from 'src/shared/components/Modal'
-import { SlideInOutContentVariants } from 'src/shared/utils/animations'
+import { SlideInOutContentVariants } from 'src/shared/animations'
 
 const meta = {
   title: 'Modal',

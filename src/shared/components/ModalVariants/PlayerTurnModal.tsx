@@ -1,13 +1,10 @@
 import { FC } from 'react'
 import { motion } from 'framer-motion'
 
-import { SlideInOutContentVariants } from 'src/shared/utils/animations'
-import { useAppSelector } from 'src/shared/redux/hooks'
-import {
-  getPlayerPrespective,
-  getTurn
-} from 'src/shared/redux/selectors/GameSelectors'
-import { getPlayerTurnModalContent } from 'src/Game/GameUtils'
+import { SlideInOutContentVariants } from 'src/shared/animations'
+import { useAppSelector } from 'src/app/store'
+import { getPlayerPrespective, getTurn } from 'src/features/duel/selectors'
+import { getPlayerTurnModalContent } from 'src/features/duel/utils'
 
 const PlayerTurnModal: FC = () => {
   const playerPrespective = useAppSelector(getPlayerPrespective)

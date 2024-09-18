@@ -1,13 +1,11 @@
 import { FC } from 'react'
 import { motion } from 'framer-motion'
 
-import { initialDrawMessage } from 'src/Game/messages'
-import { SlideInOutContentVariants } from 'src/shared/utils/animations'
-import { useAppSelector } from 'src/shared/redux/hooks'
-import {
-  getPlayerOrder,
-  getPlayers
-} from 'src/shared/redux/selectors/GameSelectors'
+import { SlideInOutContentVariants } from 'src/shared/animations'
+
+import { useAppSelector } from 'src/app/store'
+import { getPlayers, getPlayerOrder } from 'src/features/duel/selectors'
+import { initialDrawMessage } from 'src/features/duel/messages'
 
 const InitialPhaseModal: FC = () => {
   const players = useAppSelector(getPlayers)

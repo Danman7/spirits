@@ -2,7 +2,7 @@ import { FC, ReactNode } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 import styles from 'src/shared/styles/styles.module.css'
-import { FadeInOutVariants } from 'src/shared/utils/animations'
+import { FadeInOutVariants } from 'src/shared/animations'
 
 interface ModalProps {
   children?: ReactNode

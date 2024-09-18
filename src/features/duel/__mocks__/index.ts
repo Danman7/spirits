@@ -1,0 +1,60 @@
+import { DEFAULT_COINS_AMOUNT, EMPTY_PLAYER } from 'src/features/duel/constants'
+import { Player } from 'src/features/duel/types'
+import { initializeCardsAndDeck } from 'src/features/duel/utils'
+
+import {
+  HammeriteNovice,
+  AzaranTheCruel,
+  BookOfAsh,
+  BrotherSachelman,
+  ElevatedAcolyte,
+  Haunt,
+  TempleGuard,
+  ViktoriaThiefPawn,
+  Zombie
+} from 'src/features/cards/CardPrototypes'
+import { createPlayCardFromPrototype } from 'src/features/cards/utils'
+
+export const MockPlayer1: Player = {
+  ...EMPTY_PLAYER,
+  id: 'player1',
+  name: 'Garret',
+  coins: DEFAULT_COINS_AMOUNT,
+  ...initializeCardsAndDeck([
+    createPlayCardFromPrototype(HammeriteNovice),
+    createPlayCardFromPrototype(HammeriteNovice),
+    createPlayCardFromPrototype(ElevatedAcolyte),
+    createPlayCardFromPrototype(ElevatedAcolyte),
+    createPlayCardFromPrototype(TempleGuard),
+    createPlayCardFromPrototype(TempleGuard),
+    createPlayCardFromPrototype(BrotherSachelman)
+  ])
+}
+
+export const MockPlayer2: Player = {
+  ...EMPTY_PLAYER,
+  id: 'player2',
+  name: 'Karras',
+  coins: DEFAULT_COINS_AMOUNT - 1,
+  ...initializeCardsAndDeck([
+    createPlayCardFromPrototype(Zombie),
+    createPlayCardFromPrototype(Zombie),
+    createPlayCardFromPrototype(Haunt),
+    createPlayCardFromPrototype(Haunt),
+    createPlayCardFromPrototype(ViktoriaThiefPawn),
+    createPlayCardFromPrototype(AzaranTheCruel),
+    createPlayCardFromPrototype(BookOfAsh)
+  ])
+}
+
+export const PlayTestPlayer1: Player = {
+  ...MockPlayer1,
+  coins: DEFAULT_COINS_AMOUNT,
+  isActive: true
+}
+
+export const PlayTestPlayer2: Player = {
+  ...MockPlayer2,
+  coins: DEFAULT_COINS_AMOUNT,
+  isCPU: true
+}
