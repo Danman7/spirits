@@ -1,4 +1,4 @@
-import { startAppListening } from 'src/app/listenerMiddleware'
+import { addAppListener, startAppListening } from 'src/app/listenerMiddleware'
 import {
   INITIAL_CARD_DRAW_AMOUNT,
   SHORT_ANIMATION_CYCLE
@@ -6,12 +6,13 @@ import {
 import {
   completeRedraw,
   drawCardFromDeck,
+  initializeGame,
   startGame,
   startRedraw
 } from 'src/features/duel/slice'
 import { DuelPhase } from 'src/features/duel/types'
+import * as CardEffects from 'src/features/cards/CardEffects'
 
-// DUEL FLOW
 startAppListening({
   predicate: (_, currentState) =>
     currentState.duel.playerOrder.every(
@@ -74,5 +75,27 @@ startAppListening({
     listenerApi.unsubscribe()
 
     listenerApi.dispatch(startGame())
+  }
+})
+
+startAppListening({
+  actionCreator: initializeGame,
+  effect: (action, listenerApi) => {
+    action.payload.players.forEach(({ cards }) =>
+      Object.keys(cards).forEach(cardId => {
+        const { trigger } = cards[cardId]
+
+        if (trigger) {
+          const { type, effect } = trigger
+
+          listenerApi.dispatch(
+            addAppListener({
+              type,
+              effect: CardEffects[effect]
+            })
+          )
+        }
+      })
+    )
   }
 })

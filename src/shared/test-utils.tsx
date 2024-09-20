@@ -6,9 +6,7 @@ import {
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 
-import duelReducer from 'src/features/duel/slice'
-import { listenerMiddleware } from 'src/app/listenerMiddleware'
-import { RootState } from 'src/app/store'
+import { RootState, storeConfiguration } from 'src/app/store'
 
 interface customRenderOptions extends RenderOptions {
   preloadedState?: RootState
@@ -23,11 +21,7 @@ const customRender = (
   }) => (
     <Provider
       store={configureStore({
-        reducer: {
-          duel: duelReducer
-        },
-        middleware: getDefaultMiddleware =>
-          getDefaultMiddleware().prepend(listenerMiddleware.middleware),
+        ...storeConfiguration,
         preloadedState
       })}
     >

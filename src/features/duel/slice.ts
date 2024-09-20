@@ -1,9 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { DuelPhase, DuelState, Player } from 'src/features/duel/types'
+import {
+  DuelPhase,
+  DuelState,
+  PlayCardFromHandAction,
+  Player
+} from 'src/features/duel/types'
 
 import { PlayCard } from 'src/features/cards/types'
-import { getRandomArrayItem } from 'src/shared/utils'
+import { getRandomArrayItem, shuffleArray } from 'src/shared/utils'
 
 export const initialState: DuelState = {
   turn: 0,
@@ -48,7 +53,8 @@ export const duelSlice = createSlice({
         (statePlayers: DuelState['players'], player) => {
           statePlayers[player.id] = {
             ...player,
-            isActive: startingPlayerId === player.id
+            isActive: startingPlayerId === player.id,
+            deck: shuffleArray(player.deck)
           }
 
           return statePlayers
@@ -120,13 +126,7 @@ export const duelSlice = createSlice({
         state.players[playerId].hasPlayedCardThisTurn = false
       })
     },
-    playCardFromHand: (
-      state,
-      action: PayloadAction<{
-        card: PlayCard
-        playerId: Player['id']
-      }>
-    ) => {
+    playCardFromHand: (state, action: PlayCardFromHandAction) => {
       const {
         card: { id, cost },
         playerId
@@ -139,6 +139,21 @@ export const duelSlice = createSlice({
         cardId => cardId !== id
       )
       players[playerId].board = [...players[playerId].board, id]
+    },
+    updateCard: (
+      state,
+      action: PayloadAction<{
+        playerId: Player['id']
+        cardId: PlayCard['id']
+        update: Partial<PlayCard>
+      }>
+    ) => {
+      const { playerId, cardId, update } = action.payload
+
+      state.players[playerId].cards[cardId] = {
+        ...state.players[playerId].cards[cardId],
+        ...update
+      }
     }
   }
 })
@@ -154,7 +169,10 @@ export const {
   playCardFromHand,
   putCardAtBottomOfDeck,
   startGame,
-  startRedraw
+  startRedraw,
+  updateCard
 } = actions
+
+export type DuelActionTypes = `${typeof duelSlice.name}/${keyof typeof actions}`
 
 export default reducer

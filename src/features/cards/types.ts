@@ -1,4 +1,16 @@
+import { Action, ListenerEffect } from '@reduxjs/toolkit'
 import { HTMLMotionProps } from 'framer-motion'
+import { AppDispatch, RootState } from 'src/app/store'
+import { DuelActionTypes } from 'src/features/duel/slice'
+import * as CardEffects from 'src/features/cards/CardEffects'
+
+type CardEffectName = keyof typeof CardEffects
+
+export type CardEffect<DuelAction extends Action> = ListenerEffect<
+  DuelAction,
+  RootState,
+  AppDispatch
+>
 
 export interface Card {
   readonly name: string
@@ -8,6 +20,10 @@ export interface Card {
   strength: number
   description?: string
   flavor?: string
+  trigger?: {
+    type: DuelActionTypes
+    effect: CardEffectName
+  }
 }
 
 export interface PlayCard extends Card {

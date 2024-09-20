@@ -1,6 +1,6 @@
 import { FC, ReactNode, useEffect, useState } from 'react'
 
-import 'src/features/duel/listeners/gameFlow'
+import 'src/features/duel/listeners/duelFlow'
 import 'src/features/duel/listeners/computerPlayer'
 import PlayerHalfBoard from 'src/features/duel/components/PlayerHalfBoard'
 import { DuelPhase } from 'src/features/duel/types'
@@ -11,11 +11,11 @@ import {
   getTurn
 } from 'src/features/duel/selectors'
 import { LONG_ANIMATION_CYCLE } from 'src/features/duel/constants'
+import InitialPhaseModal from 'src/features/duel/components/modals/InitialPhaseModal'
+import PlayerTurnModal from 'src/features/duel/components/modals/PlayerTurnModal'
+import RedrawPhaseModal from 'src/features/duel/components/modals/RedrawPhaseModal'
 
 import Modal from 'src/shared/components/Modal'
-import InitialPhaseModal from 'src/shared/components/ModalVariants/InitialPhaseModal'
-import PlayerTurnModal from 'src/shared/components/ModalVariants/PlayerTurnModal'
-import RedrawPhaseModal from 'src/shared/components/ModalVariants/RedrawPhaseModal'
 
 import * as styles from 'src/shared/styles/styles.module.css'
 import { useAppSelector } from 'src/app/store'

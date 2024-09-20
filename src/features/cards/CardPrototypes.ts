@@ -1,6 +1,6 @@
 import {
   AZARAN_BOOST,
-  BROTHER_SACHELMAN_BOOST,
+  HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   DOWNWINDER_BOOST,
   ELEVATED_ACOLYTE_BOOST,
   GARRETT_COIN_GAIN,
@@ -74,9 +74,13 @@ export const BrotherSachelman: Card = {
   cost: 3,
   factions: [CardFaction.Order],
   types: [CardType.Hammerite],
-  description: `On play boost any allied Hammerite on board with lower strength than this card's strength by ${BROTHER_SACHELMAN_BOOST}`,
+  description: `On play boost any allied Hammerite on board with lower strength than this card's strength by ${HAMMERITES_WITH_LOWER_STRENGTH_BOOST}`,
   flavor:
-    'May the Hammer fall on the unrighteous. Officially, Brother Sachelman'
+    'May the Hammer fall on the unrighteous. Officially, Brother Sachelman',
+  trigger: {
+    type: 'duel/playCardFromHand',
+    effect: 'boostHammeritesWithLessStrength'
+  }
 }
 
 export const ViktoriaThiefPawn: Card = {

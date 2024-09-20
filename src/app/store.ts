@@ -1,16 +1,22 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { Action, configureStore, ConfigureStoreOptions } from '@reduxjs/toolkit'
 import { useDispatch, useSelector } from 'react-redux'
 import { listenerMiddleware } from 'src/app/listenerMiddleware'
 
-import duelReducer from 'src/features/duel/slice'
+import duelReducer, { DuelActionTypes } from 'src/features/duel/slice'
+import { DuelState } from 'src/features/duel/types'
 
-const store = configureStore({
+export const storeConfiguration: ConfigureStoreOptions<
+  { duel: DuelState },
+  Action<DuelActionTypes> | Action<'listenerMiddleware/add'>
+> = {
   reducer: {
     duel: duelReducer
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware().prepend(listenerMiddleware.middleware)
-})
+}
+
+const store = configureStore(storeConfiguration)
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

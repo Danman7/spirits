@@ -1,3 +1,4 @@
+import { PayloadAction } from '@reduxjs/toolkit'
 import { PlayCard } from 'src/features/cards/types'
 
 export interface Player {
@@ -32,3 +33,8 @@ export interface DuelState {
   }
   loggedInPlayerId: Player['id']
 }
+
+export type PlayCardFromHandAction = PayloadAction<{
+  card: PlayCard
+  playerId: Player['id']
+}>

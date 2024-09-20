@@ -16,8 +16,7 @@ import {
 } from 'src/features/cards/CardPrototypes'
 import { DuelPhase } from 'src/features/duel/types'
 import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
-import duelReducer from 'src/features/duel/slice'
-import { listenerMiddleware } from 'src/app/listenerMiddleware'
+import { storeConfiguration } from 'src/app/store'
 
 const meta = {
   title: 'Board',
@@ -50,11 +49,7 @@ export const Default: Story = {
     story => (
       <Provider
         store={configureStore({
-          reducer: {
-            duel: duelReducer
-          },
-          middleware: getDefaultMiddleware =>
-            getDefaultMiddleware().prepend(listenerMiddleware.middleware),
+          ...storeConfiguration,
           preloadedState: {
             duel: {
               turn: 1,
