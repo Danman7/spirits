@@ -36,8 +36,8 @@ export const Haunt: Card = {
 
 export const HammeriteNovice: Card = {
   name: 'Hammerite Novice',
-  strength: 3,
-  cost: 1,
+  strength: 2,
+  cost: 3,
   factions: [CardFaction.Order],
   types: [CardType.Hammerite],
   description:
@@ -59,8 +59,8 @@ export const ElevatedAcolyte: Card = {
 
 export const TempleGuard: Card = {
   name: 'Temple Guard',
-  strength: 5,
-  cost: 4,
+  strength: 4,
+  cost: 5,
   factions: [CardFaction.Order],
   types: [CardType.Hammerite, CardType.Guard],
   description: 'When this card is attacked, it retaliates.',
@@ -70,8 +70,8 @@ export const TempleGuard: Card = {
 
 export const BrotherSachelman: Card = {
   name: 'Brother Sachelman',
-  strength: 5,
-  cost: 3,
+  strength: 4,
+  cost: 6,
   factions: [CardFaction.Order],
   types: [CardType.Hammerite],
   description: `On play boost any allied Hammerite on board with lower strength than this card's strength by ${HAMMERITES_WITH_LOWER_STRENGTH_BOOST}`,

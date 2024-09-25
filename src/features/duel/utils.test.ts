@@ -45,8 +45,8 @@ test('return all playable cards for a given player', () => {
   }
 
   expect(getPlayableCardIds(mockBudgetPlayer)).toHaveLength(2)
-  expect(getPlayableCardIds({ ...mockBudgetPlayer, coins: 2 })).toHaveLength(1)
-  expect(getPlayableCardIds({ ...mockBudgetPlayer, coins: 1 })).toEqual([
+  expect(getPlayableCardIds({ ...mockBudgetPlayer, coins: 3 })).toHaveLength(1)
+  expect(getPlayableCardIds({ ...mockBudgetPlayer, coins: 3 })).toEqual([
     mockBudgetPlayer.hand[1]
   ])
   expect(getPlayableCardIds({ ...mockBudgetPlayer, coins: 0 })).toHaveLength(0)

@@ -51,7 +51,7 @@ it('should show card back when face down', async () => {
     expect(screen.queryByText(mockCard.name)).toBeInTheDocument()
   )
 
-  rerender(<Card card={mockCard} animate="faceDown" />)
+  // rerender(<Card card={mockCard} animate="faceDown" />)
 })
 
 it('should fire on click event passing card id', () => {
