@@ -11,7 +11,7 @@ import {
   Haunt,
   TempleGuard,
   ViktoriaThiefPawn,
-  Zombie
+  Zombie,
 } from 'src/features/cards/CardPrototypes'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
 
@@ -27,8 +27,8 @@ export const MockPlayer1: Player = {
     createPlayCardFromPrototype(ElevatedAcolyte),
     createPlayCardFromPrototype(TempleGuard),
     createPlayCardFromPrototype(TempleGuard),
-    createPlayCardFromPrototype(BrotherSachelman)
-  ])
+    createPlayCardFromPrototype(BrotherSachelman),
+  ]),
 }
 
 export const MockPlayer2: Player = {
@@ -43,8 +43,8 @@ export const MockPlayer2: Player = {
     createPlayCardFromPrototype(Haunt),
     createPlayCardFromPrototype(ViktoriaThiefPawn),
     createPlayCardFromPrototype(AzaranTheCruel),
-    createPlayCardFromPrototype(BookOfAsh)
-  ])
+    createPlayCardFromPrototype(BookOfAsh),
+  ]),
 }
 
 const novice1 = createPlayCardFromPrototype(HammeriteNovice)
@@ -56,18 +56,18 @@ export const PlayTestPlayer1: Player = {
   cards: {
     [novice1.id]: novice1,
     [novice2.id]: novice2,
-    [brother.id]: brother
+    [brother.id]: brother,
   },
   board: [novice1.id, novice2.id],
   hand: [brother.id],
   coins: DEFAULT_COINS_AMOUNT,
-  isActive: true
+  isActive: true,
 }
 
 export const PlayTestPlayer2: Player = {
   ...MockPlayer2,
   coins: DEFAULT_COINS_AMOUNT,
-  isCPU: true
+  isCPU: true,
 }
 
 export const MockPlayerTurnState: DuelState = {
@@ -80,13 +80,13 @@ export const MockPlayerTurnState: DuelState = {
       ...EMPTY_PLAYER,
       id: MockPlayer1.id,
       name: 'Garret',
-      coins: DEFAULT_COINS_AMOUNT
+      coins: DEFAULT_COINS_AMOUNT,
     },
     [MockPlayer2.id]: {
       ...EMPTY_PLAYER,
       id: MockPlayer2.id,
       name: 'Karras',
-      coins: DEFAULT_COINS_AMOUNT
-    }
-  }
+      coins: DEFAULT_COINS_AMOUNT,
+    },
+  },
 }

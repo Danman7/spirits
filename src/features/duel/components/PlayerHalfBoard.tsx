@@ -8,7 +8,7 @@ import {
   completeRedraw,
   drawCardFromDeck,
   playCardFromHand,
-  putCardAtBottomOfDeck
+  putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
 
 import styles from 'src/shared/styles/styles.module.css'
@@ -33,7 +33,7 @@ const PlayerHalfBoard: FC<{
     board,
     discard,
     isReady,
-    hasPlayedCardThisTurn
+    hasPlayedCardThisTurn,
   } = player
 
   const dispatch = useAppDispatch()
@@ -50,8 +50,8 @@ const PlayerHalfBoard: FC<{
     dispatch(
       putCardAtBottomOfDeck({
         cardId: card.id,
-        playerId: id
-      })
+        playerId: id,
+      }),
     )
 
     dispatch(drawCardFromDeck(id))
@@ -99,7 +99,7 @@ const PlayerHalfBoard: FC<{
 
       <div className={isOnTop ? styles.topPlayerSide : styles.bottomPlayerSide}>
         <div className={styles.faceDownStack}>
-          {discard.map(cardId => (
+          {discard.map((cardId) => (
             <Card
               key={cardId}
               card={cards[cardId]}
@@ -111,7 +111,7 @@ const PlayerHalfBoard: FC<{
         <motion.div
           className={isOnTop ? styles.topPlayerHand : styles.bottomPlayerHand}
         >
-          {hand.map(cardId => (
+          {hand.map((cardId) => (
             <Card
               key={cardId}
               card={cards[cardId]}
@@ -119,14 +119,14 @@ const PlayerHalfBoard: FC<{
               whileHover={!isOnTop ? { bottom: 170 } : {}}
               animate={[
                 getOnClickCard() ? 'active' : 'normal',
-                isOnTop ? 'faceDown' : ''
+                isOnTop ? 'faceDown' : '',
               ]}
             />
           ))}
         </motion.div>
 
         <div className={styles.faceDownStack}>
-          {deck.map(cardId => (
+          {deck.map((cardId) => (
             <Card
               key={cardId}
               card={cards[cardId]}
@@ -139,7 +139,7 @@ const PlayerHalfBoard: FC<{
       <div
         className={isOnTop ? styles.topPlayerBoard : styles.bottomPlayerBoard}
       >
-        {board.map(cardId => (
+        {board.map((cardId) => (
           <Card key={cardId} card={cards[cardId]} animate={['small']} />
         ))}
       </div>

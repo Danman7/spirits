@@ -3,7 +3,7 @@ import { CardFaction } from 'src/features/cards/types'
 export const FACTION_COLOR_MAP = {
   [CardFaction.Order]: 'var(--order-faction-color)',
   [CardFaction.Chaos]: 'var(--chaos-faction-color)',
-  [CardFaction.Shadow]: 'var(--shadow-faction-color)'
+  [CardFaction.Shadow]: 'var(--shadow-faction-color)',
 }
 
 export const HAUNT_DAMAGE = 1

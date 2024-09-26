@@ -20,12 +20,12 @@ export const getFactionColor = (factions: Card['factions']) => {
 export const createPlayCardFromPrototype = (cardPrototype: Card): PlayCard => {
   const prototype: PlayCard['prototype'] = {
     cost: cardPrototype.cost,
-    strength: cardPrototype.strength
+    strength: cardPrototype.strength,
   }
 
   return {
     ...cardPrototype,
     id: generateUUID(),
-    prototype
+    prototype,
   }
 }

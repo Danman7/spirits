@@ -21,7 +21,7 @@ export const enum DuelPhase {
   INITIAL_DRAW = 'Initial Draw',
   REDRAW = 'Redrawing Phase',
   PLAYER_TURN = 'Player Turn',
-  RESOLVING_END_TURN = 'Resolving end of turn'
+  RESOLVING_END_TURN = 'Resolving end of turn',
 }
 
 export interface DuelState {

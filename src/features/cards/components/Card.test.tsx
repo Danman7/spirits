@@ -3,7 +3,7 @@ import '@testing-library/jest-dom'
 import Card from 'src/features/cards/components/Card'
 import {
   createPlayCardFromPrototype,
-  joinCardTypes
+  joinCardTypes,
 } from 'src/features/cards/utils'
 import { BrotherSachelman } from 'src/features/cards/CardPrototypes'
 import { PlayCard } from 'src/features/cards/types'
@@ -48,7 +48,7 @@ it('should show card back when face down', async () => {
   rerender(<Card card={mockCard} animate="normal" />)
 
   await waitFor(() =>
-    expect(screen.queryByText(mockCard.name)).toBeInTheDocument()
+    expect(screen.queryByText(mockCard.name)).toBeInTheDocument(),
   )
 
   // rerender(<Card card={mockCard} animate="faceDown" />)

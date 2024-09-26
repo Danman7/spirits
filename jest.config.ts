@@ -6,7 +6,7 @@ const config: Config = {
   moduleDirectories: ['node_modules', 'src'],
   moduleNameMapper: {
     '.+\\.(css|styl|less|sass|scss)$': 'identity-obj-proxy',
-    'src/(.*)': '<rootDir>/src/$1'
+    'src/(.*)': '<rootDir>/src/$1',
   },
   transform: {
     '^.+\\.(t|j)sx?$': [
@@ -15,12 +15,12 @@ const config: Config = {
         jsc: {
           transform: {
             react: {
-              runtime: 'automatic'
-            }
-          }
-        }
-      }
-    ]
+              runtime: 'automatic',
+            },
+          },
+        },
+      },
+    ],
   },
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
   coverageThreshold: {
@@ -28,9 +28,9 @@ const config: Config = {
       branches: 80,
       functions: 80,
       lines: 80,
-      statements: 80
-    }
-  }
+      statements: 80,
+    },
+  },
 }
 
 export default config

@@ -3,7 +3,7 @@ import { AppDispatch, RootState } from 'src/app/store'
 import { boostHammeritesWithLessStrength } from 'src/features/cards/CardEffects'
 import {
   BrotherSachelman,
-  HammeriteNovice
+  HammeriteNovice,
   // TempleGuard
 } from 'src/features/cards/CardPrototypes'
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constants'
@@ -40,9 +40,9 @@ const listenerApi: ListenerEffectAPI<RootState, AppDispatch> = {
     addEventListener: jest.fn(),
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
-    any: jest.fn()
+    any: jest.fn(),
   },
-  extra: undefined
+  extra: undefined,
 }
 
 beforeEach(() => {
@@ -55,7 +55,7 @@ describe('boostHammeritesWithLessStrength', () => {
 
     mockAction = {
       type: playCardFromHand.type,
-      payload: { card, playerId }
+      payload: { card, playerId },
     }
   })
 
@@ -65,14 +65,14 @@ describe('boostHammeritesWithLessStrength', () => {
 
     mockduelState.players[playerId].cards = {
       [brother.id]: brother,
-      [novice.id]: novice
+      [novice.id]: novice,
     }
 
     mockduelState.players[playerId].hand = [brother.id]
     mockduelState.players[playerId].board = [novice.id]
 
     listenerApi.getState = jest.fn(() => ({
-      duel: mockduelState
+      duel: mockduelState,
     }))
 
     boostHammeritesWithLessStrength(mockAction, listenerApi)
@@ -82,9 +82,9 @@ describe('boostHammeritesWithLessStrength', () => {
         cardId: novice.id,
         playerId,
         update: {
-          strength: novice.strength + HAMMERITES_WITH_LOWER_STRENGTH_BOOST
-        }
-      })
+          strength: novice.strength + HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
+        },
+      }),
     )
   })
 

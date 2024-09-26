@@ -2,7 +2,7 @@ import {
   generateUUID,
   getCoinsMessage,
   getRandomArrayItem,
-  shuffleArray
+  shuffleArray,
 } from 'src/shared/utils'
 
 it('should generate a UUID', () => {

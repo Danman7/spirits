@@ -1,6 +1,6 @@
 import {
   LONG_ANIMATION_CYCLE,
-  SHORT_ANIMATION_CYCLE
+  SHORT_ANIMATION_CYCLE,
 } from 'src/features/duel/constants'
 import { getPlayableCardIds } from 'src/features/duel/utils'
 import { DuelPhase } from 'src/features/duel/types'
@@ -15,7 +15,7 @@ startAppListening({
   effect: (_, listenerApi) => {
     const { players, playerOrder, phase } = listenerApi.getState().duel
 
-    playerOrder.forEach(playerId => {
+    playerOrder.forEach((playerId) => {
       const player = players[playerId]
       const { cards, isCPU, isActive } = player
 
@@ -30,8 +30,8 @@ startAppListening({
             listenerApi.dispatch(
               playCardFromHand({
                 card: cards[randomCardId],
-                playerId
-              })
+                playerId,
+              }),
             )
           }, LONG_ANIMATION_CYCLE + SHORT_ANIMATION_CYCLE)
 
@@ -41,5 +41,5 @@ startAppListening({
         }
       }
     })
-  }
+  },
 })

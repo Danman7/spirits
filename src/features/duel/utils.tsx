@@ -2,7 +2,7 @@ import {
   playerFirstMessage,
   opponentFirstMessage,
   yourTurnMessage,
-  opponentTurnMessage
+  opponentTurnMessage,
 } from 'src/features/duel/messages'
 import { DuelState, Player } from 'src/features/duel/types'
 
@@ -10,7 +10,7 @@ import { PlayCard } from 'src/features/cards/types'
 
 export const getPlayerTurnModalContent = (
   isPlayerPrespective: boolean,
-  isFirstTurn: boolean
+  isFirstTurn: boolean,
 ): string => {
   if (isPlayerPrespective && isFirstTurn) {
     return playerFirstMessage
@@ -28,7 +28,7 @@ export const getPlayerTurnModalContent = (
 }
 
 export const getPlayableCardIds = (player: Player) =>
-  player.hand.filter(cardId => player.cards[cardId].cost <= player.coins)
+  player.hand.filter((cardId) => player.cards[cardId].cost <= player.coins)
 
 export const normalizeArrayOfPlayers = (players: Player[]) =>
   players.reduce((statePlayers: DuelState['players'], player) => {
@@ -45,8 +45,8 @@ export const normalizeArrayOfCards = (cards: PlayCard[]): Player['cards'] =>
   }, {})
 
 export const initializeCardsAndDeck = (
-  cards: PlayCard[]
+  cards: PlayCard[],
 ): { cards: Player['cards']; deck: Player['deck'] } => ({
   cards: normalizeArrayOfCards(cards),
-  deck: cards.map(({ id }) => id)
+  deck: cards.map(({ id }) => id),
 })

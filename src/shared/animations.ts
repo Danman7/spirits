@@ -1,7 +1,7 @@
 import {
   AnimationDefinition,
   TargetAndTransition,
-  Variants
+  Variants,
 } from 'framer-motion'
 
 export const NumberChangeAnimation: TargetAndTransition = {
@@ -9,8 +9,8 @@ export const NumberChangeAnimation: TargetAndTransition = {
   color: [null, 'var(--hilight-color)'],
   transition: {
     repeat: 1,
-    repeatType: 'reverse'
-  }
+    repeatType: 'reverse',
+  },
 }
 
 export const CardBoostAnimation: AnimationDefinition = {
@@ -18,8 +18,8 @@ export const CardBoostAnimation: AnimationDefinition = {
   boxShadow: [null, `0 0 4px 4px var(--hilight-color)`],
   transition: {
     repeat: 1,
-    repeatType: 'reverse'
-  }
+    repeatType: 'reverse',
+  },
 }
 
 export const CardDamageAnimation: AnimationDefinition = {
@@ -27,48 +27,48 @@ export const CardDamageAnimation: AnimationDefinition = {
   transition: {
     repeat: 2,
     repeatType: 'reverse',
-    duration: 0.1
-  }
+    duration: 0.1,
+  },
 }
 
 export const CardVariants: Variants = {
   normal: {
     width: '250px',
     height: '350px',
-    fontSize: '16px'
+    fontSize: '16px',
   },
   small: { width: '150px', height: '210px', fontSize: '10px' },
   active: {
     cursor: 'pointer',
     boxShadow: [
       '0 0 2px 2px var(--positive-color)',
-      '0 0 4px 4px var(--positive-color)'
+      '0 0 4px 4px var(--positive-color)',
     ],
     transition: {
       repeat: Infinity,
-      repeatType: 'reverse'
-    }
-  }
+      repeatType: 'reverse',
+    },
+  },
 }
 
 export const CardPaperVariants: Variants = {
   normal: {
-    rotateY: 0
+    rotateY: 0,
   },
   faceDown: {
-    rotateY: 180
-  }
+    rotateY: 180,
+  },
 }
 
 export const CardBackVariants: Variants = {
   normal: {
     background:
-      'repeating-linear-gradient(45deg,#fff,#fff 10px,#999 10px,#999 20px)'
+      'repeating-linear-gradient(45deg,#fff,#fff 10px,#999 10px,#999 20px)',
   },
   small: {
     background:
-      'repeating-linear-gradient(45deg,#fff,#fff 5px,#999 5px,#999 10px)'
-  }
+      'repeating-linear-gradient(45deg,#fff,#fff 5px,#999 5px,#999 10px)',
+  },
 }
 
 export const FadeInOutVariants: Variants = {
@@ -76,25 +76,25 @@ export const FadeInOutVariants: Variants = {
     opacity: 1,
     transition: {
       when: 'beforeChildren',
-      staggerChildren: 0.3
-    }
+      staggerChildren: 0.3,
+    },
   },
   closed: {
     opacity: 0,
     transition: {
       when: 'afterChildren',
-      staggerChildren: 0.3
-    }
-  }
+      staggerChildren: 0.3,
+    },
+  },
 }
 
 export const SlideInOutContentVariants: Variants = {
   open: {
     opacity: 1,
-    x: [-50, 0]
+    x: [-50, 0],
   },
   closed: {
     opacity: 0,
-    x: [0, 50]
-  }
+    x: [0, 50],
+  },
 }

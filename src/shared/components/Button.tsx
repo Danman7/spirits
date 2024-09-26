@@ -14,7 +14,7 @@ export interface ButtonProps {
 const Button: FC<ButtonProps> = ({
   label,
   type = ButtonType.defaultButton,
-  onClick
+  onClick,
 }) => (
   <motion.button
     onClick={onClick}
@@ -22,7 +22,7 @@ const Button: FC<ButtonProps> = ({
     whileHover={{
       borderBottomWidth: '6px',
       boxShadow: '0 0 2px 2px var(--hilight-color)',
-      y: -2
+      y: -2,
     }}
     whileTap={{ borderBottomWidth: '2px', y: 2 }}
   >

@@ -4,21 +4,21 @@ import { getFactionColor, joinCardTypes } from 'src/features/cards/utils'
 
 it('should join the card types in a string', () => {
   expect(joinCardTypes(Haunt.types)).toBe(
-    `${CardType.Undead}, ${CardType.Hammerite}`
+    `${CardType.Undead}, ${CardType.Hammerite}`,
   )
 })
 
 it('should get the proper faction color', () => {
   expect(getFactionColor([CardFaction.Chaos])).toBe(
-    'var(--chaos-faction-color)'
+    'var(--chaos-faction-color)',
   )
   expect(getFactionColor([CardFaction.Order])).toBe(
-    'var(--order-faction-color)'
+    'var(--order-faction-color)',
   )
   expect(getFactionColor([CardFaction.Shadow])).toBe(
-    'var(--shadow-faction-color)'
+    'var(--shadow-faction-color)',
   )
   expect(getFactionColor([CardFaction.Chaos, CardFaction.Shadow])).toBe(
-    `linear-gradient(300deg, ${'var(--chaos-faction-color)'}, ${'var(--shadow-faction-color)'})`
+    `linear-gradient(300deg, ${'var(--chaos-faction-color)'}, ${'var(--shadow-faction-color)'})`,
   )
 })

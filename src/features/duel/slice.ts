@@ -4,7 +4,7 @@ import {
   DuelPhase,
   DuelState,
   PlayCardFromHandAction,
-  Player
+  Player,
 } from 'src/features/duel/types'
 
 import { PlayCard } from 'src/features/cards/types'
@@ -15,7 +15,7 @@ export const initialState: DuelState = {
   phase: DuelPhase.PRE_DUEL,
   players: {},
   playerOrder: [],
-  loggedInPlayerId: ''
+  loggedInPlayerId: '',
 }
 
 export const duelSlice = createSlice({
@@ -29,7 +29,7 @@ export const duelSlice = createSlice({
         loggedInPlayerId?: Player['id']
         firstPlayerId?: Player['id']
         phase?: DuelPhase
-      }>
+      }>,
     ) => {
       const { players, firstPlayerId, loggedInPlayerId, phase } = action.payload
 
@@ -42,7 +42,7 @@ export const duelSlice = createSlice({
           startingPlayerId = playerFromProp.id
         } else {
           throw new Error(
-            'The firstPlayerId prop does not match any of the player ids passed to initialize.'
+            'The firstPlayerId prop does not match any of the player ids passed to initialize.',
           )
         }
       } else {
@@ -54,19 +54,19 @@ export const duelSlice = createSlice({
           statePlayers[player.id] = {
             ...player,
             isActive: startingPlayerId === player.id,
-            deck: shuffleArray(player.deck)
+            deck: shuffleArray(player.deck),
           }
 
           return statePlayers
         },
-        {}
+        {},
       )
 
       state.playerOrder = players
         .sort(
           (playerA, playerB) =>
             Number(playerA.id === loggedInPlayerId) -
-            Number(playerB.id === loggedInPlayerId)
+            Number(playerB.id === loggedInPlayerId),
         )
         .map(({ id }) => id)
 
@@ -89,7 +89,7 @@ export const duelSlice = createSlice({
         }
       }
     },
-    startRedraw: state => {
+    startRedraw: (state) => {
       state.phase = DuelPhase.REDRAW
     },
     putCardAtBottomOfDeck: (
@@ -97,7 +97,7 @@ export const duelSlice = createSlice({
       action: PayloadAction<{
         cardId: PlayCard['id']
         playerId: Player['id']
-      }>
+      }>,
     ) => {
       const { cardId, playerId } = action.payload
 
@@ -110,18 +110,18 @@ export const duelSlice = createSlice({
 
       players[action.payload].isReady = true
     },
-    startGame: state => {
+    startGame: (state) => {
       state.phase = DuelPhase.PLAYER_TURN
       state.turn = 1
     },
-    initializeEndTurn: state => {
+    initializeEndTurn: (state) => {
       state.phase = DuelPhase.RESOLVING_END_TURN
     },
-    endTurn: state => {
+    endTurn: (state) => {
       state.turn += 1
       state.phase = DuelPhase.PLAYER_TURN
 
-      state.playerOrder.forEach(playerId => {
+      state.playerOrder.forEach((playerId) => {
         state.players[playerId].isActive = !state.players[playerId].isActive
         state.players[playerId].hasPlayedCardThisTurn = false
       })
@@ -129,14 +129,14 @@ export const duelSlice = createSlice({
     playCardFromHand: (state, action: PlayCardFromHandAction) => {
       const {
         card: { id, cost },
-        playerId
+        playerId,
       } = action.payload
       const { players } = state
 
       players[playerId].coins = players[playerId].coins - cost
       players[playerId].hasPlayedCardThisTurn = true
       players[playerId].hand = players[playerId].hand.filter(
-        cardId => cardId !== id
+        (cardId) => cardId !== id,
       )
       players[playerId].board = [...players[playerId].board, id]
     },
@@ -146,16 +146,16 @@ export const duelSlice = createSlice({
         playerId: Player['id']
         cardId: PlayCard['id']
         update: Partial<PlayCard>
-      }>
+      }>,
     ) => {
       const { playerId, cardId, update } = action.payload
 
       state.players[playerId].cards[cardId] = {
         ...state.players[playerId].cards[cardId],
-        ...update
+        ...update,
       }
-    }
-  }
+    },
+  },
 })
 
 const { actions, reducer } = duelSlice
@@ -170,7 +170,7 @@ export const {
   putCardAtBottomOfDeck,
   startGame,
   startRedraw,
-  updateCard
+  updateCard,
 } = actions
 
 export type DuelActionTypes = `${typeof duelSlice.name}/${keyof typeof actions}`

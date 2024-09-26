@@ -10,7 +10,7 @@ export const boostHammeritesWithLessStrength: CardEffect<
 
   const { players } = listenerApi.getState().duel
 
-  players[playerId].board.forEach(cardId => {
+  players[playerId].board.forEach((cardId) => {
     const cardOnBoard = { ...players[playerId].cards[cardId] }
 
     if (
@@ -23,9 +23,9 @@ export const boostHammeritesWithLessStrength: CardEffect<
           cardId,
           update: {
             strength: (cardOnBoard.strength +=
-              HAMMERITES_WITH_LOWER_STRENGTH_BOOST)
-          }
-        })
+              HAMMERITES_WITH_LOWER_STRENGTH_BOOST),
+          },
+        }),
       )
     }
   })

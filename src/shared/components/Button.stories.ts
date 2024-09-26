@@ -8,20 +8,20 @@ const meta = {
   title: 'Button',
   component: Button,
   parameters: {
-    layout: 'centered'
+    layout: 'centered',
   },
   tags: ['autodocs'],
   args: {
     label: 'This is a button',
     type: ButtonType.defaultButton,
-    onClick: fn()
+    onClick: fn(),
   },
   argTypes: {
     type: {
       control: 'select',
-      options: [ButtonType.defaultButton, ButtonType.positiveButton]
-    }
-  }
+      options: [ButtonType.defaultButton, ButtonType.positiveButton],
+    },
+  },
 } satisfies Meta<typeof Button>
 
 export default meta
@@ -31,6 +31,6 @@ export const Default: Story = {}
 
 export const PositiveButton: Story = {
   args: {
-    type: ButtonType.positiveButton
-  }
+    type: ButtonType.positiveButton,
+  },
 }

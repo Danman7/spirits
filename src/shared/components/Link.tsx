@@ -14,7 +14,7 @@ const Link: FC<LinkProps> = ({ children, onClick }) => (
     onClick={onClick}
     whileHover={{
       scale: 1.1,
-      textDecoration: 'underline'
+      textDecoration: 'underline',
     }}
     whileTap={{ scale: 0.9 }}
   >

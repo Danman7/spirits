@@ -13,12 +13,12 @@ import {
   CardDamageAnimation,
   CardPaperVariants,
   CardVariants,
-  NumberChangeAnimation
+  NumberChangeAnimation,
 } from 'src/shared/animations'
 
 const enum CardSide {
   FRONT = 'FRONT',
-  BACK = 'BACK'
+  BACK = 'BACK',
 }
 
 const Card = motion.create(
@@ -33,13 +33,13 @@ const Card = motion.create(
         types,
         factions,
         cost,
-        prototype
+        prototype,
       } = card
 
       const isCardFaceDown = animate?.toString().includes('faceDown')
 
       const [activeSide, setActiveSide] = useState<CardSide>(
-        isCardFaceDown ? CardSide.BACK : CardSide.FRONT
+        isCardFaceDown ? CardSide.BACK : CardSide.FRONT,
       )
 
       const prevStrength = usePrevious(strength)
@@ -68,7 +68,7 @@ const Card = motion.create(
         prevStrength,
         strength,
         strengthChangeAnimation,
-        cardAnimationControls
+        cardAnimationControls,
       ])
 
       return (
@@ -128,9 +128,9 @@ const Card = motion.create(
           </motion.div>
         </motion.div>
       )
-    }
+    },
   ),
-  { forwardMotionProps: true }
+  { forwardMotionProps: true },
 )
 
 export default Card

@@ -8,12 +8,12 @@ const meta = {
   title: 'Modal',
   component: Modal,
   parameters: {
-    layout: 'fullscreen'
+    layout: 'fullscreen',
   },
   tags: ['autodocs'],
   args: {
-    children: 'Testing modal message'
-  }
+    children: 'Testing modal message',
+  },
 } satisfies Meta<typeof Modal>
 
 export default meta
@@ -32,6 +32,6 @@ export const NodeContent: Story = {
           You can put any ReactNode as Modal content.
         </motion.div>
       </>
-    )
-  }
+    ),
+  },
 }

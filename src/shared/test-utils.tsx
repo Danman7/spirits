@@ -1,7 +1,7 @@
 import {
   queries,
   render as rtlRender,
-  RenderOptions
+  RenderOptions,
 } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
@@ -14,15 +14,15 @@ interface customRenderOptions extends RenderOptions {
 
 const customRender = (
   ui: React.ReactElement,
-  { preloadedState, ...renderOptions }: customRenderOptions = {}
+  { preloadedState, ...renderOptions }: customRenderOptions = {},
 ) => {
   const Wrapper: React.FC<React.PropsWithChildren<Record<string, unknown>>> = ({
-    children
+    children,
   }) => (
     <Provider
       store={configureStore({
         ...storeConfiguration,
-        preloadedState
+        preloadedState,
       })}
     >
       {children}
@@ -32,7 +32,7 @@ const customRender = (
   return rtlRender(ui, {
     wrapper: Wrapper,
     ...renderOptions,
-    queries: queries
+    queries: queries,
   })
 }
 

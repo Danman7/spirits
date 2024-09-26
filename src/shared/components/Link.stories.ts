@@ -7,13 +7,13 @@ const meta = {
   title: 'Link',
   component: Link,
   parameters: {
-    layout: 'centered'
+    layout: 'centered',
   },
   tags: ['autodocs'],
   args: {
     children: 'This is a link',
-    onClick: fn()
-  }
+    onClick: fn(),
+  },
 } satisfies Meta<typeof Link>
 
 export default meta

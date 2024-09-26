@@ -9,8 +9,8 @@ store.dispatch(
     players: [PlayTestPlayer1, PlayTestPlayer2],
     loggedInPlayerId: PlayTestPlayer1.id,
     firstPlayerId: PlayTestPlayer1.id,
-    phase: DuelPhase.PLAYER_TURN
-  })
+    phase: DuelPhase.PLAYER_TURN,
+  }),
 )
 
 const App = () => <Board />

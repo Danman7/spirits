@@ -9,7 +9,7 @@ import duelReducer, {
   initialState,
   playCardFromHand,
   startGame,
-  startRedraw
+  startRedraw,
 } from 'src/features/duel/slice'
 
 import { HammeriteNovice, Haunt } from 'src/features/cards/CardPrototypes'
@@ -23,8 +23,8 @@ test('initialize a new game with a random first player', () => {
     { ...initialState },
     initializeGame({
       players: initialPlayers,
-      loggedInPlayerId: MockPlayer2.id
-    })
+      loggedInPlayerId: MockPlayer2.id,
+    }),
   )
 
   const { turn, players, playerOrder, phase } = state
@@ -32,7 +32,7 @@ test('initialize a new game with a random first player', () => {
   expect(turn).toBe(0)
   expect([
     players[playerOrder[0]].isActive,
-    players[playerOrder[1]].isActive
+    players[playerOrder[1]].isActive,
   ]).toContain(true)
   expect(phase).toBe(DuelPhase.INITIAL_DRAW)
 })
@@ -43,8 +43,8 @@ test('initialize a new game with a preset first player', () => {
     { ...initialState },
     initializeGame({
       players: initialPlayers,
-      firstPlayerId
-    })
+      firstPlayerId,
+    }),
   )
 
   const { turn, players, phase } = state
@@ -60,8 +60,8 @@ test('throw an error when initializing game if firstPlayerId is set to a non exi
       { ...initialState },
       initializeGame({
         players: initialPlayers,
-        firstPlayerId: 'random-id'
-      })
+        firstPlayerId: 'random-id',
+      }),
     )
   }).toThrow()
 })
@@ -71,7 +71,7 @@ test("draw a card from a player's deck if it has cards", () => {
 
   const mockState: DuelState = {
     ...initialState,
-    players: normalizedPlayers
+    players: normalizedPlayers,
   }
 
   const mockDrawingPlayer = mockState.players[drawingPlayerIndex]
@@ -96,14 +96,14 @@ test('should draw no card if deck has no cards', () => {
       [MockPlayer1.id]: {
         ...MockPlayer1,
         hand: [],
-        deck: []
+        deck: [],
       },
       [MockPlayer1.id]: {
         ...MockPlayer2,
         hand: [],
-        deck: []
-      }
-    }
+        deck: [],
+      },
+    },
   }
 
   const mockDrawingPlayer = mockState.players[drawingPlayerIndex]
@@ -121,7 +121,7 @@ test('should draw no card if deck has no cards', () => {
 test('start the game', () => {
   const mockState: DuelState = {
     ...initialState,
-    players: normalizedPlayers
+    players: normalizedPlayers,
   }
 
   const state = duelReducer(mockState, startGame())
@@ -135,7 +135,7 @@ test('start the game', () => {
 test('start redraw phase', () => {
   const mockState: DuelState = {
     ...initialState,
-    players: normalizedPlayers
+    players: normalizedPlayers,
   }
 
   const state = duelReducer(mockState, startRedraw())
@@ -146,7 +146,7 @@ test('start redraw phase', () => {
 test('initialize end of turn resolution', () => {
   const mockState: DuelState = {
     ...initialState,
-    players: normalizedPlayers
+    players: normalizedPlayers,
   }
 
   const state = duelReducer(mockState, initializeEndTurn())
@@ -164,15 +164,15 @@ test('end of turn', () => {
     players: {
       [MockPlayer1.id]: {
         ...MockPlayer1,
-        isActive: true
+        isActive: true,
       },
       [MockPlayer2.id]: {
         ...MockPlayer2,
-        isActive: false
-      }
+        isActive: false,
+      },
     },
     playerOrder: [MockPlayer2.id, MockPlayer1.id],
-    loggedInPlayerId: initialState.loggedInPlayerId
+    loggedInPlayerId: initialState.loggedInPlayerId,
   }
 
   const state = duelReducer(mockState, endTurn())
@@ -182,10 +182,10 @@ test('end of turn', () => {
   expect(turn).toBe(mockState.turn + 1)
   expect(phase).toBe(DuelPhase.PLAYER_TURN)
   expect(players[MockPlayer1.id].isActive).toBe(
-    !mockState.players[MockPlayer1.id].isActive
+    !mockState.players[MockPlayer1.id].isActive,
   )
   expect(players[MockPlayer2.id].isActive).toBe(
-    !mockState.players[MockPlayer2.id].isActive
+    !mockState.players[MockPlayer2.id].isActive,
   )
 })
 
@@ -202,21 +202,21 @@ test('play card from hand if active player', () => {
         ...MockPlayer1,
         hand: [hammerite.id],
         cards: {
-          [hammerite.id]: hammerite
+          [hammerite.id]: hammerite,
         },
-        isActive: true
+        isActive: true,
       },
       [MockPlayer2.id]: {
         ...MockPlayer2,
         hand: [haunt.id],
         cards: {
-          [haunt.id]: haunt
-        }
-      }
+          [haunt.id]: haunt,
+        },
+      },
     },
     turn: 1,
     phase: DuelPhase.PLAYER_TURN,
-    playerOrder: [MockPlayer2.id, MockPlayer1.id]
+    playerOrder: [MockPlayer2.id, MockPlayer1.id],
   }
 
   const mockPlayingPlayer = mockPlayCardState.players[playerId]
@@ -225,8 +225,8 @@ test('play card from hand if active player', () => {
     mockPlayCardState,
     playCardFromHand({
       card: hammerite,
-      playerId
-    })
+      playerId,
+    }),
   )
 
   const { players } = state

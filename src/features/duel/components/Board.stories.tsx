@@ -12,7 +12,7 @@ import {
   HammeriteNovice,
   Haunt,
   TempleGuard,
-  Zombie
+  Zombie,
 } from 'src/features/cards/CardPrototypes'
 import { DuelPhase } from 'src/features/duel/types'
 import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
@@ -22,10 +22,10 @@ const meta = {
   title: 'Board',
   component: Board,
   parameters: {
-    layout: 'fullscreen'
+    layout: 'fullscreen',
   },
   tags: ['autodocs'],
-  argTypes: {}
+  argTypes: {},
 } satisfies Meta<typeof Board>
 
 export default meta
@@ -46,7 +46,7 @@ const azaran = createPlayCardFromPrototype(AzaranTheCruel)
 
 export const Default: Story = {
   decorators: [
-    story => (
+    (story) => (
       <Provider
         store={configureStore({
           ...storeConfiguration,
@@ -64,11 +64,11 @@ export const Default: Story = {
                     [acolyte2.id]: acolyte2,
                     [novice1.id]: novice1,
                     [novice2.id]: novice2,
-                    [brother.id]: brother
+                    [brother.id]: brother,
                   },
                   deck: [guard1.id, guard2.id, acolyte1.id],
                   hand: [brother.id, acolyte2.id],
-                  board: [novice1.id, novice2.id]
+                  board: [novice1.id, novice2.id],
                 },
                 [MockPlayer2.id]: {
                   ...MockPlayer2,
@@ -77,22 +77,22 @@ export const Default: Story = {
                     [zombie2.id]: zombie2,
                     [haunt1.id]: haunt1,
                     [haunt2.id]: haunt2,
-                    [azaran.id]: azaran
+                    [azaran.id]: azaran,
                   },
                   deck: [zombie1.id, haunt1.id, azaran.id],
                   hand: [haunt2.id],
-                  board: [zombie2.id]
-                }
+                  board: [zombie2.id],
+                },
               },
               playerOrder: [MockPlayer2.id, MockPlayer1.id],
               phase: DuelPhase.PLAYER_TURN,
-              loggedInPlayerId: initialState.loggedInPlayerId
-            }
-          }
+              loggedInPlayerId: initialState.loggedInPlayerId,
+            },
+          },
         })}
       >
         {story()}
       </Provider>
-    )
-  ]
+    ),
+  ],
 }

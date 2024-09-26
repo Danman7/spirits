@@ -8,7 +8,7 @@ import {
   getPhase,
   getPlayerOrder,
   getPlayers,
-  getTurn
+  getTurn,
 } from 'src/features/duel/selectors'
 import { LONG_ANIMATION_CYCLE } from 'src/features/duel/constants'
 import InitialPhaseModal from 'src/features/duel/components/modals/InitialPhaseModal'

@@ -9,7 +9,7 @@ interface PositiveNegativeNumberProps {
 
 const PositiveNegativeNumber: FC<PositiveNegativeNumberProps> = ({
   base,
-  current
+  current,
 }) => {
   if (current > base) {
     return <div className={styles.positiveText}>{current}</div>

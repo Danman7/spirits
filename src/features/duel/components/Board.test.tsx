@@ -8,7 +8,7 @@ import {
   passButtonMessage,
   playerFirstMessage,
   redrawMessage,
-  skipRedrawMessage
+  skipRedrawMessage,
 } from 'src/features/duel/messages'
 import { fireEvent, render, screen, waitFor } from 'src/shared/test-utils'
 import { DuelPhase, DuelState } from 'src/features/duel/types'
@@ -22,7 +22,7 @@ import {
   HammeriteNovice,
   Haunt,
   TempleGuard,
-  Zombie
+  Zombie,
 } from 'src/features/cards/CardPrototypes'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
 
@@ -36,23 +36,23 @@ const mockPlayers: DuelState['players'] = {
     ...MockPlayer2,
     cards: {
       [haunt.id]: haunt,
-      [book.id]: book
+      [book.id]: book,
     },
     deck: [],
     hand: [haunt.id],
-    discard: [book.id]
+    discard: [book.id],
   },
   [MockPlayer1.id]: {
     ...MockPlayer1,
     isActive: true,
     cards: {
       [brother.id]: brother,
-      [novice.id]: novice
+      [novice.id]: novice,
     },
     deck: [],
     hand: [brother.id],
-    discard: [novice.id]
-  }
+    discard: [novice.id],
+  },
 }
 
 const mockGameState: DuelState = {
@@ -60,7 +60,7 @@ const mockGameState: DuelState = {
   players: mockPlayers,
   playerOrder: [MockPlayer2.id, MockPlayer1.id],
   phase: DuelPhase.PLAYER_TURN,
-  loggedInPlayerId: MockPlayer1.id
+  loggedInPlayerId: MockPlayer1.id,
 }
 
 test('show the general UI elements', () => {
@@ -68,8 +68,8 @@ test('show the general UI elements', () => {
 
   render(<Board />, {
     preloadedState: {
-      duel: gameState
-    }
+      duel: gameState,
+    },
   })
 
   const { players, playerOrder } = gameState
@@ -85,12 +85,12 @@ test('initial draw of cards', () => {
   const preloadedState: RootState = {
     duel: {
       ...mockGameState,
-      phase: DuelPhase.INITIAL_DRAW
-    }
+      phase: DuelPhase.INITIAL_DRAW,
+    },
   }
 
   render(<Board />, {
-    preloadedState
+    preloadedState,
   })
 
   expect(screen.getByText(initialDrawMessage)).toBeInTheDocument()
@@ -112,10 +112,10 @@ test('redraw a card', async () => {
         cards: {
           ...mockPlayers[MockPlayer2.id].cards,
           [zombie1.id]: zombie1,
-          [zombie2.id]: zombie2
+          [zombie2.id]: zombie2,
         },
         isReady: true,
-        hand: [...mockPlayers[MockPlayer2.id].hand, zombie1.id, zombie2.id]
+        hand: [...mockPlayers[MockPlayer2.id].hand, zombie1.id, zombie2.id],
       },
       [MockPlayer1.id]: {
         ...mockPlayers[MockPlayer1.id],
@@ -123,18 +123,18 @@ test('redraw a card', async () => {
           ...mockPlayers[MockPlayer1.id].cards,
           [novice2.id]: novice2,
           [guard.id]: guard,
-          [acolyte.id]: acolyte
+          [acolyte.id]: acolyte,
         },
         deck: [acolyte.id],
-        hand: [...mockPlayers[MockPlayer1.id].hand, novice2.id, guard.id]
-      }
-    }
+        hand: [...mockPlayers[MockPlayer1.id].hand, novice2.id, guard.id],
+      },
+    },
   }
 
   render(<Board />, {
     preloadedState: {
-      duel: gameState
-    }
+      duel: gameState,
+    },
   })
 
   expect(screen.getByText(redrawMessage)).toBeInTheDocument()
@@ -158,8 +158,8 @@ test('play a card from hand', async () => {
 
   render(<Board />, {
     preloadedState: {
-      duel: gameState
-    }
+      duel: gameState,
+    },
   })
 
   expect(screen.getByText(playerFirstMessage)).toBeInTheDocument()
@@ -169,11 +169,11 @@ test('play a card from hand', async () => {
   await waitFor(
     async () =>
       expect(
-        await screen.queryByText(playerFirstMessage)
+        await screen.queryByText(playerFirstMessage),
       ).not.toBeInTheDocument(),
     {
-      timeout: 3000
-    }
+      timeout: 3000,
+    },
   )
 
   fireEvent.click(screen.getByText(name))
@@ -186,8 +186,8 @@ test('play a card from hand', async () => {
 test('end the turn', async () => {
   render(<Board />, {
     preloadedState: {
-      duel: { ...mockGameState }
-    }
+      duel: { ...mockGameState },
+    },
   })
 
   expect(screen.queryByRole('button')).toBeInTheDocument()
@@ -197,11 +197,11 @@ test('end the turn', async () => {
   await waitFor(
     async () =>
       expect(
-        await expect(screen.queryByRole('button')).not.toBeInTheDocument()
+        await expect(screen.queryByRole('button')).not.toBeInTheDocument(),
       ),
     {
-      timeout: 3000
-    }
+      timeout: 3000,
+    },
   )
 })
 
@@ -210,14 +210,14 @@ test('play a card as CPU and end the turn', async () => {
     ...mockGameState,
     players: {
       [MockPlayer2.id]: { ...mockPlayers[MockPlayer2.id], isCPU: true },
-      [MockPlayer1.id]: mockPlayers[MockPlayer1.id]
-    }
+      [MockPlayer1.id]: mockPlayers[MockPlayer1.id],
+    },
   }
 
   render(<Board />, {
     preloadedState: {
-      duel: state
-    }
+      duel: state,
+    },
   })
 
   const cpuPlayer = mockGameState.players[MockPlayer2.id]
@@ -233,12 +233,12 @@ test('play a card as CPU and end the turn', async () => {
     async () =>
       expect(
         await expect(
-          screen.queryByText(opponentTurnMessage)
-        ).not.toBeInTheDocument()
+          screen.queryByText(opponentTurnMessage),
+        ).not.toBeInTheDocument(),
       ),
     {
-      timeout: 3000
-    }
+      timeout: 3000,
+    },
   )
 
   expect(screen.getByText(playedCPUCard.name)).toBeInTheDocument()

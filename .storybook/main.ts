@@ -5,7 +5,7 @@ const config: StorybookConfig = {
   addons: ['@storybook/addon-essentials', '@storybook/test'],
   framework: {
     name: '@storybook/react-vite',
-    options: {}
-  }
+    options: {},
+  },
 }
 export default config

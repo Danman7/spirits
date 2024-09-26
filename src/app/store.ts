@@ -10,10 +10,10 @@ export const storeConfiguration: ConfigureStoreOptions<
   Action<DuelActionTypes> | Action<'listenerMiddleware/add'>
 > = {
   reducer: {
-    duel: duelReducer
+    duel: duelReducer,
   },
-  middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().prepend(listenerMiddleware.middleware)
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().prepend(listenerMiddleware.middleware),
 }
 
 const store = configureStore(storeConfiguration)
