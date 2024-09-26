@@ -8,6 +8,21 @@ const config: Config = {
     '.+\\.(css|styl|less|sass|scss)$': 'identity-obj-proxy',
     'src/(.*)': '<rootDir>/src/$1'
   },
+  transform: {
+    '^.+\\.(t|j)sx?$': [
+      '@swc/jest',
+      {
+        jsc: {
+          transform: {
+            react: {
+              runtime: 'automatic'
+            }
+          }
+        }
+      }
+    ]
+  },
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
   coverageThreshold: {
     global: {
       branches: 80,
