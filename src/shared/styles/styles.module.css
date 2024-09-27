@@ -151,11 +151,11 @@
 
 .modal {
   position: absolute;
-  top: 40%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  width: 50em;
+  max-width: 50em;
   overflow: hidden;
   box-shadow: 2px 2px 2px var(--shadow-color);
   padding: 1em;
@@ -164,25 +164,30 @@
   color: var(--text-color);
   scale: 1;
   z-index: 3;
+
+  p {
+    margin: 0.5rem 0 0;
+  }
 }
 
 .playerInfo {
   position: fixed;
-  left: 8px;
+  left: 1em;
 }
 
 .activePlayerInfo {
   font-weight: bold;
+  font-size: 1.2em;
 }
 
 .topPlayerInfo {
   composes: playerInfo;
-  top: 8px;
+  top: 1em;
 }
 
 .bottomPlayerInfo {
   composes: playerInfo;
-  bottom: 8px;
+  bottom: 1em;
 }
 
 .defaultButton {
@@ -255,6 +260,9 @@
 }
 
 .link {
+  border: none;
+  background: none;
+  display: inline-block;
   cursor: pointer;
   color: var(--primary-color);
 }

@@ -1,12 +1,12 @@
 import { FC, useEffect } from 'react'
 import { motion, useAnimationControls } from 'framer-motion'
 
-import GameButton from 'src/features/duel/components/GameButton'
 import { DuelPhase, Player } from 'src/features/duel/types'
 import { getLoggedInPlayerId } from 'src/features/duel/selectors'
 import {
   completeRedraw,
   drawCardFromDeck,
+  endTurn,
   playCardFromHand,
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
@@ -44,6 +44,8 @@ const PlayerHalfBoard: FC<{
 
   const onPlayCard: CardProps['onClickCard'] = (card: PlayCard) => {
     dispatch(playCardFromHand({ card, playerId: id }))
+
+    dispatch(endTurn())
   }
 
   const onRedrawCard: CardProps['onClickCard'] = (card: PlayCard) => {
@@ -144,8 +146,6 @@ const PlayerHalfBoard: FC<{
           <Card key={cardId} card={cards[cardId]} animate={['small']} />
         ))}
       </div>
-
-      {isPlayerPrespective && isActive && <GameButton />}
     </>
   )
 }

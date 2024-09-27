@@ -9,7 +9,7 @@ interface LinkProps {
 }
 
 const Link: FC<LinkProps> = ({ children, onClick }) => (
-  <motion.div
+  <motion.button
     className={styles.link}
     onClick={onClick}
     whileHover={{
@@ -19,7 +19,7 @@ const Link: FC<LinkProps> = ({ children, onClick }) => (
     whileTap={{ scale: 0.9 }}
   >
     {children}
-  </motion.div>
+  </motion.button>
 )
 
 export default Link

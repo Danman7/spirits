@@ -2,13 +2,12 @@ import '@testing-library/jest-dom'
 
 import Board from 'src/features/duel/components/Board'
 import {
-  endTurnMessage,
   initialDrawMessage,
-  opponentTurnMessage,
+  opponentTurnTitle,
   passButtonMessage,
-  playerFirstMessage,
   redrawMessage,
   skipRedrawMessage,
+  yourTurnTitle,
 } from 'src/features/duel/messages'
 import { fireEvent, render, screen, waitFor } from 'src/shared/test-utils'
 import { DuelPhase, DuelState } from 'src/features/duel/types'
@@ -162,25 +161,13 @@ test('play a card from hand', async () => {
     },
   })
 
-  expect(screen.getByText(playerFirstMessage)).toBeInTheDocument()
+  expect(screen.getByText(yourTurnTitle)).toBeInTheDocument()
 
   expect(screen.getByText(passButtonMessage)).toBeInTheDocument()
-
-  await waitFor(
-    async () =>
-      expect(
-        await screen.queryByText(playerFirstMessage),
-      ).not.toBeInTheDocument(),
-    {
-      timeout: 3000,
-    },
-  )
 
   fireEvent.click(screen.getByText(name))
 
   expect(screen.getByText(coins - cost)).toBeInTheDocument()
-
-  expect(screen.getByText(endTurnMessage)).toBeInTheDocument()
 })
 
 test('end the turn', async () => {
@@ -190,7 +177,7 @@ test('end the turn', async () => {
     },
   })
 
-  expect(screen.queryByRole('button')).toBeInTheDocument()
+  expect(screen.getByRole('button')).toBeInTheDocument()
 
   fireEvent.click(screen.getByText(passButtonMessage))
 
@@ -227,13 +214,13 @@ test('play a card as CPU and end the turn', async () => {
 
   fireEvent.click(screen.getByText(passButtonMessage))
 
-  expect(screen.getByText(opponentTurnMessage)).toBeInTheDocument()
+  expect(screen.getByText(opponentTurnTitle)).toBeInTheDocument()
 
   await waitFor(
     async () =>
       expect(
         await expect(
-          screen.queryByText(opponentTurnMessage),
+          screen.queryByText(opponentTurnTitle),
         ).not.toBeInTheDocument(),
       ),
     {

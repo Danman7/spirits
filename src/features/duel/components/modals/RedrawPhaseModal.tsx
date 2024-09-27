@@ -16,15 +16,18 @@ const RedrawPhaseModal: FC<{ playerId: Player['id'] }> = ({ playerId }) => {
   }
 
   return (
-    <>
-      <motion.h3 variants={SlideInOutContentVariants}>
+    <div style={{ width: 300 }}>
+      <motion.h2 variants={SlideInOutContentVariants}>
         {DuelPhase.REDRAW}
-      </motion.h3>
-      <motion.div variants={SlideInOutContentVariants}>
-        {redrawMessage}
+      </motion.h2>
+      <motion.p variants={SlideInOutContentVariants}>{redrawMessage}</motion.p>
+      <motion.div
+        style={{ marginTop: '0.5rem' }}
+        variants={SlideInOutContentVariants}
+      >
+        <Link onClick={onSkipRedraw}>{skipRedrawMessage}</Link>
       </motion.div>
-      <Link onClick={onSkipRedraw}>{skipRedrawMessage}</Link>
-    </>
+    </div>
   )
 }
 

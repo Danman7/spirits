@@ -3,6 +3,13 @@ import { motion } from 'framer-motion'
 
 import Modal from 'src/shared/components/Modal'
 import { SlideInOutContentVariants } from 'src/shared/animations'
+import InitialPhaseModal from 'src/features/duel/components/modals/InitialPhaseModal'
+import { Provider } from 'react-redux'
+import { configureStore } from '@reduxjs/toolkit'
+import { storeConfiguration } from 'src/app/store'
+import { MockPlayerTurnState } from 'src/features/duel/__mocks__'
+import { DuelPhase } from 'src/features/duel/types'
+import RedrawPhaseModal from 'src/features/duel/components/modals/RedrawPhaseModal'
 
 const meta = {
   title: 'Modal',
@@ -32,6 +39,54 @@ export const NodeContent: Story = {
           You can put any ReactNode as Modal content.
         </motion.div>
       </>
+    ),
+  },
+}
+
+export const InitialPhase: Story = {
+  decorators: [
+    (story) => (
+      <Provider
+        store={configureStore({
+          ...storeConfiguration,
+          preloadedState: {
+            duel: {
+              ...MockPlayerTurnState,
+              phase: DuelPhase.PRE_DUEL,
+            },
+          },
+        })}
+      >
+        {story()}
+      </Provider>
+    ),
+  ],
+  args: {
+    children: <InitialPhaseModal />,
+  },
+}
+
+export const RedrawPhase: Story = {
+  decorators: [
+    (story) => (
+      <Provider
+        store={configureStore({
+          ...storeConfiguration,
+          preloadedState: {
+            duel: {
+              ...MockPlayerTurnState,
+              phase: DuelPhase.REDRAW,
+            },
+          },
+        })}
+      >
+        {story()}
+      </Provider>
+    ),
+  ],
+  args: {
+    children: (
+      <RedrawPhaseModal playerId={MockPlayerTurnState.playerOrder[1]} />
     ),
   },
 }

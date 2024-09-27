@@ -15,29 +15,31 @@ const mockCard: PlayCard = createPlayCardFromPrototype(BrotherSachelman)
 it('should display all shared UI segments of a card when face up', () => {
   const { rerender } = render(<Card card={mockCard} />)
 
-  expect(screen.queryByText(mockCard.name)).toBeInTheDocument()
+  expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
+    mockCard.name,
+  )
 
-  expect(screen.queryByText(`Cost: ${mockCard.cost}`)).toBeInTheDocument()
+  expect(screen.getByText(`Cost: ${mockCard.cost}`)).toBeInTheDocument()
 
-  expect(screen.queryByText(mockCard.strength)).toBeInTheDocument()
+  expect(screen.getByText(mockCard.strength)).toBeInTheDocument()
 
-  expect(screen.queryByText(joinCardTypes(mockCard.types))).toBeInTheDocument()
+  expect(screen.getByText(joinCardTypes(mockCard.types))).toBeInTheDocument()
 
-  expect(screen.queryByText(mockCard.description as string)).toBeInTheDocument()
+  expect(screen.getByText(mockCard.description as string)).toBeInTheDocument()
 
-  expect(screen.queryByText(mockCard.flavor as string)).toBeInTheDocument()
+  expect(screen.getByText(mockCard.flavor as string)).toBeInTheDocument()
 
   const boostedStrength = mockCard.strength + 2
 
   rerender(<Card card={{ ...mockCard, strength: boostedStrength }} />)
 
-  expect(screen.queryByText(boostedStrength)).toBeInTheDocument()
+  expect(screen.getByText(boostedStrength)).toBeInTheDocument()
 
   const damagedStrength = mockCard.strength - 2
 
   rerender(<Card card={{ ...mockCard, strength: damagedStrength }} />)
 
-  expect(screen.queryByText(damagedStrength)).toBeInTheDocument()
+  expect(screen.getByText(damagedStrength)).toBeInTheDocument()
 })
 
 it('should show card back when face down', async () => {

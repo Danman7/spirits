@@ -16,9 +16,9 @@ const InitialPhaseModal: FC = () => {
       <motion.h1 variants={SlideInOutContentVariants}>
         {`${players[playerOrder[0]].name} vs ${players[playerOrder[1]].name}`}
       </motion.h1>
-      <motion.div variants={SlideInOutContentVariants}>
+      <motion.p variants={SlideInOutContentVariants}>
         {initialDrawMessage}
-      </motion.div>
+      </motion.p>
     </>
   )
 }

@@ -10,7 +10,6 @@ import {
   getPlayers,
   getTurn,
 } from 'src/features/duel/selectors'
-import { LONG_ANIMATION_CYCLE } from 'src/features/duel/constants'
 import InitialPhaseModal from 'src/features/duel/components/modals/InitialPhaseModal'
 import PlayerTurnModal from 'src/features/duel/components/modals/PlayerTurnModal'
 import RedrawPhaseModal from 'src/features/duel/components/modals/RedrawPhaseModal'
@@ -36,10 +35,6 @@ const Board: FC = () => {
 
       case DuelPhase.PLAYER_TURN:
         setModalContent(<PlayerTurnModal />)
-
-        setTimeout(() => {
-          setModalContent(null)
-        }, LONG_ANIMATION_CYCLE)
         break
 
       case DuelPhase.REDRAW:
@@ -59,7 +54,9 @@ const Board: FC = () => {
         />
       ))}
 
-      <Modal>{modalContent}</Modal>
+      <Modal style={{ left: '1em', transform: 'translate(0, -50%)' }}>
+        {modalContent}
+      </Modal>
     </div>
   )
 }
