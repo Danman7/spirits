@@ -1,10 +1,11 @@
 import { ListenerEffectAPI } from '@reduxjs/toolkit'
+
 import { AppDispatch, RootState } from 'src/app/store'
 import { boostHammeritesWithLessStrength } from 'src/features/cards/CardEffects'
 import {
   BrotherSachelman,
   HammeriteNovice,
-  // TempleGuard
+  TempleGuard,
 } from 'src/features/cards/CardPrototypes'
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constants'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
@@ -13,10 +14,10 @@ import { playCardFromHand, updateCard } from 'src/features/duel/slice'
 import { DuelState, PlayCardFromHandAction } from 'src/features/duel/types'
 
 let mockAction: PlayCardFromHandAction
-let mockduelState: DuelState
+let mockDuelState: DuelState
 
 const playerId = MockPlayerTurnState.playerOrder[1]
-// const opponentId = MockPlayerTurnState.playerOrder[0]
+const opponentId = MockPlayerTurnState.playerOrder[0]
 
 const listenerApi: ListenerEffectAPI<RootState, AppDispatch> = {
   getState: jest.fn(() => ({ duel: { ...MockPlayerTurnState } })),
@@ -46,7 +47,11 @@ const listenerApi: ListenerEffectAPI<RootState, AppDispatch> = {
 }
 
 beforeEach(() => {
-  mockduelState = { ...MockPlayerTurnState }
+  mockDuelState = { ...MockPlayerTurnState }
+})
+
+afterEach(() => {
+  jest.clearAllMocks()
 })
 
 describe('boostHammeritesWithLessStrength', () => {
@@ -63,16 +68,16 @@ describe('boostHammeritesWithLessStrength', () => {
     const brother = createPlayCardFromPrototype(BrotherSachelman)
     const novice = createPlayCardFromPrototype(HammeriteNovice)
 
-    mockduelState.players[playerId].cards = {
+    mockDuelState.players[playerId].cards = {
       [brother.id]: brother,
       [novice.id]: novice,
     }
 
-    mockduelState.players[playerId].hand = [brother.id]
-    mockduelState.players[playerId].board = [novice.id]
+    mockDuelState.players[playerId].hand = [brother.id]
+    mockDuelState.players[playerId].board = [novice.id]
 
     listenerApi.getState = jest.fn(() => ({
-      duel: mockduelState,
+      duel: mockDuelState,
     }))
 
     boostHammeritesWithLessStrength(mockAction, listenerApi)
@@ -88,31 +93,31 @@ describe('boostHammeritesWithLessStrength', () => {
     )
   })
 
-  // test('should not boost hammerites with equal higher strength or opponent hammerites', () => {
-  //   const brother = createPlayCardFromPrototype(BrotherSachelman)
-  //   const templeGuard = createPlayCardFromPrototype(TempleGuard)
-  //   const novice = createPlayCardFromPrototype(HammeriteNovice)
+  test('should not boost hammerites with equal higher strength or opponent hammerites', () => {
+    const brother = createPlayCardFromPrototype(BrotherSachelman)
+    const templeGuard = createPlayCardFromPrototype(TempleGuard)
+    const novice = createPlayCardFromPrototype(HammeriteNovice)
 
-  //   mockduelState.players[playerId].cards = {
-  //     [brother.id]: brother,
-  //     [templeGuard.id]: templeGuard
-  //   }
+    mockDuelState.players[playerId].cards = {
+      [brother.id]: brother,
+      [templeGuard.id]: templeGuard,
+    }
 
-  //   mockduelState.players[playerId].hand = [brother.id]
-  //   mockduelState.players[playerId].board = [templeGuard.id]
+    mockDuelState.players[playerId].hand = [brother.id]
+    mockDuelState.players[playerId].board = [templeGuard.id]
 
-  //   mockduelState.players[opponentId].cards = {
-  //     [novice.id]: novice
-  //   }
+    mockDuelState.players[opponentId].cards = {
+      [novice.id]: novice,
+    }
 
-  //   mockduelState.players[opponentId].board = [novice.id]
+    mockDuelState.players[opponentId].board = [novice.id]
 
-  //   listenerApi.getState = jest.fn(() => ({
-  //     duel: mockduelState
-  //   }))
+    listenerApi.getState = jest.fn(() => ({
+      duel: mockDuelState,
+    }))
 
-  //   boostHammeritesWithLessStrength(mockAction, listenerApi)
+    boostHammeritesWithLessStrength(mockAction, listenerApi)
 
-  //   expect(listenerApi.dispatch).toHaveBeenCalledTimes(0)
-  // })
+    expect(listenerApi.dispatch).toHaveBeenCalledTimes(0)
+  })
 })

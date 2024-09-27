@@ -9,6 +9,7 @@ import {
   getPlayableCardIds,
   normalizeArrayOfPlayers,
   normalizeArrayOfCards,
+  initializeCardsAndDeck,
 } from 'src/features/duel/utils'
 import { DEFAULT_COINS_AMOUNT, EMPTY_PLAYER } from 'src/features/duel/constants'
 import { Player } from 'src/features/duel/types'
@@ -21,14 +22,14 @@ import {
 } from 'src/features/cards/CardPrototypes'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
 
-test('return the correct overlay message for new player turn', () => {
+test('getPlayerTurnModalContent should return the correct overlay message for new player turn', () => {
   expect(getPlayerTurnModalContent(true, true)).toBe(playerFirstMessage)
   expect(getPlayerTurnModalContent(false, true)).toBe(opponentFirstMessage)
   expect(getPlayerTurnModalContent(true, false)).toBe(yourTurnMessage)
   expect(getPlayerTurnModalContent(false, false)).toBe(opponentTurnMessage)
 })
 
-test('return all playable cards for a given player', () => {
+test('getPlayableCardIds should return all playable card ids for a given player', () => {
   const guard = createPlayCardFromPrototype(TempleGuard)
   const novice = createPlayCardFromPrototype(HammeriteNovice)
 
@@ -52,7 +53,7 @@ test('return all playable cards for a given player', () => {
   expect(getPlayableCardIds({ ...mockBudgetPlayer, coins: 0 })).toHaveLength(0)
 })
 
-it('should normalize an array of players', () => {
+test('normalizeArrayOfPlayers should normalize an array of players', () => {
   const normalizedPlayers = normalizeArrayOfPlayers([MockPlayer1, MockPlayer2])
 
   expect(normalizedPlayers).toEqual({
@@ -61,7 +62,7 @@ it('should normalize an array of players', () => {
   })
 })
 
-it('should normalize an array of cards', () => {
+test('normalizeArrayOfCards should normalize an array of cards', () => {
   const hammerite = createPlayCardFromPrototype(HammeriteNovice)
   const haunt = createPlayCardFromPrototype(Haunt)
 
@@ -71,4 +72,15 @@ it('should normalize an array of cards', () => {
     [hammerite.id]: hammerite,
     [haunt.id]: haunt,
   })
+})
+
+test("initializeCardsAndDeck should prepare a player's nomralized cards and deck", () => {
+  const guard = createPlayCardFromPrototype(TempleGuard)
+  const novice = createPlayCardFromPrototype(HammeriteNovice)
+  const haunt = createPlayCardFromPrototype(Haunt)
+
+  const nomralizedCardsAndDeck = initializeCardsAndDeck([guard, novice, haunt])
+
+  expect(nomralizedCardsAndDeck.deck).toHaveLength(3)
+  expect(nomralizedCardsAndDeck.cards[guard.id]).toBe(guard)
 })

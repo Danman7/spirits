@@ -51,6 +51,7 @@ const PlayerHalfBoard: FC<{
       putCardAtBottomOfDeck({
         cardId: card.id,
         playerId: id,
+        from: 'hand',
       }),
     )
 

@@ -6,8 +6,8 @@ import {
 import {
   completeRedraw,
   drawCardFromDeck,
-  initializeGame,
-  startGame,
+  initializeDuel,
+  beginPlay,
   startRedraw,
 } from 'src/features/duel/slice'
 import { DuelPhase } from 'src/features/duel/types'
@@ -74,12 +74,12 @@ startAppListening({
   effect: (_, listenerApi) => {
     listenerApi.unsubscribe()
 
-    listenerApi.dispatch(startGame())
+    listenerApi.dispatch(beginPlay())
   },
 })
 
 startAppListening({
-  actionCreator: initializeGame,
+  actionCreator: initializeDuel,
   effect: (action, listenerApi) => {
     action.payload.players.forEach(({ cards }) =>
       Object.keys(cards).forEach((cardId) => {

@@ -47,19 +47,8 @@ export const MockPlayer2: Player = {
   ]),
 }
 
-const novice1 = createPlayCardFromPrototype(HammeriteNovice)
-const novice2 = createPlayCardFromPrototype(HammeriteNovice)
-const brother = createPlayCardFromPrototype(BrotherSachelman)
-
 export const PlayTestPlayer1: Player = {
-  ...EMPTY_PLAYER,
-  cards: {
-    [novice1.id]: novice1,
-    [novice2.id]: novice2,
-    [brother.id]: brother,
-  },
-  board: [novice1.id, novice2.id],
-  hand: [brother.id],
+  ...MockPlayer1,
   coins: DEFAULT_COINS_AMOUNT,
   isActive: true,
 }

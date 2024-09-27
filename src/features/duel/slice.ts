@@ -22,7 +22,7 @@ export const duelSlice = createSlice({
   name: 'duel',
   initialState,
   reducers: {
-    initializeGame: (
+    initializeDuel: (
       state,
       action: PayloadAction<{
         players: Player[]
@@ -97,12 +97,16 @@ export const duelSlice = createSlice({
       action: PayloadAction<{
         cardId: PlayCard['id']
         playerId: Player['id']
+        from: 'hand' | 'board' | 'discard'
       }>,
     ) => {
-      const { cardId, playerId } = action.payload
+      const { cardId, playerId, from } = action.payload
 
       const { players } = state
 
+      players[playerId][from] = players[playerId][from].filter(
+        (id) => id !== cardId,
+      )
       players[playerId].deck.push(cardId)
     },
     completeRedraw: (state, action: PayloadAction<Player['id']>) => {
@@ -110,7 +114,7 @@ export const duelSlice = createSlice({
 
       players[action.payload].isReady = true
     },
-    startGame: (state) => {
+    beginPlay: (state) => {
       state.phase = DuelPhase.PLAYER_TURN
       state.turn = 1
     },
@@ -161,14 +165,14 @@ export const duelSlice = createSlice({
 const { actions, reducer } = duelSlice
 
 export const {
-  initializeGame,
+  initializeDuel,
   completeRedraw,
   drawCardFromDeck,
   endTurn,
   initializeEndTurn,
   playCardFromHand,
   putCardAtBottomOfDeck,
-  startGame,
+  beginPlay,
   startRedraw,
   updateCard,
 } = actions

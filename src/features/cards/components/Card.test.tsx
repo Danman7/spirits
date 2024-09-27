@@ -43,15 +43,17 @@ it('should display all shared UI segments of a card when face up', () => {
 it('should show card back when face down', async () => {
   const { rerender } = render(<Card card={mockCard} animate="faceDown" />)
 
-  expect(screen.queryByText(mockCard.name)).not.toBeInTheDocument()
-
   rerender(<Card card={mockCard} animate="normal" />)
 
   await waitFor(() =>
     expect(screen.queryByText(mockCard.name)).toBeInTheDocument(),
   )
 
-  // rerender(<Card card={mockCard} animate="faceDown" />)
+  rerender(<Card card={mockCard} animate="faceDown" />)
+
+  await waitFor(() =>
+    expect(screen.queryByText(mockCard.name)).not.toBeInTheDocument(),
+  )
 })
 
 it('should fire on click event passing card id', () => {

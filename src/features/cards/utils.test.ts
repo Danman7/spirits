@@ -1,14 +1,18 @@
 import { Haunt } from 'src/features/cards/CardPrototypes'
 import { CardFaction, CardType } from 'src/features/cards/types'
-import { getFactionColor, joinCardTypes } from 'src/features/cards/utils'
+import {
+  createPlayCardFromPrototype,
+  getFactionColor,
+  joinCardTypes,
+} from 'src/features/cards/utils'
 
-it('should join the card types in a string', () => {
+test('joinCardTypes should return a joined types string for a card', () => {
   expect(joinCardTypes(Haunt.types)).toBe(
     `${CardType.Undead}, ${CardType.Hammerite}`,
   )
 })
 
-it('should get the proper faction color', () => {
+test('getFactionColor should get the proper faction color', () => {
   expect(getFactionColor([CardFaction.Chaos])).toBe(
     'var(--chaos-faction-color)',
   )
@@ -21,4 +25,15 @@ it('should get the proper faction color', () => {
   expect(getFactionColor([CardFaction.Chaos, CardFaction.Shadow])).toBe(
     `linear-gradient(300deg, ${'var(--chaos-faction-color)'}, ${'var(--shadow-faction-color)'})`,
   )
+})
+
+test('createPlayCardFromPrototype should create a new play ready card from a card prototype', () => {
+  const newCard = createPlayCardFromPrototype(Haunt)
+
+  expect(newCard).toEqual(expect.objectContaining(Haunt))
+  expect(newCard.prototype).toEqual({
+    cost: Haunt.cost,
+    strength: Haunt.strength,
+  })
+  expect(newCard.id).toBeDefined()
 })
