@@ -71,8 +71,6 @@
 .cardTypes {
   display: flex;
   justify-content: center;
-  font-style: italic;
-  font-size: 0.875em;
 }
 
 .cardContent {
@@ -84,7 +82,6 @@
 
 .cardFlavor {
   font-style: italic;
-  font-size: 0.875em;
 }
 
 .board {
@@ -173,11 +170,11 @@
 .playerInfo {
   position: fixed;
   left: 1em;
+  font-weight: 400;
 }
 
 .activePlayerInfo {
-  font-weight: bold;
-  font-size: 1.2em;
+  font-weight: 700;
 }
 
 .topPlayerInfo {

@@ -29,9 +29,9 @@ const PlayerTurnModal: FC = () => {
 
   return (
     <div style={{ width: 250 }}>
-      <motion.h2 variants={SlideInOutContentVariants}>
+      <motion.h1 variants={SlideInOutContentVariants}>
         {playerIsActive ? yourTurnTitle : opponentTurnTitle}
-      </motion.h2>
+      </motion.h1>
 
       {playerIsActive && (
         <motion.p variants={SlideInOutContentVariants}>

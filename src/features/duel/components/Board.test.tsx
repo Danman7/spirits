@@ -181,15 +181,7 @@ test('end the turn', async () => {
 
   fireEvent.click(screen.getByText(passButtonMessage))
 
-  await waitFor(
-    async () =>
-      expect(
-        await expect(screen.queryByRole('button')).not.toBeInTheDocument(),
-      ),
-    {
-      timeout: 3000,
-    },
-  )
+  expect(await screen.queryByRole('button')).not.toBeInTheDocument()
 })
 
 test('play a card as CPU and end the turn', async () => {
@@ -210,23 +202,16 @@ test('play a card as CPU and end the turn', async () => {
   const cpuPlayer = mockGameState.players[MockPlayer2.id]
   const playedCPUCard = cpuPlayer.cards[cpuPlayer.hand[0]]
 
-  expect(screen.queryByText(playedCPUCard.name)).not.toBeInTheDocument()
+  expect(await screen.queryByText(playedCPUCard.name)).not.toBeInTheDocument()
 
   fireEvent.click(screen.getByText(passButtonMessage))
 
   expect(screen.getByText(opponentTurnTitle)).toBeInTheDocument()
 
   await waitFor(
-    async () =>
-      expect(
-        await expect(
-          screen.queryByText(opponentTurnTitle),
-        ).not.toBeInTheDocument(),
-      ),
-    {
-      timeout: 3000,
+    () => {
+      expect(screen.getByText(playedCPUCard.name)).toBeInTheDocument()
     },
+    { timeout: 3000 },
   )
-
-  expect(screen.getByText(playedCPUCard.name)).toBeInTheDocument()
 })

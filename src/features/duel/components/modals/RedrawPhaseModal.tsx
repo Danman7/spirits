@@ -17,9 +17,9 @@ const RedrawPhaseModal: FC<{ playerId: Player['id'] }> = ({ playerId }) => {
 
   return (
     <div style={{ width: 300 }}>
-      <motion.h2 variants={SlideInOutContentVariants}>
+      <motion.h1 variants={SlideInOutContentVariants}>
         {DuelPhase.REDRAW}
-      </motion.h2>
+      </motion.h1>
       <motion.p variants={SlideInOutContentVariants}>{redrawMessage}</motion.p>
       <motion.div
         style={{ marginTop: '0.5rem' }}

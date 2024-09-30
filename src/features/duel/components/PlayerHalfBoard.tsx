@@ -87,7 +87,7 @@ const PlayerHalfBoard: FC<{
 
   return (
     <>
-      <div
+      <h2
         className={`${isOnTop ? styles.topPlayerInfo : styles.bottomPlayerInfo} ${isActive ? styles.activePlayerInfo : ''}`}
       >
         <span>{name}</span> /{' '}
@@ -98,7 +98,7 @@ const PlayerHalfBoard: FC<{
         >
           {coins}
         </motion.span>
-      </div>
+      </h2>
 
       <div className={isOnTop ? styles.topPlayerSide : styles.bottomPlayerSide}>
         <div className={styles.faceDownStack}>

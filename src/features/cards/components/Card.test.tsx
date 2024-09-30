@@ -8,7 +8,12 @@ import {
 import { BrotherSachelman } from 'src/features/cards/CardPrototypes'
 import { PlayCard } from 'src/features/cards/types'
 
-import { fireEvent, render, screen, waitFor } from 'src/shared/test-utils'
+import {
+  fireEvent,
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from 'src/shared/test-utils'
 
 const mockCard: PlayCard = createPlayCardFromPrototype(BrotherSachelman)
 
@@ -47,15 +52,13 @@ it('should show card back when face down', async () => {
 
   rerender(<Card card={mockCard} animate="normal" />)
 
-  await waitFor(() =>
-    expect(screen.queryByText(mockCard.name)).toBeInTheDocument(),
-  )
+  expect(await screen.findByText(mockCard.name)).toBeInTheDocument()
 
   rerender(<Card card={mockCard} animate="faceDown" />)
 
-  await waitFor(() =>
-    expect(screen.queryByText(mockCard.name)).not.toBeInTheDocument(),
-  )
+  await waitForElementToBeRemoved(() => screen.queryByText(mockCard.name))
+
+  expect(await screen.queryByText(mockCard.name)).not.toBeInTheDocument()
 })
 
 it('should fire on click event passing card id', () => {

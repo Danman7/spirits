@@ -107,15 +107,13 @@ const Card = motion.create(
                         </motion.div>
                       )}
                     </h3>
-                    <div className={styles.cardTypes}>
-                      {joinCardTypes(types)}
-                    </div>
+                    <h5 className={styles.cardTypes}>{joinCardTypes(types)}</h5>
                   </div>
                   <div className={styles.cardContent}>
                     <p>{description}</p>
-                    <div className={styles.cardFlavor}>{flavor}</div>
+                    <small className={styles.cardFlavor}>{flavor}</small>
                   </div>
-                  <div className={styles.cardFooter}>Cost: {cost}</div>
+                  <footer className={styles.cardFooter}>Cost: {cost}</footer>
                 </div>
               )}
 
