@@ -9,9 +9,11 @@ import {
   initializeDuel,
   beginPlay,
   startRedraw,
+  endTurn,
 } from 'src/features/duel/slice'
 import { DuelPhase } from 'src/features/duel/types'
 import * as CardEffects from 'src/features/cards/CardEffects'
+import { isAnyOf } from '@reduxjs/toolkit'
 
 startAppListening({
   predicate: (_, currentState) =>
@@ -97,5 +99,18 @@ startAppListening({
         }
       }),
     )
+  },
+})
+
+startAppListening({
+  matcher: isAnyOf(endTurn, beginPlay),
+  effect: (_, listenerApi) => {
+    const { players, playerOrder } = listenerApi.getState().duel
+
+    const activePlayerId = players[playerOrder[0]].isActive
+      ? players[playerOrder[0]].id
+      : players[playerOrder[1]].id
+
+    listenerApi.dispatch(drawCardFromDeck(activePlayerId))
   },
 })
