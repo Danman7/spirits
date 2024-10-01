@@ -9,7 +9,13 @@ import {
   skipRedrawMessage,
   yourTurnTitle,
 } from 'src/features/duel/messages'
-import { fireEvent, render, screen, waitFor } from 'src/shared/test-utils'
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  cleanup,
+} from 'src/shared/test-utils'
 import { DuelPhase, DuelState } from 'src/features/duel/types'
 import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
 
@@ -62,35 +68,44 @@ const mockGameState: DuelState = {
   loggedInPlayerId: MockPlayer1.id,
 }
 
-test('show the general UI elements', () => {
-  const gameState: DuelState = { ...mockGameState }
+let preloadedState: RootState
 
+beforeEach(() => {
+  preloadedState = { duel: { ...mockGameState } }
+})
+
+afterEach(() => {
+  cleanup()
+})
+
+test('show the general UI elements', () => {
   render(<Board />, {
-    preloadedState: {
-      duel: gameState,
-    },
+    preloadedState,
   })
 
-  const { players, playerOrder } = gameState
+  const { players, playerOrder } = preloadedState.duel
 
-  expect(screen.getByText(players[playerOrder[0]].name)).toBeInTheDocument()
-  expect(screen.getByText(players[playerOrder[1]].name)).toBeInTheDocument()
+  const playerInfos = screen.getAllByRole('heading', { level: 2 })
 
-  expect(screen.getByText(players[playerOrder[0]].coins)).toBeInTheDocument()
-  expect(screen.getByText(players[playerOrder[1]].coins)).toBeInTheDocument()
+  playerInfos.forEach((element, index) => {
+    expect(element).toHaveTextContent(
+      `${players[playerOrder[index]].name} / ${players[playerOrder[index]].coins}`,
+    )
+  })
 })
 
 test('initial draw of cards', () => {
-  const preloadedState: RootState = {
-    duel: {
-      ...mockGameState,
-      phase: DuelPhase.INITIAL_DRAW,
-    },
-  }
+  preloadedState.duel.phase = DuelPhase.INITIAL_DRAW
 
   render(<Board />, {
     preloadedState,
   })
+
+  const { players, playerOrder } = preloadedState.duel
+
+  expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+    `${players[playerOrder[0]].name} vs ${players[playerOrder[1]].name}`,
+  )
 
   expect(screen.getByText(initialDrawMessage)).toBeInTheDocument()
 })
@@ -102,86 +117,113 @@ test('redraw a card', async () => {
   const novice2 = createPlayCardFromPrototype(HammeriteNovice)
   const guard = createPlayCardFromPrototype(TempleGuard)
 
-  const gameState: DuelState = {
-    ...mockGameState,
-    phase: DuelPhase.REDRAW,
-    players: {
-      [MockPlayer2.id]: {
-        ...mockPlayers[MockPlayer2.id],
-        cards: {
-          ...mockPlayers[MockPlayer2.id].cards,
-          [zombie1.id]: zombie1,
-          [zombie2.id]: zombie2,
-        },
-        isReady: true,
-        hand: [...mockPlayers[MockPlayer2.id].hand, zombie1.id, zombie2.id],
+  preloadedState.duel.phase = DuelPhase.REDRAW
+  preloadedState.duel.players = {
+    [MockPlayer2.id]: {
+      ...mockPlayers[MockPlayer2.id],
+      cards: {
+        ...mockPlayers[MockPlayer2.id].cards,
+        [zombie1.id]: zombie1,
+        [zombie2.id]: zombie2,
       },
-      [MockPlayer1.id]: {
-        ...mockPlayers[MockPlayer1.id],
-        cards: {
-          ...mockPlayers[MockPlayer1.id].cards,
-          [novice2.id]: novice2,
-          [guard.id]: guard,
-          [acolyte.id]: acolyte,
-        },
-        deck: [acolyte.id],
-        hand: [...mockPlayers[MockPlayer1.id].hand, novice2.id, guard.id],
+      isReady: true,
+      hand: [...mockPlayers[MockPlayer2.id].hand, zombie1.id, zombie2.id],
+    },
+    [MockPlayer1.id]: {
+      ...mockPlayers[MockPlayer1.id],
+      cards: {
+        ...mockPlayers[MockPlayer1.id].cards,
+        [novice2.id]: novice2,
+        [guard.id]: guard,
+        [acolyte.id]: acolyte,
       },
+      deck: [acolyte.id],
+      hand: [...mockPlayers[MockPlayer1.id].hand, novice2.id, guard.id],
     },
   }
 
   render(<Board />, {
-    preloadedState: {
-      duel: gameState,
-    },
+    preloadedState,
   })
 
+  expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+    DuelPhase.REDRAW,
+  )
+
   expect(screen.getByText(redrawMessage)).toBeInTheDocument()
-  expect(screen.getByText(skipRedrawMessage)).toBeInTheDocument()
+
+  expect(screen.getByRole('button')).toHaveTextContent(skipRedrawMessage)
 
   fireEvent.click(screen.getByText(guard.name))
 
   expect(screen.getByText(ElevatedAcolyte.name)).toBeInTheDocument()
+
+  expect(await screen.findByText(yourTurnTitle)).toBeInTheDocument()
+})
+
+test('skip redraw', async () => {
+  preloadedState.duel.phase = DuelPhase.REDRAW
+  preloadedState.duel.players = {
+    [MockPlayer2.id]: {
+      ...mockPlayers[MockPlayer2.id],
+      isReady: true,
+    },
+    [MockPlayer1.id]: {
+      ...mockPlayers[MockPlayer1.id],
+    },
+  }
+
+  render(<Board />, {
+    preloadedState,
+  })
+
+  fireEvent.click(screen.getByRole('button'))
+
+  expect(await screen.findByText(yourTurnTitle)).toBeInTheDocument()
 })
 
 test('play a card from hand', async () => {
-  const gameState: DuelState = { ...mockGameState }
-
-  const { players } = gameState
+  const { players } = preloadedState.duel
 
   const activePlayer = players[MockPlayer1.id]
 
-  const { coins } = activePlayer
-
-  const { name, cost } = activePlayer.cards[activePlayer.hand[0]]
+  const playedCard = activePlayer.cards[activePlayer.hand[0]]
 
   render(<Board />, {
-    preloadedState: {
-      duel: gameState,
-    },
+    preloadedState,
   })
 
   expect(screen.getByText(yourTurnTitle)).toBeInTheDocument()
 
-  expect(screen.getByText(passButtonMessage)).toBeInTheDocument()
+  expect(screen.getByRole('button')).toHaveTextContent(passButtonMessage)
 
-  fireEvent.click(screen.getByText(name))
+  fireEvent.click(screen.getByText(playedCard.name))
 
-  expect(screen.getByText(coins - cost)).toBeInTheDocument()
+  const playerInfos = screen.getAllByRole('heading', { level: 2 })
+
+  expect(playerInfos[1]).toHaveTextContent(
+    `${activePlayer.name} / ${activePlayer.coins - playedCard.cost}`,
+  )
+
+  expect(screen.getByText(opponentTurnTitle)).toBeInTheDocument()
+
+  expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
+    `${playedCard.name}${playedCard.strength}`,
+  )
 })
 
-test('end the turn', async () => {
+test('pass the turn', () => {
   render(<Board />, {
-    preloadedState: {
-      duel: { ...mockGameState },
-    },
+    preloadedState,
   })
 
-  expect(screen.getByRole('button')).toBeInTheDocument()
+  expect(screen.getByText(yourTurnTitle)).toBeInTheDocument()
 
-  fireEvent.click(screen.getByText(passButtonMessage))
+  fireEvent.click(screen.getByRole('button'))
 
-  expect(await screen.queryByRole('button')).not.toBeInTheDocument()
+  expect(screen.getByText(opponentTurnTitle)).toBeInTheDocument()
+
+  expect(screen.queryByRole('button')).not.toBeInTheDocument()
 })
 
 test('play a card as CPU and end the turn', async () => {

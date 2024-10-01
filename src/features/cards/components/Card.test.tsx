@@ -21,14 +21,14 @@ it('should display all shared UI segments of a card when face up', () => {
   const { rerender } = render(<Card card={mockCard} />)
 
   expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
-    mockCard.name,
+    `${mockCard.name}${mockCard.strength}`,
   )
 
   expect(screen.getByText(`Cost: ${mockCard.cost}`)).toBeInTheDocument()
 
-  expect(screen.getByText(mockCard.strength)).toBeInTheDocument()
-
-  expect(screen.getByText(joinCardTypes(mockCard.types))).toBeInTheDocument()
+  expect(screen.getByRole('heading', { level: 5 })).toHaveTextContent(
+    joinCardTypes(mockCard.types),
+  )
 
   expect(screen.getByText(mockCard.description as string)).toBeInTheDocument()
 
@@ -38,13 +38,17 @@ it('should display all shared UI segments of a card when face up', () => {
 
   rerender(<Card card={{ ...mockCard, strength: boostedStrength }} />)
 
-  expect(screen.getByText(boostedStrength)).toBeInTheDocument()
+  expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
+    `${mockCard.name}${boostedStrength}`,
+  )
 
   const damagedStrength = mockCard.strength - 2
 
   rerender(<Card card={{ ...mockCard, strength: damagedStrength }} />)
 
-  expect(screen.getByText(damagedStrength)).toBeInTheDocument()
+  expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
+    `${mockCard.name}${damagedStrength}`,
+  )
 })
 
 it('should show card back when face down', async () => {
@@ -52,7 +56,9 @@ it('should show card back when face down', async () => {
 
   rerender(<Card card={mockCard} animate="normal" />)
 
-  expect(await screen.findByText(mockCard.name)).toBeInTheDocument()
+  expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
+    `${mockCard.name}${mockCard.strength}`,
+  )
 
   rerender(<Card card={mockCard} animate="faceDown" />)
 

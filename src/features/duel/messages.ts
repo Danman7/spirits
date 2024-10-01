@@ -1,8 +1,5 @@
 import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
 
-export const playerFirstMessage = 'You go first!'
-export const opponentFirstMessage = 'Your opponent goes first!'
-
 export const yourTurnTitle = "It's your turn!"
 export const yourTurnMessage =
   'You can click a card to play it, or pass the turn to your opponent.'

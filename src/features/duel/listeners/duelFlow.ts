@@ -74,8 +74,6 @@ startAppListening({
       (playerId) => currentState.duel.players[playerId].isReady,
     ),
   effect: (_, listenerApi) => {
-    listenerApi.unsubscribe()
-
     listenerApi.dispatch(beginPlay())
   },
 })

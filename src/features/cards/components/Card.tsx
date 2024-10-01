@@ -113,7 +113,7 @@ const Card = motion.create(
                     <p>{description}</p>
                     <small className={styles.cardFlavor}>{flavor}</small>
                   </div>
-                  <footer className={styles.cardFooter}>Cost: {cost}</footer>
+                  <div className={styles.cardFooter}>Cost: {cost}</div>
                 </div>
               )}
 
