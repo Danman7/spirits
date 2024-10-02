@@ -3,7 +3,6 @@ import {
   SHORT_ANIMATION_CYCLE,
 } from 'src/features/duel/constants'
 import { getPlayableCardIds } from 'src/features/duel/utils'
-import { DuelPhase } from 'src/features/duel/types'
 
 import { getRandomArrayItem } from 'src/shared/utils'
 import { endTurn, playCardFromHand } from 'src/features/duel/slice'
@@ -19,7 +18,7 @@ startAppListening({
       const player = players[playerId]
       const { cards, isCPU, isActive } = player
 
-      if (isCPU && isActive && phase === DuelPhase.PLAYER_TURN) {
+      if (isCPU && isActive && phase === 'Player Turn') {
         // Play random card for now
         const playableCardIds = getPlayableCardIds(player)
 

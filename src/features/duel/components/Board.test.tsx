@@ -16,7 +16,7 @@ import {
   cleanup,
   waitFor,
 } from 'src/shared/test-utils'
-import { DuelPhase, DuelState } from 'src/features/duel/types'
+import { DuelState } from 'src/features/duel/types'
 import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
 
 import { RootState } from 'src/app/store'
@@ -64,7 +64,7 @@ const mockGameState: DuelState = {
   turn: 1,
   players: mockPlayers,
   playerOrder: [MockPlayer2.id, MockPlayer1.id],
-  phase: DuelPhase.PLAYER_TURN,
+  phase: 'Player Turn',
   loggedInPlayerId: MockPlayer1.id,
 }
 
@@ -95,7 +95,7 @@ test('show the general UI elements', () => {
 })
 
 test('initial draw of cards', () => {
-  preloadedState.duel.phase = DuelPhase.INITIAL_DRAW
+  preloadedState.duel.phase = 'Initial Draw'
 
   render(<Board />, {
     preloadedState,
@@ -117,7 +117,7 @@ test('redraw a card', async () => {
   const novice2 = createPlayCardFromPrototype(HammeriteNovice)
   const guard = createPlayCardFromPrototype(TempleGuard)
 
-  preloadedState.duel.phase = DuelPhase.REDRAW
+  preloadedState.duel.phase = 'Redrawing Phase'
   preloadedState.duel.players = {
     [MockPlayer2.id]: {
       ...mockPlayers[MockPlayer2.id],
@@ -147,7 +147,7 @@ test('redraw a card', async () => {
   })
 
   expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-    DuelPhase.REDRAW,
+    'Redrawing Phase',
   )
 
   expect(screen.getByText(redrawMessage)).toBeInTheDocument()
@@ -162,7 +162,7 @@ test('redraw a card', async () => {
 })
 
 test('skip redraw', async () => {
-  preloadedState.duel.phase = DuelPhase.REDRAW
+  preloadedState.duel.phase = 'Redrawing Phase'
   preloadedState.duel.players = {
     [MockPlayer2.id]: {
       ...mockPlayers[MockPlayer2.id],

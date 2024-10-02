@@ -1,5 +1,5 @@
 import { DEFAULT_COINS_AMOUNT, EMPTY_PLAYER } from 'src/features/duel/constants'
-import { DuelPhase, DuelState, Player } from 'src/features/duel/types'
+import { DuelState, Player } from 'src/features/duel/types'
 import { initializeCardsAndDeck } from 'src/features/duel/utils'
 
 import {
@@ -61,7 +61,7 @@ export const PlayTestPlayer2: Player = {
 
 export const MockPlayerTurnState: DuelState = {
   loggedInPlayerId: MockPlayer1.id,
-  phase: DuelPhase.PLAYER_TURN,
+  phase: 'Player Turn',
   playerOrder: [MockPlayer2.id, MockPlayer1.id],
   turn: 1,
   players: {

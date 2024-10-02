@@ -1,5 +1,4 @@
 import { Haunt } from 'src/features/cards/CardPrototypes'
-import { CardFaction, CardType } from 'src/features/cards/types'
 import {
   createPlayCardFromPrototype,
   getFactionColor,
@@ -7,22 +6,14 @@ import {
 } from 'src/features/cards/utils'
 
 test('joinCardTypes should return a joined types string for a card', () => {
-  expect(joinCardTypes(Haunt.types)).toBe(
-    `${CardType.Undead}, ${CardType.Hammerite}`,
-  )
+  expect(joinCardTypes(Haunt.types)).toBe('Undead, Hammerite')
 })
 
 test('getFactionColor should get the proper faction color', () => {
-  expect(getFactionColor([CardFaction.Chaos])).toBe(
-    'var(--chaos-faction-color)',
-  )
-  expect(getFactionColor([CardFaction.Order])).toBe(
-    'var(--order-faction-color)',
-  )
-  expect(getFactionColor([CardFaction.Shadow])).toBe(
-    'var(--shadow-faction-color)',
-  )
-  expect(getFactionColor([CardFaction.Chaos, CardFaction.Shadow])).toBe(
+  expect(getFactionColor(['Chaos'])).toBe('var(--chaos-faction-color)')
+  expect(getFactionColor(['Order'])).toBe('var(--order-faction-color)')
+  expect(getFactionColor(['Shadow'])).toBe('var(--shadow-faction-color)')
+  expect(getFactionColor(['Chaos', 'Shadow'])).toBe(
     `linear-gradient(300deg, ${'var(--chaos-faction-color)'}, ${'var(--shadow-faction-color)'})`,
   )
 })

@@ -4,9 +4,13 @@ import { motion } from 'framer-motion'
 import Link from 'src/shared/components/Link'
 import { SlideInOutContentVariants } from 'src/shared/animations'
 import { useAppDispatch } from 'src/app/store'
-import { DuelPhase, Player } from 'src/features/duel/types'
+import { Player } from 'src/features/duel/types'
 import { completeRedraw } from 'src/features/duel/slice'
-import { redrawMessage, skipRedrawMessage } from 'src/features/duel/messages'
+import {
+  redrawingPhaseModalTitle,
+  redrawMessage,
+  skipRedrawMessage,
+} from 'src/features/duel/messages'
 
 const RedrawPhaseModal: FC<{ playerId: Player['id'] }> = ({ playerId }) => {
   const dispatch = useAppDispatch()
@@ -18,7 +22,7 @@ const RedrawPhaseModal: FC<{ playerId: Player['id'] }> = ({ playerId }) => {
   return (
     <div style={{ width: 300 }}>
       <motion.h1 variants={SlideInOutContentVariants}>
-        {DuelPhase.REDRAW}
+        {redrawingPhaseModalTitle}
       </motion.h1>
       <motion.p variants={SlideInOutContentVariants}>{redrawMessage}</motion.p>
       <motion.div

@@ -8,7 +8,6 @@ import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 import { storeConfiguration } from 'src/app/store'
 import { MockPlayerTurnState } from 'src/features/duel/__mocks__'
-import { DuelPhase } from 'src/features/duel/types'
 import RedrawPhaseModal from 'src/features/duel/components/modals/RedrawPhaseModal'
 
 const meta = {
@@ -52,7 +51,7 @@ export const InitialPhase: Story = {
           preloadedState: {
             duel: {
               ...MockPlayerTurnState,
-              phase: DuelPhase.PRE_DUEL,
+              phase: 'Pre-duel',
             },
           },
         })}
@@ -75,7 +74,7 @@ export const RedrawPhase: Story = {
           preloadedState: {
             duel: {
               ...MockPlayerTurnState,
-              phase: DuelPhase.REDRAW,
+              phase: 'Redrawing Phase',
             },
           },
         })}

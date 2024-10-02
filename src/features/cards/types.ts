@@ -34,22 +34,17 @@ export interface PlayCard extends Card {
   }
 }
 
-export const enum CardFaction {
-  Order = 'Order',
-  Chaos = 'Chaos',
-  Shadow = 'Shadow',
-}
+export type CardFaction = 'Order' | 'Chaos' | 'Shadow'
 
-export const enum CardType {
-  Hammerite = 'Hammerite',
-  Undead = 'Undead',
-  Fence = 'Fence',
-  Pagan = 'Pagan',
-  Thief = 'Thief',
-  Guard = 'Guard',
-  Necromancer = 'Necromancer',
-  Artifact = 'Artifact',
-}
+export type CardType =
+  | 'Hammerite'
+  | 'Undead'
+  | 'Fence'
+  | 'Pagan'
+  | 'Thief'
+  | 'Guard'
+  | 'Necromancer'
+  | 'Artifact'
 
 export interface CardProps extends HTMLMotionProps<'div'> {
   card: PlayCard

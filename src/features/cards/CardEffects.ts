@@ -1,5 +1,5 @@
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constants'
-import { CardEffect, CardType } from 'src/features/cards/types'
+import { CardEffect } from 'src/features/cards/types'
 import { updateCard } from 'src/features/duel/slice'
 import { PlayCardFromHandAction } from 'src/features/duel/types'
 
@@ -14,7 +14,7 @@ export const boostHammeritesWithLessStrength: CardEffect<
     const cardOnBoard = { ...players[playerId].cards[cardId] }
 
     if (
-      cardOnBoard.types.includes(CardType.Hammerite) &&
+      cardOnBoard.types.includes('Hammerite') &&
       cardOnBoard.strength < card.strength
     ) {
       listenerApi.dispatch(

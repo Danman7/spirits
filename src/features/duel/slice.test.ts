@@ -1,4 +1,4 @@
-import { DuelPhase, DuelState } from 'src/features/duel/types'
+import { DuelState } from 'src/features/duel/types'
 import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
 import { normalizeArrayOfPlayers } from 'src/features/duel/utils'
 import duelReducer, {
@@ -44,7 +44,7 @@ describe('Initializing a duel', () => {
       players[playerOrder[0]].isActive,
       players[playerOrder[1]].isActive,
     ]).toContain(true)
-    expect(phase).toBe(DuelPhase.INITIAL_DRAW)
+    expect(phase).toBe('Initial Draw')
   })
 
   test('initialize a new game with a preset first player', () => {
@@ -61,7 +61,7 @@ describe('Initializing a duel', () => {
 
     expect(turn).toBe(0)
     expect(players[firstPlayerId].isActive).toBeTruthy()
-    expect(phase).toBe(DuelPhase.INITIAL_DRAW)
+    expect(phase).toBe('Initial Draw')
   })
 
   test('throw an error when initializing game if firstPlayerId is set to a non existent player', () => {
@@ -87,7 +87,7 @@ describe('Sequence before play', () => {
   test("draw a card from a player's deck if it has cards", () => {
     const mockDrawingPlayer = mockDuelState.players[playerId]
 
-    mockDuelState.phase = DuelPhase.INITIAL_DRAW
+    mockDuelState.phase = 'Initial Draw'
 
     const state = duelReducer(mockDuelState, drawCardFromDeck(playerId))
 
@@ -99,7 +99,7 @@ describe('Sequence before play', () => {
   })
 
   test('should draw no card if deck has no cards', () => {
-    mockDuelState.phase = DuelPhase.INITIAL_DRAW
+    mockDuelState.phase = 'Initial Draw'
 
     mockDuelState.players = {
       [MockPlayer1.id]: {
@@ -123,11 +123,11 @@ describe('Sequence before play', () => {
   test('start redraw phase', () => {
     const state = duelReducer(mockDuelState, startRedraw())
 
-    expect(state.phase).toBe(DuelPhase.REDRAW)
+    expect(state.phase).toBe('Redrawing Phase')
   })
 
   test('put a card from hand at the bottom of the deck', () => {
-    mockDuelState.phase = DuelPhase.REDRAW
+    mockDuelState.phase = 'Redrawing Phase'
 
     const novice = createPlayCardFromPrototype(HammeriteNovice)
 
@@ -162,14 +162,14 @@ describe('Sequence before play', () => {
   })
 
   test('start the game', () => {
-    mockDuelState.phase = DuelPhase.REDRAW
+    mockDuelState.phase = 'Redrawing Phase'
 
     const state = duelReducer(mockDuelState, beginPlay())
 
     const { turn, phase } = state
 
     expect(turn).toBe(1)
-    expect(phase).toBe(DuelPhase.PLAYER_TURN)
+    expect(phase).toBe('Player Turn')
   })
 })
 
@@ -179,7 +179,7 @@ describe('Playing turns', () => {
       ...initialState,
       players: normalizedPlayers,
       turn: 1,
-      phase: DuelPhase.PLAYER_TURN,
+      phase: 'Player Turn',
       playerOrder: [MockPlayer2.id, MockPlayer1.id],
     }
   })
@@ -187,11 +187,11 @@ describe('Playing turns', () => {
   test('initialize end of turn resolution', () => {
     const state = duelReducer(mockDuelState, initializeEndTurn())
 
-    expect(state.phase).toBe(DuelPhase.RESOLVING_END_TURN)
+    expect(state.phase).toBe('Resolving end of turn')
   })
 
   test('end of turn', () => {
-    mockDuelState.phase = DuelPhase.RESOLVING_END_TURN
+    mockDuelState.phase = 'Resolving end of turn'
 
     mockDuelState.players = {
       [MockPlayer1.id]: {
@@ -209,7 +209,7 @@ describe('Playing turns', () => {
     const { players, phase, turn } = state
 
     expect(turn).toBe(mockDuelState.turn + 1)
-    expect(phase).toBe(DuelPhase.PLAYER_TURN)
+    expect(phase).toBe('Player Turn')
     expect(players[MockPlayer1.id].isActive).toBe(
       !mockDuelState.players[MockPlayer1.id].isActive,
     )

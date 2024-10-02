@@ -12,7 +12,7 @@ import { getRandomArrayItem, shuffleArray } from 'src/shared/utils'
 
 export const initialState: DuelState = {
   turn: 0,
-  phase: DuelPhase.PRE_DUEL,
+  phase: 'Pre-duel',
   players: {},
   playerOrder: [],
   loggedInPlayerId: '',
@@ -70,7 +70,7 @@ export const duelSlice = createSlice({
         )
         .map(({ id }) => id)
 
-      state.phase = phase || DuelPhase.INITIAL_DRAW
+      state.phase = phase || 'Initial Draw'
 
       if (loggedInPlayerId) {
         state.loggedInPlayerId = loggedInPlayerId
@@ -90,7 +90,7 @@ export const duelSlice = createSlice({
       }
     },
     startRedraw: (state) => {
-      state.phase = DuelPhase.REDRAW
+      state.phase = 'Redrawing Phase'
     },
     putCardAtBottomOfDeck: (
       state,
@@ -115,15 +115,15 @@ export const duelSlice = createSlice({
       players[action.payload].isReady = true
     },
     beginPlay: (state) => {
-      state.phase = DuelPhase.PLAYER_TURN
+      state.phase = 'Player Turn'
       state.turn = 1
     },
     initializeEndTurn: (state) => {
-      state.phase = DuelPhase.RESOLVING_END_TURN
+      state.phase = 'Resolving end of turn'
     },
     endTurn: (state) => {
       state.turn += 1
-      state.phase = DuelPhase.PLAYER_TURN
+      state.phase = 'Player Turn'
 
       state.playerOrder.forEach((playerId) => {
         state.players[playerId].isActive = !state.players[playerId].isActive

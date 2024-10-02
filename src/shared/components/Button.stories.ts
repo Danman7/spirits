@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from '@storybook/test'
 
 import Button from 'src/shared/components/Button'
-import { ButtonType } from 'src/shared/components/SharedComponentTypes'
 
 const meta = {
   title: 'Button',
@@ -13,13 +12,13 @@ const meta = {
   tags: ['autodocs'],
   args: {
     label: 'This is a button',
-    type: ButtonType.defaultButton,
+    type: 'default',
     onClick: fn(),
   },
   argTypes: {
     type: {
       control: 'select',
-      options: [ButtonType.defaultButton, ButtonType.positiveButton],
+      options: ['default', 'positive'],
     },
   },
 } satisfies Meta<typeof Button>
@@ -31,6 +30,6 @@ export const Default: Story = {}
 
 export const PositiveButton: Story = {
   args: {
-    type: ButtonType.positiveButton,
+    type: 'positive',
   },
 }

@@ -64,7 +64,7 @@ const PlayerHalfBoard: FC<{
 
   const getOnClickCard = (): CardProps['onClickCard'] => {
     if (
-      phase === DuelPhase.PLAYER_TURN &&
+      phase === 'Player Turn' &&
       isActive &&
       isPlayerPrespective &&
       !hasPlayedCardThisTurn
@@ -72,7 +72,7 @@ const PlayerHalfBoard: FC<{
       return onPlayCard
     }
 
-    if (phase === DuelPhase.REDRAW && !isReady && isPlayerPrespective) {
+    if (phase === 'Redrawing Phase' && !isReady && isPlayerPrespective) {
       return onRedrawCard
     }
 

@@ -3,7 +3,6 @@ import { FC, ReactNode, useEffect, useState } from 'react'
 import 'src/features/duel/listeners/duelFlow'
 import 'src/features/duel/listeners/computerPlayer'
 import PlayerHalfBoard from 'src/features/duel/components/PlayerHalfBoard'
-import { DuelPhase } from 'src/features/duel/types'
 import {
   getPhase,
   getPlayerOrder,
@@ -29,15 +28,15 @@ const Board: FC = () => {
 
   useEffect(() => {
     switch (phase) {
-      case DuelPhase.INITIAL_DRAW:
+      case 'Initial Draw':
         setModalContent(<InitialPhaseModal />)
         break
 
-      case DuelPhase.PLAYER_TURN:
+      case 'Player Turn':
         setModalContent(<PlayerTurnModal />)
         break
 
-      case DuelPhase.REDRAW:
+      case 'Redrawing Phase':
         setModalContent(<RedrawPhaseModal playerId={playerOrder[1]} />)
         break
     }

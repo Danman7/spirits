@@ -16,13 +16,12 @@ export interface Player {
   isReady?: boolean
 }
 
-export const enum DuelPhase {
-  PRE_DUEL = 'Pre-duel',
-  INITIAL_DRAW = 'Initial Draw',
-  REDRAW = 'Redrawing Phase',
-  PLAYER_TURN = 'Player Turn',
-  RESOLVING_END_TURN = 'Resolving end of turn',
-}
+export type DuelPhase =
+  | 'Pre-duel'
+  | 'Initial Draw'
+  | 'Redrawing Phase'
+  | 'Player Turn'
+  | 'Resolving end of turn'
 
 export interface DuelState {
   turn: number

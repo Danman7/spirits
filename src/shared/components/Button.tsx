@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 
 import styles from 'src/shared/styles/styles.module.css'
 
-import { ButtonType } from 'src/shared/components/SharedComponentTypes'
+import { ButtonType } from 'src/shared/types'
 
 export interface ButtonProps {
   label: string
@@ -11,11 +11,7 @@ export interface ButtonProps {
   onClick?: MouseEventHandler<HTMLButtonElement>
 }
 
-const Button: FC<ButtonProps> = ({
-  label,
-  type = ButtonType.defaultButton,
-  onClick,
-}) => (
+const Button: FC<ButtonProps> = ({ label, type = 'default', onClick }) => (
   <motion.button
     onClick={onClick}
     className={styles[type]}

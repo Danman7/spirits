@@ -16,10 +16,7 @@ import {
   NumberChangeAnimation,
 } from 'src/shared/animations'
 
-const enum CardSide {
-  FRONT = 'FRONT',
-  BACK = 'BACK',
-}
+type CardSide = 'FRONT' | 'BACK'
 
 const Card = motion.create(
   forwardRef<HTMLDivElement, CardProps>(
@@ -39,7 +36,7 @@ const Card = motion.create(
       const isCardFaceDown = animate?.toString().includes('faceDown')
 
       const [activeSide, setActiveSide] = useState<CardSide>(
-        isCardFaceDown ? CardSide.BACK : CardSide.FRONT,
+        isCardFaceDown ? 'BACK' : 'FRONT',
       )
 
       const prevStrength = usePrevious(strength)
@@ -84,13 +81,13 @@ const Card = motion.create(
           >
             <motion.div
               className={styles.cardPaper}
-              onAnimationStart={() => setActiveSide(CardSide.FRONT)}
+              onAnimationStart={() => setActiveSide('FRONT')}
               onAnimationComplete={() =>
-                setActiveSide(isCardFaceDown ? CardSide.BACK : CardSide.FRONT)
+                setActiveSide(isCardFaceDown ? 'BACK' : 'FRONT')
               }
               variants={CardPaperVariants}
             >
-              {activeSide === CardSide.FRONT && (
+              {activeSide === 'FRONT' && (
                 <div className={styles.cardFront}>
                   <div
                     className={styles.cardHeader}

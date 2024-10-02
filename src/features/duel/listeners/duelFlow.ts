@@ -11,7 +11,6 @@ import {
   startRedraw,
   endTurn,
 } from 'src/features/duel/slice'
-import { DuelPhase } from 'src/features/duel/types'
 import * as CardEffects from 'src/features/cards/CardEffects'
 import { isAnyOf } from '@reduxjs/toolkit'
 
@@ -20,7 +19,7 @@ startAppListening({
     currentState.duel.playerOrder.every(
       (playerId) => !currentState.duel.players[playerId].hand.length,
     ) ||
-    (currentState.duel.phase === DuelPhase.INITIAL_DRAW &&
+    (currentState.duel.phase === 'Initial Draw' &&
       currentState.duel.playerOrder.every(
         (playerId) =>
           currentState.duel.players[playerId].hand.length <
@@ -43,7 +42,7 @@ startAppListening({
 
 startAppListening({
   predicate: (_, currentState) =>
-    currentState.duel.phase === DuelPhase.INITIAL_DRAW &&
+    currentState.duel.phase === 'Initial Draw' &&
     currentState.duel.playerOrder.every(
       (playerId) =>
         currentState.duel.players[playerId].hand.length ===
@@ -69,7 +68,7 @@ startAppListening({
 
 startAppListening({
   predicate: (_, currentState) =>
-    currentState.duel.phase === DuelPhase.REDRAW &&
+    currentState.duel.phase === 'Redrawing Phase' &&
     currentState.duel.playerOrder.every(
       (playerId) => currentState.duel.players[playerId].isReady,
     ),

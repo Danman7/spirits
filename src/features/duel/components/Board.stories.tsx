@@ -14,7 +14,6 @@ import {
   TempleGuard,
   Zombie,
 } from 'src/features/cards/CardPrototypes'
-import { DuelPhase } from 'src/features/duel/types'
 import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
 import { storeConfiguration } from 'src/app/store'
 
@@ -85,7 +84,7 @@ export const Default: Story = {
                 },
               },
               playerOrder: [MockPlayer2.id, MockPlayer1.id],
-              phase: DuelPhase.PLAYER_TURN,
+              phase: 'Player Turn',
               loggedInPlayerId: initialState.loggedInPlayerId,
             },
           },
