@@ -13,8 +13,8 @@ import {
   fireEvent,
   render,
   screen,
-  waitFor,
   cleanup,
+  waitFor,
 } from 'src/shared/test-utils'
 import { DuelPhase, DuelState } from 'src/features/duel/types'
 import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
@@ -227,24 +227,19 @@ test('pass the turn', () => {
 })
 
 test('play a card as CPU and end the turn', async () => {
-  const state: DuelState = {
-    ...mockGameState,
-    players: {
-      [MockPlayer2.id]: { ...mockPlayers[MockPlayer2.id], isCPU: true },
-      [MockPlayer1.id]: mockPlayers[MockPlayer1.id],
-    },
+  preloadedState.duel.players = {
+    [MockPlayer2.id]: { ...mockPlayers[MockPlayer2.id], isCPU: true },
+    [MockPlayer1.id]: mockPlayers[MockPlayer1.id],
   }
 
   render(<Board />, {
-    preloadedState: {
-      duel: state,
-    },
+    preloadedState,
   })
 
-  const cpuPlayer = mockGameState.players[MockPlayer2.id]
+  const cpuPlayer = preloadedState.duel.players[MockPlayer2.id]
   const playedCPUCard = cpuPlayer.cards[cpuPlayer.hand[0]]
 
-  expect(await screen.queryByText(playedCPUCard.name)).not.toBeInTheDocument()
+  expect(screen.queryByText(playedCPUCard.name)).not.toBeInTheDocument()
 
   fireEvent.click(screen.getByText(passButtonMessage))
 
@@ -253,6 +248,13 @@ test('play a card as CPU and end the turn', async () => {
   await waitFor(
     () => {
       expect(screen.getByText(playedCPUCard.name)).toBeInTheDocument()
+    },
+    { timeout: 3000 },
+  )
+
+  await waitFor(
+    () => {
+      expect(screen.getByText(yourTurnTitle)).toBeInTheDocument()
     },
     { timeout: 3000 },
   )
