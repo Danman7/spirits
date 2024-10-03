@@ -6,16 +6,18 @@ import { PlayCardFromHandAction } from 'src/features/duel/types'
 export const boostHammeritesWithLessStrength: CardEffect<
   PlayCardFromHandAction
 > = (action, listenerApi) => {
-  const { card, playerId } = action.payload
+  const { cardId, playerId } = action.payload
 
   const { players } = listenerApi.getState().duel
+
+  const playedCard = players[playerId].cards[cardId]
 
   players[playerId].board.forEach((cardId) => {
     const cardOnBoard = { ...players[playerId].cards[cardId] }
 
     if (
       cardOnBoard.types.includes('Hammerite') &&
-      cardOnBoard.strength < card.strength
+      cardOnBoard.strength < playedCard.strength
     ) {
       listenerApi.dispatch(
         updateCard({

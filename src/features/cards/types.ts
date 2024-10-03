@@ -23,6 +23,7 @@ export interface Card {
   trigger?: {
     type: DuelActionTypes
     effect: CardEffectName
+    condition?: EffectCondition
   }
 }
 
@@ -48,5 +49,7 @@ export type CardType =
 
 export interface CardProps extends HTMLMotionProps<'div'> {
   card: PlayCard
-  onClickCard?: (card: PlayCard) => void
+  onClickCard?: (cardId: PlayCard['id']) => void
 }
+
+export type EffectCondition = 'Action should have card id'

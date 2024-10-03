@@ -34,6 +34,6 @@ export interface DuelState {
 }
 
 export type PlayCardFromHandAction = PayloadAction<{
-  card: PlayCard
+  cardId: PlayCard['id']
   playerId: Player['id']
 }>

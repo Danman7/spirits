@@ -14,7 +14,7 @@ import {
 import styles from 'src/shared/styles/styles.module.css'
 import { NumberChangeAnimation } from 'src/shared/animations'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
-import { CardProps, PlayCard } from 'src/features/cards/types'
+import { CardProps } from 'src/features/cards/types'
 import Card from 'src/features/cards/components/Card'
 
 const PlayerHalfBoard: FC<{
@@ -42,16 +42,16 @@ const PlayerHalfBoard: FC<{
 
   const isPlayerPrespective = loggedInPlayerId === id
 
-  const onPlayCard: CardProps['onClickCard'] = (card: PlayCard) => {
-    dispatch(playCardFromHand({ card, playerId: id }))
+  const onPlayCard: CardProps['onClickCard'] = (cardId) => {
+    dispatch(playCardFromHand({ cardId, playerId: id }))
 
     dispatch(endTurn())
   }
 
-  const onRedrawCard: CardProps['onClickCard'] = (card: PlayCard) => {
+  const onRedrawCard: CardProps['onClickCard'] = (cardId) => {
     dispatch(
       putCardAtBottomOfDeck({
-        cardId: card.id,
+        cardId,
         playerId: id,
         from: 'hand',
       }),

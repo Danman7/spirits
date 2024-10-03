@@ -245,7 +245,7 @@ describe('Playing turns', () => {
     const state = duelReducer(
       mockDuelState,
       playCardFromHand({
-        card: novice,
+        cardId: novice.id,
         playerId,
       }),
     )

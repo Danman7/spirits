@@ -16,19 +16,19 @@ startAppListening({
 
     playerOrder.forEach((playerId) => {
       const player = players[playerId]
-      const { cards, isCPU, isActive } = player
+      const { isCPU, isActive } = player
 
       if (isCPU && isActive && phase === 'Player Turn') {
         // Play random card for now
         const playableCardIds = getPlayableCardIds(player)
 
         if (playableCardIds.length) {
-          const randomCardId = getRandomArrayItem(playableCardIds)
+          const cardId = getRandomArrayItem(playableCardIds)
 
           setTimeout(() => {
             listenerApi.dispatch(
               playCardFromHand({
-                card: cards[randomCardId],
+                cardId,
                 playerId,
               }),
             )

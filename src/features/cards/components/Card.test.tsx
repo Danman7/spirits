@@ -74,5 +74,5 @@ it('should fire on click event passing card id', () => {
 
   fireEvent.click(screen.getByText(mockCard.name))
 
-  expect(onCardClick).toHaveBeenCalledWith(mockCard)
+  expect(onCardClick).toHaveBeenCalledWith(mockCard.id)
 })

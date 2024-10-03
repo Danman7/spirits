@@ -75,7 +75,7 @@ const Card = motion.create(
             layoutId={id}
             initial={false}
             animate={animate}
-            onClick={onClickCard ? () => onClickCard(card) : undefined}
+            onClick={onClickCard ? () => onClickCard(id) : undefined}
             variants={CardVariants}
             className={styles.card}
           >

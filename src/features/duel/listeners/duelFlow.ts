@@ -12,7 +12,8 @@ import {
   endTurn,
 } from 'src/features/duel/slice'
 import * as CardEffects from 'src/features/cards/CardEffects'
-import { isAnyOf } from '@reduxjs/toolkit'
+import { isAnyOf, PayloadAction } from '@reduxjs/toolkit'
+import { PlayCard } from 'src/features/cards/types'
 
 startAppListening({
   predicate: (_, currentState) =>
@@ -85,11 +86,33 @@ startAppListening({
         const { trigger } = cards[cardId]
 
         if (trigger) {
-          const { type, effect } = trigger
+          const { type, effect, condition } = trigger
 
           listenerApi.dispatch(
             addAppListener({
-              type,
+              predicate: (action) => {
+                if (action.type === type) {
+                  if (condition) {
+                    switch (condition) {
+                      case 'Action should have card id':
+                        return (
+                          (
+                            action as PayloadAction<{
+                              cardId: PlayCard['id']
+                            }>
+                          ).payload.cardId === cardId
+                        )
+
+                      default:
+                        return false
+                    }
+                  }
+
+                  return true
+                }
+
+                return false
+              },
               effect: CardEffects[effect],
             }),
           )

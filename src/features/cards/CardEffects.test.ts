@@ -12,9 +12,12 @@ import { createPlayCardFromPrototype } from 'src/features/cards/utils'
 import { MockPlayerTurnState } from 'src/features/duel/__mocks__'
 import { playCardFromHand, updateCard } from 'src/features/duel/slice'
 import { DuelState, PlayCardFromHandAction } from 'src/features/duel/types'
+import { PlayCard } from 'src/features/cards/types'
 
 let mockAction: PlayCardFromHandAction
 let mockDuelState: DuelState
+let card: PlayCard
+let cardId: PlayCard['id']
 
 const playerId = MockPlayerTurnState.playerOrder[1]
 const opponentId = MockPlayerTurnState.playerOrder[0]
@@ -56,24 +59,24 @@ afterEach(() => {
 
 describe('boostHammeritesWithLessStrength', () => {
   beforeEach(() => {
-    const card = createPlayCardFromPrototype(BrotherSachelman)
+    card = createPlayCardFromPrototype(BrotherSachelman)
+    cardId = card.id
 
     mockAction = {
       type: playCardFromHand.type,
-      payload: { card, playerId },
+      payload: { cardId, playerId },
     }
   })
 
   test('should boost alied Hammerite cards on board with lower strength', () => {
-    const brother = createPlayCardFromPrototype(BrotherSachelman)
     const novice = createPlayCardFromPrototype(HammeriteNovice)
 
     mockDuelState.players[playerId].cards = {
-      [brother.id]: brother,
+      [cardId]: card,
       [novice.id]: novice,
     }
 
-    mockDuelState.players[playerId].hand = [brother.id]
+    mockDuelState.players[playerId].hand = [cardId]
     mockDuelState.players[playerId].board = [novice.id]
 
     listenerApi.getState = jest.fn(() => ({
@@ -94,16 +97,15 @@ describe('boostHammeritesWithLessStrength', () => {
   })
 
   test('should not boost hammerites with equal higher strength or opponent hammerites', () => {
-    const brother = createPlayCardFromPrototype(BrotherSachelman)
     const templeGuard = createPlayCardFromPrototype(TempleGuard)
     const novice = createPlayCardFromPrototype(HammeriteNovice)
 
     mockDuelState.players[playerId].cards = {
-      [brother.id]: brother,
+      [cardId]: card,
       [templeGuard.id]: templeGuard,
     }
 
-    mockDuelState.players[playerId].hand = [brother.id]
+    mockDuelState.players[playerId].hand = [cardId]
     mockDuelState.players[playerId].board = [templeGuard.id]
 
     mockDuelState.players[opponentId].cards = {

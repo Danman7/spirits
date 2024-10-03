@@ -80,6 +80,7 @@ export const BrotherSachelman: Card = {
   trigger: {
     type: 'duel/playCardFromHand',
     effect: 'boostHammeritesWithLessStrength',
+    condition: 'Action should have card id',
   },
 }
 
