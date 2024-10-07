@@ -14,8 +14,8 @@ export const NumberChangeAnimation: TargetAndTransition = {
 }
 
 export const CardBoostAnimation: AnimationDefinition = {
-  scale: [null, 1.05],
-  boxShadow: [null, `0 0 4px 4px var(--hilight-color)`],
+  scale: [1, 1.1],
+  boxShadow: [null, '0 0 5px 5px var(--hilight-color)'],
   transition: {
     repeat: 1,
     repeatType: 'reverse',
@@ -23,51 +23,11 @@ export const CardBoostAnimation: AnimationDefinition = {
 }
 
 export const CardDamageAnimation: AnimationDefinition = {
-  x: [0, 5, 0, -5, 0],
+  x: [null, 10, 0, -10, 0],
   transition: {
     repeat: 2,
     repeatType: 'reverse',
     duration: 0.1,
-  },
-}
-
-export const CardVariants: Variants = {
-  normal: {
-    width: '250px',
-    height: '350px',
-    fontSize: '16px',
-  },
-  small: { width: '150px', height: '210px', fontSize: '10px' },
-  active: {
-    cursor: 'pointer',
-    boxShadow: [
-      '0 0 2px 2px var(--positive-color)',
-      '0 0 4px 4px var(--positive-color)',
-    ],
-    transition: {
-      repeat: Infinity,
-      repeatType: 'reverse',
-    },
-  },
-}
-
-export const CardPaperVariants: Variants = {
-  normal: {
-    rotateY: 0,
-  },
-  faceDown: {
-    rotateY: 180,
-  },
-}
-
-export const CardBackVariants: Variants = {
-  normal: {
-    background:
-      'repeating-linear-gradient(45deg,#fff,#fff 10px,#999 10px,#999 20px)',
-  },
-  small: {
-    background:
-      'repeating-linear-gradient(45deg,#fff,#fff 5px,#999 5px,#999 10px)',
   },
 }
 

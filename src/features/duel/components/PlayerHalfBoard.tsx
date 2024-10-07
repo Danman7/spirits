@@ -87,7 +87,7 @@ const PlayerHalfBoard: FC<{
 
   return (
     <>
-      <h2
+      <h3
         className={`${isOnTop ? styles.topPlayerInfo : styles.bottomPlayerInfo} ${isActive ? styles.activePlayerInfo : ''}`}
       >
         <span>{name}</span> /{' '}
@@ -98,20 +98,16 @@ const PlayerHalfBoard: FC<{
         >
           {coins}
         </motion.span>
-      </h2>
+      </h3>
 
       <div className={isOnTop ? styles.topPlayerSide : styles.bottomPlayerSide}>
         <div className={styles.faceDownStack}>
           {discard.map((cardId) => (
-            <Card
-              key={cardId}
-              card={cards[cardId]}
-              animate={['small', 'faceDown']}
-            />
+            <Card key={cardId} card={cards[cardId]} isSmall isFaceDown />
           ))}
         </div>
 
-        <motion.div
+        <div
           className={isOnTop ? styles.topPlayerHand : styles.bottomPlayerHand}
         >
           {hand.map((cardId) => (
@@ -119,22 +115,14 @@ const PlayerHalfBoard: FC<{
               key={cardId}
               card={cards[cardId]}
               onClickCard={getOnClickCard()}
-              whileHover={!isOnTop ? { bottom: 170 } : {}}
-              animate={[
-                getOnClickCard() ? 'active' : 'normal',
-                isOnTop ? 'faceDown' : '',
-              ]}
+              isFaceDown={isOnTop}
             />
           ))}
-        </motion.div>
+        </div>
 
         <div className={styles.faceDownStack}>
           {deck.map((cardId) => (
-            <Card
-              key={cardId}
-              card={cards[cardId]}
-              animate={['small', 'faceDown']}
-            />
+            <Card key={cardId} card={cards[cardId]} isSmall isFaceDown />
           ))}
         </div>
       </div>
@@ -143,7 +131,7 @@ const PlayerHalfBoard: FC<{
         className={isOnTop ? styles.topPlayerBoard : styles.bottomPlayerBoard}
       >
         {board.map((cardId) => (
-          <Card key={cardId} card={cards[cardId]} animate={['small']} />
+          <Card key={cardId} card={cards[cardId]} isSmall />
         ))}
       </div>
     </>

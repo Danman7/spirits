@@ -24,14 +24,9 @@ const meta = {
   tags: ['autodocs'],
   args: {
     card: mockCard,
-    animate: 'normal',
     onClickCard: undefined,
-  },
-  argTypes: {
-    animate: {
-      control: 'multi-select',
-      options: ['normal', 'small', 'active', 'faceDown'],
-    },
+    isFaceDown: false,
+    isSmall: false,
   },
 } satisfies Meta<typeof Card>
 
@@ -43,14 +38,13 @@ export const Default: Story = {}
 export const SmallerVariant: Story = {
   args: {
     card: { ...mockCard },
-    animate: 'small',
+    isSmall: true,
   },
 }
 
 export const IsActive: Story = {
   args: {
     onClickCard: fn(),
-    animate: 'active',
   },
 }
 
@@ -90,6 +84,6 @@ export const MultipleFactions: Story = {
 export const FaceDown: Story = {
   args: {
     onClickCard: undefined,
-    animate: ['normal', 'faceDown'],
+    isFaceDown: true,
   },
 }

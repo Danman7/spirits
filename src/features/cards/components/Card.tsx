@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useState } from 'react'
+import { FC, useEffect } from 'react'
 import { motion, useAnimationControls } from 'framer-motion'
 
 import { CardProps } from 'src/features/cards/types'
@@ -8,124 +8,80 @@ import styles from 'src/shared/styles/styles.module.css'
 import { usePrevious } from 'src/shared/customHooks'
 import PositiveNegativeNumber from 'src/shared/components/PositiveNegativeNumber'
 import {
-  CardBackVariants,
   CardBoostAnimation,
   CardDamageAnimation,
-  CardPaperVariants,
-  CardVariants,
   NumberChangeAnimation,
 } from 'src/shared/animations'
 
-type CardSide = 'FRONT' | 'BACK'
+const Card: FC<CardProps> = ({ card, isSmall, isFaceDown, onClickCard }) => {
+  const {
+    id,
+    name,
+    strength,
+    description,
+    flavor,
+    types,
+    factions,
+    cost,
+    prototype,
+  } = card
 
-const Card = motion.create(
-  forwardRef<HTMLDivElement, CardProps>(
-    ({ card, animate, onClickCard }, ref) => {
-      const {
-        id,
-        name,
-        strength,
-        description,
-        flavor,
-        types,
-        factions,
-        cost,
-        prototype,
-      } = card
+  const prevStrength = usePrevious(strength)
 
-      const isCardFaceDown = animate?.toString().includes('faceDown')
+  const strengthChangeAnimation = useAnimationControls()
+  const cardAnimationControls = useAnimationControls()
 
-      const [activeSide, setActiveSide] = useState<CardSide>(
-        isCardFaceDown ? 'BACK' : 'FRONT',
-      )
+  useEffect(() => {
+    if (prevStrength && prevStrength !== strength) {
+      strengthChangeAnimation.start(NumberChangeAnimation)
+    }
 
-      const prevStrength = usePrevious(strength)
+    if (prevStrength < strength) {
+      cardAnimationControls.start(CardBoostAnimation)
+    }
 
-      const strengthChangeAnimation = useAnimationControls()
-      const cardAnimationControls = useAnimationControls()
+    if (prevStrength > strength) {
+      cardAnimationControls.start(CardDamageAnimation)
+    }
+  }, [prevStrength, strength, strengthChangeAnimation, cardAnimationControls])
 
-      useEffect(() => {
-        if (prevStrength && prevStrength !== strength) {
-          strengthChangeAnimation.start(NumberChangeAnimation)
-        }
-
-        if (prevStrength < strength) {
-          cardAnimationControls.start(CardBoostAnimation)
-        }
-
-        if (prevStrength > strength) {
-          cardAnimationControls.start(CardDamageAnimation)
-        }
-
-        return () => {
-          strengthChangeAnimation.stop()
-          cardAnimationControls.stop()
-        }
-      }, [
-        prevStrength,
-        strength,
-        strengthChangeAnimation,
-        cardAnimationControls,
-      ])
-
-      return (
-        <motion.div animate={cardAnimationControls}>
-          <motion.div
-            ref={ref}
-            layoutId={id}
-            initial={false}
-            animate={animate}
-            onClick={onClickCard ? () => onClickCard(id) : undefined}
-            variants={CardVariants}
-            className={styles.card}
-          >
-            <motion.div
-              className={styles.cardPaper}
-              onAnimationStart={() => setActiveSide('FRONT')}
-              onAnimationComplete={() =>
-                setActiveSide(isCardFaceDown ? 'BACK' : 'FRONT')
-              }
-              variants={CardPaperVariants}
-            >
-              {activeSide === 'FRONT' && (
-                <div className={styles.cardFront}>
-                  <div
-                    className={styles.cardHeader}
-                    style={{ background: getFactionColor(factions) }}
-                  >
-                    <h3 className={styles.cardTitle}>
-                      <div>{name}</div>
-                      {strength && prototype.strength && (
-                        <motion.div animate={strengthChangeAnimation}>
-                          <PositiveNegativeNumber
-                            current={strength}
-                            base={prototype.strength}
-                          />
-                        </motion.div>
-                      )}
-                    </h3>
-                    <h5 className={styles.cardTypes}>{joinCardTypes(types)}</h5>
-                  </div>
-                  <div className={styles.cardContent}>
-                    <p>{description}</p>
-                    <small className={styles.cardFlavor}>{flavor}</small>
-                  </div>
-                  <div className={styles.cardFooter}>Cost: {cost}</div>
-                </div>
-              )}
-
-              <motion.div
-                initial={false}
-                className={styles.cardBack}
-                variants={CardBackVariants}
+  return isFaceDown ? (
+    <motion.div
+      layoutId={id}
+      className={`${styles.cardBack} ${isSmall ? styles.smallCardBack : ''}`}
+    />
+  ) : (
+    <motion.div
+      layoutId={id}
+      initial={false}
+      animate={cardAnimationControls}
+      onClick={onClickCard ? () => onClickCard(id) : undefined}
+      className={`${styles.card} ${isSmall ? styles.smallCard : ''} ${onClickCard ? styles.activeCard : ''}`}
+    >
+      <div
+        className={styles.cardHeader}
+        style={{ background: getFactionColor(factions) }}
+      >
+        <h4 className={styles.cardTitle}>
+          <div>{name}</div>
+          {strength && prototype.strength && (
+            <motion.div animate={strengthChangeAnimation}>
+              <PositiveNegativeNumber
+                current={strength}
+                base={prototype.strength}
               />
             </motion.div>
-          </motion.div>
-        </motion.div>
-      )
-    },
-  ),
-  { forwardMotionProps: true },
-)
+          )}
+        </h4>
+        <h5 className={styles.cardTypes}>{joinCardTypes(types)}</h5>
+      </div>
+      <div className={styles.cardContent}>
+        <p>{description}</p>
+        <small className={styles.cardFlavor}>{flavor}</small>
+      </div>
+      <div className={styles.cardFooter}>Cost: {cost}</div>
+    </motion.div>
+  )
+}
 
 export default Card

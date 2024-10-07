@@ -8,19 +8,14 @@ import {
 import { BrotherSachelman } from 'src/features/cards/CardPrototypes'
 import { PlayCard } from 'src/features/cards/types'
 
-import {
-  fireEvent,
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from 'src/shared/test-utils'
+import { fireEvent, render, screen } from 'src/shared/test-utils'
 
 const mockCard: PlayCard = createPlayCardFromPrototype(BrotherSachelman)
 
 it('should display all shared UI segments of a card when face up', () => {
   const { rerender } = render(<Card card={mockCard} />)
 
-  expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
+  expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
     `${mockCard.name}${mockCard.strength}`,
   )
 
@@ -38,7 +33,7 @@ it('should display all shared UI segments of a card when face up', () => {
 
   rerender(<Card card={{ ...mockCard, strength: boostedStrength }} />)
 
-  expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
+  expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
     `${mockCard.name}${boostedStrength}`,
   )
 
@@ -46,23 +41,13 @@ it('should display all shared UI segments of a card when face up', () => {
 
   rerender(<Card card={{ ...mockCard, strength: damagedStrength }} />)
 
-  expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
+  expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
     `${mockCard.name}${damagedStrength}`,
   )
 })
 
 it('should show card back when face down', async () => {
-  const { rerender } = render(<Card card={mockCard} animate="faceDown" />)
-
-  rerender(<Card card={mockCard} animate="normal" />)
-
-  expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
-    `${mockCard.name}${mockCard.strength}`,
-  )
-
-  rerender(<Card card={mockCard} animate="faceDown" />)
-
-  await waitForElementToBeRemoved(() => screen.queryByText(mockCard.name))
+  render(<Card card={mockCard} isFaceDown />)
 
   expect(await screen.queryByText(mockCard.name)).not.toBeInTheDocument()
 })

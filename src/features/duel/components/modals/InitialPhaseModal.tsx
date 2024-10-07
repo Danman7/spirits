@@ -12,14 +12,14 @@ const InitialPhaseModal: FC = () => {
   const playerOrder = useAppSelector(getPlayerOrder)
 
   return (
-    <>
+    <div style={{ maxWidth: 350 }}>
       <motion.h1 variants={SlideInOutContentVariants}>
         {`${players[playerOrder[0]].name} vs ${players[playerOrder[1]].name}`}
       </motion.h1>
       <motion.p variants={SlideInOutContentVariants}>
         {initialDrawMessage}
       </motion.p>
-    </>
+    </div>
   )
 }
 

@@ -1,5 +1,4 @@
 import { Action, ListenerEffect } from '@reduxjs/toolkit'
-import { HTMLMotionProps } from 'framer-motion'
 import { AppDispatch, RootState } from 'src/app/store'
 import { DuelActionTypes } from 'src/features/duel/slice'
 import * as CardEffects from 'src/features/cards/CardEffects'
@@ -47,8 +46,10 @@ export type CardType =
   | 'Necromancer'
   | 'Artifact'
 
-export interface CardProps extends HTMLMotionProps<'div'> {
+export interface CardProps {
   card: PlayCard
+  isFaceDown?: boolean
+  isSmall?: boolean
   onClickCard?: (cardId: PlayCard['id']) => void
 }
 

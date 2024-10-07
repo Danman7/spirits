@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from 'src/app/store'
 
 import { getPlayerPrespective } from 'src/features/duel/selectors'
 import {
+  opponentTurnMessage,
   opponentTurnTitle,
   passButtonMessage,
   yourTurnMessage,
@@ -29,15 +30,13 @@ const PlayerTurnModal: FC = () => {
 
   return (
     <div style={{ width: 250 }}>
-      <motion.h1 variants={SlideInOutContentVariants}>
+      <motion.h2 variants={SlideInOutContentVariants}>
         {playerIsActive ? yourTurnTitle : opponentTurnTitle}
-      </motion.h1>
+      </motion.h2>
 
-      {playerIsActive && (
-        <motion.p variants={SlideInOutContentVariants}>
-          {yourTurnMessage}
-        </motion.p>
-      )}
+      <motion.p variants={SlideInOutContentVariants}>
+        {playerIsActive ? yourTurnMessage : opponentTurnMessage}
+      </motion.p>
 
       {buttonLabel && (
         <motion.div

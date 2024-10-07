@@ -13,36 +13,57 @@
 }
 
 .card {
+  border-radius: 6px;
   width: 250px;
   height: 350px;
-  perspective: 1000px;
-  background: transparent;
-  position: relative;
-}
-
-.cardPaper {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
   border: 1px solid var(--shadow-color);
-}
-
-.cardFront {
   display: flex;
   flex-direction: column;
-  position: absolute;
-  height: 100%;
-  width: 100%;
   background: var(--background-color);
-  backface-visibility: hidden;
   overflow: hidden;
   box-shadow: 3px 3px 3px var(--shadow-color);
 }
 
+@keyframes activeGlow {
+  from {
+    box-shadow: 0 0 2px 2px var(--positive-color);
+  }
+  to {
+    box-shadow: 0 0 5px 5px var(--positive-color);
+  }
+}
+
+.activeCard {
+  cursor: pointer;
+  animation-name: activeGlow;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
 .cardBack {
-  composes: cardFront;
-  transform: rotateY(180deg);
+  composes: card;
+  background: repeating-linear-gradient(
+    45deg,
+    #fff,
+    #fff 10px,
+    #999 10px,
+    #999 20px
+  );
+}
+
+.smallCardBack {
+  composes: cardBack;
+  width: 150px;
+  height: 210px;
+  box-shadow: 1px 1px 1px var(--shadow-color);
+  background: repeating-linear-gradient(
+    45deg,
+    #fff,
+    #fff 5px,
+    #999 5px,
+    #999 10px
+  );
 }
 
 .cardHeader {
@@ -57,6 +78,13 @@
   top: 0;
   display: flex;
   justify-content: space-between;
+}
+
+.smallCard {
+  width: 150px;
+  height: 210px;
+  font-size: 9.5px;
+  box-shadow: 1px 1px 1px var(--shadow-color);
 }
 
 .cardFooter {
@@ -101,26 +129,30 @@
 
 .topPlayerBoard {
   composes: playerBoard;
-  border-bottom: 1px dashed var(--line-color);
   align-items: flex-end;
-  padding-bottom: 2em;
+  padding-bottom: 0.5em;
 }
 
 .bottomPlayerBoard {
   composes: playerBoard;
   align-items: flex-start;
-  padding-top: 2em;
+  padding-top: 0.5em;
 }
 
 .playerHand {
   display: flex;
   flex-direction: row;
   justify-content: center;
-
   flex-grow: 2;
 
   .card {
     margin: 0 -80px;
+    transition: bottom 0.2s;
+
+    &:hover {
+      bottom: 170px;
+      box-shadow: 5px 5px 5px var(--shadow-color);
+    }
   }
 }
 
@@ -169,7 +201,7 @@
 
 .playerInfo {
   position: fixed;
-  left: 1em;
+  left: 1rem;
   font-weight: 400;
 }
 
@@ -179,12 +211,12 @@
 
 .topPlayerInfo {
   composes: playerInfo;
-  top: 1em;
+  top: 1rem;
 }
 
 .bottomPlayerInfo {
   composes: playerInfo;
-  bottom: 1em;
+  bottom: 1rem;
 }
 
 .defaultButton {
@@ -218,16 +250,12 @@
 }
 
 .faceDownStack {
+  position: relative;
   width: 150px;
   height: 210px;
-  position: relative;
 
   .card {
     position: absolute;
-
-    &:hover {
-      box-shadow: 1px 1px 1px var(--shadow-color);
-    }
   }
 }
 

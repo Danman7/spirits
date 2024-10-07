@@ -85,7 +85,7 @@ test('show the general UI elements', () => {
 
   const { players, playerOrder } = preloadedState.duel
 
-  const playerInfos = screen.getAllByRole('heading', { level: 2 })
+  const playerInfos = screen.getAllByRole('heading', { level: 3 })
 
   playerInfos.forEach((element, index) => {
     expect(element).toHaveTextContent(
@@ -199,7 +199,7 @@ test('play a card from hand', async () => {
 
   fireEvent.click(screen.getByText(playedCard.name))
 
-  const playerInfos = screen.getAllByRole('heading', { level: 2 })
+  const playerInfos = screen.getAllByRole('heading', { level: 3 })
 
   expect(playerInfos[1]).toHaveTextContent(
     `${activePlayer.name} / ${activePlayer.coins - playedCard.cost}`,
@@ -207,7 +207,7 @@ test('play a card from hand', async () => {
 
   expect(screen.getByText(opponentTurnTitle)).toBeInTheDocument()
 
-  expect(screen.getByRole('heading', { level: 3 })).toHaveTextContent(
+  expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
     `${playedCard.name}${playedCard.strength}`,
   )
 })
