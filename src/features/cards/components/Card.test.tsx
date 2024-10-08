@@ -25,7 +25,7 @@ it('should display all shared UI segments of a card when face up', () => {
     joinCardTypes(mockCard.types),
   )
 
-  expect(screen.getByText(mockCard.description as string)).toBeInTheDocument()
+  expect(screen.getByText(mockCard.description[0])).toBeInTheDocument()
 
   expect(screen.getByText(mockCard.flavor as string)).toBeInTheDocument()
 

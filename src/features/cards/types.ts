@@ -17,7 +17,7 @@ export interface Card {
   factions: CardFaction[]
   types: CardType[]
   strength: number
-  description?: string
+  description: string[]
   flavor?: string
   trigger?: {
     type: DuelActionTypes

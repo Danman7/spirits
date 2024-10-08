@@ -1,7 +1,10 @@
 import { ListenerEffectAPI } from '@reduxjs/toolkit'
 
 import { AppDispatch, RootState } from 'src/app/store'
-import { boostHammeritesWithLessStrength } from 'src/features/cards/CardEffects'
+import {
+  boostHammeritesWithLessStrength,
+  playAllCopiesOfHammeriteNovice,
+} from 'src/features/cards/CardEffects'
 import {
   BrotherSachelman,
   HammeriteNovice,
@@ -68,7 +71,7 @@ describe('boostHammeritesWithLessStrength', () => {
     }
   })
 
-  test('should boost alied Hammerite cards on board with lower strength', () => {
+  it('should boost alied Hammerite cards on board with lower strength', () => {
     const novice = createPlayCardFromPrototype(HammeriteNovice)
 
     mockDuelState.players[playerId].cards = {
@@ -96,7 +99,7 @@ describe('boostHammeritesWithLessStrength', () => {
     )
   })
 
-  test('should not boost hammerites with equal higher strength or opponent hammerites', () => {
+  it('should not boost hammerites with equal higher strength or opponent hammerites', () => {
     const templeGuard = createPlayCardFromPrototype(TempleGuard)
     const novice = createPlayCardFromPrototype(HammeriteNovice)
 
@@ -119,6 +122,84 @@ describe('boostHammeritesWithLessStrength', () => {
     }))
 
     boostHammeritesWithLessStrength(mockAction, listenerApi)
+
+    expect(listenerApi.dispatch).toHaveBeenCalledTimes(0)
+  })
+
+  it('should boost hammerites accordingly if is damaged', () => {
+    card.strength = card.strength - 2
+
+    const novice = createPlayCardFromPrototype(HammeriteNovice)
+
+    mockDuelState.players[playerId].cards = {
+      [cardId]: card,
+      [novice.id]: novice,
+    }
+
+    mockDuelState.players[playerId].hand = [cardId]
+    mockDuelState.players[playerId].board = [novice.id]
+
+    listenerApi.getState = jest.fn(() => ({
+      duel: mockDuelState,
+    }))
+
+    boostHammeritesWithLessStrength(mockAction, listenerApi)
+
+    expect(listenerApi.dispatch).toHaveBeenCalledTimes(0)
+  })
+})
+
+describe('playAllCopiesOfHammeriteNovice', () => {
+  beforeEach(() => {
+    card = createPlayCardFromPrototype(HammeriteNovice)
+    cardId = card.id
+
+    mockAction = {
+      type: playCardFromHand.type,
+      payload: { cardId, playerId },
+    }
+  })
+
+  it('should play all Hammerite Novice copies from your hand', () => {
+    const novice = createPlayCardFromPrototype(HammeriteNovice)
+
+    mockDuelState.players[playerId].cards = {
+      [cardId]: card,
+      [novice.id]: novice,
+    }
+
+    mockDuelState.players[playerId].hand = [cardId, novice.id]
+
+    listenerApi.getState = jest.fn(() => ({
+      duel: mockDuelState,
+    }))
+
+    playAllCopiesOfHammeriteNovice(mockAction, listenerApi)
+
+    expect(listenerApi.dispatch).toHaveBeenCalledWith(
+      playCardFromHand({
+        cardId: novice.id,
+        playerId,
+      }),
+    )
+  })
+
+  it('should not play self or Hammerite Novice copies from deck', () => {
+    const novice = createPlayCardFromPrototype(HammeriteNovice)
+
+    mockDuelState.players[playerId].cards = {
+      [cardId]: card,
+      [novice.id]: novice,
+    }
+
+    mockDuelState.players[playerId].hand = [cardId]
+    mockDuelState.players[playerId].deck = [novice.id]
+
+    listenerApi.getState = jest.fn(() => ({
+      duel: mockDuelState,
+    }))
+
+    playAllCopiesOfHammeriteNovice(mockAction, listenerApi)
 
     expect(listenerApi.dispatch).toHaveBeenCalledTimes(0)
   })

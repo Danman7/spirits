@@ -76,7 +76,10 @@ const Card: FC<CardProps> = ({ card, isSmall, isFaceDown, onClickCard }) => {
         <h5 className={styles.cardTypes}>{joinCardTypes(types)}</h5>
       </div>
       <div className={styles.cardContent}>
-        <p>{description}</p>
+        {description.map((paragraph, index) => (
+          <p key={`${id}-description-${index}`}>{paragraph}</p>
+        ))}
+
         <small className={styles.cardFlavor}>{flavor}</small>
       </div>
       <div className={styles.cardFooter}>Cost: {cost}</div>
