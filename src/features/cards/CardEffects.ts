@@ -2,9 +2,9 @@ import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constan
 import { CardEffect } from 'src/features/cards/types'
 import { playCardFromHand, updateCard } from 'src/features/duel/slice'
 import { PlayCardFromHandAction } from 'src/features/duel/types'
-import { HammeriteNovice } from './CardPrototypes'
+import { HammeriteNovice } from 'src/features/cards/CardPrototypes'
 
-export const boostHammeritesWithLessStrength: CardEffect<
+export const BrotherSachelmanOnPlayEffect: CardEffect<
   PlayCardFromHandAction
 > = (action, listenerApi) => {
   const { cardId, playerId } = action.payload
@@ -34,15 +34,26 @@ export const boostHammeritesWithLessStrength: CardEffect<
   })
 }
 
-export const playAllCopiesOfHammeriteNovice: CardEffect<
-  PlayCardFromHandAction
-> = (action, listenerApi) => {
+export const HammeriteNoviceOnPlayEffect: CardEffect<PlayCardFromHandAction> = (
+  action,
+  listenerApi,
+) => {
   const { playerId, cardId: playedCardId } = action.payload
 
   const { players } = listenerApi.getState().duel
 
-  players[playerId].hand.forEach((cardId) => {
-    const cardInHand = { ...players[playerId].cards[cardId] }
+  const player = players[playerId]
+
+  const cardsOnBoard = player.board
+    .filter((cardId) => cardId !== playedCardId)
+    .map((cardId) => player.cards[cardId])
+
+  if (!cardsOnBoard.find((card) => card && card.types.includes('Hammerite'))) {
+    return
+  }
+
+  player.hand.forEach((cardId) => {
+    const cardInHand = { ...player.cards[cardId] }
 
     if (
       cardInHand.name === HammeriteNovice.name &&

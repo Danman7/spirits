@@ -49,9 +49,8 @@ export const HammeriteNovice: Card = {
   flavor:
     'This novice has been instructed in the rules and strictures of the Order and has sworn his warrants to be silent in his vigils.',
   trigger: {
-    type: 'duel/playCardFromHand',
-    effect: 'playAllCopiesOfHammeriteNovice',
-    condition: 'Action should have card id',
+    predicate: 'HammeriteNoviceOnPlayPredicate',
+    effect: 'HammeriteNoviceOnPlayEffect',
   },
 }
 
@@ -91,9 +90,8 @@ export const BrotherSachelman: Card = {
   flavor:
     'May the Hammer fall on the unrighteous. Officially, Brother Sachelman',
   trigger: {
-    type: 'duel/playCardFromHand',
-    effect: 'boostHammeritesWithLessStrength',
-    condition: 'Action should have card id',
+    predicate: 'BrotherSachelmanOnPlayPredicate',
+    effect: 'BrotherSachelmanOnPlayEffect',
   },
 }
 

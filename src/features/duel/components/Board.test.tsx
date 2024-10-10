@@ -205,7 +205,7 @@ test('play a card from hand', async () => {
     `${activePlayer.name} / ${activePlayer.coins - playedCard.cost}`,
   )
 
-  expect(screen.getByText(opponentTurnTitle)).toBeInTheDocument()
+  expect(await screen.findByText(opponentTurnTitle)).toBeInTheDocument()
 
   expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
     `${playedCard.name}${playedCard.strength}`,

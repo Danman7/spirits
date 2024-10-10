@@ -1,7 +1,4 @@
-import {
-  LONG_ANIMATION_CYCLE,
-  SHORT_ANIMATION_CYCLE,
-} from 'src/features/duel/constants'
+import { LONG_ANIMATION_CYCLE } from 'src/features/duel/constants'
 import { getPlayableCardIds } from 'src/features/duel/utils'
 
 import { getRandomArrayItem } from 'src/shared/utils'
@@ -32,11 +29,11 @@ startAppListening({
                 playerId,
               }),
             )
-          }, LONG_ANIMATION_CYCLE + SHORT_ANIMATION_CYCLE)
+          }, LONG_ANIMATION_CYCLE * 1.5)
 
           setTimeout(() => {
             listenerApi.dispatch(endTurn())
-          }, LONG_ANIMATION_CYCLE * 2)
+          }, LONG_ANIMATION_CYCLE * 2.5)
         }
       }
     })

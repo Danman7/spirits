@@ -16,6 +16,7 @@ import { NumberChangeAnimation } from 'src/shared/animations'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { CardProps } from 'src/features/cards/types'
 import Card from 'src/features/cards/components/Card'
+import { MEDIUM_ANIMATION_CYCLE } from '../constants'
 
 const PlayerHalfBoard: FC<{
   player: Player
@@ -45,7 +46,9 @@ const PlayerHalfBoard: FC<{
   const onPlayCard: CardProps['onClickCard'] = (cardId) => {
     dispatch(playCardFromHand({ cardId, playerId: id }))
 
-    dispatch(endTurn())
+    setTimeout(() => {
+      dispatch(endTurn())
+    }, MEDIUM_ANIMATION_CYCLE)
   }
 
   const onRedrawCard: CardProps['onClickCard'] = (cardId) => {

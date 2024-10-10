@@ -38,7 +38,7 @@ const PlayerTurnModal: FC = () => {
         {playerIsActive ? yourTurnMessage : opponentTurnMessage}
       </motion.p>
 
-      {buttonLabel && (
+      {buttonLabel && !playerPrespective.hasPlayedCardThisTurn && (
         <motion.div
           style={{ marginTop: '0.5rem' }}
           variants={SlideInOutContentVariants}

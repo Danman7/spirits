@@ -1,8 +1,9 @@
 import { Action, ListenerEffect } from '@reduxjs/toolkit'
 import { AppDispatch, RootState } from 'src/app/store'
-import { DuelActionTypes } from 'src/features/duel/slice'
 import * as CardEffects from 'src/features/cards/CardEffects'
+import * as CardEffectPredicates from 'src/features/cards/CardEffectPredicates'
 
+type CardEffectPredicateName = keyof typeof CardEffectPredicates
 type CardEffectName = keyof typeof CardEffects
 
 export type CardEffect<DuelAction extends Action> = ListenerEffect<
@@ -10,6 +11,11 @@ export type CardEffect<DuelAction extends Action> = ListenerEffect<
   RootState,
   AppDispatch
 >
+
+export type CardEffectPredicate<DuelAction extends Action> = (
+  action: DuelAction,
+  currentState: RootState,
+) => boolean
 
 export interface Card {
   readonly name: string
@@ -20,9 +26,8 @@ export interface Card {
   description: string[]
   flavor?: string
   trigger?: {
-    type: DuelActionTypes
+    predicate: CardEffectPredicateName
     effect: CardEffectName
-    condition?: EffectCondition
   }
 }
 
