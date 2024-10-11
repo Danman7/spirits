@@ -37,13 +37,10 @@ describe('Initializing a duel', () => {
       }),
     )
 
-    const { turn, players, playerOrder, phase } = state
+    const { turn, activePlayerId, phase } = state
 
     expect(turn).toBe(0)
-    expect([
-      players[playerOrder[0]].isActive,
-      players[playerOrder[1]].isActive,
-    ]).toContain(true)
+    expect(activePlayerId).toBeTruthy()
     expect(phase).toBe('Initial Draw')
   })
 
@@ -57,10 +54,10 @@ describe('Initializing a duel', () => {
       }),
     )
 
-    const { turn, players, phase } = state
+    const { turn, activePlayerId, phase } = state
 
     expect(turn).toBe(0)
-    expect(players[firstPlayerId].isActive).toBeTruthy()
+    expect(activePlayerId).toBe(firstPlayerId)
     expect(phase).toBe('Initial Draw')
   })
 
@@ -192,35 +189,31 @@ describe('Playing turns', () => {
 
   test('end of turn', () => {
     mockDuelState.phase = 'Resolving end of turn'
+    mockDuelState.activePlayerId = MockPlayer1.id
 
     mockDuelState.players = {
       [MockPlayer1.id]: {
         ...MockPlayer1,
-        isActive: true,
       },
       [MockPlayer2.id]: {
         ...MockPlayer2,
-        isActive: false,
       },
     }
 
     const state = duelReducer(mockDuelState, endTurn())
 
-    const { players, phase, turn } = state
+    const { phase, turn, activePlayerId } = state
 
     expect(turn).toBe(mockDuelState.turn + 1)
     expect(phase).toBe('Player Turn')
-    expect(players[MockPlayer1.id].isActive).toBe(
-      !mockDuelState.players[MockPlayer1.id].isActive,
-    )
-    expect(players[MockPlayer2.id].isActive).toBe(
-      !mockDuelState.players[MockPlayer2.id].isActive,
-    )
+    expect(activePlayerId).toBe(MockPlayer2.id)
   })
 
   test('play card from hand if active player', () => {
     const novice = createPlayCardFromPrototype(HammeriteNovice)
     const haunt = createPlayCardFromPrototype(Haunt)
+
+    mockDuelState.activePlayerId = MockPlayer1.id
 
     mockDuelState.players = {
       [MockPlayer1.id]: {
@@ -229,7 +222,6 @@ describe('Playing turns', () => {
         cards: {
           [novice.id]: novice,
         },
-        isActive: true,
       },
       [MockPlayer2.id]: {
         ...MockPlayer2,
@@ -261,6 +253,8 @@ describe('Playing turns', () => {
     const novice = createPlayCardFromPrototype(HammeriteNovice)
     const cardId = novice.id
 
+    mockDuelState.activePlayerId = MockPlayer1.id
+
     mockDuelState.players = {
       [MockPlayer1.id]: {
         ...MockPlayer1,
@@ -268,7 +262,6 @@ describe('Playing turns', () => {
         cards: {
           [cardId]: novice,
         },
-        isActive: true,
       },
       [MockPlayer2.id]: MockPlayer2,
     }

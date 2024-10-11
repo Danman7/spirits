@@ -10,7 +10,6 @@ export interface Player {
   board: PlayCard['id'][]
   discard: PlayCard['id'][]
   cards: { [index: PlayCard['id']]: PlayCard }
-  isActive: boolean
   hasPlayedCardThisTurn: boolean
   isCPU?: boolean
   isReady?: boolean
@@ -31,6 +30,8 @@ export interface DuelState {
     [index: Player['id']]: Player
   }
   loggedInPlayerId: Player['id']
+  activePlayerId: Player['id']
+  attackingAgentId: PlayCard['id']
 }
 
 export type PlayCardFromHandAction = PayloadAction<{

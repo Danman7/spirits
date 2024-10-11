@@ -50,7 +50,6 @@ export const MockPlayer2: Player = {
 export const PlayTestPlayer1: Player = {
   ...MockPlayer1,
   coins: DEFAULT_COINS_AMOUNT,
-  isActive: true,
 }
 
 export const PlayTestPlayer2: Player = {
@@ -64,6 +63,8 @@ export const MockPlayerTurnState: DuelState = {
   phase: 'Player Turn',
   playerOrder: [MockPlayer2.id, MockPlayer1.id],
   turn: 1,
+  activePlayerId: MockPlayer1.id,
+  attackingAgentId: '',
   players: {
     [MockPlayer1.id]: {
       ...EMPTY_PLAYER,

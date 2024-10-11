@@ -9,11 +9,14 @@ import { startAppListening } from 'src/app/listenerMiddleware'
 startAppListening({
   actionCreator: endTurn,
   effect: (_, listenerApi) => {
-    const { players, playerOrder, phase } = listenerApi.getState().duel
+    const { players, playerOrder, phase, activePlayerId } =
+      listenerApi.getState().duel
 
     playerOrder.forEach((playerId) => {
       const player = players[playerId]
-      const { isCPU, isActive } = player
+      const { isCPU } = player
+
+      const isActive = player.id === activePlayerId
 
       if (isCPU && isActive && phase === 'Player Turn') {
         // Play random card for now

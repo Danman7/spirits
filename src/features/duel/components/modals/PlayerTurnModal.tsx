@@ -4,7 +4,10 @@ import { motion } from 'framer-motion'
 import { SlideInOutContentVariants } from 'src/shared/animations'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 
-import { getPlayerPrespective } from 'src/features/duel/selectors'
+import {
+  getActivePlayerId,
+  getPlayerPrespective,
+} from 'src/features/duel/selectors'
 import {
   opponentTurnMessage,
   opponentTurnTitle,
@@ -19,8 +22,9 @@ const PlayerTurnModal: FC = () => {
   const dispatch = useAppDispatch()
 
   const playerPrespective = useAppSelector(getPlayerPrespective)
+  const activePlayerId = useAppSelector(getActivePlayerId)
 
-  const playerIsActive = playerPrespective.isActive
+  const playerIsActive = playerPrespective.id === activePlayerId
 
   const onPassOrEndTurn = () => {
     dispatch(endTurn())

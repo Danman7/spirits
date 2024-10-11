@@ -9,7 +9,6 @@ export const EMPTY_PLAYER: Player = {
   board: [],
   discard: [],
   cards: {},
-  isActive: false,
   hasPlayedCardThisTurn: false,
 }
 

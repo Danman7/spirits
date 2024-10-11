@@ -118,11 +118,7 @@ startAppListening({
   effect: async (_, listenerApi) => {
     await listenerApi.delay(MEDIUM_ANIMATION_CYCLE)
 
-    const { players, playerOrder } = listenerApi.getState().duel
-
-    const activePlayerId = players[playerOrder[0]].isActive
-      ? players[playerOrder[0]].id
-      : players[playerOrder[1]].id
+    const { activePlayerId } = listenerApi.getState().duel
 
     listenerApi.dispatch(drawCardFromDeck(activePlayerId))
   },

@@ -52,10 +52,11 @@ export const Default: Story = {
           preloadedState: {
             duel: {
               turn: 1,
+              activePlayerId: MockPlayer1.id,
+              attackingAgentId: '',
               players: {
                 [MockPlayer1.id]: {
                   ...MockPlayer1,
-                  isActive: true,
                   cards: {
                     [guard1.id]: guard1,
                     [guard2.id]: guard2,

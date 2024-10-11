@@ -49,7 +49,6 @@ const mockPlayers: DuelState['players'] = {
   },
   [MockPlayer1.id]: {
     ...MockPlayer1,
-    isActive: true,
     cards: {
       [brother.id]: brother,
       [novice.id]: novice,
@@ -62,6 +61,8 @@ const mockPlayers: DuelState['players'] = {
 
 const mockGameState: DuelState = {
   turn: 1,
+  activePlayerId: MockPlayer1.id,
+  attackingAgentId: '',
   players: mockPlayers,
   playerOrder: [MockPlayer2.id, MockPlayer1.id],
   phase: 'Player Turn',

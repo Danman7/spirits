@@ -34,3 +34,8 @@ export const getPlayerPrespective = createSelector(
   getPlayerOrder,
   (players, playerOrder) => players[playerOrder[1]],
 )
+
+export const getActivePlayerId = createSelector(
+  getDuelState,
+  (duelState) => duelState.activePlayerId,
+)

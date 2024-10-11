@@ -2,7 +2,10 @@ import { FC, useEffect } from 'react'
 import { motion, useAnimationControls } from 'framer-motion'
 
 import { DuelPhase, Player } from 'src/features/duel/types'
-import { getLoggedInPlayerId } from 'src/features/duel/selectors'
+import {
+  getActivePlayerId,
+  getLoggedInPlayerId,
+} from 'src/features/duel/selectors'
 import {
   completeRedraw,
   drawCardFromDeck,
@@ -25,7 +28,6 @@ const PlayerHalfBoard: FC<{
 }> = ({ player, phase, isOnTop }) => {
   const {
     id,
-    isActive,
     name,
     coins,
     cards,
@@ -40,8 +42,10 @@ const PlayerHalfBoard: FC<{
   const dispatch = useAppDispatch()
 
   const loggedInPlayerId = useAppSelector(getLoggedInPlayerId)
+  const activePlayerId = useAppSelector(getActivePlayerId)
 
   const isPlayerPrespective = loggedInPlayerId === id
+  const isActive = activePlayerId === id
 
   const onPlayCard: CardProps['onClickCard'] = (cardId) => {
     dispatch(playCardFromHand({ cardId, playerId: id }))

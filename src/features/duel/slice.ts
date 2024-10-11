@@ -16,6 +16,8 @@ export const initialState: DuelState = {
   players: {},
   playerOrder: [],
   loggedInPlayerId: '',
+  attackingAgentId: '',
+  activePlayerId: '',
 }
 
 export const duelSlice = createSlice({
@@ -49,11 +51,12 @@ export const duelSlice = createSlice({
         startingPlayerId = getRandomArrayItem(players).id
       }
 
+      state.activePlayerId = startingPlayerId
+
       state.players = players.reduce(
         (statePlayers: DuelState['players'], player) => {
           statePlayers[player.id] = {
             ...player,
-            isActive: startingPlayerId === player.id,
             deck: shuffleArray(player.deck),
           }
 
@@ -125,8 +128,12 @@ export const duelSlice = createSlice({
       state.turn += 1
       state.phase = 'Player Turn'
 
+      state.activePlayerId =
+        state.playerOrder[0] === state.activePlayerId
+          ? state.playerOrder[1]
+          : state.playerOrder[0]
+
       state.playerOrder.forEach((playerId) => {
-        state.players[playerId].isActive = !state.players[playerId].isActive
         state.players[playerId].hasPlayedCardThisTurn = false
       })
     },
