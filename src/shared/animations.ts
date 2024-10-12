@@ -22,6 +22,22 @@ export const CardBoostAnimation: AnimationDefinition = {
   },
 }
 
+export const CardAttackAnimation = (
+  isOnTop?: boolean,
+): AnimationDefinition => ({
+  y: [null, isOnTop ? 20 : -20],
+  boxShadow: [
+    null,
+    isOnTop
+      ? '0 -1px 1px 1px var(--primary-color)'
+      : '0 1px 1px 1px var(--primary-color)',
+  ],
+  transition: {
+    repeat: 1,
+    repeatType: 'reverse',
+  },
+})
+
 export const CardDamageAnimation: AnimationDefinition = {
   x: [null, 10, 0, -10, 0],
   transition: {

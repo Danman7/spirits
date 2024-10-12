@@ -55,6 +55,8 @@ export interface CardProps {
   card: PlayCard
   isFaceDown?: boolean
   isSmall?: boolean
+  isAttacking?: boolean
+  isOnTop?: boolean
   onClickCard?: (cardId: PlayCard['id']) => void
 }
 

@@ -38,3 +38,17 @@ export type PlayCardFromHandAction = PayloadAction<{
   cardId: PlayCard['id']
   playerId: Player['id']
 }>
+
+interface AgentAttackPayload {
+  attackingCardId: PlayCard['id']
+  attackinPlayerId: Player['id']
+  defendingPlayerId: Player['id']
+}
+
+export type AgentAttacksPlayerAction = PayloadAction<AgentAttackPayload>
+
+interface AgentAttacksAgentPayload extends AgentAttackPayload {
+  defendingCardId: PlayCard['id']
+}
+
+export type AgentAttacksAgentAction = PayloadAction<AgentAttacksAgentPayload>

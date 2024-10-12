@@ -206,14 +206,14 @@ test('play a card from hand', async () => {
     `${activePlayer.name} / ${activePlayer.coins - playedCard.cost}`,
   )
 
-  expect(await screen.findByText(opponentTurnTitle)).toBeInTheDocument()
-
   expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
     `${playedCard.name}${playedCard.strength}`,
   )
+
+  expect(await screen.findByText(opponentTurnTitle)).toBeInTheDocument()
 })
 
-test('pass the turn', () => {
+test('pass the turn', async () => {
   render(<Board />, {
     preloadedState,
   })
@@ -222,7 +222,7 @@ test('pass the turn', () => {
 
   fireEvent.click(screen.getByRole('button'))
 
-  expect(screen.getByText(opponentTurnTitle)).toBeInTheDocument()
+  expect(await screen.findByText(opponentTurnTitle)).toBeInTheDocument()
 
   expect(screen.queryByRole('button')).not.toBeInTheDocument()
 })
@@ -244,7 +244,7 @@ test('play a card as CPU and end the turn', async () => {
 
   fireEvent.click(screen.getByText(passButtonMessage))
 
-  expect(screen.getByText(opponentTurnTitle)).toBeInTheDocument()
+  expect(await screen.findByText(opponentTurnTitle)).toBeInTheDocument()
 
   await waitFor(
     () => {

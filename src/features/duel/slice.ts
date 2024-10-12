@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import {
+  AgentAttacksAgentAction,
+  AgentAttacksPlayerAction,
   DuelPhase,
   DuelState,
   PlayCardFromHandAction,
@@ -122,11 +124,35 @@ export const duelSlice = createSlice({
       state.turn = 1
     },
     initializeEndTurn: (state) => {
+      const { activePlayerId } = state
+
       state.phase = 'Resolving end of turn'
+
+      const activePlayer = state.players[activePlayerId]
+
+      state.attackingAgentId = activePlayer.board[0] || ''
+    },
+    agentAttacksAgent: (state, action: AgentAttacksAgentAction) => {
+      const { defendingCardId, defendingPlayerId } = action.payload
+
+      const { players } = state
+
+      players[defendingPlayerId].cards[defendingCardId].strength -= 1
+    },
+    agentAttacksPlayer: (state, action: AgentAttacksPlayerAction) => {
+      const { defendingPlayerId } = action.payload
+
+      const { players } = state
+
+      players[defendingPlayerId].coins -= 1
+    },
+    moveToNextAttacker: (state, action: PayloadAction<PlayCard['id']>) => {
+      state.attackingAgentId = action.payload
     },
     endTurn: (state) => {
       state.turn += 1
       state.phase = 'Player Turn'
+      state.attackingAgentId = initialState.attackingAgentId
 
       state.activePlayerId =
         state.playerOrder[0] === state.activePlayerId
@@ -181,6 +207,9 @@ export const {
   beginPlay,
   startRedraw,
   updateCard,
+  agentAttacksAgent,
+  agentAttacksPlayer,
+  moveToNextAttacker,
 } = actions
 
 export type DuelActionTypes = `${typeof duelSlice.name}/${keyof typeof actions}`

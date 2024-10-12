@@ -12,6 +12,7 @@ import duelReducer, {
   startRedraw,
   updateCard,
   putCardAtBottomOfDeck,
+  agentAttacksPlayer,
 } from 'src/features/duel/slice'
 
 import { HammeriteNovice, Haunt } from 'src/features/cards/CardPrototypes'
@@ -75,10 +76,15 @@ describe('Initializing a duel', () => {
 })
 
 const playerId = MockPlayer1.id
+const opponentId = MockPlayer2.id
 
 describe('Sequence before play', () => {
   beforeEach(() => {
-    mockDuelState = { ...initialState, players: { ...normalizedPlayers } }
+    mockDuelState = {
+      ...initialState,
+      players: { ...normalizedPlayers },
+      activePlayerId: playerId,
+    }
   })
 
   test("draw a card from a player's deck if it has cards", () => {
@@ -99,12 +105,12 @@ describe('Sequence before play', () => {
     mockDuelState.phase = 'Initial Draw'
 
     mockDuelState.players = {
-      [MockPlayer1.id]: {
+      [playerId]: {
         ...MockPlayer1,
         hand: [],
         deck: [],
       },
-      [MockPlayer2.id]: MockPlayer2,
+      [opponentId]: MockPlayer2,
     }
 
     const mockDrawingPlayer = mockDuelState.players[playerId]
@@ -131,7 +137,7 @@ describe('Sequence before play', () => {
     const cardId = novice.id
 
     mockDuelState.players = {
-      [MockPlayer1.id]: {
+      [playerId]: {
         ...MockPlayer1,
         cards: {
           ...MockPlayer1.cards,
@@ -139,7 +145,7 @@ describe('Sequence before play', () => {
         },
         hand: [cardId],
       },
-      [MockPlayer2.id]: MockPlayer2,
+      [opponentId]: MockPlayer2,
     }
 
     const state = duelReducer(
@@ -174,28 +180,96 @@ describe('Playing turns', () => {
   beforeEach(() => {
     mockDuelState = {
       ...initialState,
+      activePlayerId: playerId,
       players: normalizedPlayers,
       turn: 1,
       phase: 'Player Turn',
-      playerOrder: [MockPlayer2.id, MockPlayer1.id],
+      playerOrder: [opponentId, playerId],
     }
   })
 
-  test('initialize end of turn resolution', () => {
+  test('initialize end of turn resolution if active player has no units on board', () => {
+    const mockState: DuelState = {
+      ...mockDuelState,
+      players: {
+        [playerId]: {
+          ...mockDuelState.players[playerId],
+          board: [],
+        },
+        [opponentId]: mockDuelState.players[opponentId],
+      },
+    }
+
+    const state = duelReducer(mockState, initializeEndTurn())
+
+    const { phase, attackingAgentId } = state
+
+    expect(phase).toBe('Resolving end of turn')
+    expect(attackingAgentId).toBe('')
+  })
+
+  test('initialize end of turn resolution if active player has units on board', () => {
+    const novice = createPlayCardFromPrototype(HammeriteNovice)
+
+    mockDuelState.players = {
+      [playerId]: {
+        ...mockDuelState.players[playerId],
+        cards: {
+          [novice.id]: novice,
+        },
+        deck: [],
+        board: [novice.id],
+      },
+      [opponentId]: mockDuelState.players[opponentId],
+    }
+
     const state = duelReducer(mockDuelState, initializeEndTurn())
 
-    expect(state.phase).toBe('Resolving end of turn')
+    const { phase, attackingAgentId } = state
+
+    expect(phase).toBe('Resolving end of turn')
+    expect(attackingAgentId).toBe(novice.id)
+  })
+
+  test('agent attacking player', () => {
+    const novice = createPlayCardFromPrototype(HammeriteNovice)
+
+    mockDuelState.phase = 'Resolving end of turn'
+    mockDuelState.players = {
+      [playerId]: {
+        ...mockDuelState.players[playerId],
+        cards: {
+          [novice.id]: novice,
+        },
+        deck: [],
+        board: [novice.id],
+      },
+      [opponentId]: mockDuelState.players[opponentId],
+    }
+
+    const state = duelReducer(
+      mockDuelState,
+      agentAttacksPlayer({
+        attackingCardId: novice.id,
+        attackinPlayerId: playerId,
+        defendingPlayerId: opponentId,
+      }),
+    )
+
+    const { players } = state
+
+    expect(players[opponentId].coins).toBe(MockPlayer2.coins - 1)
   })
 
   test('end of turn', () => {
     mockDuelState.phase = 'Resolving end of turn'
-    mockDuelState.activePlayerId = MockPlayer1.id
+    mockDuelState.activePlayerId = playerId
 
     mockDuelState.players = {
-      [MockPlayer1.id]: {
+      [playerId]: {
         ...MockPlayer1,
       },
-      [MockPlayer2.id]: {
+      [opponentId]: {
         ...MockPlayer2,
       },
     }
@@ -206,24 +280,24 @@ describe('Playing turns', () => {
 
     expect(turn).toBe(mockDuelState.turn + 1)
     expect(phase).toBe('Player Turn')
-    expect(activePlayerId).toBe(MockPlayer2.id)
+    expect(activePlayerId).toBe(opponentId)
   })
 
   test('play card from hand if active player', () => {
     const novice = createPlayCardFromPrototype(HammeriteNovice)
     const haunt = createPlayCardFromPrototype(Haunt)
 
-    mockDuelState.activePlayerId = MockPlayer1.id
+    mockDuelState.activePlayerId = playerId
 
     mockDuelState.players = {
-      [MockPlayer1.id]: {
+      [playerId]: {
         ...MockPlayer1,
         hand: [novice.id],
         cards: {
           [novice.id]: novice,
         },
       },
-      [MockPlayer2.id]: {
+      [opponentId]: {
         ...MockPlayer2,
         hand: [haunt.id],
         cards: {
@@ -253,17 +327,17 @@ describe('Playing turns', () => {
     const novice = createPlayCardFromPrototype(HammeriteNovice)
     const cardId = novice.id
 
-    mockDuelState.activePlayerId = MockPlayer1.id
+    mockDuelState.activePlayerId = playerId
 
     mockDuelState.players = {
-      [MockPlayer1.id]: {
+      [playerId]: {
         ...MockPlayer1,
         board: [cardId],
         cards: {
           [cardId]: novice,
         },
       },
-      [MockPlayer2.id]: MockPlayer2,
+      [opponentId]: MockPlayer2,
     }
 
     const update: Partial<PlayCard> = {

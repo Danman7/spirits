@@ -16,7 +16,7 @@ import {
   yourTurnTitle,
 } from 'src/features/duel/messages'
 import Link from 'src/shared/components/Link'
-import { endTurn } from 'src/features/duel/slice'
+import { initializeEndTurn } from 'src/features/duel/slice'
 
 const PlayerTurnModal: FC = () => {
   const dispatch = useAppDispatch()
@@ -27,7 +27,7 @@ const PlayerTurnModal: FC = () => {
   const playerIsActive = playerPrespective.id === activePlayerId
 
   const onPassOrEndTurn = () => {
-    dispatch(endTurn())
+    dispatch(initializeEndTurn())
   }
 
   const buttonLabel = playerIsActive ? passButtonMessage : ''

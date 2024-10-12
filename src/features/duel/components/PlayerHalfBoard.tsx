@@ -4,12 +4,13 @@ import { motion, useAnimationControls } from 'framer-motion'
 import { DuelPhase, Player } from 'src/features/duel/types'
 import {
   getActivePlayerId,
+  getAttackingAgentId,
   getLoggedInPlayerId,
 } from 'src/features/duel/selectors'
 import {
   completeRedraw,
   drawCardFromDeck,
-  endTurn,
+  initializeEndTurn,
   playCardFromHand,
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
@@ -43,6 +44,7 @@ const PlayerHalfBoard: FC<{
 
   const loggedInPlayerId = useAppSelector(getLoggedInPlayerId)
   const activePlayerId = useAppSelector(getActivePlayerId)
+  const attackingAgentId = useAppSelector(getAttackingAgentId)
 
   const isPlayerPrespective = loggedInPlayerId === id
   const isActive = activePlayerId === id
@@ -51,7 +53,7 @@ const PlayerHalfBoard: FC<{
     dispatch(playCardFromHand({ cardId, playerId: id }))
 
     setTimeout(() => {
-      dispatch(endTurn())
+      dispatch(initializeEndTurn())
     }, MEDIUM_ANIMATION_CYCLE)
   }
 
@@ -138,7 +140,13 @@ const PlayerHalfBoard: FC<{
         className={isOnTop ? styles.topPlayerBoard : styles.bottomPlayerBoard}
       >
         {board.map((cardId) => (
-          <Card key={cardId} card={cards[cardId]} isSmall />
+          <Card
+            key={cardId}
+            card={cards[cardId]}
+            isSmall
+            isAttacking={attackingAgentId === cardId}
+            isOnTop={isOnTop}
+          />
         ))}
       </div>
     </>

@@ -39,3 +39,8 @@ export const getActivePlayerId = createSelector(
   getDuelState,
   (duelState) => duelState.activePlayerId,
 )
+
+export const getAttackingAgentId = createSelector(
+  getDuelState,
+  (duelState) => duelState.attackingAgentId,
+)

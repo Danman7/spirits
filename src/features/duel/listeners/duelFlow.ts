@@ -11,9 +11,14 @@ import {
   beginPlay,
   startRedraw,
   endTurn,
+  initializeEndTurn,
+  moveToNextAttacker,
+  agentAttacksAgent,
+  agentAttacksPlayer,
 } from 'src/features/duel/slice'
 import * as CardEffects from 'src/features/cards/CardEffects'
 import * as CardEffectPredicates from 'src/features/cards/CardEffectPredicates'
+import { Player } from 'src/features/duel/types'
 
 // Initial card draw
 startAppListening({
@@ -121,5 +126,60 @@ startAppListening({
     const { activePlayerId } = listenerApi.getState().duel
 
     listenerApi.dispatch(drawCardFromDeck(activePlayerId))
+  },
+})
+
+// Manage attacking
+startAppListening({
+  matcher: isAnyOf(initializeEndTurn, moveToNextAttacker),
+  effect: async (_, listenerApi) => {
+    const { activePlayerId, attackingAgentId, playerOrder, players } =
+      listenerApi.getState().duel
+
+    if (attackingAgentId) {
+      const opponent: Player =
+        players[playerOrder[0]].id === activePlayerId
+          ? players[playerOrder[1]]
+          : players[playerOrder[0]]
+
+      if (opponent.board.length) {
+        const attackingCardIndex =
+          players[activePlayerId].board.indexOf(attackingAgentId)
+        const defendingCardId =
+          opponent.board[attackingCardIndex] ||
+          opponent.board[opponent.board.length - 1]
+
+        listenerApi.dispatch(
+          agentAttacksAgent({
+            attackingCardId: attackingAgentId,
+            attackinPlayerId: activePlayerId,
+            defendingPlayerId: opponent.id,
+            defendingCardId,
+          }),
+        )
+      } else {
+        listenerApi.dispatch(
+          agentAttacksPlayer({
+            attackingCardId: attackingAgentId,
+            attackinPlayerId: activePlayerId,
+            defendingPlayerId: opponent.id,
+          }),
+        )
+      }
+    }
+
+    await listenerApi.delay(MEDIUM_ANIMATION_CYCLE)
+
+    const activePlayer = players[activePlayerId]
+
+    const attackingAgentIndex = activePlayer.board.indexOf(attackingAgentId)
+
+    if (attackingAgentIndex === activePlayer.board.length - 1) {
+      listenerApi.dispatch(endTurn())
+    } else {
+      listenerApi.dispatch(
+        moveToNextAttacker(activePlayer.board[attackingAgentIndex + 1]),
+      )
+    }
   },
 })

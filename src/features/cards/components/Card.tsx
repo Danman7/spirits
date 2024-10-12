@@ -8,12 +8,20 @@ import styles from 'src/shared/styles/styles.module.css'
 import { usePrevious } from 'src/shared/customHooks'
 import PositiveNegativeNumber from 'src/shared/components/PositiveNegativeNumber'
 import {
+  CardAttackAnimation,
   CardBoostAnimation,
   CardDamageAnimation,
   NumberChangeAnimation,
 } from 'src/shared/animations'
 
-const Card: FC<CardProps> = ({ card, isSmall, isFaceDown, onClickCard }) => {
+const Card: FC<CardProps> = ({
+  card,
+  isSmall,
+  isFaceDown,
+  isAttacking,
+  isOnTop,
+  onClickCard,
+}) => {
   const {
     id,
     name,
@@ -44,6 +52,12 @@ const Card: FC<CardProps> = ({ card, isSmall, isFaceDown, onClickCard }) => {
       cardAnimationControls.start(CardDamageAnimation)
     }
   }, [prevStrength, strength, strengthChangeAnimation, cardAnimationControls])
+
+  useEffect(() => {
+    if (isAttacking) {
+      cardAnimationControls.start(CardAttackAnimation(isOnTop))
+    }
+  }, [isAttacking])
 
   return isFaceDown ? (
     <motion.div
