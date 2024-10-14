@@ -14,10 +14,10 @@ import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constan
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
 import { MockPlayerTurnState } from 'src/features/duel/__mocks__'
 import { playCardFromHand, updateCard } from 'src/features/duel/slice'
-import { DuelState, PlayCardFromHandAction } from 'src/features/duel/types'
+import { DuelState, PlayerCardAction } from 'src/features/duel/types'
 import { PlayCard } from 'src/features/cards/types'
 
-let mockAction: PlayCardFromHandAction
+let mockAction: PlayerCardAction
 let mockDuelState: DuelState
 let card: PlayCard
 let cardId: PlayCard['id']

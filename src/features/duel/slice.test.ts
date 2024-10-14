@@ -15,6 +15,7 @@ import duelReducer, {
   agentAttacksPlayer,
   agentAttacksAgent,
   moveToNextAttacker,
+  moveCardToDiscard,
 } from 'src/features/duel/slice'
 
 import {
@@ -135,39 +136,40 @@ describe('Sequence before play', () => {
     expect(state.phase).toBe('Redrawing Phase')
   })
 
-  test('put a card from hand at the bottom of the deck', () => {
+  test('put a card at the bottom of the deck', () => {
     mockDuelState.phase = 'Redrawing Phase'
 
     const novice = createPlayCardFromPrototype(HammeriteNovice)
-
     const cardId = novice.id
+    const stacks = ['hand', 'board', 'discard']
 
-    mockDuelState.players = {
-      [playerId]: {
-        ...MockPlayer1,
-        cards: {
-          ...MockPlayer1.cards,
-          [cardId]: novice,
+    stacks.forEach((stack: 'hand' | 'board' | 'discard') => {
+      mockDuelState.players = {
+        [playerId]: {
+          ...MockPlayer1,
+          cards: {
+            ...MockPlayer1.cards,
+            [cardId]: novice,
+          },
+          [stack]: [cardId],
         },
-        hand: [cardId],
-      },
-      [opponentId]: MockPlayer2,
-    }
+        [opponentId]: MockPlayer2,
+      }
 
-    const state = duelReducer(
-      mockDuelState,
-      putCardAtBottomOfDeck({
-        playerId,
-        cardId,
-        from: 'hand',
-      }),
-    )
+      const state = duelReducer(
+        mockDuelState,
+        putCardAtBottomOfDeck({
+          playerId,
+          cardId,
+        }),
+      )
 
-    const player = state.players[playerId]
+      const player = state.players[playerId]
 
-    expect(player.hand).toHaveLength(0)
-    expect(player.deck).toHaveLength(MockPlayer1.deck.length + 1)
-    expect(player.deck).toContain(cardId)
+      expect(player[stack]).toHaveLength(0)
+      expect(player.deck).toHaveLength(MockPlayer1.deck.length + 1)
+      expect(player.deck).toContain(cardId)
+    })
   })
 
   test('start the game', () => {
@@ -414,5 +416,41 @@ describe('Playing turns', () => {
 
     expect(updatedCard.strength).toBe(update.strength)
     expect(updatedCard.cost).toBe(update.cost)
+  })
+
+  test('move a card from board to discard pile', () => {
+    const novice = createPlayCardFromPrototype(HammeriteNovice)
+    const cardId = novice.id
+    const stacks = ['hand', 'board', 'deck']
+
+    stacks.forEach((stack: 'hand' | 'board' | 'deck') => {
+      mockDuelState.players = {
+        [playerId]: {
+          ...MockPlayer1,
+          [stack]: [cardId],
+          cards: {
+            [cardId]: { ...novice, strength: 1 },
+          },
+        },
+        [opponentId]: MockPlayer2,
+      }
+
+      const state = duelReducer(
+        mockDuelState,
+        moveCardToDiscard({
+          playerId,
+          cardId,
+        }),
+      )
+
+      const player = state.players[playerId]
+
+      expect(player[stack]).toHaveLength(0)
+      expect(player.discard).toHaveLength(1)
+      expect(player.discard).toContain(cardId)
+      expect(player.cards[cardId].strength).toBe(
+        player.cards[cardId].prototype.strength,
+      )
+    })
   })
 })

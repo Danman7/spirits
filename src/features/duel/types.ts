@@ -34,10 +34,12 @@ export interface DuelState {
   attackingAgentId: PlayCard['id']
 }
 
-export type PlayCardFromHandAction = PayloadAction<{
+interface PlayerCardPayload {
   cardId: PlayCard['id']
   playerId: Player['id']
-}>
+}
+
+export type PlayerCardAction = PayloadAction<PlayerCardPayload>
 
 interface AgentAttackPayload {
   attackingCardId: PlayCard['id']

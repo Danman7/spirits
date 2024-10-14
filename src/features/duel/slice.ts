@@ -5,7 +5,7 @@ import {
   AgentAttacksPlayerAction,
   DuelPhase,
   DuelState,
-  PlayCardFromHandAction,
+  PlayerCardAction,
   Player,
 } from 'src/features/duel/types'
 
@@ -97,22 +97,22 @@ export const duelSlice = createSlice({
     startRedraw: (state) => {
       state.phase = 'Redrawing Phase'
     },
-    putCardAtBottomOfDeck: (
-      state,
-      action: PayloadAction<{
-        cardId: PlayCard['id']
-        playerId: Player['id']
-        from: 'hand' | 'board' | 'discard'
-      }>,
-    ) => {
-      const { cardId, playerId, from } = action.payload
+    putCardAtBottomOfDeck: (state, action: PlayerCardAction) => {
+      const { cardId: movedCardId, playerId } = action.payload
 
       const { players } = state
 
-      players[playerId][from] = players[playerId][from].filter(
-        (id) => id !== cardId,
+      players[playerId].board = players[playerId].board.filter(
+        (cardId) => cardId !== movedCardId,
       )
-      players[playerId].deck.push(cardId)
+      players[playerId].hand = players[playerId].hand.filter(
+        (cardId) => cardId !== movedCardId,
+      )
+      players[playerId].discard = players[playerId].discard.filter(
+        (cardId) => cardId !== movedCardId,
+      )
+
+      players[playerId].deck.push(movedCardId)
     },
     completeRedraw: (state, action: PayloadAction<Player['id']>) => {
       const { players } = state
@@ -163,7 +163,7 @@ export const duelSlice = createSlice({
         state.players[playerId].hasPlayedCardThisTurn = false
       })
     },
-    playCardFromHand: (state, action: PlayCardFromHandAction) => {
+    playCardFromHand: (state, action: PlayerCardAction) => {
       const { cardId, playerId } = action.payload
       const { players } = state
 
@@ -191,6 +191,30 @@ export const duelSlice = createSlice({
         ...update,
       }
     },
+    moveCardToDiscard: (state, action: PlayerCardAction) => {
+      const { players } = state
+      const { playerId, cardId: movedCardId } = action.payload
+
+      const player = players[playerId]
+
+      players[playerId].board = player.board.filter(
+        (cardId) => cardId !== movedCardId,
+      )
+      players[playerId].hand = player.hand.filter(
+        (cardId) => cardId !== movedCardId,
+      )
+      players[playerId].deck = player.deck.filter(
+        (cardId) => cardId !== movedCardId,
+      )
+
+      const card = player.cards[movedCardId]
+
+      players[playerId].discard = [...player.board, movedCardId]
+      players[playerId].cards[movedCardId] = {
+        ...card,
+        strength: card.prototype.strength,
+      }
+    },
   },
 })
 
@@ -210,6 +234,7 @@ export const {
   agentAttacksAgent,
   agentAttacksPlayer,
   moveToNextAttacker,
+  moveCardToDiscard,
 } = actions
 
 export type DuelActionTypes = `${typeof duelSlice.name}/${keyof typeof actions}`

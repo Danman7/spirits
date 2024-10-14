@@ -233,7 +233,7 @@ test('pass the turn', async () => {
     [opponentId]: {
       ...MockPlayer2,
       cards: {
-        [haunt.id]: haunt,
+        [haunt.id]: { ...haunt, strength: 1 },
         [zombie.id]: zombie,
       },
       deck: [],
@@ -266,6 +266,7 @@ test('pass the turn', async () => {
   )
 
   expect(screen.queryByRole('button')).not.toBeInTheDocument()
+  expect(screen.queryByText(Haunt.name)).not.toBeInTheDocument()
 })
 
 test('play a card as CPU and end the turn', async () => {

@@ -15,6 +15,8 @@ import {
   moveToNextAttacker,
   agentAttacksAgent,
   agentAttacksPlayer,
+  updateCard,
+  moveCardToDiscard,
 } from 'src/features/duel/slice'
 import * as CardEffects from 'src/features/cards/CardEffects'
 import * as CardEffectPredicates from 'src/features/cards/CardEffectPredicates'
@@ -179,5 +181,28 @@ startAppListening({
         moveToNextAttacker(activePlayer.board[attackingAgentIndex + 1]),
       )
     }
+  },
+})
+
+// Manage agents being defeated
+startAppListening({
+  matcher: isAnyOf(updateCard, agentAttacksAgent),
+  effect: async (_, listenerApi) => {
+    const { players, playerOrder } = listenerApi.getState().duel
+
+    playerOrder.forEach((playerId) => {
+      Object.values(players[playerId].cards).forEach(
+        ({ strength, id: cardId }) => {
+          if (strength <= 0) {
+            listenerApi.dispatch(
+              moveCardToDiscard({
+                cardId,
+                playerId,
+              }),
+            )
+          }
+        },
+      )
+    })
   },
 })
