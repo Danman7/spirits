@@ -60,8 +60,6 @@ startAppListening({
   effect: async (_, listenerApi) => {
     await listenerApi.delay(MEDIUM_ANIMATION_CYCLE)
 
-    listenerApi.unsubscribe()
-
     listenerApi.dispatch(startRedraw())
 
     const { players, playerOrder } = listenerApi.getState().duel

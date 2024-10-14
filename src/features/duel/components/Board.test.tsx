@@ -9,13 +9,7 @@ import {
   skipRedrawMessage,
   yourTurnTitle,
 } from 'src/features/duel/messages'
-import {
-  fireEvent,
-  render,
-  screen,
-  cleanup,
-  waitFor,
-} from 'src/shared/test-utils'
+import { fireEvent, render, screen, waitFor } from 'src/shared/test-utils'
 import { DuelState } from 'src/features/duel/types'
 import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
 
@@ -31,52 +25,28 @@ import {
 } from 'src/features/cards/CardPrototypes'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
 
-const haunt = createPlayCardFromPrototype(Haunt)
-const book = createPlayCardFromPrototype(BookOfAsh)
-const brother = createPlayCardFromPrototype(BrotherSachelman)
-const novice = createPlayCardFromPrototype(HammeriteNovice)
+const playerId = MockPlayer1.id
+const opponentId = MockPlayer2.id
 
 const mockPlayers: DuelState['players'] = {
-  [MockPlayer2.id]: {
-    ...MockPlayer2,
-    cards: {
-      [haunt.id]: haunt,
-      [book.id]: book,
-    },
-    deck: [],
-    hand: [haunt.id],
-    discard: [book.id],
-  },
-  [MockPlayer1.id]: {
-    ...MockPlayer1,
-    cards: {
-      [brother.id]: brother,
-      [novice.id]: novice,
-    },
-    deck: [],
-    hand: [brother.id],
-    discard: [novice.id],
-  },
+  [opponentId]: MockPlayer2,
+  [playerId]: MockPlayer1,
 }
 
 const mockGameState: DuelState = {
   turn: 1,
-  activePlayerId: MockPlayer1.id,
+  activePlayerId: playerId,
   attackingAgentId: '',
   players: mockPlayers,
-  playerOrder: [MockPlayer2.id, MockPlayer1.id],
+  playerOrder: [opponentId, playerId],
   phase: 'Player Turn',
-  loggedInPlayerId: MockPlayer1.id,
+  loggedInPlayerId: playerId,
 }
 
 let preloadedState: RootState
 
 beforeEach(() => {
   preloadedState = { duel: { ...mockGameState } }
-})
-
-afterEach(() => {
-  cleanup()
 })
 
 test('show the general UI elements', () => {
@@ -102,13 +72,18 @@ test('initial draw of cards', () => {
     preloadedState,
   })
 
-  const { players, playerOrder } = preloadedState.duel
+  const { players } = preloadedState.duel
+
+  const player = players[playerId]
+  const opponent = players[opponentId]
 
   expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-    `${players[playerOrder[0]].name} vs ${players[playerOrder[1]].name}`,
+    `${opponent.name} vs ${player.name}`,
   )
 
   expect(screen.getByText(initialDrawMessage)).toBeInTheDocument()
+
+  // TODO: Drawing cards up to initial limit
 })
 
 test('redraw a card', async () => {
@@ -120,26 +95,26 @@ test('redraw a card', async () => {
 
   preloadedState.duel.phase = 'Redrawing Phase'
   preloadedState.duel.players = {
-    [MockPlayer2.id]: {
-      ...mockPlayers[MockPlayer2.id],
+    [opponentId]: {
+      ...mockPlayers[opponentId],
       cards: {
-        ...mockPlayers[MockPlayer2.id].cards,
+        ...mockPlayers[opponentId].cards,
         [zombie1.id]: zombie1,
         [zombie2.id]: zombie2,
       },
       isReady: true,
-      hand: [...mockPlayers[MockPlayer2.id].hand, zombie1.id, zombie2.id],
+      hand: [...mockPlayers[opponentId].hand, zombie1.id, zombie2.id],
     },
-    [MockPlayer1.id]: {
-      ...mockPlayers[MockPlayer1.id],
+    [playerId]: {
+      ...mockPlayers[playerId],
       cards: {
-        ...mockPlayers[MockPlayer1.id].cards,
+        ...mockPlayers[playerId].cards,
         [novice2.id]: novice2,
         [guard.id]: guard,
         [acolyte.id]: acolyte,
       },
       deck: [acolyte.id],
-      hand: [...mockPlayers[MockPlayer1.id].hand, novice2.id, guard.id],
+      hand: [...mockPlayers[playerId].hand, novice2.id, guard.id],
     },
   }
 
@@ -165,12 +140,12 @@ test('redraw a card', async () => {
 test('skip redraw', async () => {
   preloadedState.duel.phase = 'Redrawing Phase'
   preloadedState.duel.players = {
-    [MockPlayer2.id]: {
-      ...mockPlayers[MockPlayer2.id],
+    [opponentId]: {
+      ...mockPlayers[opponentId],
       isReady: true,
     },
-    [MockPlayer1.id]: {
-      ...mockPlayers[MockPlayer1.id],
+    [playerId]: {
+      ...mockPlayers[playerId],
     },
   }
 
@@ -184,9 +159,38 @@ test('skip redraw', async () => {
 })
 
 test('play a card from hand', async () => {
+  const haunt = createPlayCardFromPrototype(Haunt)
+  const book = createPlayCardFromPrototype(BookOfAsh)
+  const brother = createPlayCardFromPrototype(BrotherSachelman)
+  const novice = createPlayCardFromPrototype(HammeriteNovice)
+
+  preloadedState.duel.players = {
+    [opponentId]: {
+      ...MockPlayer2,
+      cards: {
+        [haunt.id]: haunt,
+        [book.id]: book,
+      },
+      deck: [],
+      hand: [haunt.id],
+      discard: [book.id],
+    },
+    [playerId]: {
+      ...MockPlayer1,
+      cards: {
+        [brother.id]: brother,
+        [novice.id]: novice,
+      },
+      deck: [],
+      hand: [brother.id],
+      discard: [novice.id],
+    },
+  }
+
   const { players } = preloadedState.duel
 
-  const activePlayer = players[MockPlayer1.id]
+  const activePlayer = players[playerId]
+  const opponent = players[opponentId]
 
   const playedCard = activePlayer.cards[activePlayer.hand[0]]
 
@@ -210,10 +214,42 @@ test('play a card from hand', async () => {
     `${playedCard.name}${playedCard.strength}`,
   )
 
+  expect(await screen.findByText(opponent.coins - 1)).toBeInTheDocument()
+
+  expect(playerInfos[0]).toHaveTextContent(
+    `${opponent.name} / ${opponent.coins - 1}`,
+  )
+
   expect(await screen.findByText(opponentTurnTitle)).toBeInTheDocument()
 })
 
 test('pass the turn', async () => {
+  const haunt = createPlayCardFromPrototype(Haunt)
+  const zombie = createPlayCardFromPrototype(Zombie)
+  const brother = createPlayCardFromPrototype(BrotherSachelman)
+  const novice = createPlayCardFromPrototype(HammeriteNovice)
+
+  preloadedState.duel.players = {
+    [opponentId]: {
+      ...MockPlayer2,
+      cards: {
+        [haunt.id]: haunt,
+        [zombie.id]: zombie,
+      },
+      deck: [],
+      board: [haunt.id, zombie.id],
+    },
+    [playerId]: {
+      ...MockPlayer1,
+      cards: {
+        [brother.id]: brother,
+        [novice.id]: novice,
+      },
+      deck: [],
+      board: [brother.id, novice.id],
+    },
+  }
+
   render(<Board />, {
     preloadedState,
   })
@@ -222,22 +258,47 @@ test('pass the turn', async () => {
 
   fireEvent.click(screen.getByRole('button'))
 
-  expect(await screen.findByText(opponentTurnTitle)).toBeInTheDocument()
+  await waitFor(
+    () => {
+      expect(screen.getByText(opponentTurnTitle)).toBeInTheDocument()
+    },
+    { timeout: 3000 },
+  )
 
   expect(screen.queryByRole('button')).not.toBeInTheDocument()
 })
 
 test('play a card as CPU and end the turn', async () => {
+  const haunt = createPlayCardFromPrototype(Haunt)
+  const brother = createPlayCardFromPrototype(BrotherSachelman)
+
   preloadedState.duel.players = {
-    [MockPlayer2.id]: { ...mockPlayers[MockPlayer2.id], isCPU: true },
-    [MockPlayer1.id]: mockPlayers[MockPlayer1.id],
+    [opponentId]: {
+      ...MockPlayer2,
+      cards: {
+        [haunt.id]: haunt,
+      },
+      deck: [],
+      hand: [haunt.id],
+      discard: [],
+      isCPU: true,
+    },
+    [playerId]: {
+      ...MockPlayer1,
+      cards: {
+        [brother.id]: brother,
+      },
+      deck: [],
+      hand: [brother.id],
+      discard: [],
+    },
   }
 
   render(<Board />, {
     preloadedState,
   })
 
-  const cpuPlayer = preloadedState.duel.players[MockPlayer2.id]
+  const cpuPlayer = preloadedState.duel.players[opponentId]
   const playedCPUCard = cpuPlayer.cards[cpuPlayer.hand[0]]
 
   expect(screen.queryByText(playedCPUCard.name)).not.toBeInTheDocument()
@@ -257,6 +318,6 @@ test('play a card as CPU and end the turn', async () => {
     () => {
       expect(screen.getByText(yourTurnTitle)).toBeInTheDocument()
     },
-    { timeout: 3000 },
+    { timeout: 2000 },
   )
 })
