@@ -13,9 +13,15 @@ import duelReducer, {
   updateCard,
   putCardAtBottomOfDeck,
   agentAttacksPlayer,
+  agentAttacksAgent,
+  moveToNextAttacker,
 } from 'src/features/duel/slice'
 
-import { HammeriteNovice, Haunt } from 'src/features/cards/CardPrototypes'
+import {
+  HammeriteNovice,
+  Haunt,
+  Zombie,
+} from 'src/features/cards/CardPrototypes'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
 import { PlayCard } from 'src/features/cards/types'
 
@@ -259,6 +265,56 @@ describe('Playing turns', () => {
     const { players } = state
 
     expect(players[opponentId].coins).toBe(MockPlayer2.coins - 1)
+  })
+
+  test('agent attacking agent', () => {
+    const novice = createPlayCardFromPrototype(HammeriteNovice)
+    const zombie = createPlayCardFromPrototype(Zombie)
+
+    mockDuelState.phase = 'Resolving end of turn'
+    mockDuelState.players = {
+      [playerId]: {
+        ...mockDuelState.players[playerId],
+        cards: {
+          [novice.id]: novice,
+        },
+        deck: [],
+        board: [novice.id],
+      },
+      [opponentId]: {
+        ...mockDuelState.players[opponentId],
+        cards: {
+          [zombie.id]: zombie,
+        },
+        deck: [],
+        board: [zombie.id],
+      },
+    }
+
+    const state = duelReducer(
+      mockDuelState,
+      agentAttacksAgent({
+        attackingCardId: novice.id,
+        attackinPlayerId: playerId,
+        defendingPlayerId: opponentId,
+        defendingCardId: zombie.id,
+      }),
+    )
+
+    const { players } = state
+
+    expect(players[opponentId].cards[zombie.id].strength).toBe(
+      Zombie.strength - 1,
+    )
+  })
+
+  test('move to next attacker', () => {
+    const nextAttackerId = 'test'
+    const state = duelReducer(mockDuelState, moveToNextAttacker(nextAttackerId))
+
+    const { attackingAgentId } = state
+
+    expect(attackingAgentId).toBe(nextAttackerId)
   })
 
   test('end of turn', () => {
