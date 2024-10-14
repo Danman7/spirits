@@ -11,7 +11,7 @@ import {
   completeRedraw,
   drawCardFromDeck,
   initializeEndTurn,
-  playCardFromHand,
+  playCard,
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
 
@@ -50,7 +50,7 @@ const PlayerHalfBoard: FC<{
   const isActive = activePlayerId === id
 
   const onPlayCard: CardProps['onClickCard'] = (cardId) => {
-    dispatch(playCardFromHand({ cardId, playerId: id }))
+    dispatch(playCard({ cardId, playerId: id }))
 
     setTimeout(() => {
       dispatch(initializeEndTurn())
@@ -62,7 +62,6 @@ const PlayerHalfBoard: FC<{
       putCardAtBottomOfDeck({
         cardId,
         playerId: id,
-        from: 'hand',
       }),
     )
 

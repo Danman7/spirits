@@ -2,11 +2,7 @@ import { LONG_ANIMATION_CYCLE } from 'src/features/duel/constants'
 import { getPlayableCardIds } from 'src/features/duel/utils'
 
 import { getRandomArrayItem } from 'src/shared/utils'
-import {
-  endTurn,
-  initializeEndTurn,
-  playCardFromHand,
-} from 'src/features/duel/slice'
+import { endTurn, initializeEndTurn, playCard } from 'src/features/duel/slice'
 import { startAppListening } from 'src/app/listenerMiddleware'
 
 // Handle computer playing turn
@@ -31,7 +27,7 @@ startAppListening({
 
           setTimeout(() => {
             listenerApi.dispatch(
-              playCardFromHand({
+              playCard({
                 cardId,
                 playerId,
               }),

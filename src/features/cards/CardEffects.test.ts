@@ -13,7 +13,7 @@ import {
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constants'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
 import { MockPlayerTurnState } from 'src/features/duel/__mocks__'
-import { playCardFromHand, updateCard } from 'src/features/duel/slice'
+import { playCard, updateCard } from 'src/features/duel/slice'
 import { DuelState, PlayerCardAction } from 'src/features/duel/types'
 import { PlayCard } from 'src/features/cards/types'
 
@@ -66,7 +66,7 @@ describe(BrotherSachelman.name, () => {
     cardId = card.id
 
     mockAction = {
-      type: playCardFromHand.type,
+      type: playCard.type,
       payload: { cardId, playerId },
     }
   })
@@ -155,7 +155,7 @@ describe(HammeriteNovice.name, () => {
     cardId = card.id
 
     mockAction = {
-      type: playCardFromHand.type,
+      type: playCard.type,
       payload: { cardId, playerId },
     }
   })
@@ -198,7 +198,7 @@ describe(HammeriteNovice.name, () => {
     HammeriteNoviceOnPlayEffect(mockAction, listenerApi)
 
     expect(listenerApi.dispatch).toHaveBeenCalledWith(
-      playCardFromHand({
+      playCard({
         cardId: novice.id,
         playerId,
       }),

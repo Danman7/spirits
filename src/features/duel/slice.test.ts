@@ -7,7 +7,7 @@ import duelReducer, {
   initializeEndTurn,
   initializeDuel,
   initialState,
-  playCardFromHand,
+  playCard,
   beginPlay,
   startRedraw,
   updateCard,
@@ -341,7 +341,7 @@ describe('Playing turns', () => {
     expect(activePlayerId).toBe(opponentId)
   })
 
-  test('play card from hand if active player', () => {
+  test('play card', () => {
     const novice = createPlayCardFromPrototype(HammeriteNovice)
     const haunt = createPlayCardFromPrototype(Haunt)
 
@@ -368,7 +368,7 @@ describe('Playing turns', () => {
 
     const state = duelReducer(
       mockDuelState,
-      playCardFromHand({
+      playCard({
         cardId: novice.id,
         playerId,
       }),

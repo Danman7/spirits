@@ -163,16 +163,22 @@ export const duelSlice = createSlice({
         state.players[playerId].hasPlayedCardThisTurn = false
       })
     },
-    playCardFromHand: (state, action: PlayerCardAction) => {
-      const { cardId, playerId } = action.payload
+    playCard: (state, action: PlayerCardAction) => {
+      const { cardId: playedCardId, playerId } = action.payload
       const { players } = state
 
-      const playedCard = players[playerId].cards[cardId]
+      const playedCard = players[playerId].cards[playedCardId]
 
       players[playerId].coins = players[playerId].coins - playedCard.cost
       players[playerId].hasPlayedCardThisTurn = true
+      players[playerId].board = players[playerId].board.filter(
+        (cardId) => cardId !== playedCardId,
+      )
       players[playerId].hand = players[playerId].hand.filter(
-        (cardId) => cardId !== playedCard.id,
+        (cardId) => cardId !== playedCardId,
+      )
+      players[playerId].discard = players[playerId].discard.filter(
+        (cardId) => cardId !== playedCardId,
       )
       players[playerId].board = [...players[playerId].board, playedCard.id]
     },
@@ -226,7 +232,7 @@ export const {
   drawCardFromDeck,
   endTurn,
   initializeEndTurn,
-  playCardFromHand,
+  playCard,
   putCardAtBottomOfDeck,
   beginPlay,
   startRedraw,
