@@ -4,6 +4,7 @@ export const EMPTY_PLAYER: Player = {
   id: '',
   name: '',
   coins: 0,
+  income: 0,
   deck: [],
   hand: [],
   board: [],

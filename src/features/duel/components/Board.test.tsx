@@ -50,6 +50,11 @@ beforeEach(() => {
 })
 
 test('show the general UI elements', () => {
+  preloadedState.duel.players = {
+    [playerId]: { ...MockPlayer1, income: 2 },
+    [opponentId]: { ...MockPlayer2 },
+  }
+
   render(<Board />, {
     preloadedState,
   })
@@ -58,11 +63,13 @@ test('show the general UI elements', () => {
 
   const playerInfos = screen.getAllByRole('heading', { level: 3 })
 
-  playerInfos.forEach((element, index) => {
-    expect(element).toHaveTextContent(
-      `${players[playerOrder[index]].name} / ${players[playerOrder[index]].coins}`,
-    )
-  })
+  expect(playerInfos[1].textContent).toBe(
+    `${players[playerOrder[1]].name} / ${players[playerOrder[1]].coins} (+${players[playerOrder[1]].income})`,
+  )
+
+  expect(playerInfos[0].textContent).toBe(
+    `${players[playerOrder[0]].name} / ${players[playerOrder[0]].coins}`,
+  )
 })
 
 test('initial draw of cards', () => {

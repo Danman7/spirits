@@ -31,6 +31,7 @@ const PlayerHalfBoard: FC<{
     id,
     name,
     coins,
+    income,
     cards,
     deck,
     hand,
@@ -106,6 +107,7 @@ const PlayerHalfBoard: FC<{
         >
           {coins}
         </motion.span>
+        {income ? <span> (+{income})</span> : null}
       </h3>
 
       <div className={isOnTop ? styles.topPlayerSide : styles.bottomPlayerSide}>

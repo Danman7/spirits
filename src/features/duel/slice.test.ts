@@ -323,22 +323,29 @@ describe('Playing turns', () => {
     mockDuelState.phase = 'Resolving end of turn'
     mockDuelState.activePlayerId = playerId
 
+    const coins = 20
+    const income = 2
+
     mockDuelState.players = {
       [playerId]: {
         ...MockPlayer1,
+        income,
+        coins,
       },
-      [opponentId]: {
-        ...MockPlayer2,
-      },
+      [opponentId]: MockPlayer2,
     }
 
     const state = duelReducer(mockDuelState, endTurn())
 
-    const { phase, turn, activePlayerId } = state
+    const { phase, turn, activePlayerId, players } = state
+
+    const player = players[playerId]
 
     expect(turn).toBe(mockDuelState.turn + 1)
     expect(phase).toBe('Player Turn')
     expect(activePlayerId).toBe(opponentId)
+    expect(player.coins).toBe(coins + 1)
+    expect(player.income).toBe(income - 1)
   })
 
   test('play card', () => {
@@ -455,6 +462,7 @@ describe('Playing turns', () => {
       expect(player.cards[cardId].strength).toBe(
         player.cards[cardId].prototype.strength,
       )
+      expect(player.income).toBe(novice.cost)
     })
   })
 })

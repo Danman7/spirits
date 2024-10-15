@@ -160,7 +160,14 @@ export const duelSlice = createSlice({
           : state.playerOrder[0]
 
       state.playerOrder.forEach((playerId) => {
+        const player = state.players[playerId]
+
         state.players[playerId].hasPlayedCardThisTurn = false
+
+        if (player.income) {
+          state.players[playerId].coins += 1
+          state.players[playerId].income -= 1
+        }
       })
     },
     playCard: (state, action: PlayerCardAction) => {
@@ -220,6 +227,7 @@ export const duelSlice = createSlice({
         ...card,
         strength: card.prototype.strength,
       }
+      players[playerId].income += card.cost
     },
   },
 })

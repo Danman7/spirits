@@ -203,6 +203,7 @@
   position: fixed;
   left: 1rem;
   font-weight: 400;
+  z-index: 4;
 }
 
 .activePlayerInfo {
@@ -211,12 +212,12 @@
 
 .topPlayerInfo {
   composes: playerInfo;
-  top: 1rem;
+  top: 3rem;
 }
 
 .bottomPlayerInfo {
   composes: playerInfo;
-  bottom: 1rem;
+  bottom: 3rem;
 }
 
 .defaultButton {

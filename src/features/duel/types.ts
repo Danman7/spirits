@@ -5,6 +5,7 @@ export interface Player {
   id: string
   name: string
   coins: number
+  income: number
   deck: PlayCard['id'][]
   hand: PlayCard['id'][]
   board: PlayCard['id'][]
