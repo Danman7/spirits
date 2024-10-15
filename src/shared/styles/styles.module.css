@@ -292,3 +292,26 @@
   cursor: pointer;
   color: var(--primary-color);
 }
+
+.cardBrowserModal {
+  position: relative;
+  overflow: auto;
+  height: 100%;
+}
+
+.cardBrowseModalFooter {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.5em;
+  backdrop-filter: blur(10px);
+}
+
+.cardList {
+  display: flex;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}

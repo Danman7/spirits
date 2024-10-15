@@ -70,6 +70,10 @@ export type CardType =
   | 'Necromancer'
   | 'Artifact'
 
+export interface DisplayCardProps<CardKind extends Card = Agent> {
+  card: PlayCard<CardKind>
+}
+
 export interface CardProps<CardKind extends Card = Agent> {
   card: PlayCard<CardKind>
   isFaceDown?: boolean

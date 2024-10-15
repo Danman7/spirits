@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 import { motion, useAnimationControls } from 'framer-motion'
 
 import { DuelPhase, Player } from 'src/features/duel/types'
@@ -21,6 +21,9 @@ import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { CardProps } from 'src/features/cards/types'
 import Card from 'src/features/cards/components/Card'
 import { MEDIUM_ANIMATION_CYCLE } from '../constants'
+import Link from 'src/shared/components/Link'
+import Modal from 'src/shared/components/Modal'
+import DisplayCard from 'src/features/cards/components/DisplayCard'
 
 const PlayerHalfBoard: FC<{
   player: Player
@@ -42,6 +45,8 @@ const PlayerHalfBoard: FC<{
   } = player
 
   const dispatch = useAppDispatch()
+
+  const [modalContent, setModalContent] = useState<ReactNode>(null)
 
   const loggedInPlayerId = useAppSelector(getLoggedInPlayerId)
   const activePlayerId = useAppSelector(getActivePlayerId)
@@ -88,6 +93,23 @@ const PlayerHalfBoard: FC<{
     return undefined
   }
 
+  const closeBrowseCardsModal = () => setModalContent(null)
+
+  const openBrowseCardsModal = (cardList: string[]) =>
+    setModalContent(
+      <div className={styles.cardBrowserModal}>
+        <div className={styles.cardList}>
+          {cardList.map((cardId) => (
+            <DisplayCard key={`${cardId}-browse`} card={cards[cardId]} />
+          ))}
+        </div>
+
+        <div className={styles.cardBrowseModalFooter}>
+          <Link onClick={closeBrowseCardsModal}>Close</Link>
+        </div>
+      </div>,
+    )
+
   const coinsChangeAnimation = useAnimationControls()
 
   useEffect(() => {
@@ -111,11 +133,16 @@ const PlayerHalfBoard: FC<{
       </h3>
 
       <div className={isOnTop ? styles.topPlayerSide : styles.bottomPlayerSide}>
-        <div className={styles.faceDownStack}>
-          {discard.map((cardId) => (
-            <Card key={cardId} card={cards[cardId]} isSmall isFaceDown />
-          ))}
-        </div>
+        {discard.length ? (
+          <div
+            className={styles.faceDownStack}
+            onClick={!isOnTop ? () => openBrowseCardsModal(deck) : undefined}
+          >
+            {discard.map((cardId) => (
+              <Card key={cardId} card={cards[cardId]} isSmall isFaceDown />
+            ))}
+          </div>
+        ) : null}
 
         <div
           className={isOnTop ? styles.topPlayerHand : styles.bottomPlayerHand}
@@ -130,7 +157,10 @@ const PlayerHalfBoard: FC<{
           ))}
         </div>
 
-        <div className={styles.faceDownStack}>
+        <div
+          className={styles.faceDownStack}
+          onClick={!isOnTop ? () => openBrowseCardsModal(deck) : undefined}
+        >
           {deck.map((cardId) => (
             <Card key={cardId} card={cards[cardId]} isSmall isFaceDown />
           ))}
@@ -150,6 +180,17 @@ const PlayerHalfBoard: FC<{
           />
         ))}
       </div>
+
+      <Modal
+        style={{
+          height: '90vh',
+          width: 800,
+          zIndex: 5,
+          padding: '1rem 0',
+        }}
+      >
+        {modalContent}
+      </Modal>
     </>
   )
 }
