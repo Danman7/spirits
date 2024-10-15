@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react'
 import { motion, useAnimationControls } from 'framer-motion'
 
-import { CardProps } from 'src/features/cards/types'
+import { Card, CardProps } from 'src/features/cards/types'
 import { getFactionColor, joinCardTypes } from 'src/features/cards/utils'
 
 import styles from 'src/shared/styles/styles.module.css'
@@ -14,7 +14,7 @@ import {
   NumberChangeAnimation,
 } from 'src/shared/animations'
 
-const Card: FC<CardProps> = ({
+const CardComponent: FC<CardProps<Card>> = ({
   card,
   isSmall,
   isFaceDown,
@@ -25,31 +25,35 @@ const Card: FC<CardProps> = ({
   const {
     id,
     name,
-    strength,
     description,
     flavor,
     types,
     factions,
     cost,
     prototype,
+    kind,
   } = card
 
-  const prevStrength = usePrevious(strength)
+  const strength = kind === 'agent' ? card.strength : undefined
+
+  const prevStrength = strength ? usePrevious(strength) : undefined
 
   const strengthChangeAnimation = useAnimationControls()
   const cardAnimationControls = useAnimationControls()
 
   useEffect(() => {
-    if (prevStrength && prevStrength !== strength) {
-      strengthChangeAnimation.start(NumberChangeAnimation)
-    }
+    if (strength && prevStrength) {
+      if (prevStrength && prevStrength !== strength) {
+        strengthChangeAnimation.start(NumberChangeAnimation)
+      }
 
-    if (prevStrength < strength) {
-      cardAnimationControls.start(CardBoostAnimation)
-    }
+      if (prevStrength < strength) {
+        cardAnimationControls.start(CardBoostAnimation)
+      }
 
-    if (prevStrength > strength) {
-      cardAnimationControls.start(CardDamageAnimation)
+      if (prevStrength > strength) {
+        cardAnimationControls.start(CardDamageAnimation)
+      }
     }
   }, [prevStrength, strength, strengthChangeAnimation, cardAnimationControls])
 
@@ -77,8 +81,8 @@ const Card: FC<CardProps> = ({
         style={{ background: getFactionColor(factions) }}
       >
         <h4 className={styles.cardTitle}>
-          <div>{name}</div>
-          {strength && prototype.strength && (
+          <div style={{ textAlign: 'center', flexGrow: 2 }}>{name}</div>
+          {kind === 'agent' && strength && (
             <motion.div animate={strengthChangeAnimation}>
               <PositiveNegativeNumber
                 current={strength}
@@ -101,4 +105,4 @@ const Card: FC<CardProps> = ({
   )
 }
 
-export default Card
+export default CardComponent

@@ -17,12 +17,11 @@ export type CardEffectPredicate<DuelAction extends Action> = (
   currentState: RootState,
 ) => boolean
 
-export interface Card {
+interface CardBase {
   readonly name: string
   cost: number
   factions: CardFaction[]
   types: CardType[]
-  strength: number
   description: string[]
   flavor?: string
   trigger?: {
@@ -31,13 +30,33 @@ export interface Card {
   }
 }
 
-export interface PlayCard extends Card {
-  id: string
-  prototype: {
-    strength: Card['strength']
-    cost: Card['cost']
-  }
+export interface Agent extends CardBase {
+  kind: 'agent'
+  strength: number
 }
+
+export interface Instant extends CardBase {
+  kind: 'instant'
+}
+
+export type Card = Agent | Instant
+
+export type PlayCard<CardKind extends Card = Agent> =
+  | (CardKind & {
+      kind: 'instant'
+      id: string
+      prototype: {
+        cost: number
+      }
+    })
+  | (CardKind & {
+      kind: 'agent'
+      id: string
+      prototype: {
+        strength: number
+        cost: number
+      }
+    })
 
 export type CardFaction = 'Order' | 'Chaos' | 'Shadow'
 
@@ -51,8 +70,8 @@ export type CardType =
   | 'Necromancer'
   | 'Artifact'
 
-export interface CardProps {
-  card: PlayCard
+export interface CardProps<CardKind extends Card = Agent> {
+  card: PlayCard<CardKind>
   isFaceDown?: boolean
   isSmall?: boolean
   isAttacking?: boolean

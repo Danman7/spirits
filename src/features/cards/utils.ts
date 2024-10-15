@@ -1,5 +1,5 @@
 import { FACTION_COLOR_MAP } from 'src/features/cards/constants'
-import { Card, PlayCard } from 'src/features/cards/types'
+import { Agent, Card, Instant, PlayCard } from 'src/features/cards/types'
 
 import { generateUUID } from 'src/shared/utils'
 
@@ -17,15 +17,29 @@ export const getFactionColor = (factions: Card['factions']) => {
   })`
 }
 
-export const createPlayCardFromPrototype = (cardPrototype: Card): PlayCard => {
-  const prototype: PlayCard['prototype'] = {
-    cost: cardPrototype.cost,
-    strength: cardPrototype.strength,
+export const createPlayCardFromPrototype = <CardKind extends Card = Agent>(
+  cardPrototype: Card,
+): PlayCard<CardKind> => {
+  const { kind } = cardPrototype
+
+  const id = generateUUID()
+
+  if (kind === 'agent') {
+    return {
+      ...cardPrototype,
+      id,
+      prototype: {
+        cost: cardPrototype.cost,
+        strength: cardPrototype.strength,
+      },
+    } as PlayCard<Agent>
   }
 
   return {
     ...cardPrototype,
-    id: generateUUID(),
-    prototype,
-  }
+    id,
+    prototype: {
+      cost: cardPrototype.cost,
+    },
+  } as PlayCard<Instant>
 }

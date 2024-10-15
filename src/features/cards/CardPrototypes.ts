@@ -7,11 +7,12 @@ import {
   HAUNT_DAMAGE,
   VIKTORIA_COIN_GAIN,
 } from 'src/features/cards/constants'
-import { Card } from 'src/features/cards/types'
+import { Agent, Instant } from 'src/features/cards/types'
 
 import { getCoinsMessage } from 'src/shared/utils'
 
-export const Zombie: Card = {
+export const Zombie: Agent = {
+  kind: 'agent',
   name: 'Zombie',
   strength: 3,
   cost: 1,
@@ -24,7 +25,8 @@ export const Zombie: Card = {
     "The zombie's antipathy for all living creatures is both its strength and weakness.",
 }
 
-export const Haunt: Card = {
+export const Haunt: Agent = {
+  kind: 'agent',
   name: 'Haunt',
   strength: 7,
   cost: 3,
@@ -37,7 +39,8 @@ export const Haunt: Card = {
     'These haunts who inhabit the bodies of my brethren... they must all be killed. -- The apparition of Brother Murus',
 }
 
-export const HammeriteNovice: Card = {
+export const HammeriteNovice: Agent = {
+  kind: 'agent',
   name: 'Hammerite Novice',
   strength: 2,
   cost: 3,
@@ -54,7 +57,8 @@ export const HammeriteNovice: Card = {
   },
 }
 
-export const ElevatedAcolyte: Card = {
+export const ElevatedAcolyte: Agent = {
+  kind: 'agent',
   name: 'Elevated Acolyte',
   strength: 5,
   cost: 3,
@@ -67,7 +71,8 @@ export const ElevatedAcolyte: Card = {
     'He will endure a standard three-year contract of service, at the end of which he will be considered for indoctrination as an Elevated Acolyte.',
 }
 
-export const TempleGuard: Card = {
+export const TempleGuard: Agent = {
+  kind: 'agent',
   name: 'Temple Guard',
   strength: 4,
   cost: 5,
@@ -78,7 +83,8 @@ export const TempleGuard: Card = {
     'Thy hammer pounds the nail, holds the roof-beam. Thy hammer strikes the iron, shapes the cauldron.',
 }
 
-export const BrotherSachelman: Card = {
+export const BrotherSachelman: Agent = {
+  kind: 'agent',
   name: 'Brother Sachelman',
   strength: 4,
   cost: 6,
@@ -95,7 +101,8 @@ export const BrotherSachelman: Card = {
   },
 }
 
-export const ViktoriaThiefPawn: Card = {
+export const ViktoriaThiefPawn: Agent = {
+  kind: 'agent',
   name: 'Viktoria: Thiefs-pawn',
   strength: 4,
   cost: 5,
@@ -110,7 +117,8 @@ export const ViktoriaThiefPawn: Card = {
     'About your Victoria, nothing yet. Walks she an inch above the ground, for all the dirt of her footprints have I found. -- From a report to Lord Bafford',
 }
 
-export const GarrettMasterThief: Card = {
+export const GarrettMasterThief: Agent = {
+  kind: 'agent',
   name: 'Garrett: Master Thief',
   strength: 4,
   cost: 5,
@@ -125,7 +133,8 @@ export const GarrettMasterThief: Card = {
     'His heart was clouded, and his balance was lost, but his abilities were unmatched. -- Keeper Annals',
 }
 
-export const DownwinderThief: Card = {
+export const DownwinderThief: Agent = {
+  kind: 'agent',
   name: 'Downwinder Thief',
   strength: 2,
   cost: 1,
@@ -138,7 +147,8 @@ export const DownwinderThief: Card = {
     "We chose our profession in defiance of the greed of the monarchy. We will not live for the sake of taxes to fatten the noble's pockets. -- excerpt from the Downwinders Creed",
 }
 
-export const AzaranTheCruel: Card = {
+export const AzaranTheCruel: Agent = {
+  kind: 'agent',
   name: 'Azaran the Cruel',
   strength: 5,
   cost: 5,
@@ -151,10 +161,10 @@ export const AzaranTheCruel: Card = {
     "Be warned! The truth is hidden from the unworthy. Blacken thy heart, or face the prisoners of flesh. -- Azaran's last mortal written words",
 }
 
-export const BookOfAsh: Card = {
+export const BookOfAsh: Instant = {
+  kind: 'instant',
   name: 'The Book of Ash',
   cost: 5,
-  strength: 0,
   factions: ['Chaos'],
   types: ['Artifact'],
   description: ['Summon 2 zombies.'],

@@ -6,11 +6,10 @@ import {
   joinCardTypes,
 } from 'src/features/cards/utils'
 import { BrotherSachelman } from 'src/features/cards/CardPrototypes'
-import { PlayCard } from 'src/features/cards/types'
 
 import { fireEvent, render, screen } from 'src/shared/test-utils'
 
-const mockCard: PlayCard = createPlayCardFromPrototype(BrotherSachelman)
+const mockCard = createPlayCardFromPrototype(BrotherSachelman)
 
 it('should display all shared UI segments of a card when face up', () => {
   const { rerender } = render(<Card card={mockCard} />)

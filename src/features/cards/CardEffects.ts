@@ -18,6 +18,7 @@ export const BrotherSachelmanOnPlayEffect: CardEffect<PlayerCardAction> = (
     const cardOnBoard = { ...players[playerId].cards[cardId] }
 
     if (
+      cardOnBoard.kind === 'agent' &&
       cardOnBoard.types.includes('Hammerite') &&
       cardOnBoard.strength < playedCard.strength
     ) {
