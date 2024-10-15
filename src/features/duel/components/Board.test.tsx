@@ -3,6 +3,7 @@ import '@testing-library/jest-dom'
 import Board from 'src/features/duel/components/Board'
 import {
   initialDrawMessage,
+  opponentDecidingMessage,
   opponentTurnTitle,
   passButtonMessage,
   redrawMessage,
@@ -142,6 +143,46 @@ test('redraw a card', async () => {
   expect(screen.getByText(ElevatedAcolyte.name)).toBeInTheDocument()
 
   expect(await screen.findByText(yourTurnTitle)).toBeInTheDocument()
+})
+
+test('waiting for opponent to redraw', async () => {
+  const zombie1 = createPlayCardFromPrototype(Zombie)
+  const zombie2 = createPlayCardFromPrototype(Zombie)
+  const acolyte = createPlayCardFromPrototype(ElevatedAcolyte)
+  const novice2 = createPlayCardFromPrototype(HammeriteNovice)
+  const guard = createPlayCardFromPrototype(TempleGuard)
+
+  preloadedState.duel.phase = 'Redrawing Phase'
+  preloadedState.duel.players = {
+    [opponentId]: {
+      ...mockPlayers[opponentId],
+      cards: {
+        ...mockPlayers[opponentId].cards,
+        [zombie1.id]: zombie1,
+        [zombie2.id]: zombie2,
+      },
+      hand: [...mockPlayers[opponentId].hand, zombie1.id, zombie2.id],
+    },
+    [playerId]: {
+      ...mockPlayers[playerId],
+      cards: {
+        ...mockPlayers[playerId].cards,
+        [novice2.id]: novice2,
+        [guard.id]: guard,
+        [acolyte.id]: acolyte,
+      },
+      deck: [acolyte.id],
+      hand: [...mockPlayers[playerId].hand, novice2.id, guard.id],
+    },
+  }
+
+  render(<Board />, {
+    preloadedState,
+  })
+
+  fireEvent.click(screen.getByText(guard.name))
+
+  expect(screen.getByText(opponentDecidingMessage)).toBeInTheDocument()
 })
 
 test('skip redraw', async () => {
