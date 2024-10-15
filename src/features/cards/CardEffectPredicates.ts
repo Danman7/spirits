@@ -1,11 +1,15 @@
 import { CardEffectPredicate } from 'src/features/cards/types'
 import { PlayerCardAction } from 'src/features/duel/types'
-import { BrotherSachelman, HammeriteNovice } from './CardPrototypes'
+import {
+  BrotherSachelman,
+  HammeriteNovice,
+} from 'src/features/cards/CardPrototypes'
+import { DuelActionTypes } from 'src/features/duel/slice'
 
 export const BrotherSachelmanOnPlayPredicate: CardEffectPredicate<
   PlayerCardAction
 > = (action, currentState) => {
-  if (action.type === 'duel/playCardFromHand') {
+  if ((action.type as DuelActionTypes) === 'duel/playCard') {
     const { cardId, playerId } = action.payload
 
     return (
@@ -20,7 +24,7 @@ export const BrotherSachelmanOnPlayPredicate: CardEffectPredicate<
 export const HammeriteNoviceOnPlayPredicate: CardEffectPredicate<
   PlayerCardAction
 > = (action, currentState) => {
-  if (action.type === 'duel/playCardFromHand') {
+  if ((action.type as DuelActionTypes) === 'duel/playCard') {
     const { cardId, playerId } = action.payload
 
     return (
