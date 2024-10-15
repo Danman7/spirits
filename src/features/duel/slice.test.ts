@@ -18,11 +18,7 @@ import duelReducer, {
   moveCardToDiscard,
 } from 'src/features/duel/slice'
 
-import {
-  HammeriteNovice,
-  Haunt,
-  Zombie,
-} from 'src/features/cards/CardPrototypes'
+import { HammeriteNovice, Zombie } from 'src/features/cards/CardPrototypes'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
 import { PlayCard } from 'src/features/cards/types'
 
@@ -343,42 +339,43 @@ describe('Playing turns', () => {
 
   test('play card', () => {
     const novice = createPlayCardFromPrototype(HammeriteNovice)
-    const haunt = createPlayCardFromPrototype(Haunt)
+    const cardId = novice.id
+    const stacks = ['hand', 'discard', 'deck']
 
-    mockDuelState.activePlayerId = playerId
-
-    mockDuelState.players = {
-      [playerId]: {
-        ...MockPlayer1,
-        hand: [novice.id],
-        cards: {
-          [novice.id]: novice,
+    stacks.forEach((stack: 'hand' | 'discard' | 'deck') => {
+      mockDuelState.players = {
+        [playerId]: {
+          ...MockPlayer1,
+          [stack]: [cardId],
+          cards: {
+            [cardId]: novice,
+          },
         },
-      },
-      [opponentId]: {
-        ...MockPlayer2,
-        hand: [haunt.id],
-        cards: {
-          [haunt.id]: haunt,
+        [opponentId]: {
+          ...MockPlayer2,
+          hand: [],
+          cards: {},
         },
-      },
-    }
+      }
 
-    const mockPlayingPlayer = mockDuelState.players[playerId]
+      const mockPlayingPlayer = mockDuelState.players[playerId]
 
-    const state = duelReducer(
-      mockDuelState,
-      playCard({
-        cardId: novice.id,
-        playerId,
-      }),
-    )
+      const state = duelReducer(
+        mockDuelState,
+        playCard({
+          cardId: novice.id,
+          playerId,
+        }),
+      )
 
-    const playingPlayer = state.players[playerId]
+      const playingPlayer = state.players[playerId]
 
-    expect(playingPlayer.hand).toHaveLength(mockPlayingPlayer.hand.length - 1)
-    expect(playingPlayer.board).toHaveLength(mockPlayingPlayer.board.length + 1)
-    expect(playingPlayer.board).toContain(novice.id)
+      expect(playingPlayer[stack]).toHaveLength(0)
+      expect(playingPlayer.board).toHaveLength(
+        mockPlayingPlayer.board.length + 1,
+      )
+      expect(playingPlayer.board).toContain(cardId)
+    })
   })
 
   test('update a card', () => {

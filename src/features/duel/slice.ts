@@ -171,7 +171,7 @@ export const duelSlice = createSlice({
 
       players[playerId].coins = players[playerId].coins - playedCard.cost
       players[playerId].hasPlayedCardThisTurn = true
-      players[playerId].board = players[playerId].board.filter(
+      players[playerId].deck = players[playerId].deck.filter(
         (cardId) => cardId !== playedCardId,
       )
       players[playerId].hand = players[playerId].hand.filter(
