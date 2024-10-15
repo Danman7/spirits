@@ -5,7 +5,6 @@ import { initializeCardsAndDeck } from 'src/features/duel/utils'
 import {
   HammeriteNovice,
   AzaranTheCruel,
-  BookOfAsh,
   BrotherSachelman,
   ElevatedAcolyte,
   Haunt,
@@ -43,7 +42,6 @@ export const MockPlayer2: Player = {
     createPlayCardFromPrototype(Haunt),
     createPlayCardFromPrototype(ViktoriaThiefPawn),
     createPlayCardFromPrototype(AzaranTheCruel),
-    createPlayCardFromPrototype(BookOfAsh),
   ]),
 }
 

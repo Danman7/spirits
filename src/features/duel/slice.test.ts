@@ -18,7 +18,11 @@ import duelReducer, {
   moveCardToDiscard,
 } from 'src/features/duel/slice'
 
-import { HammeriteNovice, Zombie } from 'src/features/cards/CardPrototypes'
+import {
+  HammeriteNovice,
+  TempleGuard,
+  Zombie,
+} from 'src/features/cards/CardPrototypes'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
 import { PlayCard } from 'src/features/cards/types'
 
@@ -417,6 +421,7 @@ describe('Playing turns', () => {
 
   test('move a card from board to discard pile', () => {
     const novice = createPlayCardFromPrototype(HammeriteNovice)
+    const guard = createPlayCardFromPrototype(TempleGuard)
     const cardId = novice.id
     const stacks = ['hand', 'board', 'deck']
 
@@ -424,9 +429,11 @@ describe('Playing turns', () => {
       mockDuelState.players = {
         [playerId]: {
           ...MockPlayer1,
-          [stack]: [cardId],
+          [stack]: [cardId, guard.id],
+          discard: [],
           cards: {
             [cardId]: { ...novice, strength: 1 },
+            [guard.id]: guard,
           },
         },
         [opponentId]: MockPlayer2,
@@ -442,7 +449,7 @@ describe('Playing turns', () => {
 
       const player = state.players[playerId]
 
-      expect(player[stack]).toHaveLength(0)
+      expect(player[stack]).toHaveLength(1)
       expect(player.discard).toHaveLength(1)
       expect(player.discard).toContain(cardId)
       expect(player.cards[cardId].strength).toBe(

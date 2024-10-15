@@ -215,7 +215,7 @@ export const duelSlice = createSlice({
 
       const card = player.cards[movedCardId]
 
-      players[playerId].discard = [...player.board, movedCardId]
+      players[playerId].discard = [...player.discard, movedCardId]
       players[playerId].cards[movedCardId] = {
         ...card,
         strength: card.prototype.strength,
