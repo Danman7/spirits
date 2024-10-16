@@ -49,3 +49,8 @@ export const getAttackingAgentId = createSelector(
   getDuelState,
   (duelState) => duelState.attackingAgentId,
 )
+
+export const getVictoriousPlayerName = createSelector(
+  getPlayers,
+  (players) => Object.values(players).find(({ coins }) => coins <= 0)?.name,
+)

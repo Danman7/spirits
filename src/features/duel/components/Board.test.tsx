@@ -25,6 +25,7 @@ import {
   Zombie,
 } from 'src/features/cards/CardPrototypes'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
+import { initialState } from 'src/features/duel/slice'
 
 const playerId = MockPlayer1.id
 const opponentId = MockPlayer2.id
@@ -35,9 +36,9 @@ const mockPlayers: DuelState['players'] = {
 }
 
 const mockGameState: DuelState = {
+  ...initialState,
   turn: 1,
   activePlayerId: playerId,
-  attackingAgentId: '',
   players: mockPlayers,
   playerOrder: [opponentId, playerId],
   phase: 'Player Turn',

@@ -16,3 +16,5 @@ export const initialDrawMessage = `The game begins. Both players draw ${INITIAL_
 
 export const passButtonMessage = 'Pass'
 export const skipRedrawMessage = 'Skip Redraw'
+
+export const victoryMessage = 'has won the duel!'

@@ -51,9 +51,9 @@ export const Default: Story = {
           ...storeConfiguration,
           preloadedState: {
             duel: {
+              ...initialState,
               turn: 1,
               activePlayerId: MockPlayer1.id,
-              attackingAgentId: '',
               players: {
                 [MockPlayer1.id]: {
                   ...MockPlayer1,

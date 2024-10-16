@@ -8,36 +8,42 @@ import {
   getPlayerOrder,
   getPlayers,
   getTurn,
+  getVictoriousPlayerName,
 } from 'src/features/duel/selectors'
 import InitialPhaseModal from 'src/features/duel/components/modals/InitialPhaseModal'
 import PlayerTurnModal from 'src/features/duel/components/modals/PlayerTurnModal'
 import RedrawPhaseModal from 'src/features/duel/components/modals/RedrawPhaseModal'
 
 import Modal from 'src/shared/components/Modal'
-
 import * as styles from 'src/shared/styles/styles.module.css'
 import { useAppSelector } from 'src/app/store'
+import VictoryModal from 'src/features/duel/components/modals/VictoryModal'
 
 const Board: FC = () => {
   const players = useAppSelector(getPlayers)
   const playerOrder = useAppSelector(getPlayerOrder)
   const phase = useAppSelector(getPhase)
   const turn = useAppSelector(getTurn)
+  const victorName = useAppSelector(getVictoriousPlayerName)
 
-  const [modalContent, setModalContent] = useState<ReactNode>(null)
+  const victoryModalContent: ReactNode = victorName ? (
+    <VictoryModal victorName={victorName} />
+  ) : null
+
+  const [gameModalContent, setGameModalContent] = useState<ReactNode>(null)
 
   useEffect(() => {
     switch (phase) {
       case 'Initial Draw':
-        setModalContent(<InitialPhaseModal />)
+        setGameModalContent(<InitialPhaseModal />)
         break
 
       case 'Player Turn':
-        setModalContent(<PlayerTurnModal />)
+        setGameModalContent(<PlayerTurnModal />)
         break
 
       case 'Redrawing Phase':
-        setModalContent(<RedrawPhaseModal playerId={playerOrder[1]} />)
+        setGameModalContent(<RedrawPhaseModal playerId={playerOrder[1]} />)
         break
     }
   }, [phase, turn, playerOrder])
@@ -54,7 +60,11 @@ const Board: FC = () => {
       ))}
 
       <Modal style={{ left: '1em', transform: 'translate(0, -50%)' }}>
-        {modalContent}
+        {gameModalContent}
+      </Modal>
+
+      <Modal hasOverlay style={{ zIndex: 5 }}>
+        {victoryModalContent}
       </Modal>
     </div>
   )

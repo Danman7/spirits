@@ -7,11 +7,12 @@ import { FadeInOutVariants } from 'src/shared/animations'
 interface ModalProps {
   children?: ReactNode
   style?: MotionStyle
+  hasOverlay?: boolean
 }
 
-const Modal: FC<ModalProps> = ({ children, style }) => (
+const Modal: FC<ModalProps> = ({ children, style, hasOverlay }) => (
   <AnimatePresence>
-    {children && (
+    {children ? (
       <motion.div
         className={styles.modal}
         initial="closed"
@@ -22,7 +23,14 @@ const Modal: FC<ModalProps> = ({ children, style }) => (
       >
         {children}
       </motion.div>
-    )}
+    ) : null}
+    {children && hasOverlay ? (
+      <motion.div
+        className={styles.overlay}
+        animate={children ? 'open' : 'closed'}
+        variants={FadeInOutVariants}
+      />
+    ) : null}
   </AnimatePresence>
 )
 
