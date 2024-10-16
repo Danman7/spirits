@@ -3,7 +3,7 @@
   "description": "A card game based in the world of the Thief games.",
   "license": "MIT",
   "private": false,
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
