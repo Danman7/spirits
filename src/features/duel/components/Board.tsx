@@ -59,7 +59,9 @@ const Board: FC = () => {
         />
       ))}
 
-      <Modal style={{ left: '1em', transform: 'translate(0, -50%)' }}>
+      <Modal
+        style={{ left: '1em', transform: 'translate(0, -50%)', zIndex: 3 }}
+      >
         {gameModalContent}
       </Modal>
 

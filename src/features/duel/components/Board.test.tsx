@@ -8,6 +8,7 @@ import {
   passButtonMessage,
   redrawMessage,
   skipRedrawMessage,
+  victoryMessage,
   yourTurnTitle,
 } from 'src/features/duel/messages'
 import { fireEvent, render, screen, waitFor } from 'src/shared/test-utils'
@@ -26,6 +27,7 @@ import {
 } from 'src/features/cards/CardPrototypes'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
 import { initialState } from 'src/features/duel/slice'
+import { PLAYER_DECK_TEST_ID, PLAYER_DISCARD_TEST_ID } from '../constants'
 
 const playerId = MockPlayer1.id
 const opponentId = MockPlayer2.id
@@ -370,4 +372,81 @@ test('play a card as CPU and end the turn', async () => {
     },
     { timeout: 2000 },
   )
+})
+
+test('show victory modal', () => {
+  preloadedState.duel.players = {
+    [opponentId]: MockPlayer2,
+    [playerId]: {
+      ...MockPlayer1,
+      coins: 0,
+    },
+  }
+
+  render(<Board />, {
+    preloadedState,
+  })
+
+  expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+    `${MockPlayer2.name} ${victoryMessage}`,
+  )
+})
+
+test('browse deck', () => {
+  const haunt = createPlayCardFromPrototype(Haunt)
+  const brother = createPlayCardFromPrototype(BrotherSachelman)
+
+  preloadedState.duel.players = {
+    [opponentId]: MockPlayer2,
+    [playerId]: {
+      ...MockPlayer1,
+      cards: {
+        [haunt.id]: haunt,
+        [brother.id]: brother,
+      },
+      deck: [haunt.id, brother.id],
+    },
+  }
+
+  render(<Board />, {
+    preloadedState,
+  })
+
+  expect(screen.queryByText(haunt.name)).not.toBeInTheDocument()
+  expect(screen.queryByText(brother.name)).not.toBeInTheDocument()
+
+  fireEvent.click(screen.getByTestId(PLAYER_DECK_TEST_ID))
+
+  expect(screen.getByText(haunt.name)).toBeInTheDocument()
+  expect(screen.getByText(brother.name)).toBeInTheDocument()
+})
+
+test('browse discard', () => {
+  const haunt = createPlayCardFromPrototype(Haunt)
+  const brother = createPlayCardFromPrototype(BrotherSachelman)
+
+  preloadedState.duel.players = {
+    [opponentId]: MockPlayer2,
+    [playerId]: {
+      ...MockPlayer1,
+      cards: {
+        [haunt.id]: haunt,
+        [brother.id]: brother,
+      },
+      deck: [],
+      discard: [haunt.id, brother.id],
+    },
+  }
+
+  render(<Board />, {
+    preloadedState,
+  })
+
+  expect(screen.queryByText(haunt.name)).not.toBeInTheDocument()
+  expect(screen.queryByText(brother.name)).not.toBeInTheDocument()
+
+  fireEvent.click(screen.getByTestId(PLAYER_DISCARD_TEST_ID))
+
+  expect(screen.getByText(haunt.name)).toBeInTheDocument()
+  expect(screen.getByText(brother.name)).toBeInTheDocument()
 })

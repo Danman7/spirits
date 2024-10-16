@@ -29,6 +29,8 @@ const Modal: FC<ModalProps> = ({ children, style, hasOverlay }) => (
         className={styles.overlay}
         animate={children ? 'open' : 'closed'}
         variants={FadeInOutVariants}
+        initial="closed"
+        exit="closed"
       />
     ) : null}
   </AnimatePresence>

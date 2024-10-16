@@ -20,7 +20,11 @@ import { NumberChangeAnimation } from 'src/shared/animations'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { CardProps } from 'src/features/cards/types'
 import Card from 'src/features/cards/components/Card'
-import { MEDIUM_ANIMATION_CYCLE } from '../constants'
+import {
+  MEDIUM_ANIMATION_CYCLE,
+  PLAYER_DECK_TEST_ID,
+  PLAYER_DISCARD_TEST_ID,
+} from '../constants'
 import Link from 'src/shared/components/Link'
 import Modal from 'src/shared/components/Modal'
 import DisplayCard from 'src/features/cards/components/DisplayCard'
@@ -144,6 +148,8 @@ const PlayerHalfBoard: FC<{
       <div className={isOnTop ? styles.topPlayerSide : styles.bottomPlayerSide}>
         {discard.length ? (
           <div
+            data-testid={!isOnTop ? PLAYER_DISCARD_TEST_ID : ''}
+            style={!isOnTop ? { cursor: 'pointer' } : {}}
             className={styles.faceDownStack}
             onClick={
               !isOnTop ? () => openBrowseCardsModal('discard') : undefined
@@ -168,14 +174,18 @@ const PlayerHalfBoard: FC<{
           ))}
         </div>
 
-        <div
-          className={styles.faceDownStack}
-          onClick={!isOnTop ? () => openBrowseCardsModal('deck') : undefined}
-        >
-          {deck.map((cardId) => (
-            <Card key={cardId} card={cards[cardId]} isSmall isFaceDown />
-          ))}
-        </div>
+        {deck.length ? (
+          <div
+            data-testid={!isOnTop ? PLAYER_DECK_TEST_ID : ''}
+            style={!isOnTop ? { cursor: 'pointer' } : {}}
+            className={styles.faceDownStack}
+            onClick={!isOnTop ? () => openBrowseCardsModal('deck') : undefined}
+          >
+            {deck.map((cardId) => (
+              <Card key={cardId} card={cards[cardId]} isSmall isFaceDown />
+            ))}
+          </div>
+        ) : null}
       </div>
 
       <div
@@ -195,8 +205,7 @@ const PlayerHalfBoard: FC<{
       <Modal
         style={{
           height: '90vh',
-          width: 800,
-          zIndex: 5,
+          zIndex: 6,
           padding: '1rem 0 2rem',
         }}
         hasOverlay

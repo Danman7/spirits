@@ -52,5 +52,11 @@ export const getAttackingAgentId = createSelector(
 
 export const getVictoriousPlayerName = createSelector(
   getPlayers,
-  (players) => Object.values(players).find(({ coins }) => coins <= 0)?.name,
+  getPlayerOrder,
+  (players, playerOrder) =>
+    players[playerOrder[0]].coins <= 0
+      ? players[playerOrder[1]].name
+      : players[playerOrder[1]].coins <= 0
+        ? players[playerOrder[0]].name
+        : null,
 )
