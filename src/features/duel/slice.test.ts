@@ -16,6 +16,7 @@ import duelReducer, {
   agentAttacksAgent,
   moveToNextAttacker,
   moveCardToDiscard,
+  moveCardToBoard,
 } from 'src/features/duel/slice'
 
 import {
@@ -381,6 +382,49 @@ describe('Playing turns', () => {
 
       const playingPlayer = state.players[playerId]
 
+      expect(playingPlayer.coins).toBe(mockPlayingPlayer.coins - novice.cost)
+      expect(playingPlayer[stack]).toHaveLength(0)
+      expect(playingPlayer.board).toHaveLength(
+        mockPlayingPlayer.board.length + 1,
+      )
+      expect(playingPlayer.board).toContain(cardId)
+    })
+  })
+
+  test('move card to board without playing it', () => {
+    const novice = createPlayCardFromPrototype(HammeriteNovice)
+    const cardId = novice.id
+    const stacks = ['hand', 'discard', 'deck']
+
+    stacks.forEach((stack: 'hand' | 'discard' | 'deck') => {
+      mockDuelState.players = {
+        [playerId]: {
+          ...MockPlayer1,
+          [stack]: [cardId],
+          cards: {
+            [cardId]: novice,
+          },
+        },
+        [opponentId]: {
+          ...MockPlayer2,
+          hand: [],
+          cards: {},
+        },
+      }
+
+      const mockPlayingPlayer = mockDuelState.players[playerId]
+
+      const state = duelReducer(
+        mockDuelState,
+        moveCardToBoard({
+          cardId: novice.id,
+          playerId,
+        }),
+      )
+
+      const playingPlayer = state.players[playerId]
+
+      expect(playingPlayer.coins).toBe(mockPlayingPlayer.coins)
       expect(playingPlayer[stack]).toHaveLength(0)
       expect(playingPlayer.board).toHaveLength(
         mockPlayingPlayer.board.length + 1,

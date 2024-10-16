@@ -13,7 +13,7 @@ import {
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constants'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
 import { MockPlayerTurnState } from 'src/features/duel/__mocks__'
-import { playCard, updateCard } from 'src/features/duel/slice'
+import { moveCardToBoard, playCard, updateCard } from 'src/features/duel/slice'
 import { DuelState, PlayerCardAction } from 'src/features/duel/types'
 import { PlayCard } from 'src/features/cards/types'
 
@@ -198,7 +198,7 @@ describe(HammeriteNovice.name, () => {
     HammeriteNoviceOnPlayEffect(mockAction, listenerApi)
 
     expect(listenerApi.dispatch).toHaveBeenCalledWith(
-      playCard({
+      moveCardToBoard({
         cardId: novice.id,
         playerId,
       }),

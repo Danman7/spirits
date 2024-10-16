@@ -11,6 +11,7 @@ import {
 
 import { PlayCard } from 'src/features/cards/types'
 import { getRandomArrayItem, shuffleArray } from 'src/shared/utils'
+import { moveCardToBoardTransformer } from './utils'
 
 export const initialState: DuelState = {
   turn: 0,
@@ -174,20 +175,15 @@ export const duelSlice = createSlice({
       const { cardId: playedCardId, playerId } = action.payload
       const { players } = state
 
+      moveCardToBoardTransformer(state, action)
+
       const playedCard = players[playerId].cards[playedCardId]
 
       players[playerId].coins = players[playerId].coins - playedCard.cost
       players[playerId].hasPlayedCardThisTurn = true
-      players[playerId].deck = players[playerId].deck.filter(
-        (cardId) => cardId !== playedCardId,
-      )
-      players[playerId].hand = players[playerId].hand.filter(
-        (cardId) => cardId !== playedCardId,
-      )
-      players[playerId].discard = players[playerId].discard.filter(
-        (cardId) => cardId !== playedCardId,
-      )
-      players[playerId].board = [...players[playerId].board, playedCard.id]
+    },
+    moveCardToBoard: (state, action: PlayerCardAction) => {
+      moveCardToBoardTransformer(state, action)
     },
     updateCard: (
       state,
@@ -244,6 +240,7 @@ export const {
   putCardAtBottomOfDeck,
   beginPlay,
   startRedraw,
+  moveCardToBoard,
   updateCard,
   agentAttacksAgent,
   agentAttacksPlayer,

@@ -1,6 +1,6 @@
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constants'
 import { CardEffect } from 'src/features/cards/types'
-import { playCard, updateCard } from 'src/features/duel/slice'
+import { moveCardToBoard, updateCard } from 'src/features/duel/slice'
 import { PlayerCardAction } from 'src/features/duel/types'
 import { HammeriteNovice } from 'src/features/cards/CardPrototypes'
 
@@ -62,7 +62,7 @@ export const HammeriteNoviceOnPlayEffect: CardEffect<PlayerCardAction> = (
       cardInHand.id !== playedCardId
     ) {
       listenerApi.dispatch(
-        playCard({
+        moveCardToBoard({
           playerId,
           cardId,
         }),
