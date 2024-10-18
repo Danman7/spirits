@@ -11,22 +11,11 @@ import {
   agentAttacksPlayer,
   updateCard,
   moveCardToDiscard,
+  drawCardFromDeck,
 } from 'src/features/duel/slice'
 import * as CardEffects from 'src/features/cards/CardEffects'
 import * as CardEffectPredicates from 'src/features/cards/CardEffectPredicates'
 import { Player } from 'src/features/duel/types'
-
-// If both plears are ready with redraw begin play
-startAppListening({
-  predicate: (_, currentState) =>
-    currentState.duel.phase === 'Redrawing Phase' &&
-    currentState.duel.playerOrder.every(
-      (playerId) => currentState.duel.players[playerId].hasPerformedAction,
-    ),
-  effect: (_, listenerApi) => {
-    listenerApi.dispatch(beginPlay())
-  },
-})
 
 // Add listeners for card effects
 startAppListening({
@@ -132,5 +121,16 @@ startAppListening({
         },
       )
     })
+  },
+})
+
+startAppListening({
+  matcher: isAnyOf(endTurn, beginPlay),
+  effect: async (_, listenerApi) => {
+    await listenerApi.delay(MEDIUM_ANIMATION_CYCLE)
+
+    const { activePlayerId } = listenerApi.getState().duel
+
+    listenerApi.dispatch(drawCardFromDeck(activePlayerId))
   },
 })

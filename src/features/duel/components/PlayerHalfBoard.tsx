@@ -46,6 +46,7 @@ const PlayerHalfBoard: FC<{
     board,
     discard,
     hasPerformedAction,
+    isCPU,
   } = player
 
   const dispatch = useAppDispatch()
@@ -137,6 +138,12 @@ const PlayerHalfBoard: FC<{
     }
   }, [dispatch, id, phase, hand.length])
 
+  useEffect(() => {
+    if (phase === 'Redrawing Phase' && isCPU && !hasPerformedAction) {
+      dispatch(completeRedraw(id))
+    }
+  }, [dispatch, id, hasPerformedAction, isCPU, phase])
+
   return (
     <>
       <h3
@@ -187,7 +194,7 @@ const PlayerHalfBoard: FC<{
               card={cards[cardId]}
               onClickCard={getOnClickCard()}
               isFaceDown={isOnTop}
-              transition={{ delay: 0.5 * i }}
+              transition={{ layout: { delay: 0.1 * i } }}
             />
           ))}
         </div>

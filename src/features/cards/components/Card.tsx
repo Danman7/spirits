@@ -69,6 +69,7 @@ const CardComponent = motion.create(
       ) : (
         <motion.div
           ref={ref}
+          animate={cardAnimationControls}
           onClick={onClickCard ? () => onClickCard(id) : undefined}
           className={`${styles.card} ${isSmall ? styles.smallCard : ''} ${onClickCard ? styles.activeCard : ''}`}
         >

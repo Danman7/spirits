@@ -15,7 +15,7 @@ import {
   getTurn,
   getVictoriousPlayerName,
 } from 'src/features/duel/selectors'
-import { startRedraw } from 'src/features/duel/slice'
+import { beginPlay, startRedraw } from 'src/features/duel/slice'
 import Modal from 'src/shared/components/Modal'
 import * as styles from 'src/shared/styles/styles.module.css'
 
@@ -58,6 +58,17 @@ const Board: FC = () => {
       )
     ) {
       dispatch(startRedraw())
+    }
+  }, [dispatch, phase, players])
+
+  useEffect(() => {
+    if (
+      phase === 'Redrawing Phase' &&
+      Object.values(players).every(
+        ({ hasPerformedAction }) => !!hasPerformedAction,
+      )
+    ) {
+      dispatch(beginPlay())
     }
   }, [dispatch, phase, players])
 

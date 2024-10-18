@@ -117,8 +117,13 @@ export const duelSlice = createSlice({
       players[action.payload].hasPerformedAction = true
     },
     beginPlay: (state) => {
+      const { playerOrder } = state
+
       state.phase = 'Player Turn'
       state.turn = 1
+
+      state.players[playerOrder[0]].hasPerformedAction = false
+      state.players[playerOrder[1]].hasPerformedAction = false
     },
     initializeEndTurn: (state) => {
       const { activePlayerId } = state

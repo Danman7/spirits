@@ -181,6 +181,11 @@ describe('Sequence before play', () => {
 
   test('start the game', () => {
     mockDuelState.phase = 'Redrawing Phase'
+    mockDuelState.players = {
+      [playerId]: MockPlayer1,
+      [opponentId]: MockPlayer2,
+    }
+    mockDuelState.playerOrder = [opponentId, playerId]
 
     const state = duelReducer(mockDuelState, beginPlay())
 
