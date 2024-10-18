@@ -10,7 +10,7 @@ export const EMPTY_PLAYER: Player = {
   board: [],
   discard: [],
   cards: {},
-  hasPlayedCardThisTurn: false,
+  hasPerformedAction: false,
 }
 
 export const DEFAULT_COINS_AMOUNT = 30

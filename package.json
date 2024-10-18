@@ -43,6 +43,7 @@
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^9.12.0",
     "eslint-plugin-react": "^7.36.1",
+    "eslint-plugin-react-hooks": "^5.0.0",
     "globals": "^15.9.0",
     "husky": "^9.1.6",
     "identity-obj-proxy": "^3.0.0",

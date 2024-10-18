@@ -1,7 +1,15 @@
+import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
 import { FC, useEffect, useMemo, useState } from 'react'
-import { motion, useAnimationControls } from 'framer-motion'
-
-import { DuelPhase, Player } from 'src/features/duel/types'
+import { useAppDispatch, useAppSelector } from 'src/app/store'
+import Card from 'src/features/cards/components/Card'
+import DisplayCard from 'src/features/cards/components/DisplayCard'
+import { CardProps } from 'src/features/cards/types'
+import {
+  INITIAL_CARD_DRAW_AMOUNT,
+  MEDIUM_ANIMATION_CYCLE,
+  PLAYER_DECK_TEST_ID,
+  PLAYER_DISCARD_TEST_ID,
+} from 'src/features/duel/constants'
 import {
   getActivePlayerId,
   getAttackingAgentId,
@@ -14,20 +22,11 @@ import {
   playCard,
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
-
-import styles from 'src/shared/styles/styles.module.css'
+import { DuelPhase, Player } from 'src/features/duel/types'
 import { NumberChangeAnimation } from 'src/shared/animations'
-import { useAppDispatch, useAppSelector } from 'src/app/store'
-import { CardProps } from 'src/features/cards/types'
-import Card from 'src/features/cards/components/Card'
-import {
-  MEDIUM_ANIMATION_CYCLE,
-  PLAYER_DECK_TEST_ID,
-  PLAYER_DISCARD_TEST_ID,
-} from '../constants'
 import Link from 'src/shared/components/Link'
 import Modal from 'src/shared/components/Modal'
-import DisplayCard from 'src/features/cards/components/DisplayCard'
+import styles from 'src/shared/styles/styles.module.css'
 
 type browsedStack = 'deck' | 'discard' | null
 
@@ -46,8 +45,7 @@ const PlayerHalfBoard: FC<{
     hand,
     board,
     discard,
-    isReady,
-    hasPlayedCardThisTurn,
+    hasPerformedAction,
   } = player
 
   const dispatch = useAppDispatch()
@@ -87,12 +85,16 @@ const PlayerHalfBoard: FC<{
       phase === 'Player Turn' &&
       isActive &&
       isPlayerPrespective &&
-      !hasPlayedCardThisTurn
+      !hasPerformedAction
     ) {
       return onPlayCard
     }
 
-    if (phase === 'Redrawing Phase' && !isReady && isPlayerPrespective) {
+    if (
+      phase === 'Redrawing Phase' &&
+      !hasPerformedAction &&
+      isPlayerPrespective
+    ) {
       return onRedrawCard
     }
 
@@ -120,7 +122,7 @@ const PlayerHalfBoard: FC<{
           </div>
         </div>
       ) : null,
-    [browsedStack, deck, discard],
+    [browsedStack, cards, player],
   )
 
   const coinsChangeAnimation = useAnimationControls()
@@ -128,6 +130,12 @@ const PlayerHalfBoard: FC<{
   useEffect(() => {
     coinsChangeAnimation.start(NumberChangeAnimation)
   }, [coins, coinsChangeAnimation])
+
+  useEffect(() => {
+    if (phase === 'Initial Draw' && hand.length < INITIAL_CARD_DRAW_AMOUNT) {
+      dispatch(drawCardFromDeck(id))
+    }
+  }, [dispatch, id, phase, hand.length])
 
   return (
     <>
@@ -156,7 +164,14 @@ const PlayerHalfBoard: FC<{
             }
           >
             {discard.map((cardId) => (
-              <Card key={cardId} card={cards[cardId]} isSmall isFaceDown />
+              <Card
+                layout
+                layoutId={cardId}
+                key={cardId}
+                card={cards[cardId]}
+                isSmall
+                isFaceDown
+              />
             ))}
           </div>
         ) : null}
@@ -164,12 +179,15 @@ const PlayerHalfBoard: FC<{
         <div
           className={isOnTop ? styles.topPlayerHand : styles.bottomPlayerHand}
         >
-          {hand.map((cardId) => (
+          {hand.map((cardId, i) => (
             <Card
+              layout
+              layoutId={cardId}
               key={cardId}
               card={cards[cardId]}
               onClickCard={getOnClickCard()}
               isFaceDown={isOnTop}
+              transition={{ delay: 0.5 * i }}
             />
           ))}
         </div>
@@ -181,9 +199,19 @@ const PlayerHalfBoard: FC<{
             className={styles.faceDownStack}
             onClick={!isOnTop ? () => openBrowseCardsModal('deck') : undefined}
           >
-            {deck.map((cardId) => (
-              <Card key={cardId} card={cards[cardId]} isSmall isFaceDown />
-            ))}
+            <AnimatePresence>
+              {deck.map((cardId) => (
+                <Card
+                  layout
+                  layoutId={cardId}
+                  key={cardId}
+                  card={cards[cardId]}
+                  isSmall
+                  isFaceDown
+                  exit={{ opacity: 0 }}
+                />
+              ))}
+            </AnimatePresence>
           </div>
         ) : null}
       </div>
@@ -191,15 +219,20 @@ const PlayerHalfBoard: FC<{
       <div
         className={isOnTop ? styles.topPlayerBoard : styles.bottomPlayerBoard}
       >
-        {board.map((cardId) => (
-          <Card
-            key={cardId}
-            card={cards[cardId]}
-            isSmall
-            isAttacking={attackingAgentId === cardId}
-            isOnTop={isOnTop}
-          />
-        ))}
+        <AnimatePresence>
+          {board.map((cardId) => (
+            <Card
+              layout
+              layoutId={cardId}
+              key={cardId}
+              card={cards[cardId]}
+              isSmall
+              isAttacking={attackingAgentId === cardId}
+              isOnTop={isOnTop}
+              exit={{ opacity: 0 }}
+            />
+          ))}
+        </AnimatePresence>
       </div>
 
       <Modal

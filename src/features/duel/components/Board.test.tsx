@@ -2,7 +2,6 @@ import '@testing-library/jest-dom'
 
 import Board from 'src/features/duel/components/Board'
 import {
-  initialDrawMessage,
   opponentDecidingMessage,
   opponentTurnTitle,
   passButtonMessage,
@@ -77,7 +76,7 @@ describe('General duel flow', () => {
     )
   })
 
-  test('initial draw of cards', () => {
+  test('initial draw of cards', async () => {
     preloadedState.duel.phase = 'Initial Draw'
 
     render(<Board />, {
@@ -87,15 +86,10 @@ describe('General duel flow', () => {
     const { players } = preloadedState.duel
 
     const player = players[playerId]
-    const opponent = players[opponentId]
 
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      `${opponent.name} vs ${player.name}`,
-    )
-
-    expect(screen.getByText(initialDrawMessage)).toBeInTheDocument()
-
-    // TODO: Drawing cards up to initial limit
+    expect(
+      await screen.findByText(player.cards[player.deck[0]].name),
+    ).toBeInTheDocument()
   })
 
   test('redraw a card', async () => {
@@ -114,7 +108,7 @@ describe('General duel flow', () => {
           [zombie1.id]: zombie1,
           [zombie2.id]: zombie2,
         },
-        isReady: true,
+        hasPerformedAction: true,
         hand: [...mockPlayers[opponentId].hand, zombie1.id, zombie2.id],
       },
       [playerId]: {
@@ -194,7 +188,7 @@ describe('General duel flow', () => {
     preloadedState.duel.players = {
       [opponentId]: {
         ...mockPlayers[opponentId],
-        isReady: true,
+        hasPerformedAction: true,
       },
       [playerId]: {
         ...mockPlayers[playerId],

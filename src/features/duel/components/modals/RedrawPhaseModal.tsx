@@ -12,12 +12,12 @@ import {
   redrawMessage,
   skipRedrawMessage,
 } from 'src/features/duel/messages'
-import { getPlayerIsReady } from 'src/features/duel/selectors'
+import { getPlayerhasPerformedAction } from 'src/features/duel/selectors'
 
 const RedrawPhaseModal: FC<{ playerId: Player['id'] }> = ({ playerId }) => {
   const dispatch = useAppDispatch()
 
-  const isPlayerReady = useAppSelector(getPlayerIsReady)
+  const isPlayerReady = useAppSelector(getPlayerhasPerformedAction)
 
   const onSkipRedraw = () => {
     dispatch(completeRedraw(playerId))

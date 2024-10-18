@@ -1,5 +1,3 @@
-import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
-
 export const redrawingPhaseModalTitle = 'Redrawing Phase'
 
 export const yourTurnTitle = "It's your turn!"
@@ -12,7 +10,7 @@ export const opponentTurnMessage =
 export const redrawMessage =
   'You may replace one card from your hand by clicking on it. You will put it at the bottom of your deck then draw the top card from your deck.'
 export const opponentDecidingMessage = 'Your opponent is deciding...'
-export const initialDrawMessage = `The game begins. Both players draw ${INITIAL_CARD_DRAW_AMOUNT} cards from their decks into their hands.`
+export const initialDrawMessage = `goes first.`
 
 export const passButtonMessage = 'Pass'
 export const skipRedrawMessage = 'Skip Redraw'

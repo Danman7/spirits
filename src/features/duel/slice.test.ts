@@ -132,6 +132,12 @@ describe('Sequence before play', () => {
   })
 
   test('start redraw phase', () => {
+    mockDuelState = {
+      ...initialState,
+      players: normalizedPlayers,
+      playerOrder: [opponentId, playerId],
+    }
+
     const state = duelReducer(mockDuelState, startRedraw())
 
     expect(state.phase).toBe('Redrawing Phase')

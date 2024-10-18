@@ -3,7 +3,6 @@ import { fn } from '@storybook/test'
 
 import Card from 'src/features/cards/components/Card'
 import {
-  BookOfAsh,
   ElevatedAcolyte,
   GarrettMasterThief,
   HammeriteNovice,
@@ -11,7 +10,7 @@ import {
   ViktoriaThiefPawn,
 } from 'src/features/cards/CardPrototypes'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
-import { Agent, Instant, PlayCard } from '../types'
+import { Agent, PlayCard } from '../types'
 
 const mockCard = createPlayCardFromPrototype(Haunt)
 
@@ -35,12 +34,6 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
-
-export const Artifact: Story = {
-  args: {
-    card: createPlayCardFromPrototype<Instant>(BookOfAsh),
-  },
-}
 
 export const SmallerVariant: Story = {
   args: {

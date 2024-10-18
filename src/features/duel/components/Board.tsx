@@ -1,8 +1,13 @@
 import { FC, ReactNode, useEffect, useState } from 'react'
-
-import 'src/features/duel/listeners/duelFlow'
-import 'src/features/duel/listeners/computerPlayer'
+import { useAppDispatch, useAppSelector } from 'src/app/store'
+import InitialPhaseModal from 'src/features/duel/components/modals/InitialPhaseModal'
+import PlayerTurnModal from 'src/features/duel/components/modals/PlayerTurnModal'
+import RedrawPhaseModal from 'src/features/duel/components/modals/RedrawPhaseModal'
+import VictoryModal from 'src/features/duel/components/modals/VictoryModal'
 import PlayerHalfBoard from 'src/features/duel/components/PlayerHalfBoard'
+import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
+import 'src/features/duel/listeners/computerPlayer'
+import 'src/features/duel/listeners/duelFlow'
 import {
   getPhase,
   getPlayerOrder,
@@ -10,16 +15,13 @@ import {
   getTurn,
   getVictoriousPlayerName,
 } from 'src/features/duel/selectors'
-import InitialPhaseModal from 'src/features/duel/components/modals/InitialPhaseModal'
-import PlayerTurnModal from 'src/features/duel/components/modals/PlayerTurnModal'
-import RedrawPhaseModal from 'src/features/duel/components/modals/RedrawPhaseModal'
-
+import { startRedraw } from 'src/features/duel/slice'
 import Modal from 'src/shared/components/Modal'
 import * as styles from 'src/shared/styles/styles.module.css'
-import { useAppSelector } from 'src/app/store'
-import VictoryModal from 'src/features/duel/components/modals/VictoryModal'
 
 const Board: FC = () => {
+  const dispatch = useAppDispatch()
+
   const players = useAppSelector(getPlayers)
   const playerOrder = useAppSelector(getPlayerOrder)
   const phase = useAppSelector(getPhase)
@@ -47,6 +49,17 @@ const Board: FC = () => {
         break
     }
   }, [phase, turn, playerOrder])
+
+  useEffect(() => {
+    if (
+      phase === 'Initial Draw' &&
+      Object.values(players).every(
+        ({ hand }) => hand.length === INITIAL_CARD_DRAW_AMOUNT,
+      )
+    ) {
+      dispatch(startRedraw())
+    }
+  }, [dispatch, phase, players])
 
   return (
     <div className={styles.board}>

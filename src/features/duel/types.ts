@@ -11,9 +11,8 @@ export interface Player {
   board: PlayCard['id'][]
   discard: PlayCard['id'][]
   cards: { [index: PlayCard['id']]: PlayCard }
-  hasPlayedCardThisTurn: boolean
+  hasPerformedAction: boolean
   isCPU?: boolean
-  isReady?: boolean
 }
 
 export type DuelPhase =

@@ -35,9 +35,9 @@ export const getPlayerPrespective = createSelector(
   (players, playerOrder) => players[playerOrder[1]],
 )
 
-export const getPlayerIsReady = createSelector(
+export const getPlayerhasPerformedAction = createSelector(
   getPlayerPrespective,
-  (player) => player.isReady,
+  (player) => player.hasPerformedAction,
 )
 
 export const getActivePlayerId = createSelector(
@@ -45,9 +45,19 @@ export const getActivePlayerId = createSelector(
   (duelState) => duelState.activePlayerId,
 )
 
+export const getActivePlayerName = createSelector(
+  getPlayers,
+  getActivePlayerId,
+  (players, activePlayerId) => players[activePlayerId].name,
+)
+
 export const getAttackingAgentId = createSelector(
   getDuelState,
   (duelState) => duelState.attackingAgentId,
+)
+
+export const getPlayerNames = createSelector(getPlayers, (players) =>
+  Object.values(players).map(({ name }) => name),
 )
 
 export const getVictoriousPlayerName = createSelector(

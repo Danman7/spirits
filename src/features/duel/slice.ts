@@ -1,17 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
+import { PlayCard } from 'src/features/cards/types'
+import {
+  drawCardFromDeckTransformer,
+  moveCardToBoardTransformer,
+} from 'src/features/duel/transformers'
 import {
   AgentAttacksAgentAction,
   AgentAttacksPlayerAction,
   DuelPhase,
   DuelState,
-  PlayerCardAction,
   Player,
+  PlayerCardAction,
 } from 'src/features/duel/types'
-
-import { PlayCard } from 'src/features/cards/types'
 import { getRandomArrayItem, shuffleArray } from 'src/shared/utils'
-import { moveCardToBoardTransformer } from './utils'
 
 export const initialState: DuelState = {
   turn: 0,
@@ -83,20 +84,15 @@ export const duelSlice = createSlice({
       }
     },
     drawCardFromDeck: (state, action: PayloadAction<Player['id']>) => {
-      const { players } = state
-
-      const drawingPlayer = players[action.payload]
-
-      if (drawingPlayer.deck.length) {
-        const drawnCardId = drawingPlayer.deck.shift()
-
-        if (drawnCardId) {
-          drawingPlayer.hand.push(drawnCardId)
-        }
-      }
+      drawCardFromDeckTransformer(state, action)
     },
     startRedraw: (state) => {
+      const { playerOrder } = state
+
       state.phase = 'Redrawing Phase'
+
+      state.players[playerOrder[0]].hasPerformedAction = false
+      state.players[playerOrder[1]].hasPerformedAction = false
     },
     putCardAtBottomOfDeck: (state, action: PlayerCardAction) => {
       const { cardId: movedCardId, playerId } = action.payload
@@ -118,7 +114,7 @@ export const duelSlice = createSlice({
     completeRedraw: (state, action: PayloadAction<Player['id']>) => {
       const { players } = state
 
-      players[action.payload].isReady = true
+      players[action.payload].hasPerformedAction = true
     },
     beginPlay: (state) => {
       state.phase = 'Player Turn'
@@ -163,7 +159,7 @@ export const duelSlice = createSlice({
       state.playerOrder.forEach((playerId) => {
         const player = state.players[playerId]
 
-        state.players[playerId].hasPlayedCardThisTurn = false
+        state.players[playerId].hasPerformedAction = false
 
         if (player.income) {
           state.players[playerId].coins += 1
@@ -180,7 +176,7 @@ export const duelSlice = createSlice({
       const playedCard = players[playerId].cards[playedCardId]
 
       players[playerId].coins = players[playerId].coins - playedCard.cost
-      players[playerId].hasPlayedCardThisTurn = true
+      players[playerId].hasPerformedAction = true
     },
     moveCardToBoard: (state, action: PlayerCardAction) => {
       moveCardToBoardTransformer(state, action)

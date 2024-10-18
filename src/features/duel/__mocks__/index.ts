@@ -20,13 +20,13 @@ export const MockPlayer1: Player = {
   name: 'Garret',
   coins: DEFAULT_COINS_AMOUNT,
   ...initializeCardsAndDeck([
-    createPlayCardFromPrototype(HammeriteNovice),
-    createPlayCardFromPrototype(HammeriteNovice),
-    createPlayCardFromPrototype(ElevatedAcolyte),
-    createPlayCardFromPrototype(ElevatedAcolyte),
-    createPlayCardFromPrototype(TempleGuard),
-    createPlayCardFromPrototype(TempleGuard),
     createPlayCardFromPrototype(BrotherSachelman),
+    createPlayCardFromPrototype(HammeriteNovice),
+    createPlayCardFromPrototype(HammeriteNovice),
+    createPlayCardFromPrototype(ElevatedAcolyte),
+    createPlayCardFromPrototype(ElevatedAcolyte),
+    createPlayCardFromPrototype(TempleGuard),
+    createPlayCardFromPrototype(TempleGuard),
   ]),
 }
 
