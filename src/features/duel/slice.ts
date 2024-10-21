@@ -84,7 +84,7 @@ export const duelSlice = createSlice({
       }
     },
     drawCardFromDeck: (state, action: PayloadAction<Player['id']>) => {
-      drawCardFromDeckTransformer(state, action)
+      drawCardFromDeckTransformer(state, action.payload)
     },
     startRedraw: (state) => {
       const { playerOrder } = state
@@ -117,13 +117,15 @@ export const duelSlice = createSlice({
       players[action.payload].hasPerformedAction = true
     },
     beginPlay: (state) => {
-      const { playerOrder } = state
+      const { playerOrder, activePlayerId } = state
 
       state.phase = 'Player Turn'
       state.turn = 1
 
       state.players[playerOrder[0]].hasPerformedAction = false
       state.players[playerOrder[1]].hasPerformedAction = false
+
+      drawCardFromDeckTransformer(state, activePlayerId)
     },
     initializeEndTurn: (state) => {
       const { activePlayerId } = state
@@ -171,6 +173,8 @@ export const duelSlice = createSlice({
           state.players[playerId].income -= 1
         }
       })
+
+      drawCardFromDeckTransformer(state, state.activePlayerId)
     },
     playCard: (state, action: PlayerCardAction) => {
       const { cardId: playedCardId, playerId } = action.payload

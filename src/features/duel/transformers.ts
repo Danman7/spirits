@@ -1,13 +1,12 @@
-import { PayloadAction } from '@reduxjs/toolkit'
 import { DuelState, Player, PlayerCardAction } from 'src/features/duel/types'
 
 export const drawCardFromDeckTransformer = (
   state: DuelState,
-  action: PayloadAction<Player['id']>,
+  playerId: Player['id'],
 ) => {
   const { players } = state
 
-  const drawingPlayer = players[action.payload]
+  const drawingPlayer = players[playerId]
 
   if (drawingPlayer.deck.length) {
     const drawnCardId = drawingPlayer.deck.shift()

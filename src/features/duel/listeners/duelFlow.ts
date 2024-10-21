@@ -11,7 +11,6 @@ import {
   agentAttacksPlayer,
   updateCard,
   moveCardToDiscard,
-  drawCardFromDeck,
 } from 'src/features/duel/slice'
 import * as CardEffects from 'src/features/cards/CardEffects'
 import * as CardEffectPredicates from 'src/features/cards/CardEffectPredicates'
@@ -121,16 +120,5 @@ startAppListening({
         },
       )
     })
-  },
-})
-
-startAppListening({
-  matcher: isAnyOf(endTurn, beginPlay),
-  effect: async (_, listenerApi) => {
-    await listenerApi.delay(MEDIUM_ANIMATION_CYCLE)
-
-    const { activePlayerId } = listenerApi.getState().duel
-
-    listenerApi.dispatch(drawCardFromDeck(activePlayerId))
   },
 })
