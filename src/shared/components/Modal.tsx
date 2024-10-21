@@ -14,6 +14,7 @@ const Modal: FC<ModalProps> = ({ children, style, hasOverlay }) => (
   <AnimatePresence>
     {children ? (
       <motion.div
+        key="modal"
         className={styles.modal}
         initial="closed"
         style={style}
@@ -26,6 +27,7 @@ const Modal: FC<ModalProps> = ({ children, style, hasOverlay }) => (
     ) : null}
     {children && hasOverlay ? (
       <motion.div
+        key="overlay"
         className={styles.overlay}
         animate={children ? 'open' : 'closed'}
         variants={FadeInOutVariants}

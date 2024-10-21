@@ -174,7 +174,7 @@ const PlayerHalfBoard: FC<{
               <Card
                 layout
                 layoutId={cardId}
-                key={cardId}
+                key={`${cardId}-discard`}
                 card={cards[cardId]}
                 isSmall
                 isFaceDown
@@ -190,7 +190,7 @@ const PlayerHalfBoard: FC<{
             <Card
               layout
               layoutId={cardId}
-              key={cardId}
+              key={`${cardId}-hand`}
               card={cards[cardId]}
               onClickCard={getOnClickCard()}
               isFaceDown={isOnTop}
@@ -211,7 +211,7 @@ const PlayerHalfBoard: FC<{
                 <Card
                   layout
                   layoutId={cardId}
-                  key={cardId}
+                  key={`${cardId}-deck`}
                   card={cards[cardId]}
                   isSmall
                   isFaceDown
@@ -231,7 +231,7 @@ const PlayerHalfBoard: FC<{
             <Card
               layout
               layoutId={cardId}
-              key={cardId}
+              key={`${cardId}-board`}
               card={cards[cardId]}
               isSmall
               isAttacking={attackingAgentId === cardId}

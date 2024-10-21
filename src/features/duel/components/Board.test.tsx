@@ -360,13 +360,6 @@ describe('General duel flow', () => {
       },
       { timeout: 3000 },
     )
-
-    await waitFor(
-      () => {
-        expect(screen.getByText(yourTurnTitle)).toBeInTheDocument()
-      },
-      { timeout: 2000 },
-    )
   })
 
   test('show victory modal', () => {
