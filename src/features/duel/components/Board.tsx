@@ -6,7 +6,6 @@ import RedrawPhaseModal from 'src/features/duel/components/modals/RedrawPhaseMod
 import VictoryModal from 'src/features/duel/components/modals/VictoryModal'
 import PlayerHalfBoard from 'src/features/duel/components/PlayerHalfBoard'
 import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
-import 'src/features/duel/listeners/computerPlayer'
 import 'src/features/duel/listeners/duelFlow'
 import {
   getPhase,

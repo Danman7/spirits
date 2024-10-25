@@ -23,10 +23,12 @@ import {
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
 import { DuelPhase, Player } from 'src/features/duel/types'
+import { getPlayableCardIds } from 'src/features/duel/utils'
 import { NumberChangeAnimation } from 'src/shared/animations'
 import Link from 'src/shared/components/Link'
 import Modal from 'src/shared/components/Modal'
 import styles from 'src/shared/styles/styles.module.css'
+import { getRandomArrayItem } from 'src/shared/utils'
 
 type browsedStack = 'deck' | 'discard' | null
 
@@ -143,6 +145,26 @@ const PlayerHalfBoard: FC<{
       dispatch(completeRedraw(id))
     }
   }, [dispatch, id, hasPerformedAction, isCPU, phase])
+
+  useEffect(() => {
+    if (isCPU && isActive && phase === 'Player Turn') {
+      // Play random card for now
+      const playableCardIds = getPlayableCardIds(player)
+
+      if (playableCardIds.length) {
+        const cardId = getRandomArrayItem(playableCardIds)
+
+        dispatch(
+          playCard({
+            cardId,
+            playerId: id,
+          }),
+        )
+
+        dispatch(initializeEndTurn())
+      }
+    }
+  }, [dispatch, id, isActive, isCPU, phase, player])
 
   return (
     <>
