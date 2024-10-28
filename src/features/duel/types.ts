@@ -32,6 +32,7 @@ export interface DuelState {
   loggedInPlayerId: Player['id']
   activePlayerId: Player['id']
   attackingAgentId: PlayCard['id']
+  hasAddedCardEffectListeners: boolean
 }
 
 interface PlayerCardPayload {

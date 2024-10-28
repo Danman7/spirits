@@ -39,7 +39,6 @@ const CardComponent = motion.create(
 
       const onAnimationComplete = () => {
         if (isAttacking) {
-          console.log('finished attacking')
           dispatch(moveToNextAttacker())
         }
       }

@@ -70,3 +70,8 @@ export const getVictoriousPlayerName = createSelector(
         ? players[playerOrder[0]].name
         : null,
 )
+
+export const getHasAddedCardEffectListeners = createSelector(
+  getDuelState,
+  (duelState) => duelState.hasAddedCardEffectListeners,
+)

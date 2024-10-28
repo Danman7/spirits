@@ -23,6 +23,7 @@ export const initialState: DuelState = {
   loggedInPlayerId: '',
   attackingAgentId: '',
   activePlayerId: '',
+  hasAddedCardEffectListeners: false,
 }
 
 export const duelSlice = createSlice({
@@ -177,6 +178,9 @@ export const duelSlice = createSlice({
     moveCardToDiscard: (state, action: PlayerCardAction) => {
       moveCardToDiscardTransformer(state, action)
     },
+    setHasAddedCardEffectListeners: (state, action: PayloadAction<boolean>) => {
+      state.hasAddedCardEffectListeners = action.payload
+    },
   },
 })
 
@@ -195,6 +199,7 @@ export const {
   updateCard,
   moveToNextAttacker,
   moveCardToDiscard,
+  setHasAddedCardEffectListeners,
 } = actions
 
 export type DuelActionTypes = `${typeof duelSlice.name}/${keyof typeof actions}`

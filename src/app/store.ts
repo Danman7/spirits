@@ -7,7 +7,9 @@ import { DuelState } from 'src/features/duel/types'
 
 export const storeConfiguration: ConfigureStoreOptions<
   { duel: DuelState },
-  Action<DuelActionTypes> | Action<'listenerMiddleware/add'>
+  | Action<DuelActionTypes>
+  | Action<'listenerMiddleware/add'>
+  | Action<'listenerMiddleware/removeAll'>
 > = {
   reducer: {
     duel: duelReducer,

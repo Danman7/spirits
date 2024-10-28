@@ -1,20 +1,28 @@
+import { clearAllListeners } from '@reduxjs/toolkit'
 import { FC, ReactNode, useEffect, useState } from 'react'
+import { addAppListener } from 'src/app/listenerMiddleware'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
+import * as CardEffectPredicates from 'src/features/cards/CardEffectPredicates'
+import * as CardEffects from 'src/features/cards/CardEffects'
 import InitialPhaseModal from 'src/features/duel/components/modals/InitialPhaseModal'
 import PlayerTurnModal from 'src/features/duel/components/modals/PlayerTurnModal'
 import RedrawPhaseModal from 'src/features/duel/components/modals/RedrawPhaseModal'
 import VictoryModal from 'src/features/duel/components/modals/VictoryModal'
 import PlayerHalfBoard from 'src/features/duel/components/PlayerHalfBoard'
 import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
-import 'src/features/duel/listeners/duelFlow'
 import {
+  getHasAddedCardEffectListeners,
   getPhase,
   getPlayerOrder,
   getPlayers,
   getTurn,
   getVictoriousPlayerName,
 } from 'src/features/duel/selectors'
-import { beginPlay, startRedraw } from 'src/features/duel/slice'
+import {
+  beginPlay,
+  setHasAddedCardEffectListeners,
+  startRedraw,
+} from 'src/features/duel/slice'
 import Modal from 'src/shared/components/Modal'
 import * as styles from 'src/shared/styles/styles.module.css'
 
@@ -26,6 +34,9 @@ const Board: FC = () => {
   const phase = useAppSelector(getPhase)
   const turn = useAppSelector(getTurn)
   const victorName = useAppSelector(getVictoriousPlayerName)
+  const hasAddedCardEffectListeners = useAppSelector(
+    getHasAddedCardEffectListeners,
+  )
 
   const victoryModalContent: ReactNode = victorName ? (
     <VictoryModal victorName={victorName} />
@@ -70,6 +81,35 @@ const Board: FC = () => {
       dispatch(beginPlay())
     }
   }, [dispatch, phase, players])
+
+  useEffect(() => {
+    if (!hasAddedCardEffectListeners) {
+      console.log('add listeners')
+      dispatch(clearAllListeners())
+      dispatch(setHasAddedCardEffectListeners(true))
+
+      const addedListeners: string[] = []
+
+      Object.values(players).forEach(({ cards }) =>
+        Object.keys(cards).forEach((cardId) => {
+          const { trigger, name } = cards[cardId]
+
+          if (trigger && !addedListeners.includes(name)) {
+            const { predicate, effect } = trigger
+
+            dispatch(
+              addAppListener({
+                predicate: CardEffectPredicates[predicate],
+                effect: CardEffects[effect],
+              }),
+            )
+
+            addedListeners.push(name)
+          }
+        }),
+      )
+    }
+  }, [dispatch, players, hasAddedCardEffectListeners])
 
   return (
     <div className={styles.board}>
