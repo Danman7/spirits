@@ -1,7 +1,8 @@
 import { Action, ListenerEffect } from '@reduxjs/toolkit'
 import { AppDispatch, RootState } from 'src/app/store'
-import * as CardEffects from 'src/features/cards/CardEffects'
 import * as CardEffectPredicates from 'src/features/cards/CardEffectPredicates'
+import * as CardEffects from 'src/features/cards/CardEffects'
+import { Player } from 'src/features/duel/types'
 
 type CardEffectPredicateName = keyof typeof CardEffectPredicates
 type CardEffectName = keyof typeof CardEffects
@@ -81,6 +82,10 @@ export interface CardProps<CardKind extends Card = Agent> {
   isAttacking?: boolean
   isOnTop?: boolean
   onClickCard?: (cardId: PlayCard['id']) => void
+}
+
+export interface DuelCardProps extends CardProps {
+  playerId: Player['id']
 }
 
 export type EffectCondition = 'Action should have card id'

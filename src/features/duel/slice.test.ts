@@ -3,7 +3,6 @@ import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
 import { normalizeArrayOfPlayers } from 'src/features/duel/utils'
 import duelReducer, {
   drawCardFromDeck,
-  endTurn,
   initializeEndTurn,
   initializeDuel,
   initialState,
@@ -12,11 +11,9 @@ import duelReducer, {
   startRedraw,
   updateCard,
   putCardAtBottomOfDeck,
-  agentAttacksPlayer,
-  agentAttacksAgent,
-  moveToNextAttacker,
   moveCardToDiscard,
   moveCardToBoard,
+  moveToNextAttacker,
 } from 'src/features/duel/slice'
 
 import {
@@ -224,7 +221,7 @@ describe('Playing turns', () => {
 
     const { phase, attackingAgentId } = state
 
-    expect(phase).toBe('Resolving end of turn')
+    expect(phase).toBe('Player Turn')
     expect(attackingAgentId).toBe('')
   })
 
@@ -254,7 +251,7 @@ describe('Playing turns', () => {
   test('agent attacking player', () => {
     const novice = createPlayCardFromPrototype(HammeriteNovice)
 
-    mockDuelState.phase = 'Resolving end of turn'
+    mockDuelState.phase = 'Player Turn'
     mockDuelState.players = {
       [playerId]: {
         ...mockDuelState.players[playerId],
@@ -264,17 +261,10 @@ describe('Playing turns', () => {
         deck: [],
         board: [novice.id],
       },
-      [opponentId]: mockDuelState.players[opponentId],
+      [opponentId]: { ...mockDuelState.players[opponentId], board: [] },
     }
 
-    const state = duelReducer(
-      mockDuelState,
-      agentAttacksPlayer({
-        attackingCardId: novice.id,
-        attackinPlayerId: playerId,
-        defendingPlayerId: opponentId,
-      }),
-    )
+    const state = duelReducer(mockDuelState, initializeEndTurn())
 
     const { players } = state
 
@@ -305,30 +295,13 @@ describe('Playing turns', () => {
       },
     }
 
-    const state = duelReducer(
-      mockDuelState,
-      agentAttacksAgent({
-        attackingCardId: novice.id,
-        attackinPlayerId: playerId,
-        defendingPlayerId: opponentId,
-        defendingCardId: zombie.id,
-      }),
-    )
+    const state = duelReducer(mockDuelState, initializeEndTurn())
 
     const { players } = state
 
     expect(players[opponentId].cards[zombie.id].strength).toBe(
       Zombie.strength - 1,
     )
-  })
-
-  test('move to next attacker', () => {
-    const nextAttackerId = 'test'
-    const state = duelReducer(mockDuelState, moveToNextAttacker(nextAttackerId))
-
-    const { attackingAgentId } = state
-
-    expect(attackingAgentId).toBe(nextAttackerId)
   })
 
   test('end of turn', () => {
@@ -347,7 +320,7 @@ describe('Playing turns', () => {
       [opponentId]: MockPlayer2,
     }
 
-    const state = duelReducer(mockDuelState, endTurn())
+    const state = duelReducer(mockDuelState, moveToNextAttacker())
 
     const { phase, turn, activePlayerId, players } = state
 

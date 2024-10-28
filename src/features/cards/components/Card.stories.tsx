@@ -1,7 +1,8 @@
+import { configureStore } from '@reduxjs/toolkit'
 import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from '@storybook/test'
-
-import Card from 'src/features/cards/components/Card'
+import { Provider } from 'react-redux'
+import { storeConfiguration } from 'src/app/store'
 import {
   ElevatedAcolyte,
   GarrettMasterThief,
@@ -9,8 +10,9 @@ import {
   Haunt,
   ViktoriaThiefPawn,
 } from 'src/features/cards/CardPrototypes'
+import Card from 'src/features/cards/components/Card'
+import { Agent, PlayCard } from 'src/features/cards/types'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
-import { Agent, PlayCard } from '../types'
 
 const mockCard = createPlayCardFromPrototype(Haunt)
 
@@ -28,6 +30,11 @@ const meta = {
     isFaceDown: false,
     isSmall: false,
   },
+  decorators: [
+    (story) => (
+      <Provider store={configureStore(storeConfiguration)}>{story()}</Provider>
+    ),
+  ],
 } satisfies Meta<typeof Card>
 
 export default meta

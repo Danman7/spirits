@@ -2,11 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PlayCard } from 'src/features/cards/types'
 import {
   drawCardFromDeckTransformer,
+  initializeEndTurnTransformer,
   moveCardToBoardTransformer,
+  moveCardToDiscardTransformer,
+  moveToNextAttackerTransformer,
 } from 'src/features/duel/transformers'
 import {
-  AgentAttacksAgentAction,
-  AgentAttacksPlayerAction,
   DuelPhase,
   DuelState,
   Player,
@@ -128,53 +129,10 @@ export const duelSlice = createSlice({
       drawCardFromDeckTransformer(state, activePlayerId)
     },
     initializeEndTurn: (state) => {
-      const { activePlayerId } = state
-
-      state.phase = 'Resolving end of turn'
-
-      const activePlayer = state.players[activePlayerId]
-
-      state.attackingAgentId = activePlayer.board[0] || ''
+      initializeEndTurnTransformer(state)
     },
-    agentAttacksAgent: (state, action: AgentAttacksAgentAction) => {
-      const { defendingCardId, defendingPlayerId } = action.payload
-
-      const { players } = state
-
-      players[defendingPlayerId].cards[defendingCardId].strength -= 1
-    },
-    agentAttacksPlayer: (state, action: AgentAttacksPlayerAction) => {
-      const { defendingPlayerId } = action.payload
-
-      const { players } = state
-
-      players[defendingPlayerId].coins -= 1
-    },
-    moveToNextAttacker: (state, action: PayloadAction<PlayCard['id']>) => {
-      state.attackingAgentId = action.payload
-    },
-    endTurn: (state) => {
-      state.turn += 1
-      state.phase = 'Player Turn'
-      state.attackingAgentId = initialState.attackingAgentId
-
-      state.activePlayerId =
-        state.playerOrder[0] === state.activePlayerId
-          ? state.playerOrder[1]
-          : state.playerOrder[0]
-
-      state.playerOrder.forEach((playerId) => {
-        const player = state.players[playerId]
-
-        state.players[playerId].hasPerformedAction = false
-
-        if (player.income) {
-          state.players[playerId].coins += 1
-          state.players[playerId].income -= 1
-        }
-      })
-
-      drawCardFromDeckTransformer(state, state.activePlayerId)
+    moveToNextAttacker: (state) => {
+      moveToNextAttackerTransformer(state)
     },
     playCard: (state, action: PlayerCardAction) => {
       const { cardId: playedCardId, playerId } = action.payload
@@ -186,6 +144,8 @@ export const duelSlice = createSlice({
 
       players[playerId].coins = players[playerId].coins - playedCard.cost
       players[playerId].hasPerformedAction = true
+
+      initializeEndTurnTransformer(state)
     },
     moveCardToBoard: (state, action: PlayerCardAction) => {
       moveCardToBoardTransformer(state, action)
@@ -204,31 +164,18 @@ export const duelSlice = createSlice({
         ...state.players[playerId].cards[cardId],
         ...update,
       }
+
+      if (state.players[playerId].cards[cardId].strength <= 0) {
+        moveCardToDiscardTransformer(state, {
+          payload: {
+            cardId,
+            playerId,
+          },
+        })
+      }
     },
     moveCardToDiscard: (state, action: PlayerCardAction) => {
-      const { players } = state
-      const { playerId, cardId: movedCardId } = action.payload
-
-      const player = players[playerId]
-
-      players[playerId].board = player.board.filter(
-        (cardId) => cardId !== movedCardId,
-      )
-      players[playerId].hand = player.hand.filter(
-        (cardId) => cardId !== movedCardId,
-      )
-      players[playerId].deck = player.deck.filter(
-        (cardId) => cardId !== movedCardId,
-      )
-
-      const card = player.cards[movedCardId]
-
-      players[playerId].discard = [...player.discard, movedCardId]
-      players[playerId].cards[movedCardId] = {
-        ...card,
-        strength: card.prototype.strength,
-      }
-      players[playerId].income += card.cost
+      moveCardToDiscardTransformer(state, action)
     },
   },
 })
@@ -239,7 +186,6 @@ export const {
   initializeDuel,
   completeRedraw,
   drawCardFromDeck,
-  endTurn,
   initializeEndTurn,
   playCard,
   putCardAtBottomOfDeck,
@@ -247,8 +193,6 @@ export const {
   startRedraw,
   moveCardToBoard,
   updateCard,
-  agentAttacksAgent,
-  agentAttacksPlayer,
   moveToNextAttacker,
   moveCardToDiscard,
 } = actions

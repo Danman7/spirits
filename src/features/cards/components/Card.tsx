@@ -1,7 +1,9 @@
 import { motion, useAnimationControls } from 'framer-motion'
 import { forwardRef, useEffect } from 'react'
+import { useAppDispatch } from 'src/app/store'
 import { CardProps } from 'src/features/cards/types'
 import { getFactionColor, joinCardTypes } from 'src/features/cards/utils'
+import { moveToNextAttacker } from 'src/features/duel/slice'
 import {
   CardAttackAnimation,
   CardBoostAnimation,
@@ -30,9 +32,17 @@ const CardComponent = motion.create(
       const strength = kind === 'agent' ? card.strength : undefined
 
       const prevStrength = usePrevious(strength)
+      const dispatch = useAppDispatch()
 
       const strengthChangeAnimation = useAnimationControls()
       const cardAnimationControls = useAnimationControls()
+
+      const onAnimationComplete = () => {
+        if (isAttacking) {
+          console.log('finished attacking')
+          dispatch(moveToNextAttacker())
+        }
+      }
 
       useEffect(() => {
         if (strength && prevStrength) {
@@ -70,6 +80,7 @@ const CardComponent = motion.create(
         <motion.div
           ref={ref}
           animate={cardAnimationControls}
+          onAnimationComplete={onAnimationComplete}
           onClick={onClickCard ? () => onClickCard(id) : undefined}
           className={`${styles.card} ${isSmall ? styles.smallCard : ''} ${onClickCard ? styles.activeCard : ''}`}
         >
@@ -102,7 +113,6 @@ const CardComponent = motion.create(
       )
     },
   ),
-  { forwardMotionProps: true },
 )
 
 export default CardComponent

@@ -2,11 +2,9 @@ import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
 import { FC, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import Card from 'src/features/cards/components/Card'
-import DisplayCard from 'src/features/cards/components/DisplayCard'
 import { CardProps } from 'src/features/cards/types'
 import {
   INITIAL_CARD_DRAW_AMOUNT,
-  MEDIUM_ANIMATION_CYCLE,
   PLAYER_DECK_TEST_ID,
   PLAYER_DISCARD_TEST_ID,
 } from 'src/features/duel/constants'
@@ -18,7 +16,6 @@ import {
 import {
   completeRedraw,
   drawCardFromDeck,
-  initializeEndTurn,
   playCard,
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
@@ -64,10 +61,6 @@ const PlayerHalfBoard: FC<{
 
   const onPlayCard: CardProps['onClickCard'] = (cardId) => {
     dispatch(playCard({ cardId, playerId: id }))
-
-    setTimeout(() => {
-      dispatch(initializeEndTurn())
-    }, MEDIUM_ANIMATION_CYCLE)
   }
 
   const onRedrawCard: CardProps['onClickCard'] = (cardId) => {
@@ -116,7 +109,7 @@ const PlayerHalfBoard: FC<{
           <h1>Browsing {browsedStack}</h1>
           <div className={styles.cardList}>
             {player[browsedStack].map((cardId) => (
-              <DisplayCard key={`${cardId}-browse`} card={cards[cardId]} />
+              <Card key={`${cardId}-browse`} card={cards[cardId]} />
             ))}
           </div>
 
@@ -160,8 +153,6 @@ const PlayerHalfBoard: FC<{
             playerId: id,
           }),
         )
-
-        dispatch(initializeEndTurn())
       }
     }
   }, [dispatch, id, isActive, isCPU, phase, player])
