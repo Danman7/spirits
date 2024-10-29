@@ -63,6 +63,7 @@ export const MockPlayerTurnState: DuelState = {
   turn: 1,
   activePlayerId: MockPlayer1.id,
   attackingAgentId: '',
+  hasAddedCardEffectListeners: true,
   players: {
     [MockPlayer1.id]: {
       ...EMPTY_PLAYER,

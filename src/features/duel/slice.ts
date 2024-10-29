@@ -12,6 +12,7 @@ import {
   DuelState,
   Player,
   PlayerCardAction,
+  PlayerOrder,
 } from 'src/features/duel/types'
 import { getRandomArrayItem, shuffleArray } from 'src/shared/utils'
 
@@ -19,7 +20,7 @@ export const initialState: DuelState = {
   turn: 0,
   phase: 'Pre-duel',
   players: {},
-  playerOrder: [],
+  playerOrder: ['', ''],
   loggedInPlayerId: '',
   attackingAgentId: '',
   activePlayerId: '',
@@ -77,7 +78,7 @@ export const duelSlice = createSlice({
             Number(playerA.id === loggedInPlayerId) -
             Number(playerB.id === loggedInPlayerId),
         )
-        .map(({ id }) => id)
+        .map(({ id }) => id) as PlayerOrder
 
       state.phase = phase || 'Initial Draw'
 
