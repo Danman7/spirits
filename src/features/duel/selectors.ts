@@ -14,11 +14,6 @@ export const getPhase = createSelector(
   (duelState) => duelState.phase,
 )
 
-export const getLoggedInPlayerId = createSelector(
-  getDuelState,
-  (duelState) => duelState.loggedInPlayerId,
-)
-
 export const getPlayers = createSelector(
   getDuelState,
   (duelState) => duelState.players,
@@ -29,10 +24,15 @@ export const getPlayerOrder = createSelector(
   (duelState) => duelState.playerOrder,
 )
 
+export const getLoggedInPlayerId = createSelector(
+  getDuelState,
+  (duelState) => duelState.loggedInPlayerId,
+)
+
 export const getPlayerPrespective = createSelector(
   getPlayers,
-  getPlayerOrder,
-  (players, playerOrder) => players[playerOrder[1]],
+  getLoggedInPlayerId,
+  (players, loggedInPlayerId) => players[loggedInPlayerId],
 )
 
 export const getPlayerhasPerformedAction = createSelector(

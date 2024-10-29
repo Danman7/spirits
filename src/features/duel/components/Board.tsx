@@ -55,7 +55,7 @@ const Board: FC = () => {
         break
 
       case 'Redrawing Phase':
-        setGameModalContent(<RedrawPhaseModal playerId={playerOrder[1]} />)
+        setGameModalContent(<RedrawPhaseModal />)
         break
     }
   }, [phase, turn, playerOrder])

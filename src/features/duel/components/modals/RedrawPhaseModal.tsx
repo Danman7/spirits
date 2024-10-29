@@ -4,7 +4,6 @@ import { motion } from 'framer-motion'
 import Link from 'src/shared/components/Link'
 import { SlideInOutContentVariants } from 'src/shared/animations'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
-import { Player } from 'src/features/duel/types'
 import { completeRedraw } from 'src/features/duel/slice'
 import {
   opponentDecidingMessage,
@@ -12,12 +11,16 @@ import {
   redrawMessage,
   skipRedrawMessage,
 } from 'src/features/duel/messages'
-import { getPlayerhasPerformedAction } from 'src/features/duel/selectors'
+import {
+  getLoggedInPlayerId,
+  getPlayerhasPerformedAction,
+} from 'src/features/duel/selectors'
 
-const RedrawPhaseModal: FC<{ playerId: Player['id'] }> = ({ playerId }) => {
+const RedrawPhaseModal: FC = () => {
   const dispatch = useAppDispatch()
 
   const isPlayerReady = useAppSelector(getPlayerhasPerformedAction)
+  const playerId = useAppSelector(getLoggedInPlayerId)
 
   const onSkipRedraw = () => {
     dispatch(completeRedraw(playerId))

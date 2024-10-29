@@ -22,8 +22,7 @@ let mockDuelState: DuelState
 let card: PlayCard
 let cardId: PlayCard['id']
 
-const playerId = MockPlayerTurnState.playerOrder[1]
-const opponentId = MockPlayerTurnState.playerOrder[0]
+const [playerId, opponentId] = MockPlayerTurnState.playerOrder
 
 const listenerApi: ListenerEffectAPI<RootState, AppDispatch> = {
   getState: jest.fn(() => ({ duel: { ...MockPlayerTurnState } })),

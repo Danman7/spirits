@@ -11,7 +11,6 @@ import {
 import {
   getActivePlayerId,
   getAttackingAgentId,
-  getLoggedInPlayerId,
 } from 'src/features/duel/selectors'
 import {
   completeRedraw,
@@ -52,11 +51,9 @@ const PlayerHalfBoard: FC<{
 
   const [browsedStack, setBrowsedStack] = useState<browsedStack>(null)
 
-  const loggedInPlayerId = useAppSelector(getLoggedInPlayerId)
   const activePlayerId = useAppSelector(getActivePlayerId)
   const attackingAgentId = useAppSelector(getAttackingAgentId)
 
-  const isPlayerPrespective = loggedInPlayerId === id
   const isActive = activePlayerId === id
 
   const onPlayCard: CardProps['onClickCard'] = (cardId) => {
@@ -80,17 +77,13 @@ const PlayerHalfBoard: FC<{
     if (
       phase === 'Player Turn' &&
       isActive &&
-      isPlayerPrespective &&
+      !isOnTop &&
       !hasPerformedAction
     ) {
       return onPlayCard
     }
 
-    if (
-      phase === 'Redrawing Phase' &&
-      !hasPerformedAction &&
-      isPlayerPrespective
-    ) {
+    if (phase === 'Redrawing Phase' && !hasPerformedAction && !isOnTop) {
       return onRedrawCard
     }
 
