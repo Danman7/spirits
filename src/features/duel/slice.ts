@@ -147,8 +147,6 @@ export const duelSlice = createSlice({
 
       players[playerId].coins = players[playerId].coins - playedCard.cost
       players[playerId].hasPerformedAction = true
-
-      initializeEndTurnTransformer(state)
     },
     moveCardToBoard: (state, action: PlayerCardAction) => {
       moveCardToBoardTransformer(state, action)

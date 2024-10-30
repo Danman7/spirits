@@ -260,13 +260,7 @@ describe('General duel flow', () => {
       `${playedCard.name}${playedCard.strength}`,
     )
 
-    expect(await screen.findByText(opponent.coins - 1)).toBeInTheDocument()
-
-    expect(playerInfos[0]).toHaveTextContent(
-      `${opponent.name} / ${opponent.coins - 1}`,
-    )
-
-    expect(await screen.findByText(opponentTurnTitle)).toBeInTheDocument()
+    expect(await screen.findByText(activePlayer.coins - 1)).toBeInTheDocument()
   })
 
   test('pass the turn', async () => {

@@ -15,6 +15,7 @@ import {
 import {
   completeRedraw,
   drawCardFromDeck,
+  initializeEndTurn,
   playCard,
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
@@ -95,6 +96,12 @@ const PlayerHalfBoard: FC<{
   const openBrowseCardsModal = (cardList: browsedStack) =>
     setBrowsedStack(cardList)
 
+  const onBoardCardLayoutComplete = () => {
+    if (phase === 'Player Turn') {
+      dispatch(initializeEndTurn())
+    }
+  }
+
   const modalContent = useMemo(
     () =>
       browsedStack ? (
@@ -133,7 +140,7 @@ const PlayerHalfBoard: FC<{
   }, [dispatch, id, hasPerformedAction, isCPU, phase])
 
   useEffect(() => {
-    if (isCPU && isActive && phase === 'Player Turn') {
+    if (isCPU && isActive && phase === 'Player Turn' && !hasPerformedAction) {
       // Play random card for now
       const playableCardIds = getPlayableCardIds(player)
 
@@ -148,7 +155,7 @@ const PlayerHalfBoard: FC<{
         )
       }
     }
-  }, [dispatch, id, isActive, isCPU, phase, player])
+  }, [dispatch, id, isActive, isCPU, phase, player, hasPerformedAction])
 
   return (
     <>
@@ -237,6 +244,7 @@ const PlayerHalfBoard: FC<{
             <Card
               layout
               layoutId={cardId}
+              onLayoutAnimationComplete={onBoardCardLayoutComplete}
               key={`${cardId}-board`}
               card={cards[cardId]}
               isSmall

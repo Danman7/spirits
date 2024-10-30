@@ -84,7 +84,6 @@ const Board: FC = () => {
 
   useEffect(() => {
     if (!hasAddedCardEffectListeners) {
-      console.log('add listeners')
       dispatch(clearAllListeners())
       dispatch(setHasAddedCardEffectListeners(true))
 
