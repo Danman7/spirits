@@ -236,7 +236,6 @@ describe('General duel flow', () => {
     const { players } = preloadedState.duel
 
     const activePlayer = players[playerId]
-    const opponent = players[opponentId]
 
     const playedCard = activePlayer.cards[activePlayer.hand[0]]
 
