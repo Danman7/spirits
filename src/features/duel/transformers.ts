@@ -1,3 +1,4 @@
+import { DuelAgent } from 'src/features/cards/types'
 import { initialState } from 'src/features/duel/slice'
 import { DuelState, Player, PlayerCardAction } from 'src/features/duel/types'
 
@@ -107,15 +108,21 @@ const agentAttackTransformer = (state: DuelState) => {
         opponent.board[attackingCardIndex] ||
         opponent.board[opponent.board.length - 1]
 
-      players[opponent.id].cards[defendingCardId].strength -= 1
+      if (players[opponent.id].cards[defendingCardId].kind === 'agent') {
+        ;(players[opponent.id].cards[defendingCardId] as DuelAgent).strength -=
+          1
 
-      if (players[opponent.id].cards[defendingCardId].strength <= 0) {
-        moveCardToDiscardTransformer(state, {
-          payload: {
-            cardId: defendingCardId,
-            playerId: opponent.id,
-          },
-        })
+        if (
+          (players[opponent.id].cards[defendingCardId] as DuelAgent).strength <=
+          0
+        ) {
+          moveCardToDiscardTransformer(state, {
+            payload: {
+              cardId: defendingCardId,
+              playerId: opponent.id,
+            },
+          })
+        }
       }
     } else {
       players[opponent.id].coins -= 1
@@ -142,12 +149,12 @@ export const moveCardToDiscardTransformer = (
     (cardId) => cardId !== movedCardId,
   )
 
-  const card = player.cards[movedCardId]
-
   players[playerId].discard = [...player.discard, movedCardId]
-  players[playerId].cards[movedCardId] = {
-    ...card,
-    strength: card.prototype.strength,
+
+  if (players[playerId].cards[movedCardId].kind === 'agent') {
+    players[playerId].cards[movedCardId].strength =
+      players[playerId].cards[movedCardId].prototype.strength
   }
-  players[playerId].income += card.cost
+
+  players[playerId].income += players[playerId].cards[movedCardId].cost
 }

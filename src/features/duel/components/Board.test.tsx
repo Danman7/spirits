@@ -27,6 +27,7 @@ import {
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
 import { initialState } from 'src/features/duel/slice'
 import { PLAYER_DECK_TEST_ID, PLAYER_DISCARD_TEST_ID } from '../constants'
+import { DuelAgent } from 'src/features/cards/types'
 
 const playerId = MockPlayer1.id
 const opponentId = MockPlayer2.id
@@ -237,7 +238,7 @@ describe('General duel flow', () => {
 
     const activePlayer = players[playerId]
 
-    const playedCard = activePlayer.cards[activePlayer.hand[0]]
+    const playedCard = activePlayer.cards[activePlayer.hand[0]] as DuelAgent
 
     render(<Board />, {
       preloadedState,
@@ -272,7 +273,7 @@ describe('General duel flow', () => {
       [opponentId]: {
         ...MockPlayer2,
         cards: {
-          [haunt.id]: { ...haunt, strength: 1 },
+          [haunt.id]: { ...haunt, strength: 1 } as DuelAgent,
           [zombie.id]: zombie,
         },
         deck: [],

@@ -9,7 +9,7 @@ import duelReducer, {
   playCard,
   beginPlay,
   startRedraw,
-  updateCard,
+  updateAgent,
   putCardAtBottomOfDeck,
   moveCardToDiscard,
   moveCardToBoard,
@@ -22,7 +22,7 @@ import {
   Zombie,
 } from 'src/features/cards/CardPrototypes'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
-import { PlayCard } from 'src/features/cards/types'
+import { DuelAgent, PlayCard } from 'src/features/cards/types'
 
 const initialPlayers = [MockPlayer1, MockPlayer2]
 const normalizedPlayers = normalizeArrayOfPlayers(initialPlayers)
@@ -299,9 +299,9 @@ describe('Playing turns', () => {
 
     const { players } = state
 
-    expect(players[opponentId].cards[zombie.id].strength).toBe(
-      Zombie.strength - 1,
-    )
+    const damagedAgent = players[opponentId].cards[zombie.id] as DuelAgent
+
+    expect(damagedAgent.strength).toBe(Zombie.strength - 1)
   })
 
   test('end of turn', () => {
@@ -441,14 +441,14 @@ describe('Playing turns', () => {
 
     const state = duelReducer(
       mockDuelState,
-      updateCard({
+      updateAgent({
         playerId,
         cardId,
         update,
       }),
     )
 
-    const updatedCard = state.players[playerId].cards[cardId]
+    const updatedCard = state.players[playerId].cards[cardId] as DuelAgent
 
     expect(updatedCard.strength).toBe(update.strength)
     expect(updatedCard.cost).toBe(update.cost)
@@ -467,7 +467,7 @@ describe('Playing turns', () => {
           [stack]: [cardId, guard.id],
           discard: [],
           cards: {
-            [cardId]: { ...novice, strength: 1 },
+            [cardId]: { ...novice, strength: 1 } as DuelAgent,
             [guard.id]: guard,
           },
         },
@@ -484,12 +484,12 @@ describe('Playing turns', () => {
 
       const player = state.players[playerId]
 
+      const discardedCard = player.cards[cardId] as DuelAgent
+
       expect(player[stack]).toHaveLength(1)
       expect(player.discard).toHaveLength(1)
       expect(player.discard).toContain(cardId)
-      expect(player.cards[cardId].strength).toBe(
-        player.cards[cardId].prototype.strength,
-      )
+      expect(discardedCard.strength).toBe(discardedCard.prototype.strength)
       expect(player.income).toBe(novice.cost)
     })
   })

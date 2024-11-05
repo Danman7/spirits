@@ -1,5 +1,4 @@
 import { ListenerEffectAPI } from '@reduxjs/toolkit'
-
 import { AppDispatch, RootState } from 'src/app/store'
 import {
   BrotherSachelmanOnPlayEffect,
@@ -11,15 +10,14 @@ import {
   TempleGuard,
 } from 'src/features/cards/CardPrototypes'
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constants'
+import { DuelAgent, PlayCard } from 'src/features/cards/types'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
 import { MockPlayerTurnState } from 'src/features/duel/__mocks__'
-import { moveCardToBoard, playCard, updateCard } from 'src/features/duel/slice'
+import { moveCardToBoard, playCard, updateAgent } from 'src/features/duel/slice'
 import { DuelState, PlayerCardAction } from 'src/features/duel/types'
-import { PlayCard } from 'src/features/cards/types'
 
 let mockAction: PlayerCardAction
 let mockDuelState: DuelState
-let card: PlayCard
 let cardId: PlayCard['id']
 
 const [playerId, opponentId] = MockPlayerTurnState.playerOrder
@@ -60,8 +58,9 @@ afterEach(() => {
 })
 
 describe(BrotherSachelman.name, () => {
+  const card = createPlayCardFromPrototype(BrotherSachelman) as DuelAgent
+
   beforeEach(() => {
-    card = createPlayCardFromPrototype(BrotherSachelman)
     cardId = card.id
 
     mockAction = {
@@ -71,7 +70,7 @@ describe(BrotherSachelman.name, () => {
   })
 
   it('should boost alied Hammerite cards on board with lower strength', () => {
-    const novice = createPlayCardFromPrototype(HammeriteNovice)
+    const novice = createPlayCardFromPrototype(HammeriteNovice) as DuelAgent
 
     mockDuelState.players[playerId].cards = {
       [cardId]: card,
@@ -88,7 +87,7 @@ describe(BrotherSachelman.name, () => {
     BrotherSachelmanOnPlayEffect(mockAction, listenerApi)
 
     expect(listenerApi.dispatch).toHaveBeenCalledWith(
-      updateCard({
+      updateAgent({
         cardId: novice.id,
         playerId,
         update: {
@@ -149,8 +148,9 @@ describe(BrotherSachelman.name, () => {
 })
 
 describe(HammeriteNovice.name, () => {
+  const card = createPlayCardFromPrototype(HammeriteNovice) as DuelAgent
+
   beforeEach(() => {
-    card = createPlayCardFromPrototype(HammeriteNovice)
     cardId = card.id
 
     mockAction = {

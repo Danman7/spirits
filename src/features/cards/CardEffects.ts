@@ -1,6 +1,6 @@
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constants'
-import { CardEffect } from 'src/features/cards/types'
-import { moveCardToBoard, updateCard } from 'src/features/duel/slice'
+import { Agent, CardEffect } from 'src/features/cards/types'
+import { moveCardToBoard, updateAgent } from 'src/features/duel/slice'
 import { PlayerCardAction } from 'src/features/duel/types'
 import { HammeriteNovice } from 'src/features/cards/CardPrototypes'
 
@@ -12,7 +12,7 @@ export const BrotherSachelmanOnPlayEffect: CardEffect<PlayerCardAction> = (
 
   const { players } = listenerApi.getState().duel
 
-  const playedCard = players[playerId].cards[cardId]
+  const playedCard = players[playerId].cards[cardId] as Agent
 
   players[playerId].board.forEach((cardId) => {
     const cardOnBoard = { ...players[playerId].cards[cardId] }
@@ -23,7 +23,7 @@ export const BrotherSachelmanOnPlayEffect: CardEffect<PlayerCardAction> = (
       cardOnBoard.strength < playedCard.strength
     ) {
       listenerApi.dispatch(
-        updateCard({
+        updateAgent({
           playerId,
           cardId,
           update: {

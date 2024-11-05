@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { PlayCard } from 'src/features/cards/types'
+import { DuelAgent, PlayCard } from 'src/features/cards/types'
 import {
   drawCardFromDeckTransformer,
   initializeEndTurnTransformer,
@@ -151,22 +151,24 @@ export const duelSlice = createSlice({
     moveCardToBoard: (state, action: PlayerCardAction) => {
       moveCardToBoardTransformer(state, action)
     },
-    updateCard: (
+    updateAgent: (
       state,
       action: PayloadAction<{
         playerId: Player['id']
         cardId: PlayCard['id']
-        update: Partial<PlayCard>
+        update: Partial<DuelAgent>
       }>,
     ) => {
       const { playerId, cardId, update } = action.payload
 
+      const movedCard = state.players[playerId].cards[cardId] as DuelAgent
+
       state.players[playerId].cards[cardId] = {
         ...state.players[playerId].cards[cardId],
         ...update,
-      }
+      } as DuelAgent
 
-      if (state.players[playerId].cards[cardId].strength <= 0) {
+      if (movedCard.strength <= 0) {
         moveCardToDiscardTransformer(state, {
           payload: {
             cardId,
@@ -196,7 +198,7 @@ export const {
   beginPlay,
   startRedraw,
   moveCardToBoard,
-  updateCard,
+  updateAgent,
   moveToNextAttacker,
   moveCardToDiscard,
   setHasAddedCardEffectListeners,

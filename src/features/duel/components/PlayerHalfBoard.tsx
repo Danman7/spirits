@@ -2,7 +2,7 @@ import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
 import { FC, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import Card from 'src/features/cards/components/Card'
-import { CardProps } from 'src/features/cards/types'
+import { CardComponentProps } from 'src/features/cards/types'
 import {
   INITIAL_CARD_DRAW_AMOUNT,
   PLAYER_DECK_TEST_ID,
@@ -57,11 +57,11 @@ const PlayerHalfBoard: FC<{
 
   const isActive = activePlayerId === id
 
-  const onPlayCard: CardProps['onClickCard'] = (cardId) => {
+  const onPlayCard: CardComponentProps['onClickCard'] = (cardId) => {
     dispatch(playCard({ cardId, playerId: id }))
   }
 
-  const onRedrawCard: CardProps['onClickCard'] = (cardId) => {
+  const onRedrawCard: CardComponentProps['onClickCard'] = (cardId) => {
     dispatch(
       putCardAtBottomOfDeck({
         cardId,
@@ -74,7 +74,7 @@ const PlayerHalfBoard: FC<{
     dispatch(completeRedraw(id))
   }
 
-  const getOnClickCard = (): CardProps['onClickCard'] => {
+  const getOnClickCard = (): CardComponentProps['onClickCard'] => {
     if (
       phase === 'Player Turn' &&
       isActive &&

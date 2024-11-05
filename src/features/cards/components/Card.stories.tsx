@@ -11,10 +11,10 @@ import {
   ViktoriaThiefPawn,
 } from 'src/features/cards/CardPrototypes'
 import Card from 'src/features/cards/components/Card'
-import { Agent, PlayCard } from 'src/features/cards/types'
+import { DuelAgent } from 'src/features/cards/types'
 import { createPlayCardFromPrototype } from 'src/features/cards/utils'
 
-const mockCard = createPlayCardFromPrototype(Haunt)
+const mockCard = createPlayCardFromPrototype(Haunt) as DuelAgent
 
 const meta = {
   title: 'Card',
@@ -57,7 +57,7 @@ export const IsActive: Story = {
 
 export const Boosted: Story = {
   args: {
-    card: { ...mockCard, strength: mockCard.strength + 2 },
+    card: { ...mockCard, strength: mockCard.strength + 2 } as DuelAgent,
   },
 }
 
@@ -66,7 +66,7 @@ export const Damaged: Story = {
     card: {
       ...createPlayCardFromPrototype(ElevatedAcolyte),
       strength: ElevatedAcolyte.strength - 1,
-    } as PlayCard<Agent>,
+    } as DuelAgent,
   },
 }
 

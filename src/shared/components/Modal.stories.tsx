@@ -103,9 +103,7 @@ export const RedrawPhase: Story = {
     ),
   ],
   args: {
-    children: (
-      <RedrawPhaseModal playerId={MockPlayerTurnState.playerOrder[1]} />
-    ),
+    children: <RedrawPhaseModal />,
   },
 }
 

@@ -1,11 +1,17 @@
 import { FACTION_COLOR_MAP } from 'src/features/cards/constants'
-import { Agent, Card, Instant, PlayCard } from 'src/features/cards/types'
-
+import {
+  Agent,
+  CardBase,
+  DuelAgent,
+  DuelInstant,
+  Instant,
+  PlayCard,
+} from 'src/features/cards/types'
 import { generateUUID } from 'src/shared/utils'
 
-export const joinCardTypes = (types: Card['types']) => types.join(', ')
+export const joinCardTypes = (types: CardBase['types']) => types.join(', ')
 
-export const getFactionColor = (factions: Card['factions']) => {
+export const getFactionColor = (factions: CardBase['factions']) => {
   const firstColor = FACTION_COLOR_MAP[factions[0]]
 
   if (factions.length === 1) {
@@ -17,9 +23,9 @@ export const getFactionColor = (factions: Card['factions']) => {
   })`
 }
 
-export const createPlayCardFromPrototype = <CardKind extends Card = Agent>(
-  cardPrototype: Card,
-): PlayCard<CardKind> => {
+export const createPlayCardFromPrototype = (
+  cardPrototype: Agent | Instant,
+): PlayCard => {
   const { kind } = cardPrototype
 
   const id = generateUUID()
@@ -32,7 +38,7 @@ export const createPlayCardFromPrototype = <CardKind extends Card = Agent>(
         cost: cardPrototype.cost,
         strength: cardPrototype.strength,
       },
-    } as PlayCard<Agent>
+    } as DuelAgent
   }
 
   return {
@@ -41,5 +47,5 @@ export const createPlayCardFromPrototype = <CardKind extends Card = Agent>(
     prototype: {
       cost: cardPrototype.cost,
     },
-  } as PlayCard<Instant>
+  } as DuelInstant
 }
