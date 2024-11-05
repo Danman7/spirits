@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 import Board from 'src/features/duel/components/Board'
 import { initialState } from 'src/features/duel/slice'
-import { createPlayCardFromPrototype } from 'src/features/cards/utils'
+import { createDuelCard } from 'src/features/cards/utils'
 import {
   AzaranTheCruel,
   BrotherSachelman,
@@ -30,18 +30,18 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-const guard1 = createPlayCardFromPrototype(TempleGuard)
-const guard2 = createPlayCardFromPrototype(TempleGuard)
-const acolyte1 = createPlayCardFromPrototype(ElevatedAcolyte)
-const acolyte2 = createPlayCardFromPrototype(ElevatedAcolyte)
-const novice1 = createPlayCardFromPrototype(HammeriteNovice)
-const novice2 = createPlayCardFromPrototype(HammeriteNovice)
-const brother = createPlayCardFromPrototype(BrotherSachelman)
-const zombie1 = createPlayCardFromPrototype(Zombie)
-const zombie2 = createPlayCardFromPrototype(Zombie)
-const haunt1 = createPlayCardFromPrototype(Haunt)
-const haunt2 = createPlayCardFromPrototype(Haunt)
-const azaran = createPlayCardFromPrototype(AzaranTheCruel)
+const guard1 = createDuelCard(TempleGuard)
+const guard2 = createDuelCard(TempleGuard)
+const acolyte1 = createDuelCard(ElevatedAcolyte)
+const acolyte2 = createDuelCard(ElevatedAcolyte)
+const novice1 = createDuelCard(HammeriteNovice)
+const novice2 = createDuelCard(HammeriteNovice)
+const brother = createDuelCard(BrotherSachelman)
+const zombie1 = createDuelCard(Zombie)
+const zombie2 = createDuelCard(Zombie)
+const haunt1 = createDuelCard(Haunt)
+const haunt2 = createDuelCard(Haunt)
+const azaran = createDuelCard(AzaranTheCruel)
 
 export const Default: Story = {
   decorators: [

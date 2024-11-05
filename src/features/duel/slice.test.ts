@@ -21,8 +21,8 @@ import {
   TempleGuard,
   Zombie,
 } from 'src/features/cards/CardPrototypes'
-import { createPlayCardFromPrototype } from 'src/features/cards/utils'
-import { DuelAgent, PlayCard } from 'src/features/cards/types'
+import { createDuelCard } from 'src/features/cards/utils'
+import { DuelAgent, DuelCard } from 'src/features/cards/types'
 
 const initialPlayers = [MockPlayer1, MockPlayer2]
 const normalizedPlayers = normalizeArrayOfPlayers(initialPlayers)
@@ -143,7 +143,7 @@ describe('Sequence before play', () => {
   test('put a card at the bottom of the deck', () => {
     mockDuelState.phase = 'Redrawing Phase'
 
-    const novice = createPlayCardFromPrototype(HammeriteNovice)
+    const novice = createDuelCard(HammeriteNovice)
     const cardId = novice.id
     const stacks = ['hand', 'board', 'discard']
 
@@ -226,7 +226,7 @@ describe('Playing turns', () => {
   })
 
   test('initialize end of turn resolution if active player has units on board', () => {
-    const novice = createPlayCardFromPrototype(HammeriteNovice)
+    const novice = createDuelCard(HammeriteNovice)
 
     mockDuelState.players = {
       [playerId]: {
@@ -249,7 +249,7 @@ describe('Playing turns', () => {
   })
 
   test('agent attacking player', () => {
-    const novice = createPlayCardFromPrototype(HammeriteNovice)
+    const novice = createDuelCard(HammeriteNovice)
 
     mockDuelState.phase = 'Player Turn'
     mockDuelState.players = {
@@ -272,8 +272,8 @@ describe('Playing turns', () => {
   })
 
   test('agent attacking agent', () => {
-    const novice = createPlayCardFromPrototype(HammeriteNovice)
-    const zombie = createPlayCardFromPrototype(Zombie)
+    const novice = createDuelCard(HammeriteNovice)
+    const zombie = createDuelCard(Zombie)
 
     mockDuelState.phase = 'Resolving end of turn'
     mockDuelState.players = {
@@ -334,7 +334,7 @@ describe('Playing turns', () => {
   })
 
   test('play card', () => {
-    const novice = createPlayCardFromPrototype(HammeriteNovice)
+    const novice = createDuelCard(HammeriteNovice)
     const cardId = novice.id
     const stacks = ['hand', 'discard', 'deck']
 
@@ -376,7 +376,7 @@ describe('Playing turns', () => {
   })
 
   test('move card to board without playing it', () => {
-    const novice = createPlayCardFromPrototype(HammeriteNovice)
+    const novice = createDuelCard(HammeriteNovice)
     const cardId = novice.id
     const stacks = ['hand', 'discard', 'deck']
 
@@ -418,7 +418,7 @@ describe('Playing turns', () => {
   })
 
   test('update a card', () => {
-    const novice = createPlayCardFromPrototype(HammeriteNovice)
+    const novice = createDuelCard(HammeriteNovice)
     const cardId = novice.id
 
     mockDuelState.activePlayerId = playerId
@@ -434,7 +434,7 @@ describe('Playing turns', () => {
       [opponentId]: MockPlayer2,
     }
 
-    const update: Partial<PlayCard> = {
+    const update: Partial<DuelCard> = {
       cost: 1,
       strength: 5,
     }
@@ -455,8 +455,8 @@ describe('Playing turns', () => {
   })
 
   test('move a card from board to discard pile', () => {
-    const novice = createPlayCardFromPrototype(HammeriteNovice)
-    const guard = createPlayCardFromPrototype(TempleGuard)
+    const novice = createDuelCard(HammeriteNovice)
+    const guard = createDuelCard(TempleGuard)
     const cardId = novice.id
     const stacks = ['hand', 'board', 'deck']
 

@@ -54,7 +54,7 @@ export type DuelAgent = Agent & {
   }
 }
 
-export type PlayCard = DuelInstant | DuelAgent
+export type DuelCard = DuelInstant | DuelAgent
 
 export type CardFaction = 'Order' | 'Chaos' | 'Shadow'
 
@@ -69,10 +69,10 @@ export type CardType =
   | 'Artifact'
 
 export interface CardComponentProps {
-  card: PlayCard
+  card: DuelCard
   isFaceDown?: boolean
   isSmall?: boolean
   isAttacking?: boolean
   isOnTop?: boolean
-  onClickCard?: (cardId: PlayCard['id']) => void
+  onClickCard?: (cardId: DuelCard['id']) => void
 }

@@ -12,9 +12,9 @@ import {
 } from 'src/features/cards/CardPrototypes'
 import Card from 'src/features/cards/components/Card'
 import { DuelAgent } from 'src/features/cards/types'
-import { createPlayCardFromPrototype } from 'src/features/cards/utils'
+import { createDuelCard } from 'src/features/cards/utils'
 
-const mockCard = createPlayCardFromPrototype(Haunt) as DuelAgent
+const mockCard = createDuelCard(Haunt) as DuelAgent
 
 const meta = {
   title: 'Card',
@@ -64,7 +64,7 @@ export const Boosted: Story = {
 export const Damaged: Story = {
   args: {
     card: {
-      ...createPlayCardFromPrototype(ElevatedAcolyte),
+      ...createDuelCard(ElevatedAcolyte),
       strength: ElevatedAcolyte.strength - 1,
     } as DuelAgent,
   },
@@ -72,19 +72,19 @@ export const Damaged: Story = {
 
 export const OrderCard: Story = {
   args: {
-    card: createPlayCardFromPrototype(HammeriteNovice),
+    card: createDuelCard(HammeriteNovice),
   },
 }
 
 export const ShadowCard: Story = {
   args: {
-    card: createPlayCardFromPrototype(GarrettMasterThief),
+    card: createDuelCard(GarrettMasterThief),
   },
 }
 
 export const MultipleFactions: Story = {
   args: {
-    card: createPlayCardFromPrototype(ViktoriaThiefPawn),
+    card: createDuelCard(ViktoriaThiefPawn),
   },
 }
 

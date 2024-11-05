@@ -1,16 +1,16 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { PlayCard } from 'src/features/cards/types'
+import { DuelCard } from 'src/features/cards/types'
 
 export interface Player {
   id: string
   name: string
   coins: number
   income: number
-  deck: PlayCard['id'][]
-  hand: PlayCard['id'][]
-  board: PlayCard['id'][]
-  discard: PlayCard['id'][]
-  cards: { [index: PlayCard['id']]: PlayCard }
+  deck: DuelCard['id'][]
+  hand: DuelCard['id'][]
+  board: DuelCard['id'][]
+  discard: DuelCard['id'][]
+  cards: { [index: DuelCard['id']]: DuelCard }
   hasPerformedAction: boolean
   isCPU?: boolean
 }
@@ -33,12 +33,12 @@ export interface DuelState {
   }
   loggedInPlayerId: Player['id']
   activePlayerId: Player['id']
-  attackingAgentId: PlayCard['id']
+  attackingAgentId: DuelCard['id']
   hasAddedCardEffectListeners: boolean
 }
 
 interface PlayerCardPayload {
-  cardId: PlayCard['id']
+  cardId: DuelCard['id']
   playerId: Player['id']
 }
 

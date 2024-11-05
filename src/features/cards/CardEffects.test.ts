@@ -10,15 +10,15 @@ import {
   TempleGuard,
 } from 'src/features/cards/CardPrototypes'
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constants'
-import { DuelAgent, PlayCard } from 'src/features/cards/types'
-import { createPlayCardFromPrototype } from 'src/features/cards/utils'
+import { DuelAgent, DuelCard } from 'src/features/cards/types'
+import { createDuelCard } from 'src/features/cards/utils'
 import { MockPlayerTurnState } from 'src/features/duel/__mocks__'
 import { moveCardToBoard, playCard, updateAgent } from 'src/features/duel/slice'
 import { DuelState, PlayerCardAction } from 'src/features/duel/types'
 
 let mockAction: PlayerCardAction
 let mockDuelState: DuelState
-let cardId: PlayCard['id']
+let cardId: DuelCard['id']
 
 const [playerId, opponentId] = MockPlayerTurnState.playerOrder
 
@@ -58,7 +58,7 @@ afterEach(() => {
 })
 
 describe(BrotherSachelman.name, () => {
-  const card = createPlayCardFromPrototype(BrotherSachelman) as DuelAgent
+  const card = createDuelCard(BrotherSachelman) as DuelAgent
 
   beforeEach(() => {
     cardId = card.id
@@ -70,7 +70,7 @@ describe(BrotherSachelman.name, () => {
   })
 
   it('should boost alied Hammerite cards on board with lower strength', () => {
-    const novice = createPlayCardFromPrototype(HammeriteNovice) as DuelAgent
+    const novice = createDuelCard(HammeriteNovice) as DuelAgent
 
     mockDuelState.players[playerId].cards = {
       [cardId]: card,
@@ -98,8 +98,8 @@ describe(BrotherSachelman.name, () => {
   })
 
   it('should not boost hammerites with equal higher strength or opponent hammerites', () => {
-    const templeGuard = createPlayCardFromPrototype(TempleGuard)
-    const novice = createPlayCardFromPrototype(HammeriteNovice)
+    const templeGuard = createDuelCard(TempleGuard)
+    const novice = createDuelCard(HammeriteNovice)
 
     mockDuelState.players[playerId].cards = {
       [cardId]: card,
@@ -127,7 +127,7 @@ describe(BrotherSachelman.name, () => {
   it('should boost hammerites accordingly if is damaged', () => {
     card.strength = card.strength - 2
 
-    const novice = createPlayCardFromPrototype(HammeriteNovice)
+    const novice = createDuelCard(HammeriteNovice)
 
     mockDuelState.players[playerId].cards = {
       [cardId]: card,
@@ -148,7 +148,7 @@ describe(BrotherSachelman.name, () => {
 })
 
 describe(HammeriteNovice.name, () => {
-  const card = createPlayCardFromPrototype(HammeriteNovice) as DuelAgent
+  const card = createDuelCard(HammeriteNovice) as DuelAgent
 
   beforeEach(() => {
     cardId = card.id
@@ -160,7 +160,7 @@ describe(HammeriteNovice.name, () => {
   })
 
   it('should not play Hammerite Novice if there are no Hammerites in play on your side', () => {
-    const novice = createPlayCardFromPrototype(HammeriteNovice)
+    const novice = createDuelCard(HammeriteNovice)
 
     mockDuelState.players[playerId].cards = {
       [cardId]: card,
@@ -179,8 +179,8 @@ describe(HammeriteNovice.name, () => {
   })
 
   it('should play all Hammerite Novice copies from your hand if you have another Hammerite in play', () => {
-    const novice = createPlayCardFromPrototype(HammeriteNovice)
-    const guard = createPlayCardFromPrototype(TempleGuard)
+    const novice = createDuelCard(HammeriteNovice)
+    const guard = createDuelCard(TempleGuard)
 
     mockDuelState.players[playerId].cards = {
       [cardId]: card,
@@ -205,8 +205,8 @@ describe(HammeriteNovice.name, () => {
   })
 
   it('should not play self or Hammerite Novice copies from deck if you have another Hammerite in play', () => {
-    const novice = createPlayCardFromPrototype(HammeriteNovice)
-    const guard = createPlayCardFromPrototype(TempleGuard)
+    const novice = createDuelCard(HammeriteNovice)
+    const guard = createDuelCard(TempleGuard)
 
     mockDuelState.players[playerId].cards = {
       [cardId]: card,

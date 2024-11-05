@@ -12,7 +12,7 @@ import {
   ViktoriaThiefPawn,
   Zombie,
 } from 'src/features/cards/CardPrototypes'
-import { createPlayCardFromPrototype } from 'src/features/cards/utils'
+import { createDuelCard } from 'src/features/cards/utils'
 
 export const MockPlayer1: Player = {
   ...EMPTY_PLAYER,
@@ -20,13 +20,13 @@ export const MockPlayer1: Player = {
   name: 'Garret',
   coins: DEFAULT_COINS_AMOUNT,
   ...initializeCardsAndDeck([
-    createPlayCardFromPrototype(BrotherSachelman),
-    createPlayCardFromPrototype(HammeriteNovice),
-    createPlayCardFromPrototype(HammeriteNovice),
-    createPlayCardFromPrototype(ElevatedAcolyte),
-    createPlayCardFromPrototype(ElevatedAcolyte),
-    createPlayCardFromPrototype(TempleGuard),
-    createPlayCardFromPrototype(TempleGuard),
+    createDuelCard(BrotherSachelman),
+    createDuelCard(HammeriteNovice),
+    createDuelCard(HammeriteNovice),
+    createDuelCard(ElevatedAcolyte),
+    createDuelCard(ElevatedAcolyte),
+    createDuelCard(TempleGuard),
+    createDuelCard(TempleGuard),
   ]),
 }
 
@@ -36,12 +36,12 @@ export const MockPlayer2: Player = {
   name: 'Karras',
   coins: DEFAULT_COINS_AMOUNT - 1,
   ...initializeCardsAndDeck([
-    createPlayCardFromPrototype(Zombie),
-    createPlayCardFromPrototype(Zombie),
-    createPlayCardFromPrototype(Haunt),
-    createPlayCardFromPrototype(Haunt),
-    createPlayCardFromPrototype(ViktoriaThiefPawn),
-    createPlayCardFromPrototype(AzaranTheCruel),
+    createDuelCard(Zombie),
+    createDuelCard(Zombie),
+    createDuelCard(Haunt),
+    createDuelCard(Haunt),
+    createDuelCard(ViktoriaThiefPawn),
+    createDuelCard(AzaranTheCruel),
   ]),
 }
 

@@ -24,7 +24,7 @@ import {
   TempleGuard,
   Zombie,
 } from 'src/features/cards/CardPrototypes'
-import { createPlayCardFromPrototype } from 'src/features/cards/utils'
+import { createDuelCard } from 'src/features/cards/utils'
 import { initialState } from 'src/features/duel/slice'
 import { PLAYER_DECK_TEST_ID, PLAYER_DISCARD_TEST_ID } from '../constants'
 import { DuelAgent } from 'src/features/cards/types'
@@ -94,11 +94,11 @@ describe('General duel flow', () => {
   })
 
   test('redraw a card', async () => {
-    const zombie1 = createPlayCardFromPrototype(Zombie)
-    const zombie2 = createPlayCardFromPrototype(Zombie)
-    const acolyte = createPlayCardFromPrototype(ElevatedAcolyte)
-    const novice2 = createPlayCardFromPrototype(HammeriteNovice)
-    const guard = createPlayCardFromPrototype(TempleGuard)
+    const zombie1 = createDuelCard(Zombie)
+    const zombie2 = createDuelCard(Zombie)
+    const acolyte = createDuelCard(ElevatedAcolyte)
+    const novice2 = createDuelCard(HammeriteNovice)
+    const guard = createDuelCard(TempleGuard)
 
     preloadedState.duel.phase = 'Redrawing Phase'
     preloadedState.duel.players = {
@@ -145,11 +145,11 @@ describe('General duel flow', () => {
   })
 
   test('waiting for opponent to redraw', async () => {
-    const zombie1 = createPlayCardFromPrototype(Zombie)
-    const zombie2 = createPlayCardFromPrototype(Zombie)
-    const acolyte = createPlayCardFromPrototype(ElevatedAcolyte)
-    const novice2 = createPlayCardFromPrototype(HammeriteNovice)
-    const guard = createPlayCardFromPrototype(TempleGuard)
+    const zombie1 = createDuelCard(Zombie)
+    const zombie2 = createDuelCard(Zombie)
+    const acolyte = createDuelCard(ElevatedAcolyte)
+    const novice2 = createDuelCard(HammeriteNovice)
+    const guard = createDuelCard(TempleGuard)
 
     preloadedState.duel.phase = 'Redrawing Phase'
     preloadedState.duel.players = {
@@ -206,10 +206,10 @@ describe('General duel flow', () => {
   })
 
   test('play a card from hand', async () => {
-    const haunt = createPlayCardFromPrototype(Haunt)
-    const book = createPlayCardFromPrototype(BookOfAsh)
-    const brother = createPlayCardFromPrototype(BrotherSachelman)
-    const novice = createPlayCardFromPrototype(HammeriteNovice)
+    const haunt = createDuelCard(Haunt)
+    const book = createDuelCard(BookOfAsh)
+    const brother = createDuelCard(BrotherSachelman)
+    const novice = createDuelCard(HammeriteNovice)
 
     preloadedState.duel.players = {
       [opponentId]: {
@@ -264,10 +264,10 @@ describe('General duel flow', () => {
   })
 
   test('pass the turn', async () => {
-    const haunt = createPlayCardFromPrototype(Haunt)
-    const zombie = createPlayCardFromPrototype(Zombie)
-    const brother = createPlayCardFromPrototype(BrotherSachelman)
-    const novice = createPlayCardFromPrototype(HammeriteNovice)
+    const haunt = createDuelCard(Haunt)
+    const zombie = createDuelCard(Zombie)
+    const brother = createDuelCard(BrotherSachelman)
+    const novice = createDuelCard(HammeriteNovice)
 
     preloadedState.duel.players = {
       [opponentId]: {
@@ -310,8 +310,8 @@ describe('General duel flow', () => {
   })
 
   test('play a card as CPU and end the turn', async () => {
-    const haunt = createPlayCardFromPrototype(Haunt)
-    const brother = createPlayCardFromPrototype(BrotherSachelman)
+    const haunt = createDuelCard(Haunt)
+    const brother = createDuelCard(BrotherSachelman)
 
     preloadedState.duel.players = {
       [opponentId]: {
@@ -375,8 +375,8 @@ describe('General duel flow', () => {
   })
 
   test('browse deck', () => {
-    const haunt = createPlayCardFromPrototype(Haunt)
-    const brother = createPlayCardFromPrototype(BrotherSachelman)
+    const haunt = createDuelCard(Haunt)
+    const brother = createDuelCard(BrotherSachelman)
 
     preloadedState.duel.players = {
       [opponentId]: MockPlayer2,
@@ -404,8 +404,8 @@ describe('General duel flow', () => {
   })
 
   test('browse discard', () => {
-    const haunt = createPlayCardFromPrototype(Haunt)
-    const brother = createPlayCardFromPrototype(BrotherSachelman)
+    const haunt = createDuelCard(Haunt)
+    const brother = createDuelCard(BrotherSachelman)
 
     preloadedState.duel.players = {
       [opponentId]: MockPlayer2,
@@ -436,9 +436,9 @@ describe('General duel flow', () => {
 
 describe('Specifics', () => {
   test('playind cards with "all copies" effects reduce coins only once', () => {
-    const novice1 = createPlayCardFromPrototype(HammeriteNovice)
-    const novice2 = createPlayCardFromPrototype(HammeriteNovice)
-    const guard = createPlayCardFromPrototype(TempleGuard)
+    const novice1 = createDuelCard(HammeriteNovice)
+    const novice2 = createDuelCard(HammeriteNovice)
+    const guard = createDuelCard(TempleGuard)
 
     preloadedState.duel.players = {
       [opponentId]: MockPlayer2,

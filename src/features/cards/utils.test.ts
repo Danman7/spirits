@@ -1,6 +1,6 @@
 import { Haunt } from 'src/features/cards/CardPrototypes'
 import {
-  createPlayCardFromPrototype,
+  createDuelCard,
   getFactionColor,
   joinCardTypes,
 } from 'src/features/cards/utils'
@@ -19,7 +19,7 @@ test('getFactionColor should get the proper faction color', () => {
 })
 
 test('createPlayCardFromPrototype should create a new play ready card from a card prototype', () => {
-  const newCard = createPlayCardFromPrototype(Haunt)
+  const newCard = createDuelCard(Haunt)
 
   expect(newCard).toEqual(expect.objectContaining(Haunt))
   expect(newCard.prototype).toEqual({

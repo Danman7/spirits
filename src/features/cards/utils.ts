@@ -5,7 +5,7 @@ import {
   DuelAgent,
   DuelInstant,
   Instant,
-  PlayCard,
+  DuelCard,
 } from 'src/features/cards/types'
 import { generateUUID } from 'src/shared/utils'
 
@@ -23,9 +23,7 @@ export const getFactionColor = (factions: CardBase['factions']) => {
   })`
 }
 
-export const createPlayCardFromPrototype = (
-  cardPrototype: Agent | Instant,
-): PlayCard => {
+export const createDuelCard = (cardPrototype: Agent | Instant): DuelCard => {
   const { kind } = cardPrototype
 
   const id = generateUUID()

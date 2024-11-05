@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { DuelAgent, PlayCard } from 'src/features/cards/types'
+import { DuelAgent, DuelCard } from 'src/features/cards/types'
 import {
   drawCardFromDeckTransformer,
   initializeEndTurnTransformer,
@@ -155,7 +155,7 @@ export const duelSlice = createSlice({
       state,
       action: PayloadAction<{
         playerId: Player['id']
-        cardId: PlayCard['id']
+        cardId: DuelCard['id']
         update: Partial<DuelAgent>
       }>,
     ) => {

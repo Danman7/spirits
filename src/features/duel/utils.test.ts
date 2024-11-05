@@ -13,11 +13,11 @@ import {
   Haunt,
   TempleGuard,
 } from 'src/features/cards/CardPrototypes'
-import { createPlayCardFromPrototype } from 'src/features/cards/utils'
+import { createDuelCard } from 'src/features/cards/utils'
 
 test('getPlayableCardIds should return all playable card ids for a given player', () => {
-  const guard = createPlayCardFromPrototype(TempleGuard)
-  const novice = createPlayCardFromPrototype(HammeriteNovice)
+  const guard = createDuelCard(TempleGuard)
+  const novice = createDuelCard(HammeriteNovice)
 
   const mockBudgetPlayer: Player = {
     ...EMPTY_PLAYER,
@@ -49,8 +49,8 @@ test('normalizeArrayOfPlayers should normalize an array of players', () => {
 })
 
 test('normalizeArrayOfCards should normalize an array of cards', () => {
-  const hammerite = createPlayCardFromPrototype(HammeriteNovice)
-  const haunt = createPlayCardFromPrototype(Haunt)
+  const hammerite = createDuelCard(HammeriteNovice)
+  const haunt = createDuelCard(Haunt)
 
   const normalizedPlayers = normalizeArrayOfCards([hammerite, haunt])
 
@@ -61,9 +61,9 @@ test('normalizeArrayOfCards should normalize an array of cards', () => {
 })
 
 test("initializeCardsAndDeck should prepare a player's nomralized cards and deck", () => {
-  const guard = createPlayCardFromPrototype(TempleGuard)
-  const novice = createPlayCardFromPrototype(HammeriteNovice)
-  const haunt = createPlayCardFromPrototype(Haunt)
+  const guard = createDuelCard(TempleGuard)
+  const novice = createDuelCard(HammeriteNovice)
+  const haunt = createDuelCard(Haunt)
 
   const nomralizedCardsAndDeck = initializeCardsAndDeck([guard, novice, haunt])
 

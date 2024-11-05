@@ -2,13 +2,10 @@ import '@testing-library/jest-dom'
 import { BrotherSachelman } from 'src/features/cards/CardPrototypes'
 import Card from 'src/features/cards/components/Card'
 import { DuelAgent } from 'src/features/cards/types'
-import {
-  createPlayCardFromPrototype,
-  joinCardTypes,
-} from 'src/features/cards/utils'
+import { createDuelCard, joinCardTypes } from 'src/features/cards/utils'
 import { fireEvent, render, screen } from 'src/shared/test-utils'
 
-const mockCard = createPlayCardFromPrototype(BrotherSachelman) as DuelAgent
+const mockCard = createDuelCard(BrotherSachelman) as DuelAgent
 
 it('should display all shared UI segments of a card when face up', () => {
   const { rerender } = render(<Card card={mockCard} />)
