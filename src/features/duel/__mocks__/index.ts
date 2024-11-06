@@ -11,6 +11,7 @@ import {
   TempleGuard,
   ViktoriaThiefPawn,
   Zombie,
+  BookOfAsh,
 } from 'src/features/cards/CardPrototypes'
 import { createDuelCard } from 'src/features/cards/utils'
 
@@ -42,18 +43,19 @@ export const MockPlayer2: Player = {
     createDuelCard(Haunt),
     createDuelCard(ViktoriaThiefPawn),
     createDuelCard(AzaranTheCruel),
+    createDuelCard(BookOfAsh),
   ]),
 }
 
 export const PlayTestPlayer1: Player = {
   ...MockPlayer1,
   coins: DEFAULT_COINS_AMOUNT,
+  isCPU: true,
 }
 
 export const PlayTestPlayer2: Player = {
   ...MockPlayer2,
   coins: DEFAULT_COINS_AMOUNT,
-  isCPU: true,
 }
 
 export const MockPlayerTurnState: DuelState = {

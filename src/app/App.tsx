@@ -6,8 +6,8 @@ import { initializeDuel } from 'src/features/duel/slice'
 store.dispatch(
   initializeDuel({
     players: [PlayTestPlayer1, PlayTestPlayer2],
-    loggedInPlayerId: PlayTestPlayer1.id,
-    firstPlayerId: PlayTestPlayer1.id,
+    loggedInPlayerId: PlayTestPlayer2.id,
+    firstPlayerId: PlayTestPlayer2.id,
   }),
 )
 

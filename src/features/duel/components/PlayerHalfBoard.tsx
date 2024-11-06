@@ -2,7 +2,7 @@ import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
 import { FC, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import Card from 'src/features/cards/components/Card'
-import { CardComponentProps } from 'src/features/cards/types'
+import { CardComponentProps, DuelCard } from 'src/features/cards/types'
 import {
   INITIAL_CARD_DRAW_AMOUNT,
   PLAYER_DECK_TEST_ID,
@@ -16,6 +16,7 @@ import {
   completeRedraw,
   drawCardFromDeck,
   initializeEndTurn,
+  moveCardToDiscard,
   playCard,
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
@@ -96,8 +97,11 @@ const PlayerHalfBoard: FC<{
   const openBrowseCardsModal = (cardList: browsedStack) =>
     setBrowsedStack(cardList)
 
-  const onBoardCardLayoutComplete = () => {
+  const onBoardCardLayoutComplete = (card: DuelCard) => {
     if (phase === 'Player Turn') {
+      if (card.kind === 'instant') {
+        dispatch(moveCardToDiscard({ cardId: card.id, playerId: id }))
+      }
       dispatch(initializeEndTurn())
     }
   }
@@ -244,7 +248,9 @@ const PlayerHalfBoard: FC<{
             <Card
               layout
               layoutId={cardId}
-              onLayoutAnimationComplete={onBoardCardLayoutComplete}
+              onLayoutAnimationComplete={() =>
+                onBoardCardLayoutComplete(cards[cardId])
+              }
               key={`${cardId}-board`}
               card={cards[cardId]}
               isSmall
