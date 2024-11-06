@@ -1,4 +1,4 @@
-import { DuelState } from 'src/features/duel/types'
+import { DuelState, PlayerCards } from 'src/features/duel/types'
 import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
 import { normalizeArrayOfPlayers } from 'src/features/duel/utils'
 import duelReducer, {
@@ -14,6 +14,7 @@ import duelReducer, {
   moveCardToDiscard,
   moveCardToBoard,
   moveToNextAttacker,
+  addNewCards,
 } from 'src/features/duel/slice'
 
 import {
@@ -417,7 +418,7 @@ describe('Playing turns', () => {
     })
   })
 
-  test('update a card', () => {
+  test('update an agent', () => {
     const novice = createDuelCard(HammeriteNovice)
     const cardId = novice.id
 
@@ -452,6 +453,42 @@ describe('Playing turns', () => {
 
     expect(updatedCard.strength).toBe(update.strength)
     expect(updatedCard.cost).toBe(update.cost)
+  })
+
+  test('remove agent with no strength as a result of update', () => {
+    const novice = createDuelCard(HammeriteNovice)
+    const cardId = novice.id
+
+    mockDuelState.activePlayerId = playerId
+
+    mockDuelState.players = {
+      [playerId]: {
+        ...MockPlayer1,
+        board: [cardId],
+        cards: {
+          [cardId]: novice,
+        },
+      },
+      [opponentId]: MockPlayer2,
+    }
+
+    const update: Partial<DuelCard> = {
+      strength: 0,
+    }
+
+    const state = duelReducer(
+      mockDuelState,
+      updateAgent({
+        playerId,
+        cardId,
+        update,
+      }),
+    )
+
+    const player = state.players[playerId]
+
+    expect(player.board).toHaveLength(0)
+    expect(player.discard).toContain(cardId)
   })
 
   test('move a card from board to discard pile', () => {
@@ -493,4 +530,35 @@ describe('Playing turns', () => {
       expect(player.income).toBe(novice.cost)
     })
   })
+})
+
+test('summon new cards for a player', () => {
+  const novice = createDuelCard(HammeriteNovice)
+
+  mockDuelState.activePlayerId = playerId
+
+  mockDuelState.players = {
+    [playerId]: {
+      ...MockPlayer1,
+      deck: [],
+      cards: {},
+    },
+    [opponentId]: MockPlayer2,
+  }
+
+  const addedCards: PlayerCards = {
+    [novice.id]: novice,
+  }
+
+  const state = duelReducer(
+    mockDuelState,
+    addNewCards({
+      playerId,
+      cards: addedCards,
+    }),
+  )
+
+  const player = state.players[playerId]
+
+  expect(player.cards).toEqual(addedCards)
 })

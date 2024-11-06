@@ -162,14 +162,12 @@ export const duelSlice = createSlice({
     ) => {
       const { playerId, cardId, update } = action.payload
 
-      const movedCard = state.players[playerId].cards[cardId] as DuelAgent
-
       state.players[playerId].cards[cardId] = {
         ...state.players[playerId].cards[cardId],
         ...update,
       } as DuelAgent
 
-      if (movedCard.strength <= 0) {
+      if (state.players[playerId].cards[cardId].strength <= 0) {
         moveCardToDiscardTransformer(state, {
           payload: {
             cardId,
