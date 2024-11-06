@@ -1,19 +1,29 @@
 import { ListenerEffectAPI } from '@reduxjs/toolkit'
 import { AppDispatch, RootState } from 'src/app/store'
 import {
+  BookOfAshEffect,
   BrotherSachelmanOnPlayEffect,
   HammeriteNoviceOnPlayEffect,
 } from 'src/features/cards/CardEffects'
 import {
+  BookOfAsh,
   BrotherSachelman,
   HammeriteNovice,
+  Haunt,
   TempleGuard,
+  ViktoriaThiefPawn,
+  Zombie,
 } from 'src/features/cards/CardPrototypes'
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constants'
-import { DuelAgent, DuelCard } from 'src/features/cards/types'
+import { DuelAgent, DuelCard, DuelInstant } from 'src/features/cards/types'
 import { createDuelCard } from 'src/features/cards/utils'
 import { MockPlayerTurnState } from 'src/features/duel/__mocks__'
-import { moveCardToBoard, playCard, updateAgent } from 'src/features/duel/slice'
+import {
+  addNewCards,
+  moveCardToBoard,
+  playCard,
+  updateAgent,
+} from 'src/features/duel/slice'
 import { DuelState, PlayerCardAction } from 'src/features/duel/types'
 
 let mockAction: PlayerCardAction
@@ -22,9 +32,11 @@ let cardId: DuelCard['id']
 
 const [playerId, opponentId] = MockPlayerTurnState.playerOrder
 
+const mockDispatch = jest.fn()
+
 const listenerApi: ListenerEffectAPI<RootState, AppDispatch> = {
   getState: jest.fn(() => ({ duel: { ...MockPlayerTurnState } })),
-  dispatch: jest.fn(),
+  dispatch: mockDispatch,
   getOriginalState: jest.fn(),
   unsubscribe: jest.fn(),
   subscribe: jest.fn(),
@@ -58,9 +70,10 @@ afterEach(() => {
 })
 
 describe(BrotherSachelman.name, () => {
-  const card = createDuelCard(BrotherSachelman) as DuelAgent
+  let card: DuelAgent
 
   beforeEach(() => {
+    card = createDuelCard(BrotherSachelman) as DuelAgent
     cardId = card.id
 
     mockAction = {
@@ -148,9 +161,10 @@ describe(BrotherSachelman.name, () => {
 })
 
 describe(HammeriteNovice.name, () => {
-  const card = createDuelCard(HammeriteNovice) as DuelAgent
+  let card: DuelAgent
 
   beforeEach(() => {
+    card = createDuelCard(HammeriteNovice) as DuelAgent
     cardId = card.id
 
     mockAction = {
@@ -223,6 +237,117 @@ describe(HammeriteNovice.name, () => {
     }))
 
     HammeriteNoviceOnPlayEffect(mockAction, listenerApi)
+
+    expect(listenerApi.dispatch).toHaveBeenCalledTimes(0)
+  })
+})
+
+describe(BookOfAsh.name, () => {
+  let card: DuelInstant
+
+  beforeEach(() => {
+    card = createDuelCard(BookOfAsh) as DuelInstant
+    cardId = card.id
+
+    mockAction = {
+      type: playCard.type,
+      payload: { cardId, playerId },
+    }
+  })
+
+  it('should spawn two Zombies if a Zombie is at the top of the discard', () => {
+    const zombie = createDuelCard(Zombie)
+    const haunt = createDuelCard(Haunt)
+
+    mockDuelState.players[playerId].cards = {
+      [cardId]: card,
+      [zombie.id]: zombie,
+      [haunt.id]: haunt,
+    }
+
+    mockDuelState.players[playerId].hand = [cardId]
+    mockDuelState.players[playerId].discard = [haunt.id, zombie.id]
+    mockDuelState.players[playerId].board = []
+
+    listenerApi.getState = jest.fn(() => ({
+      duel: mockDuelState,
+    }))
+
+    BookOfAshEffect(mockAction, listenerApi)
+
+    expect(listenerApi.dispatch).toHaveBeenCalledTimes(3)
+    expect(listenerApi.dispatch).toHaveBeenNthCalledWith(
+      1,
+      addNewCards(
+        expect.objectContaining({
+          playerId,
+        }),
+      ),
+    )
+
+    expect(
+      Object.values(mockDispatch.mock.calls[0][0].payload.cards),
+    ).toContainEqual(
+      expect.objectContaining({
+        name: 'Zombie',
+      }),
+    )
+
+    expect(listenerApi.dispatch).toHaveBeenNthCalledWith(
+      2,
+      moveCardToBoard({
+        playerId,
+        cardId: expect.any(String),
+      }),
+    )
+  })
+
+  it('should spawn two Haunts if a Haunt is at the top of the discard', () => {
+    const zombie = createDuelCard(Zombie)
+    const haunt = createDuelCard(Haunt)
+
+    mockDuelState.players[playerId].cards = {
+      [cardId]: card,
+      [zombie.id]: zombie,
+      [haunt.id]: haunt,
+    }
+
+    mockDuelState.players[playerId].hand = [cardId]
+    mockDuelState.players[playerId].discard = [zombie.id, haunt.id]
+    mockDuelState.players[playerId].board = []
+
+    listenerApi.getState = jest.fn(() => ({
+      duel: mockDuelState,
+    }))
+
+    BookOfAshEffect(mockAction, listenerApi)
+
+    expect(
+      Object.values(mockDispatch.mock.calls[0][0].payload.cards),
+    ).toContainEqual(
+      expect.objectContaining({
+        name: 'Haunt',
+      }),
+    )
+  })
+
+  it('should not spawn anything if there are no Undead in the discard', () => {
+    const viktoria = createDuelCard(ViktoriaThiefPawn)
+
+    mockDuelState.players[playerId].cards = {
+      [cardId]: card,
+      [viktoria.id]: viktoria,
+    }
+
+    mockDuelState.players[playerId].hand = [cardId]
+    mockDuelState.players[playerId].discard = [viktoria.id]
+    mockDuelState.players[playerId].board = []
+
+    listenerApi.getState = jest.fn(() => ({
+      duel: mockDuelState,
+    }))
+
+    BookOfAshEffect(mockAction, listenerApi)
 
     expect(listenerApi.dispatch).toHaveBeenCalledTimes(0)
   })

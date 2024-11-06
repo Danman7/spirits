@@ -1,8 +1,13 @@
+import { HammeriteNovice } from 'src/features/cards/CardPrototypes'
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constants'
 import { Agent, CardEffect } from 'src/features/cards/types'
-import { moveCardToBoard, updateAgent } from 'src/features/duel/slice'
-import { PlayerCardAction } from 'src/features/duel/types'
-import { HammeriteNovice } from 'src/features/cards/CardPrototypes'
+import { copyDuelCard } from 'src/features/cards/utils'
+import {
+  addNewCards,
+  moveCardToBoard,
+  updateAgent,
+} from 'src/features/duel/slice'
+import { PlayerCardAction, PlayerCards } from 'src/features/duel/types'
 
 export const BrotherSachelmanOnPlayEffect: CardEffect<PlayerCardAction> = (
   action,
@@ -69,4 +74,42 @@ export const HammeriteNoviceOnPlayEffect: CardEffect<PlayerCardAction> = (
       )
     }
   })
+}
+
+export const BookOfAshEffect: CardEffect<PlayerCardAction> = (
+  action,
+  listenerApi,
+) => {
+  const { playerId } = action.payload
+
+  const { players } = listenerApi.getState().duel
+
+  const player = players[playerId]
+
+  const topUndeadCardInDiscard =
+    player.cards[
+      player.discard.findLast((cardId) =>
+        player.cards[cardId].types.includes('Undead'),
+      ) || ''
+    ]
+
+  if (topUndeadCardInDiscard) {
+    const undead1 = copyDuelCard(topUndeadCardInDiscard)
+    const undead2 = copyDuelCard(topUndeadCardInDiscard)
+
+    const cards: PlayerCards = {
+      [undead1.id]: undead1,
+      [undead2.id]: undead2,
+    }
+
+    listenerApi.dispatch(
+      addNewCards({
+        playerId,
+        cards,
+      }),
+    )
+
+    listenerApi.dispatch(moveCardToBoard({ cardId: undead1.id, playerId }))
+    listenerApi.dispatch(moveCardToBoard({ cardId: undead2.id, playerId }))
+  }
 }

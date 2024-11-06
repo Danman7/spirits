@@ -8,6 +8,7 @@ import {
   moveToNextAttackerTransformer,
 } from 'src/features/duel/transformers'
 import {
+  AddNewCardsAction,
   DuelPhase,
   DuelState,
   Player,
@@ -183,6 +184,15 @@ export const duelSlice = createSlice({
     setHasAddedCardEffectListeners: (state, action: PayloadAction<boolean>) => {
       state.hasAddedCardEffectListeners = action.payload
     },
+    addNewCards: (state, action: AddNewCardsAction) => {
+      const { players } = state
+      const { playerId, cards } = action.payload
+
+      players[playerId].cards = {
+        ...players[playerId].cards,
+        ...cards,
+      }
+    },
   },
 })
 
@@ -202,6 +212,7 @@ export const {
   moveToNextAttacker,
   moveCardToDiscard,
   setHasAddedCardEffectListeners,
+  addNewCards,
 } = actions
 
 export type DuelActionTypes = `${typeof duelSlice.name}/${keyof typeof actions}`

@@ -47,3 +47,8 @@ export const createDuelCard = (cardPrototype: Agent | Instant): DuelCard => {
     },
   } as DuelInstant
 }
+
+export const copyDuelCard = (card: DuelCard): DuelCard => ({
+  ...card,
+  id: generateUUID(),
+})

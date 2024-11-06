@@ -167,7 +167,11 @@ export const BookOfAsh: Instant = {
   cost: 5,
   factions: ['Chaos'],
   types: ['Artifact'],
-  description: ['Summon 2 zombies.'],
+  description: ['Summon 2 copies of the top Undead card in your discard pile.'],
   flavor:
     'I owe my transcendence to the Book of Ash, that tome of legend I recovered so long ago from the sands of long forgotten kings. Within its pages lie the secrets of life, death ...and undeath. -- Azaran the Cruel',
+  trigger: {
+    predicate: 'BookOfAshPredicate',
+    effect: 'BookOfAshEffect',
+  },
 }

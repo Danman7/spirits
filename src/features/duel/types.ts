@@ -1,6 +1,8 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { DuelCard } from 'src/features/cards/types'
 
+export type PlayerCards = { [index: DuelCard['id']]: DuelCard }
+
 export interface Player {
   id: string
   name: string
@@ -10,7 +12,7 @@ export interface Player {
   hand: DuelCard['id'][]
   board: DuelCard['id'][]
   discard: DuelCard['id'][]
-  cards: { [index: DuelCard['id']]: DuelCard }
+  cards: PlayerCards
   hasPerformedAction: boolean
   isCPU?: boolean
 }
@@ -37,9 +39,12 @@ export interface DuelState {
   hasAddedCardEffectListeners: boolean
 }
 
-interface PlayerCardPayload {
+export type PlayerCardAction = PayloadAction<{
   cardId: DuelCard['id']
   playerId: Player['id']
-}
+}>
 
-export type PlayerCardAction = PayloadAction<PlayerCardPayload>
+export type AddNewCardsAction = PayloadAction<{
+  playerId: Player['id']
+  cards: PlayerCards
+}>
