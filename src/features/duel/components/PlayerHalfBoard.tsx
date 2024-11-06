@@ -98,10 +98,14 @@ const PlayerHalfBoard: FC<{
     setBrowsedStack(cardList)
 
   const onBoardCardLayoutComplete = (card: DuelCard) => {
-    if (phase === 'Player Turn') {
+    if (
+      (phase === 'Player Turn' && card.id === board[board.length - 1]) ||
+      card.kind === 'instant'
+    ) {
       if (card.kind === 'instant') {
         dispatch(moveCardToDiscard({ cardId: card.id, playerId: id }))
       }
+
       dispatch(initializeEndTurn())
     }
   }
