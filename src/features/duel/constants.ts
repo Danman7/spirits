@@ -15,6 +15,3 @@ export const EMPTY_PLAYER: Player = {
 
 export const DEFAULT_COINS_AMOUNT = 30
 export const INITIAL_CARD_DRAW_AMOUNT = 4
-
-export const PLAYER_DECK_TEST_ID = 'player_deck_test_id'
-export const PLAYER_DISCARD_TEST_ID = 'player_discard_test_id'

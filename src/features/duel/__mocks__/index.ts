@@ -35,7 +35,7 @@ export const MockPlayer2: Player = {
   ...EMPTY_PLAYER,
   id: 'player2',
   name: 'Karras',
-  coins: DEFAULT_COINS_AMOUNT - 1,
+  coins: DEFAULT_COINS_AMOUNT,
   ...initializeCardsAndDeck([
     createDuelCard(Zombie),
     createDuelCard(Zombie),

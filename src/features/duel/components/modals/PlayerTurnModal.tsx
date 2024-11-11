@@ -26,7 +26,7 @@ const PlayerTurnModal: FC = () => {
 
   const playerIsActive = playerPrespective.id === activePlayerId
 
-  const onPassOrEndTurn = () => {
+  const onPass = () => {
     dispatch(initializeEndTurn())
   }
 
@@ -47,7 +47,7 @@ const PlayerTurnModal: FC = () => {
           style={{ marginTop: '0.5rem' }}
           variants={SlideInOutContentVariants}
         >
-          <Link onClick={onPassOrEndTurn}>{buttonLabel}</Link>
+          <Link onClick={onPass}>{buttonLabel}</Link>
         </motion.div>
       )}
     </div>

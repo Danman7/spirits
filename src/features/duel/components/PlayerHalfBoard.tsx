@@ -3,11 +3,7 @@ import { FC, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import Card from 'src/features/cards/components/Card'
 import { CardComponentProps, DuelCard } from 'src/features/cards/types'
-import {
-  INITIAL_CARD_DRAW_AMOUNT,
-  PLAYER_DECK_TEST_ID,
-  PLAYER_DISCARD_TEST_ID,
-} from 'src/features/duel/constants'
+import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
 import {
   getActivePlayerId,
   getAttackingAgentId,
@@ -26,6 +22,18 @@ import { NumberChangeAnimation } from 'src/shared/animations'
 import Link from 'src/shared/components/Link'
 import Modal from 'src/shared/components/Modal'
 import styles from 'src/shared/styles/styles.module.css'
+import {
+  OPPONENT_BOARD_ID,
+  OPPONENT_DECK_ID,
+  OPPONENT_DISCARD_ID,
+  OPPONENT_HAND_ID,
+  OPPONENT_INFO_ID,
+  PLAYER_BOARD_ID,
+  PLAYER_DECK_ID,
+  PLAYER_DISCARD_ID,
+  PLAYER_HAND_ID,
+  PLAYER_INFO_ID,
+} from 'src/shared/testIds'
 import { getRandomArrayItem } from 'src/shared/utils'
 
 type browsedStack = 'deck' | 'discard' | null
@@ -60,6 +68,18 @@ const PlayerHalfBoard: FC<{
 
   const onPlayCard: CardComponentProps['onClickCard'] = (cardId) => {
     dispatch(playCard({ cardId, playerId: id }))
+
+    if (process.env.NODE_ENV === 'test') {
+      triggerEndTurn(cards[cardId])
+    }
+  }
+
+  const triggerEndTurn = (card: DuelCard) => {
+    if (card.kind === 'instant') {
+      dispatch(moveCardToDiscard({ cardId: card.id, playerId: id }))
+    }
+
+    dispatch(initializeEndTurn())
   }
 
   const onRedrawCard: CardComponentProps['onClickCard'] = (cardId) => {
@@ -102,11 +122,7 @@ const PlayerHalfBoard: FC<{
       (phase === 'Player Turn' && card.id === board[board.length - 1]) ||
       card.kind === 'instant'
     ) {
-      if (card.kind === 'instant') {
-        dispatch(moveCardToDiscard({ cardId: card.id, playerId: id }))
-      }
-
-      dispatch(initializeEndTurn())
+      triggerEndTurn(card)
     }
   }
 
@@ -168,6 +184,7 @@ const PlayerHalfBoard: FC<{
   return (
     <>
       <h3
+        data-testid={isOnTop ? OPPONENT_INFO_ID : PLAYER_INFO_ID}
         className={`${isOnTop ? styles.topPlayerInfo : styles.bottomPlayerInfo} ${isActive ? styles.activePlayerInfo : ''}`}
       >
         <span>{name}</span> /{' '}
@@ -184,7 +201,7 @@ const PlayerHalfBoard: FC<{
       <div className={isOnTop ? styles.topPlayerSide : styles.bottomPlayerSide}>
         {discard.length ? (
           <div
-            data-testid={!isOnTop ? PLAYER_DISCARD_TEST_ID : ''}
+            data-testid={isOnTop ? OPPONENT_DISCARD_ID : PLAYER_DISCARD_ID}
             style={!isOnTop ? { cursor: 'pointer' } : {}}
             className={styles.faceDownStack}
             onClick={
@@ -205,6 +222,7 @@ const PlayerHalfBoard: FC<{
         ) : null}
 
         <div
+          data-testid={isOnTop ? OPPONENT_HAND_ID : PLAYER_HAND_ID}
           className={isOnTop ? styles.topPlayerHand : styles.bottomPlayerHand}
         >
           {hand.map((cardId, i) => (
@@ -222,7 +240,7 @@ const PlayerHalfBoard: FC<{
 
         {deck.length ? (
           <div
-            data-testid={!isOnTop ? PLAYER_DECK_TEST_ID : ''}
+            data-testid={isOnTop ? OPPONENT_DECK_ID : PLAYER_DECK_ID}
             style={!isOnTop ? { cursor: 'pointer' } : {}}
             className={styles.faceDownStack}
             onClick={!isOnTop ? () => openBrowseCardsModal('deck') : undefined}
@@ -245,6 +263,7 @@ const PlayerHalfBoard: FC<{
       </div>
 
       <div
+        data-testid={isOnTop ? OPPONENT_BOARD_ID : PLAYER_BOARD_ID}
         className={isOnTop ? styles.topPlayerBoard : styles.bottomPlayerBoard}
       >
         <AnimatePresence>
