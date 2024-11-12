@@ -1,16 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { motion } from 'framer-motion'
-
-import Modal from 'src/shared/components/Modal'
-import { SlideInOutContentVariants } from 'src/shared/animations'
-import InitialPhaseModal from 'src/features/duel/components/modals/InitialPhaseModal'
 import { Provider } from 'react-redux'
-import { configureStore } from '@reduxjs/toolkit'
-import { storeConfiguration } from 'src/app/store'
+import { configureStoreWithPreloadedState } from 'src/app/store'
 import { MockPlayerTurnState } from 'src/features/duel/__mocks__'
-import RedrawPhaseModal from 'src/features/duel/components/modals/RedrawPhaseModal'
+import InitialPhaseModal from 'src/features/duel/components/modals/InitialPhaseModal'
 import PlayerTurnModal from 'src/features/duel/components/modals/PlayerTurnModal'
+import RedrawPhaseModal from 'src/features/duel/components/modals/RedrawPhaseModal'
 import VictoryModal from 'src/features/duel/components/modals/VictoryModal'
+import { SlideInOutContentVariants } from 'src/shared/animations'
+import Modal from 'src/shared/components/Modal'
 
 const meta = {
   title: 'Modal',
@@ -65,13 +63,10 @@ export const InitialPhase: Story = {
   decorators: [
     (story) => (
       <Provider
-        store={configureStore({
-          ...storeConfiguration,
-          preloadedState: {
-            duel: {
-              ...MockPlayerTurnState,
-              phase: 'Pre-duel',
-            },
+        store={configureStoreWithPreloadedState({
+          duel: {
+            ...MockPlayerTurnState,
+            phase: 'Pre-duel',
           },
         })}
       >
@@ -88,13 +83,10 @@ export const RedrawPhase: Story = {
   decorators: [
     (story) => (
       <Provider
-        store={configureStore({
-          ...storeConfiguration,
-          preloadedState: {
-            duel: {
-              ...MockPlayerTurnState,
-              phase: 'Redrawing Phase',
-            },
+        store={configureStoreWithPreloadedState({
+          duel: {
+            ...MockPlayerTurnState,
+            phase: 'Redrawing Phase',
           },
         })}
       >
@@ -111,13 +103,10 @@ export const PlayerTurn: Story = {
   decorators: [
     (story) => (
       <Provider
-        store={configureStore({
-          ...storeConfiguration,
-          preloadedState: {
-            duel: {
-              ...MockPlayerTurnState,
-              phase: 'Player Turn',
-            },
+        store={configureStoreWithPreloadedState({
+          duel: {
+            ...MockPlayerTurnState,
+            phase: 'Player Turn',
           },
         })}
       >
@@ -134,13 +123,10 @@ export const Victory: Story = {
   decorators: [
     (story) => (
       <Provider
-        store={configureStore({
-          ...storeConfiguration,
-          preloadedState: {
-            duel: {
-              ...MockPlayerTurnState,
-              phase: 'Player Turn',
-            },
+        store={configureStoreWithPreloadedState({
+          duel: {
+            ...MockPlayerTurnState,
+            phase: 'Player Turn',
           },
         })}
       >

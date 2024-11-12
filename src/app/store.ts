@@ -5,7 +5,7 @@ import { listenerMiddleware } from 'src/app/listenerMiddleware'
 import duelReducer, { DuelActionTypes } from 'src/features/duel/slice'
 import { DuelState } from 'src/features/duel/types'
 
-export const storeConfiguration: ConfigureStoreOptions<
+const storeConfiguration: ConfigureStoreOptions<
   { duel: DuelState },
   | Action<DuelActionTypes>
   | Action<'listenerMiddleware/add'>
@@ -22,6 +22,9 @@ const store = configureStore(storeConfiguration)
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
+
+export const configureStoreWithPreloadedState = (preloadedState?: RootState) =>
+  configureStore({ ...storeConfiguration, preloadedState })
 
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>()
 export const useAppSelector = useSelector.withTypes<RootState>()

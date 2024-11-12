@@ -1,7 +1,5 @@
 import { Provider } from 'react-redux'
-import { configureStore } from '@reduxjs/toolkit'
 import type { Meta, StoryObj } from '@storybook/react'
-
 import Board from 'src/features/duel/components/Board'
 import { initialState } from 'src/features/duel/slice'
 import { createDuelCard } from 'src/features/cards/utils'
@@ -15,7 +13,7 @@ import {
   Zombie,
 } from 'src/features/cards/CardPrototypes'
 import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
-import { storeConfiguration } from 'src/app/store'
+import { configureStoreWithPreloadedState } from 'src/app/store'
 
 const meta = {
   title: 'Board',
@@ -47,47 +45,44 @@ export const Default: Story = {
   decorators: [
     (story) => (
       <Provider
-        store={configureStore({
-          ...storeConfiguration,
-          preloadedState: {
-            duel: {
-              ...initialState,
-              turn: 1,
-              activePlayerId: MockPlayer1.id,
-              players: {
-                [MockPlayer1.id]: {
-                  ...MockPlayer1,
-                  cards: {
-                    [guard1.id]: guard1,
-                    [guard2.id]: guard2,
-                    [acolyte1.id]: acolyte1,
-                    [acolyte2.id]: acolyte2,
-                    [novice1.id]: novice1,
-                    [novice2.id]: novice2,
-                    [brother.id]: brother,
-                  },
-                  deck: [guard1.id, guard2.id, acolyte1.id],
-                  hand: [brother.id, acolyte2.id],
-                  board: [novice1.id, novice2.id],
+        store={configureStoreWithPreloadedState({
+          duel: {
+            ...initialState,
+            turn: 1,
+            activePlayerId: MockPlayer1.id,
+            players: {
+              [MockPlayer1.id]: {
+                ...MockPlayer1,
+                cards: {
+                  [guard1.id]: guard1,
+                  [guard2.id]: guard2,
+                  [acolyte1.id]: acolyte1,
+                  [acolyte2.id]: acolyte2,
+                  [novice1.id]: novice1,
+                  [novice2.id]: novice2,
+                  [brother.id]: brother,
                 },
-                [MockPlayer2.id]: {
-                  ...MockPlayer2,
-                  cards: {
-                    [zombie1.id]: zombie1,
-                    [zombie2.id]: zombie2,
-                    [haunt1.id]: haunt1,
-                    [haunt2.id]: haunt2,
-                    [azaran.id]: azaran,
-                  },
-                  deck: [zombie1.id, haunt1.id, azaran.id],
-                  hand: [haunt2.id],
-                  board: [zombie2.id],
-                },
+                deck: [guard1.id, guard2.id, acolyte1.id],
+                hand: [brother.id, acolyte2.id],
+                board: [novice1.id, novice2.id],
               },
-              playerOrder: [MockPlayer2.id, MockPlayer1.id],
-              phase: 'Player Turn',
-              loggedInPlayerId: initialState.loggedInPlayerId,
+              [MockPlayer2.id]: {
+                ...MockPlayer2,
+                cards: {
+                  [zombie1.id]: zombie1,
+                  [zombie2.id]: zombie2,
+                  [haunt1.id]: haunt1,
+                  [haunt2.id]: haunt2,
+                  [azaran.id]: azaran,
+                },
+                deck: [zombie1.id, haunt1.id, azaran.id],
+                hand: [haunt2.id],
+                board: [zombie2.id],
+              },
             },
+            playerOrder: [MockPlayer2.id, MockPlayer1.id],
+            phase: 'Player Turn',
+            loggedInPlayerId: MockPlayer1.id,
           },
         })}
       >

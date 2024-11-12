@@ -4,9 +4,8 @@ import {
   RenderOptions,
 } from '@testing-library/react'
 import { Provider } from 'react-redux'
-import { configureStore } from '@reduxjs/toolkit'
 
-import { RootState, storeConfiguration } from 'src/app/store'
+import { configureStoreWithPreloadedState, RootState } from 'src/app/store'
 
 interface customRenderOptions extends RenderOptions {
   preloadedState?: RootState
@@ -19,12 +18,7 @@ const customRender = (
   const Wrapper: React.FC<React.PropsWithChildren<Record<string, unknown>>> = ({
     children,
   }) => (
-    <Provider
-      store={configureStore({
-        ...storeConfiguration,
-        preloadedState,
-      })}
-    >
+    <Provider store={configureStoreWithPreloadedState(preloadedState)}>
       {children}
     </Provider>
   )

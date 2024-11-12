@@ -1,8 +1,7 @@
-import { configureStore } from '@reduxjs/toolkit'
 import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from '@storybook/test'
 import { Provider } from 'react-redux'
-import { storeConfiguration } from 'src/app/store'
+import store from 'src/app/store'
 import {
   ElevatedAcolyte,
   GarrettMasterThief,
@@ -30,11 +29,7 @@ const meta = {
     isFaceDown: false,
     isSmall: false,
   },
-  decorators: [
-    (story) => (
-      <Provider store={configureStore(storeConfiguration)}>{story()}</Provider>
-    ),
-  ],
+  decorators: [(story) => <Provider store={store}>{story()}</Provider>],
 } satisfies Meta<typeof Card>
 
 export default meta
