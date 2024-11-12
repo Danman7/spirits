@@ -15,6 +15,7 @@ import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
 import Board from 'src/features/duel/components/Board'
 import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
 import {
+  closeMessage,
   opponentDecidingMessage,
   opponentTurnTitle,
   passButtonMessage,
@@ -393,7 +394,7 @@ describe('General duel flow', () => {
     expect(screen.queryByText(Haunt.name)).not.toBeInTheDocument()
   })
 
-  test('show victory modal', () => {
+  test('opponent is victorious', () => {
     preloadedState.duel.players = {
       [opponentId]: mockOpponent,
       [playerId]: {
@@ -411,7 +412,22 @@ describe('General duel flow', () => {
     )
   })
 
-  test('browse deck', () => {
+  test('player is victorious', () => {
+    preloadedState.duel.players = {
+      [opponentId]: { ...mockOpponent, coins: 0 },
+      [playerId]: mockPlayer,
+    }
+
+    render(<Board />, {
+      preloadedState,
+    })
+
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      `${mockPlayer.name} ${victoryMessage}`,
+    )
+  })
+
+  test('browse deck', async () => {
     const haunt = createDuelCard(Haunt)
     const brother = createDuelCard(BrotherSachelman)
 
@@ -438,6 +454,12 @@ describe('General duel flow', () => {
 
     expect(screen.getByText(haunt.name)).toBeInTheDocument()
     expect(screen.getByText(brother.name)).toBeInTheDocument()
+
+    fireEvent.click(screen.getByText(closeMessage))
+
+    await waitFor(() => {
+      expect(screen.queryByText(haunt.name)).not.toBeInTheDocument()
+    })
   })
 
   test('browse discard', () => {

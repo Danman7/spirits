@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from 'src/app/store'
 import Card from 'src/features/cards/components/Card'
 import { CardComponentProps, DuelCard } from 'src/features/cards/types'
 import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
+import { closeMessage } from 'src/features/duel/messages'
 import {
   getActivePlayerId,
   getAttackingAgentId,
@@ -138,7 +139,7 @@ const PlayerHalfBoard: FC<{
           </div>
 
           <div className={styles.cardBrowseModalFooter}>
-            <Link onClick={closeBrowseCardsModal}>Close</Link>
+            <Link onClick={closeBrowseCardsModal}>{closeMessage}</Link>
           </div>
         </div>
       ) : null,

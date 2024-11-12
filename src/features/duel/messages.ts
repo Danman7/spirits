@@ -16,3 +16,4 @@ export const passButtonMessage = 'Pass'
 export const skipRedrawMessage = 'Skip Redraw'
 
 export const victoryMessage = 'has won the duel!'
+export const closeMessage = 'Close'

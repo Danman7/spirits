@@ -305,7 +305,7 @@ describe('Playing turns', () => {
     expect(damagedAgent.strength).toBe(Zombie.strength - 1)
   })
 
-  test('end of turn', () => {
+  test('end of turn as player', () => {
     mockDuelState.phase = 'Resolving end of turn'
     mockDuelState.activePlayerId = playerId
 
@@ -332,6 +332,114 @@ describe('Playing turns', () => {
     expect(activePlayerId).toBe(opponentId)
     expect(player.coins).toBe(coins + 1)
     expect(player.income).toBe(income - 1)
+  })
+
+  test('agent attacking agent on opposite slot', () => {
+    const novice1 = createDuelCard(HammeriteNovice)
+    const novice2 = createDuelCard(HammeriteNovice)
+    const zombie1 = createDuelCard(Zombie)
+    const zombie2 = createDuelCard(Zombie)
+
+    mockDuelState.phase = 'Resolving end of turn'
+    mockDuelState.activePlayerId = opponentId
+    mockDuelState.players = {
+      [playerId]: {
+        ...MockPlayer1,
+        cards: {
+          [zombie1.id]: zombie1,
+          [zombie2.id]: zombie2,
+        },
+        deck: [],
+        hand: [],
+        board: [zombie1.id, zombie2.id],
+      },
+      [opponentId]: {
+        ...MockPlayer2,
+        cards: {
+          [novice1.id]: novice1,
+          [novice2.id]: novice2,
+        },
+        deck: [],
+        hand: [],
+        board: [novice1.id, novice2.id],
+      },
+    }
+
+    const mockDefendingCard = mockDuelState.players[playerId].cards[
+      mockDuelState.players[playerId].board[0]
+    ] as DuelAgent
+
+    const state = duelReducer(mockDuelState, moveToNextAttacker())
+
+    const { players, attackingAgentId } = state
+
+    const player = players[playerId]
+    const opponent = players[opponentId]
+
+    const defendingCard = player.cards[player.board[0]] as DuelAgent
+
+    expect(attackingAgentId).toBe(opponent.board[0])
+    expect(defendingCard.strength).toBe(mockDefendingCard.strength - 1)
+  })
+
+  test('agent attacking agent on previous slot', () => {
+    const novice = createDuelCard(HammeriteNovice)
+    const zombie1 = createDuelCard(Zombie)
+    const zombie2 = createDuelCard(Zombie)
+
+    mockDuelState.phase = 'Resolving end of turn'
+    mockDuelState.activePlayerId = playerId
+    mockDuelState.attackingAgentId = zombie1.id
+    mockDuelState.players = {
+      [playerId]: {
+        ...MockPlayer1,
+        cards: {
+          [zombie1.id]: zombie1,
+          [zombie2.id]: zombie2,
+        },
+        deck: [],
+        hand: [],
+        board: [zombie1.id, zombie2.id],
+      },
+      [opponentId]: {
+        ...MockPlayer2,
+        cards: {
+          [novice.id]: novice,
+        },
+        deck: [],
+        hand: [],
+        board: [novice.id],
+      },
+    }
+
+    const mockDefendingCard = mockDuelState.players[opponentId].cards[
+      mockDuelState.players[opponentId].board[0]
+    ] as DuelAgent
+
+    const state = duelReducer(mockDuelState, moveToNextAttacker())
+
+    const { players, attackingAgentId } = state
+
+    const player = players[playerId]
+    const opponent = players[opponentId]
+
+    const defendingCard = opponent.cards[opponent.board[0]] as DuelAgent
+
+    expect(attackingAgentId).toBe(player.board[1])
+    expect(defendingCard.strength).toBe(mockDefendingCard.strength - 1)
+  })
+
+  test('end turn when there are no attackers', () => {
+    mockDuelState.phase = 'Resolving end of turn'
+    mockDuelState.activePlayerId = opponentId
+
+    const state = duelReducer(mockDuelState, moveToNextAttacker())
+
+    const { phase, turn, activePlayerId } = state
+
+    expect(turn).toBe(mockDuelState.turn + 1)
+    expect(phase).toBe('Player Turn')
+    expect(activePlayerId).toBe(playerId)
   })
 
   test('play card', () => {
