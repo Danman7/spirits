@@ -1,5 +1,6 @@
 import { motion, useAnimationControls } from 'framer-motion'
 import { forwardRef, useEffect } from 'react'
+
 import { useAppDispatch } from 'src/app/store'
 import { CardComponentProps } from 'src/features/cards/types'
 import { getFactionColor, joinCardCategories } from 'src/features/cards/utils'
@@ -97,6 +98,7 @@ const CardComponent = motion.create(
                 </motion.div>
               )}
             </h4>
+
             <h5>{joinCardCategories(categories)}</h5>
           </div>
           <div className={styles.cardContent}>

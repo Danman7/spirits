@@ -1,9 +1,16 @@
-import { Haunt } from 'src/features/cards/CardBases'
+import { RootState } from 'src/app/store'
+import { Haunt, Zombie } from 'src/features/cards/CardBases'
+import { DuelCard } from 'src/features/cards/types'
 import {
+  copyDuelCard,
   createDuelCard,
   getFactionColor,
+  getOnPlayPredicate,
   joinCardCategories,
 } from 'src/features/cards/utils'
+import { EMPTY_PLAYER } from 'src/features/duel/constants'
+import { initialState } from 'src/features/duel/slice'
+import { PlayerCardAction } from 'src/features/duel/types'
 
 test('joinCardTypes should return a joined types string for a card', () => {
   expect(joinCardCategories(Haunt.categories)).toBe('Undead, Hammerite')
@@ -27,4 +34,46 @@ test('createPlayCardFromPrototype should create a new play ready card from a car
     strength: Haunt.strength,
   })
   expect(newCard.id).toBeDefined()
+})
+
+test('copyDuelCard', () => {
+  const newCard = createDuelCard(Haunt)
+  const updatedCard: DuelCard = { ...newCard, strength: newCard.strength - 1 }
+  const copiedCard = copyDuelCard(updatedCard)
+
+  expect(copiedCard.id).not.toBe(updatedCard.id)
+  expect(copiedCard.strength).toBe(newCard.strength)
+})
+
+test('getOnPlayPredicate returns the correct check', () => {
+  const cardId = 'card'
+  const playerId = 'player'
+
+  const mockAction: PlayerCardAction = {
+    type: 'duel/playCard',
+    payload: {
+      cardId,
+      playerId,
+    },
+  }
+
+  const mockState: RootState = {
+    duel: {
+      ...initialState,
+      players: {
+        [playerId]: {
+          ...EMPTY_PLAYER,
+          cards: {
+            [cardId]: {
+              ...createDuelCard(Haunt),
+              id: cardId,
+            },
+          },
+        },
+      },
+    },
+  }
+
+  expect(getOnPlayPredicate(mockAction, mockState, Haunt.name)).toEqual(true)
+  expect(getOnPlayPredicate(mockAction, mockState, Zombie.name)).toEqual(false)
 })
