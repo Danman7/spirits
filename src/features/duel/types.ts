@@ -25,14 +25,15 @@ export type DuelPhase =
   | 'Resolving end of turn'
 
 export type PlayerOrder = [Player['id'], Player['id']]
+export type DuelPlayers = {
+  [index: Player['id']]: Player
+}
 
 export interface DuelState {
   turn: number
   phase: DuelPhase
   playerOrder: PlayerOrder
-  players: {
-    [index: Player['id']]: Player
-  }
+  players: DuelPlayers
   loggedInPlayerId: Player['id']
   activePlayerId: Player['id']
   attackingAgentId: DuelCard['id']

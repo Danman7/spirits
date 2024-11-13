@@ -1,10 +1,6 @@
 import { ListenerEffectAPI } from '@reduxjs/toolkit'
+
 import { AppDispatch, RootState } from 'src/app/store'
-import {
-  BookOfAshEffect,
-  BrotherSachelmanOnPlayEffect,
-  HammeriteNoviceOnPlayEffect,
-} from 'src/features/cards/CardEffects'
 import {
   BookOfAsh,
   BrotherSachelman,
@@ -13,16 +9,21 @@ import {
   TempleGuard,
   ViktoriaThiefPawn,
   Zombie,
-} from 'src/features/cards/CardPrototypes'
+} from 'src/features/cards/CardBases'
+import {
+  BookOfAshEffect,
+  BrotherSachelmanOnPlayEffect,
+  HammeriteNoviceOnPlayEffect,
+} from 'src/features/cards/CardEffects'
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constants'
-import { DuelAgent, DuelCard, DuelInstant } from 'src/features/cards/types'
+import { DuelCard } from 'src/features/cards/types'
 import { createDuelCard } from 'src/features/cards/utils'
 import { MockPlayerTurnState } from 'src/features/duel/__mocks__'
 import {
   addNewCards,
   moveCardToBoard,
   playCard,
-  updateAgent,
+  updateCard,
 } from 'src/features/duel/slice'
 import { DuelState, PlayerCardAction } from 'src/features/duel/types'
 
@@ -61,6 +62,8 @@ const listenerApi: ListenerEffectAPI<RootState, AppDispatch> = {
   extra: undefined,
 }
 
+let card: DuelCard
+
 beforeEach(() => {
   mockDuelState = { ...MockPlayerTurnState }
 })
@@ -70,10 +73,8 @@ afterEach(() => {
 })
 
 describe(BrotherSachelman.name, () => {
-  let card: DuelAgent
-
   beforeEach(() => {
-    card = createDuelCard(BrotherSachelman) as DuelAgent
+    card = createDuelCard(BrotherSachelman)
     cardId = card.id
 
     mockAction = {
@@ -83,7 +84,7 @@ describe(BrotherSachelman.name, () => {
   })
 
   it('should boost alied Hammerite cards on board with lower strength', () => {
-    const novice = createDuelCard(HammeriteNovice) as DuelAgent
+    const novice = createDuelCard(HammeriteNovice)
 
     mockDuelState.players[playerId].cards = {
       [cardId]: card,
@@ -100,7 +101,7 @@ describe(BrotherSachelman.name, () => {
     BrotherSachelmanOnPlayEffect(mockAction, listenerApi)
 
     expect(listenerApi.dispatch).toHaveBeenCalledWith(
-      updateAgent({
+      updateCard({
         cardId: novice.id,
         playerId,
         update: {
@@ -161,10 +162,8 @@ describe(BrotherSachelman.name, () => {
 })
 
 describe(HammeriteNovice.name, () => {
-  let card: DuelAgent
-
   beforeEach(() => {
-    card = createDuelCard(HammeriteNovice) as DuelAgent
+    card = createDuelCard(HammeriteNovice)
     cardId = card.id
 
     mockAction = {
@@ -243,10 +242,8 @@ describe(HammeriteNovice.name, () => {
 })
 
 describe(BookOfAsh.name, () => {
-  let card: DuelInstant
-
   beforeEach(() => {
-    card = createDuelCard(BookOfAsh) as DuelInstant
+    card = createDuelCard(BookOfAsh)
     cardId = card.id
 
     mockAction = {
@@ -255,7 +252,7 @@ describe(BookOfAsh.name, () => {
     }
   })
 
-  it('should spawn two Zombies if a Zombie is at the top of the discard', () => {
+  it('should spawn two copies if a non-unique card is at the top of the discard', () => {
     const zombie = createDuelCard(Zombie)
     const haunt = createDuelCard(Haunt)
 
@@ -302,18 +299,20 @@ describe(BookOfAsh.name, () => {
     )
   })
 
-  it('should spawn two Haunts if a Haunt is at the top of the discard', () => {
+  it('should spawn two copies of top non-unique agent in discard even if a unique card is at the top', () => {
     const zombie = createDuelCard(Zombie)
     const haunt = createDuelCard(Haunt)
+    const viktoria = createDuelCard(ViktoriaThiefPawn)
 
     mockDuelState.players[playerId].cards = {
       [cardId]: card,
       [zombie.id]: zombie,
       [haunt.id]: haunt,
+      [viktoria.id]: viktoria,
     }
 
     mockDuelState.players[playerId].hand = [cardId]
-    mockDuelState.players[playerId].discard = [zombie.id, haunt.id]
+    mockDuelState.players[playerId].discard = [zombie.id, haunt.id, viktoria.id]
     mockDuelState.players[playerId].board = []
 
     listenerApi.getState = jest.fn(() => ({
@@ -331,7 +330,7 @@ describe(BookOfAsh.name, () => {
     )
   })
 
-  it('should not spawn anything if there are no Undead in the discard', () => {
+  it('should not spawn anything if there is only unique cards in the discard', () => {
     const viktoria = createDuelCard(ViktoriaThiefPawn)
 
     mockDuelState.players[playerId].cards = {
@@ -339,8 +338,22 @@ describe(BookOfAsh.name, () => {
       [viktoria.id]: viktoria,
     }
 
-    mockDuelState.players[playerId].hand = [cardId]
+    mockDuelState.players[playerId].hand = []
     mockDuelState.players[playerId].discard = [viktoria.id]
+    mockDuelState.players[playerId].board = []
+
+    listenerApi.getState = jest.fn(() => ({
+      duel: mockDuelState,
+    }))
+
+    BookOfAshEffect(mockAction, listenerApi)
+
+    expect(listenerApi.dispatch).toHaveBeenCalledTimes(0)
+  })
+
+  it('should not spawn anything if there are no cards in the discard', () => {
+    mockDuelState.players[playerId].hand = []
+    mockDuelState.players[playerId].discard = []
     mockDuelState.players[playerId].board = []
 
     listenerApi.getState = jest.fn(() => ({

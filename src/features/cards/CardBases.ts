@@ -1,23 +1,23 @@
 import {
   AZARAN_BOOST,
-  HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   DOWNWINDER_BOOST,
   ELEVATED_ACOLYTE_BOOST,
   GARRETT_COIN_GAIN,
+  HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   HAUNT_DAMAGE,
   VIKTORIA_COIN_GAIN,
 } from 'src/features/cards/constants'
-import { Agent, Instant } from 'src/features/cards/types'
-
+import { CardBase } from 'src/features/cards/types'
 import { getCoinsMessage } from 'src/shared/utils'
 
-export const Zombie: Agent = {
-  kind: 'agent',
+export const Zombie: CardBase = {
+  type: 'agent',
   name: 'Zombie',
   strength: 3,
   cost: 1,
+  rank: 'common',
   factions: ['Chaos'],
-  types: ['Undead'],
+  categories: ['Undead'],
   description: [
     'If this card is in your discard pile when a Necromancer is played, bring it back to your board.',
   ],
@@ -25,13 +25,14 @@ export const Zombie: Agent = {
     "The zombie's antipathy for all living creatures is both its strength and weakness.",
 }
 
-export const Haunt: Agent = {
-  kind: 'agent',
+export const Haunt: CardBase = {
+  type: 'agent',
   name: 'Haunt',
   strength: 7,
   cost: 3,
+  rank: 'common',
   factions: ['Chaos'],
-  types: ['Undead', 'Hammerite'],
+  categories: ['Undead', 'Hammerite'],
   description: [
     `Whenever your opponent plays a card with strength, damage it by ${HAUNT_DAMAGE}.`,
   ],
@@ -39,13 +40,14 @@ export const Haunt: Agent = {
     'These haunts who inhabit the bodies of my brethren... they must all be killed. -- The apparition of Brother Murus',
 }
 
-export const HammeriteNovice: Agent = {
-  kind: 'agent',
+export const HammeriteNovice: CardBase = {
+  type: 'agent',
   name: 'Hammerite Novice',
   strength: 2,
   cost: 3,
+  rank: 'common',
   factions: ['Order'],
-  types: ['Hammerite'],
+  categories: ['Hammerite'],
   description: [
     'On play if you have another Hammerite card on the table also play all other copies of Hammerite Novice you have in your hand.',
   ],
@@ -57,13 +59,14 @@ export const HammeriteNovice: Agent = {
   },
 }
 
-export const ElevatedAcolyte: Agent = {
-  kind: 'agent',
+export const ElevatedAcolyte: CardBase = {
+  type: 'agent',
   name: 'Elevated Acolyte',
   strength: 5,
   cost: 3,
+  rank: 'common',
   factions: ['Order'],
-  types: ['Hammerite'],
+  categories: ['Hammerite'],
   description: [
     `If a card is boosted next to Elevated Acolyte, boost Elevated Acolyte by ${ELEVATED_ACOLYTE_BOOST}.`,
   ],
@@ -71,25 +74,27 @@ export const ElevatedAcolyte: Agent = {
     'He will endure a standard three-year contract of service, at the end of which he will be considered for indoctrination as an Elevated Acolyte.',
 }
 
-export const TempleGuard: Agent = {
-  kind: 'agent',
+export const TempleGuard: CardBase = {
+  type: 'agent',
   name: 'Temple Guard',
   strength: 4,
   cost: 5,
+  rank: 'common',
   factions: ['Order'],
-  types: ['Hammerite', 'Guard'],
+  categories: ['Hammerite', 'Guard'],
   description: ['When this card is attacked, it retaliates.'],
   flavor:
     'Thy hammer pounds the nail, holds the roof-beam. Thy hammer strikes the iron, shapes the cauldron.',
 }
 
-export const BrotherSachelman: Agent = {
-  kind: 'agent',
+export const BrotherSachelman: CardBase = {
+  type: 'agent',
   name: 'Brother Sachelman',
   strength: 4,
   cost: 6,
+  rank: 'unique',
   factions: ['Order'],
-  types: ['Hammerite'],
+  categories: ['Hammerite'],
   description: [
     `On play boost any allied Hammerite on board with lower strength than this card's strength by ${HAMMERITES_WITH_LOWER_STRENGTH_BOOST}`,
   ],
@@ -101,13 +106,14 @@ export const BrotherSachelman: Agent = {
   },
 }
 
-export const ViktoriaThiefPawn: Agent = {
-  kind: 'agent',
+export const ViktoriaThiefPawn: CardBase = {
+  type: 'agent',
   name: 'Viktoria: Thiefs-pawn',
   strength: 4,
   cost: 5,
+  rank: 'unique',
   factions: ['Chaos', 'Shadow'],
-  types: ['Fence', 'Pagan'],
+  categories: ['Fence', 'Pagan'],
   description: [
     `Whenever you steal coins from the opponent, gain ${getCoinsMessage(
       VIKTORIA_COIN_GAIN,
@@ -117,13 +123,14 @@ export const ViktoriaThiefPawn: Agent = {
     'About your Victoria, nothing yet. Walks she an inch above the ground, for all the dirt of her footprints have I found. -- From a report to Lord Bafford',
 }
 
-export const GarrettMasterThief: Agent = {
-  kind: 'agent',
+export const GarrettMasterThief: CardBase = {
+  type: 'agent',
   name: 'Garrett: Master Thief',
   strength: 4,
   cost: 5,
+  rank: 'unique',
   factions: ['Shadow'],
-  types: ['Thief'],
+  categories: ['Thief'],
   description: [
     `Whenever your opponent spends coins, gain ${getCoinsMessage(
       GARRETT_COIN_GAIN,
@@ -133,13 +140,14 @@ export const GarrettMasterThief: Agent = {
     'His heart was clouded, and his balance was lost, but his abilities were unmatched. -- Keeper Annals',
 }
 
-export const DownwinderThief: Agent = {
-  kind: 'agent',
+export const DownwinderThief: CardBase = {
+  type: 'agent',
   name: 'Downwinder Thief',
   strength: 2,
   cost: 1,
+  rank: 'common',
   factions: ['Shadow'],
-  types: ['Thief'],
+  categories: ['Thief'],
   description: [
     `When stealing coins from opponent boost self by ${DOWNWINDER_BOOST}.`,
   ],
@@ -147,13 +155,14 @@ export const DownwinderThief: Agent = {
     "We chose our profession in defiance of the greed of the monarchy. We will not live for the sake of taxes to fatten the noble's pockets. -- excerpt from the Downwinders Creed",
 }
 
-export const AzaranTheCruel: Agent = {
-  kind: 'agent',
+export const AzaranTheCruel: CardBase = {
+  type: 'agent',
   name: 'Azaran the Cruel',
   strength: 5,
   cost: 5,
+  rank: 'unique',
   factions: ['Chaos'],
-  types: ['Necromancer'],
+  categories: ['Necromancer'],
   description: [
     `On playOn play boost self by ${AZARAN_BOOST} for each Undead card in the discard pile.`,
   ],
@@ -161,13 +170,16 @@ export const AzaranTheCruel: Agent = {
     "Be warned! The truth is hidden from the unworthy. Blacken thy heart, or face the prisoners of flesh. -- Azaran's last mortal written words",
 }
 
-export const BookOfAsh: Instant = {
-  kind: 'instant',
+export const BookOfAsh: CardBase = {
+  type: 'instant',
   name: 'The Book of Ash',
   cost: 5,
+  rank: 'unique',
   factions: ['Chaos'],
-  types: ['Artifact'],
-  description: ['Summon 2 copies of the top Undead card in your discard pile.'],
+  categories: ['Artifact'],
+  description: [
+    'Summon 2 copies of the top non-unique agent in your discard pile.',
+  ],
   flavor:
     'I owe my transcendence to the Book of Ash, that tome of legend I recovered so long ago from the sands of long forgotten kings. Within its pages lie the secrets of life, death ...and undeath. -- Azaran the Cruel',
   trigger: {

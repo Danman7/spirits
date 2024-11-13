@@ -1,11 +1,10 @@
 import '@testing-library/jest-dom'
-import { BrotherSachelman } from 'src/features/cards/CardPrototypes'
+import { BrotherSachelman } from 'src/features/cards/CardBases'
 import Card from 'src/features/cards/components/Card'
-import { DuelAgent } from 'src/features/cards/types'
-import { createDuelCard, joinCardTypes } from 'src/features/cards/utils'
+import { createDuelCard, joinCardCategories } from 'src/features/cards/utils'
 import { fireEvent, render, screen } from 'src/shared/test-utils'
 
-const mockCard = createDuelCard(BrotherSachelman) as DuelAgent
+const mockCard = createDuelCard(BrotherSachelman)
 
 it('should display all shared UI segments of a card when face up', () => {
   const { rerender } = render(<Card card={mockCard} />)
@@ -17,7 +16,7 @@ it('should display all shared UI segments of a card when face up', () => {
   expect(screen.getByText(`Cost: ${mockCard.cost}`)).toBeInTheDocument()
 
   expect(screen.getByRole('heading', { level: 5 })).toHaveTextContent(
-    joinCardTypes(mockCard.types),
+    joinCardCategories(mockCard.categories),
   )
 
   expect(screen.getByText(mockCard.description[0])).toBeInTheDocument()

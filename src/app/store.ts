@@ -1,7 +1,7 @@
 import { Action, configureStore, ConfigureStoreOptions } from '@reduxjs/toolkit'
 import { useDispatch, useSelector } from 'react-redux'
-import { listenerMiddleware } from 'src/app/listenerMiddleware'
 
+import { listenerMiddleware } from 'src/app/listenerMiddleware'
 import duelReducer, { DuelActionTypes } from 'src/features/duel/slice'
 import { DuelState } from 'src/features/duel/types'
 

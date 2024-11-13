@@ -1,11 +1,11 @@
-import { HammeriteNovice } from 'src/features/cards/CardPrototypes'
+import { HammeriteNovice } from 'src/features/cards/CardBases'
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constants'
-import { Agent, CardEffect } from 'src/features/cards/types'
+import { CardEffect } from 'src/features/cards/types'
 import { copyDuelCard } from 'src/features/cards/utils'
 import {
   addNewCards,
   moveCardToBoard,
-  updateAgent,
+  updateCard,
 } from 'src/features/duel/slice'
 import { PlayerCardAction, PlayerCards } from 'src/features/duel/types'
 
@@ -17,18 +17,18 @@ export const BrotherSachelmanOnPlayEffect: CardEffect<PlayerCardAction> = (
 
   const { players } = listenerApi.getState().duel
 
-  const playedCard = players[playerId].cards[cardId] as Agent
+  const playedCard = players[playerId].cards[cardId]
 
   players[playerId].board.forEach((cardId) => {
     const cardOnBoard = { ...players[playerId].cards[cardId] }
 
     if (
-      cardOnBoard.kind === 'agent' &&
-      cardOnBoard.types.includes('Hammerite') &&
+      cardOnBoard.type === 'agent' &&
+      cardOnBoard.categories.includes('Hammerite') &&
       cardOnBoard.strength < playedCard.strength
     ) {
       listenerApi.dispatch(
-        updateAgent({
+        updateCard({
           playerId,
           cardId,
           update: {
@@ -55,7 +55,9 @@ export const HammeriteNoviceOnPlayEffect: CardEffect<PlayerCardAction> = (
     .filter((cardId) => cardId !== playedCardId)
     .map((cardId) => player.cards[cardId])
 
-  if (!cardsOnBoard.find((card) => card && card.types.includes('Hammerite'))) {
+  if (
+    !cardsOnBoard.find((card) => card && card.categories.includes('Hammerite'))
+  ) {
     return
   }
 
@@ -86,16 +88,16 @@ export const BookOfAshEffect: CardEffect<PlayerCardAction> = (
 
   const player = players[playerId]
 
-  const topUndeadCardInDiscard =
+  const topCommonDiscardCard =
     player.cards[
-      player.discard.findLast((cardId) =>
-        player.cards[cardId].types.includes('Undead'),
+      player.discard.findLast(
+        (cardId) => player.cards[cardId].rank === 'common',
       ) || ''
     ]
 
-  if (topUndeadCardInDiscard) {
-    const undead1 = copyDuelCard(topUndeadCardInDiscard)
-    const undead2 = copyDuelCard(topUndeadCardInDiscard)
+  if (topCommonDiscardCard) {
+    const undead1 = copyDuelCard(topCommonDiscardCard)
+    const undead2 = copyDuelCard(topCommonDiscardCard)
 
     const cards: PlayerCards = {
       [undead1.id]: undead1,

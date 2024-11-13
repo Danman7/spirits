@@ -12,7 +12,7 @@ import {
   ViktoriaThiefPawn,
   Zombie,
   BookOfAsh,
-} from 'src/features/cards/CardPrototypes'
+} from 'src/features/cards/CardBases'
 import { createDuelCard } from 'src/features/cards/utils'
 
 export const MockPlayer1: Player = {

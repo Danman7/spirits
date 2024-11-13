@@ -2,7 +2,7 @@ import { motion, useAnimationControls } from 'framer-motion'
 import { forwardRef, useEffect } from 'react'
 import { useAppDispatch } from 'src/app/store'
 import { CardComponentProps } from 'src/features/cards/types'
-import { getFactionColor, joinCardTypes } from 'src/features/cards/utils'
+import { getFactionColor, joinCardCategories } from 'src/features/cards/utils'
 import { moveToNextAttacker } from 'src/features/duel/slice'
 import {
   CardAttackAnimation,
@@ -22,14 +22,13 @@ const CardComponent = motion.create(
         name,
         description,
         flavor,
-        types,
+        categories,
         factions,
         cost,
-        prototype,
-        kind,
+        base,
+        rank,
+        strength,
       } = card
-
-      const strength = kind === 'agent' ? card.strength : undefined
 
       const prevStrength = usePrevious(strength)
       const dispatch = useAppDispatch()
@@ -81,24 +80,24 @@ const CardComponent = motion.create(
           animate={cardAnimationControls}
           onAnimationComplete={onAnimationComplete}
           onClick={onClickCard ? () => onClickCard(id) : undefined}
-          className={`${styles.card} ${isSmall ? styles.smallCard : ''} ${onClickCard ? styles.activeCard : ''}`}
+          className={`${styles.card} ${isSmall ? styles.smallCard : ''} ${onClickCard ? styles.activeCard : ''} ${rank === 'common' ? styles.commonCard : styles.uniqueCard}`}
         >
           <div
             className={styles.cardHeader}
             style={{ background: getFactionColor(factions) }}
           >
             <h4 className={styles.cardTitle}>
-              <div style={{ textAlign: 'center', flexGrow: 2 }}>{name}</div>
-              {kind === 'agent' && strength && (
+              <span>{name}</span>
+              {strength && (
                 <motion.div animate={strengthChangeAnimation}>
                   <PositiveNegativeNumber
                     current={strength}
-                    base={prototype.strength}
+                    base={base.strength || 0}
                   />
                 </motion.div>
               )}
             </h4>
-            <h5 className={styles.cardTypes}>{joinCardTypes(types)}</h5>
+            <h5>{joinCardCategories(categories)}</h5>
           </div>
           <div className={styles.cardContent}>
             {description.map((paragraph, index) => (

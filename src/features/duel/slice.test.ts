@@ -1,29 +1,29 @@
-import { DuelState, PlayerCards } from 'src/features/duel/types'
 import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
-import { normalizeArrayOfPlayers } from 'src/features/duel/utils'
 import duelReducer, {
-  drawCardFromDeck,
-  initializeEndTurn,
-  initializeDuel,
-  initialState,
-  playCard,
-  beginPlay,
-  startRedraw,
-  updateAgent,
-  putCardAtBottomOfDeck,
-  moveCardToDiscard,
-  moveCardToBoard,
-  moveToNextAttacker,
   addNewCards,
+  beginPlay,
+  drawCardFromDeck,
+  initializeDuel,
+  initializeEndTurn,
+  initialState,
+  moveCardToBoard,
+  moveCardToDiscard,
+  moveToNextAttacker,
+  playCard,
+  putCardAtBottomOfDeck,
+  startRedraw,
+  updateCard,
 } from 'src/features/duel/slice'
+import { DuelState, PlayerCards } from 'src/features/duel/types'
+import { normalizeArrayOfPlayers } from 'src/features/duel/utils'
 
 import {
   HammeriteNovice,
   TempleGuard,
   Zombie,
-} from 'src/features/cards/CardPrototypes'
+} from 'src/features/cards/CardBases'
+import { DuelCard } from 'src/features/cards/types'
 import { createDuelCard } from 'src/features/cards/utils'
-import { DuelAgent, DuelCard } from 'src/features/cards/types'
 
 const initialPlayers = [MockPlayer1, MockPlayer2]
 const normalizedPlayers = normalizeArrayOfPlayers(initialPlayers)
@@ -300,9 +300,11 @@ describe('Playing turns', () => {
 
     const { players } = state
 
-    const damagedAgent = players[opponentId].cards[zombie.id] as DuelAgent
+    const damagedAgent = players[opponentId].cards[zombie.id]
 
-    expect(damagedAgent.strength).toBe(Zombie.strength - 1)
+    expect(damagedAgent.strength).toBe(
+      (players[opponentId].cards[zombie.id].base.strength as number) - 1,
+    )
   })
 
   test('end of turn as player', () => {
@@ -365,9 +367,10 @@ describe('Playing turns', () => {
       },
     }
 
-    const mockDefendingCard = mockDuelState.players[playerId].cards[
-      mockDuelState.players[playerId].board[0]
-    ] as DuelAgent
+    const mockDefendingCard =
+      mockDuelState.players[playerId].cards[
+        mockDuelState.players[playerId].board[0]
+      ]
 
     const state = duelReducer(mockDuelState, moveToNextAttacker())
 
@@ -376,7 +379,7 @@ describe('Playing turns', () => {
     const player = players[playerId]
     const opponent = players[opponentId]
 
-    const defendingCard = player.cards[player.board[0]] as DuelAgent
+    const defendingCard = player.cards[player.board[0]]
 
     expect(attackingAgentId).toBe(opponent.board[0])
     expect(defendingCard.strength).toBe(mockDefendingCard.strength - 1)
@@ -412,9 +415,10 @@ describe('Playing turns', () => {
       },
     }
 
-    const mockDefendingCard = mockDuelState.players[opponentId].cards[
-      mockDuelState.players[opponentId].board[0]
-    ] as DuelAgent
+    const mockDefendingCard =
+      mockDuelState.players[opponentId].cards[
+        mockDuelState.players[opponentId].board[0]
+      ]
 
     const state = duelReducer(mockDuelState, moveToNextAttacker())
 
@@ -423,7 +427,7 @@ describe('Playing turns', () => {
     const player = players[playerId]
     const opponent = players[opponentId]
 
-    const defendingCard = opponent.cards[opponent.board[0]] as DuelAgent
+    const defendingCard = opponent.cards[opponent.board[0]]
 
     expect(attackingAgentId).toBe(player.board[1])
     expect(defendingCard.strength).toBe(mockDefendingCard.strength - 1)
@@ -550,14 +554,14 @@ describe('Playing turns', () => {
 
     const state = duelReducer(
       mockDuelState,
-      updateAgent({
+      updateCard({
         playerId,
         cardId,
         update,
       }),
     )
 
-    const updatedCard = state.players[playerId].cards[cardId] as DuelAgent
+    const updatedCard = state.players[playerId].cards[cardId]
 
     expect(updatedCard.strength).toBe(update.strength)
     expect(updatedCard.cost).toBe(update.cost)
@@ -586,7 +590,7 @@ describe('Playing turns', () => {
 
     const state = duelReducer(
       mockDuelState,
-      updateAgent({
+      updateCard({
         playerId,
         cardId,
         update,
@@ -612,7 +616,7 @@ describe('Playing turns', () => {
           [stack]: [cardId, guard.id],
           discard: [],
           cards: {
-            [cardId]: { ...novice, strength: 1 } as DuelAgent,
+            [cardId]: { ...novice, strength: 1 },
             [guard.id]: guard,
           },
         },
@@ -629,12 +633,12 @@ describe('Playing turns', () => {
 
       const player = state.players[playerId]
 
-      const discardedCard = player.cards[cardId] as DuelAgent
+      const discardedCard = player.cards[cardId]
 
       expect(player[stack]).toHaveLength(1)
       expect(player.discard).toHaveLength(1)
       expect(player.discard).toContain(cardId)
-      expect(discardedCard.strength).toBe(discardedCard.prototype.strength)
+      expect(discardedCard.strength).toBe(discardedCard.base.strength)
       expect(player.income).toBe(novice.cost)
     })
   })

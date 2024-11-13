@@ -76,7 +76,7 @@ const PlayerHalfBoard: FC<{
   }
 
   const triggerEndTurn = (card: DuelCard) => {
-    if (card.kind === 'instant') {
+    if (card.type === 'instant') {
       dispatch(moveCardToDiscard({ cardId: card.id, playerId: id }))
     }
 
@@ -121,7 +121,7 @@ const PlayerHalfBoard: FC<{
   const onBoardCardLayoutComplete = (card: DuelCard) => {
     if (
       (phase === 'Player Turn' && card.id === board[board.length - 1]) ||
-      card.kind === 'instant'
+      card.type === 'instant'
     ) {
       triggerEndTurn(card)
     }

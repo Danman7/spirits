@@ -3,17 +3,17 @@ import { fn } from '@storybook/test'
 import { Provider } from 'react-redux'
 import store from 'src/app/store'
 import {
+  BookOfAsh,
   ElevatedAcolyte,
   GarrettMasterThief,
   HammeriteNovice,
   Haunt,
   ViktoriaThiefPawn,
-} from 'src/features/cards/CardPrototypes'
+} from 'src/features/cards/CardBases'
 import Card from 'src/features/cards/components/Card'
-import { DuelAgent } from 'src/features/cards/types'
 import { createDuelCard } from 'src/features/cards/utils'
 
-const mockCard = createDuelCard(Haunt) as DuelAgent
+const mockCard = createDuelCard(Haunt)
 
 const meta = {
   title: 'Card',
@@ -37,6 +37,12 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 
+export const Instant: Story = {
+  args: {
+    card: createDuelCard(BookOfAsh),
+  },
+}
+
 export const SmallerVariant: Story = {
   args: {
     card: { ...mockCard },
@@ -52,16 +58,18 @@ export const IsActive: Story = {
 
 export const Boosted: Story = {
   args: {
-    card: { ...mockCard, strength: mockCard.strength + 2 } as DuelAgent,
+    card: { ...mockCard, strength: mockCard.strength + 2 },
   },
 }
+
+const mockAcolyte = createDuelCard(ElevatedAcolyte)
 
 export const Damaged: Story = {
   args: {
     card: {
-      ...createDuelCard(ElevatedAcolyte),
-      strength: ElevatedAcolyte.strength - 1,
-    } as DuelAgent,
+      ...mockAcolyte,
+      strength: mockAcolyte.strength - 1,
+    },
   },
 }
 

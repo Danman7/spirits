@@ -12,7 +12,7 @@ import {
   HammeriteNovice,
   Haunt,
   TempleGuard,
-} from 'src/features/cards/CardPrototypes'
+} from 'src/features/cards/CardBases'
 import { createDuelCard } from 'src/features/cards/utils'
 
 test('getPlayableCardIds should return all playable card ids for a given player', () => {

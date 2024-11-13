@@ -8,8 +8,7 @@ import {
   Haunt,
   TempleGuard,
   Zombie,
-} from 'src/features/cards/CardPrototypes'
-import { DuelAgent } from 'src/features/cards/types'
+} from 'src/features/cards/CardBases'
 import { createDuelCard } from 'src/features/cards/utils'
 import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
 import Board from 'src/features/duel/components/Board'
@@ -245,8 +244,8 @@ describe('General duel flow', () => {
     const { players } = preloadedState.duel
     const activePlayer = players[playerId]
     const opponent = players[opponentId]
-    const playedCard = activePlayer.cards[activePlayer.hand[0]] as DuelAgent
-    const defenderCard = opponent.cards[opponent.board[0]] as DuelAgent
+    const playedCard = activePlayer.cards[activePlayer.hand[0]]
+    const defenderCard = opponent.cards[opponent.board[0]]
 
     render(<Board />, {
       preloadedState,
@@ -300,7 +299,7 @@ describe('General duel flow', () => {
 
     const { players } = preloadedState.duel
     const activePlayer = players[playerId]
-    const playedCard = activePlayer.cards[activePlayer.hand[0]] as DuelAgent
+    const playedCard = activePlayer.cards[activePlayer.hand[0]]
 
     expect(
       within(screen.getByTestId(PLAYER_HAND_ID)).getByText(playedCard.name),
@@ -359,7 +358,7 @@ describe('General duel flow', () => {
       [opponentId]: {
         ...mockOpponent,
         cards: {
-          [haunt.id]: { ...haunt, strength: 1 } as DuelAgent,
+          [haunt.id]: { ...haunt, strength: 1 },
           [zombie.id]: zombie,
         },
         deck: [],

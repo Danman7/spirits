@@ -11,7 +11,7 @@ import {
   Haunt,
   TempleGuard,
   Zombie,
-} from 'src/features/cards/CardPrototypes'
+} from 'src/features/cards/CardBases'
 import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
 import { configureStoreWithPreloadedState } from 'src/app/store'
 

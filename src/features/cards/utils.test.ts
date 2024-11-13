@@ -1,12 +1,12 @@
-import { Haunt } from 'src/features/cards/CardPrototypes'
+import { Haunt } from 'src/features/cards/CardBases'
 import {
   createDuelCard,
   getFactionColor,
-  joinCardTypes,
+  joinCardCategories,
 } from 'src/features/cards/utils'
 
 test('joinCardTypes should return a joined types string for a card', () => {
-  expect(joinCardTypes(Haunt.types)).toBe('Undead, Hammerite')
+  expect(joinCardCategories(Haunt.categories)).toBe('Undead, Hammerite')
 })
 
 test('getFactionColor should get the proper faction color', () => {
@@ -22,7 +22,7 @@ test('createPlayCardFromPrototype should create a new play ready card from a car
   const newCard = createDuelCard(Haunt)
 
   expect(newCard).toEqual(expect.objectContaining(Haunt))
-  expect(newCard.prototype).toEqual({
+  expect(newCard.base).toEqual({
     cost: Haunt.cost,
     strength: Haunt.strength,
   })

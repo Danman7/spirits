@@ -16,12 +16,21 @@
   border-radius: 6px;
   width: 250px;
   height: 350px;
-  border: 1px solid var(--line-color);
   display: flex;
   flex-direction: column;
   background: var(--background-color);
   overflow: hidden;
   box-shadow: 3px 3px 3px var(--shadow-color);
+  border-width: 2px;
+  border-style: solid;
+}
+
+.commonCard {
+  border-color: var(--common-card-border);
+}
+
+.uniqueCard {
+  border-color: var(--unique-card-border);
 }
 
 @keyframes activeGlow {
@@ -81,6 +90,7 @@
 }
 
 .smallCard {
+  border-width: 1px;
   width: 150px;
   height: 210px;
   font-size: 9.5px;
@@ -94,11 +104,6 @@
   display: flex;
   flex-direction: column;
   border-top: 1px solid var(--line-color);
-}
-
-.cardTypes {
-  display: flex;
-  justify-content: center;
 }
 
 .cardContent {
@@ -227,36 +232,6 @@
 .bottomPlayerInfo {
   composes: playerInfo;
   bottom: 3rem;
-}
-
-.defaultButton {
-  cursor: pointer;
-  overflow: hidden;
-  padding: 0.5em 2em;
-  border-radius: 6px;
-  text-align: center;
-  background: var(--background-color);
-  color: var(--text-color);
-  border-width: 1px;
-  border-color: var(--line-color);
-  border-bottom-width: 4px;
-  border-bottom-color: var(--line-color);
-  box-shadow: 2px 2px 2px #777;
-}
-
-.positiveButton {
-  composes: defaultButton;
-  background: var(--secondary-color);
-  color: white;
-}
-
-.gameButtonWrapper {
-  position: absolute;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2;
 }
 
 .faceDownStack {

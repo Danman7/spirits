@@ -1,15 +1,13 @@
 import { FACTION_COLOR_MAP } from 'src/features/cards/constants'
 import {
-  Agent,
   CardBase,
-  DuelAgent,
-  DuelInstant,
-  Instant,
   DuelCard,
+  GetOnPlayPredicate,
 } from 'src/features/cards/types'
 import { generateUUID } from 'src/shared/utils'
 
-export const joinCardTypes = (types: CardBase['types']) => types.join(', ')
+export const joinCardCategories = (types: CardBase['categories']) =>
+  types.join(', ')
 
 export const getFactionColor = (factions: CardBase['factions']) => {
   const firstColor = FACTION_COLOR_MAP[factions[0]]
@@ -23,32 +21,27 @@ export const getFactionColor = (factions: CardBase['factions']) => {
   })`
 }
 
-export const createDuelCard = (cardPrototype: Agent | Instant): DuelCard => {
-  const { kind } = cardPrototype
-
-  const id = generateUUID()
-
-  if (kind === 'agent') {
-    return {
-      ...cardPrototype,
-      id,
-      prototype: {
-        cost: cardPrototype.cost,
-        strength: cardPrototype.strength,
-      },
-    } as DuelAgent
-  }
-
-  return {
-    ...cardPrototype,
-    id,
-    prototype: {
-      cost: cardPrototype.cost,
-    },
-  } as DuelInstant
-}
+export const createDuelCard = (base: CardBase): DuelCard => ({
+  ...base,
+  id: generateUUID(),
+  strength: base.strength || 0,
+  base: {
+    strength: base.strength || 0,
+    cost: base.cost,
+  },
+})
 
 export const copyDuelCard = (card: DuelCard): DuelCard => ({
   ...card,
   id: generateUUID(),
 })
+
+export const getOnPlayPredicate: GetOnPlayPredicate = (
+  action,
+  currentState,
+  agentName,
+) =>
+  action.type === 'duel/playCard' &&
+  currentState.duel.players[action.payload.playerId].cards[
+    action.payload.cardId
+  ].name === agentName
