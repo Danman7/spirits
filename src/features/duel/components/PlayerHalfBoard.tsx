@@ -2,7 +2,7 @@ import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
 import { FC, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import Card from 'src/features/cards/components/Card'
-import { CardComponentProps, DuelCard } from 'src/features/cards/types'
+import { CardProps, DuelCard } from 'src/features/cards/types'
 import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
 import { closeMessage } from 'src/features/duel/messages'
 import {
@@ -67,7 +67,7 @@ const PlayerHalfBoard: FC<{
 
   const isActive = activePlayerId === id
 
-  const onPlayCard: CardComponentProps['onClickCard'] = (cardId) => {
+  const onPlayCard: CardProps['onClickCard'] = (cardId) => {
     dispatch(playCard({ cardId, playerId: id }))
 
     if (process.env.NODE_ENV === 'test') {
@@ -83,7 +83,7 @@ const PlayerHalfBoard: FC<{
     dispatch(initializeEndTurn())
   }
 
-  const onRedrawCard: CardComponentProps['onClickCard'] = (cardId) => {
+  const onRedrawCard: CardProps['onClickCard'] = (cardId) => {
     dispatch(
       putCardAtBottomOfDeck({
         cardId,
@@ -96,7 +96,7 @@ const PlayerHalfBoard: FC<{
     dispatch(completeRedraw(id))
   }
 
-  const getOnClickCard = (): CardComponentProps['onClickCard'] => {
+  const getOnClickCard = (): CardProps['onClickCard'] => {
     if (
       phase === 'Player Turn' &&
       isActive &&

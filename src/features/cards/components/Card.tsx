@@ -2,7 +2,7 @@ import { motion, useAnimationControls } from 'framer-motion'
 import { forwardRef, useEffect } from 'react'
 
 import { useAppDispatch } from 'src/app/store'
-import { CardComponentProps } from 'src/features/cards/types'
+import { CardProps } from 'src/features/cards/types'
 import { getFactionColor, joinCardCategories } from 'src/features/cards/utils'
 import { moveToNextAttacker } from 'src/features/duel/slice'
 import {
@@ -16,7 +16,7 @@ import { usePrevious } from 'src/shared/customHooks'
 import styles from 'src/shared/styles/styles.module.css'
 
 const CardComponent = motion.create(
-  forwardRef<HTMLDivElement, CardComponentProps>(
+  forwardRef<HTMLDivElement, CardProps>(
     ({ card, isSmall, isFaceDown, isAttacking, isOnTop, onClickCard }, ref) => {
       const {
         id,
