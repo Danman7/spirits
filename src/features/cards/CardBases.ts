@@ -164,7 +164,7 @@ export const AzaranTheCruel: CardBase = {
   factions: ['Chaos'],
   categories: ['Necromancer'],
   description: [
-    `On playOn play boost self by ${AZARAN_BOOST} for each Undead card in the discard pile.`,
+    `On play boost self by ${AZARAN_BOOST} for each Undead card in the discard pile.`,
   ],
   flavor:
     "Be warned! The truth is hidden from the unworthy. Blacken thy heart, or face the prisoners of flesh. -- Azaran's last mortal written words",

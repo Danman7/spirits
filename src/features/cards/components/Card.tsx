@@ -17,7 +17,17 @@ import styles from 'src/shared/styles/styles.module.css'
 
 const CardComponent = motion.create(
   forwardRef<HTMLDivElement, CardProps>(
-    ({ card, isSmall, isFaceDown, isAttacking, isOnTop, onClickCard }, ref) => {
+    (
+      {
+        card,
+        isSmall = false,
+        isFaceDown = false,
+        isAttacking = false,
+        isOnTop = false,
+        onClickCard,
+      },
+      ref,
+    ) => {
       const {
         id,
         name,
@@ -73,7 +83,7 @@ const CardComponent = motion.create(
       return isFaceDown ? (
         <motion.div
           ref={ref}
-          className={`${styles.cardBack} ${isSmall ? styles.smallCardBack : ''}`}
+          className={`${styles.card} ${styles.cardBack} ${isSmall ? styles.smallCard : ''}`}
         />
       ) : (
         <motion.div
@@ -81,7 +91,7 @@ const CardComponent = motion.create(
           animate={cardAnimationControls}
           onAnimationComplete={onAnimationComplete}
           onClick={onClickCard ? () => onClickCard(id) : undefined}
-          className={`${styles.card} ${isSmall ? styles.smallCard : ''} ${onClickCard ? styles.activeCard : ''} ${rank === 'common' ? styles.commonCard : styles.uniqueCard}`}
+          className={`${styles.card} ${isSmall ? styles.smallCard : ''} ${onClickCard ? styles.activeCard : ''} ${rank === 'unique' ? styles.uniqueCard : ''}`}
         >
           <div
             className={styles.cardHeader}
@@ -89,7 +99,7 @@ const CardComponent = motion.create(
           >
             <h4 className={styles.cardTitle}>
               <span>{name}</span>
-              {strength && (
+              {!!strength && (
                 <motion.div animate={strengthChangeAnimation}>
                   <PositiveNegativeNumber
                     current={strength}

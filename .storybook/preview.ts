@@ -4,11 +4,9 @@ import 'src/shared/styles/global.css'
 
 const preview: Preview = {
   parameters: {
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i,
-      },
+    backgrounds: {
+      values: [{ name: 'Paper', value: 'var(--background-color)' }],
+      default: 'Paper',
     },
   },
 }

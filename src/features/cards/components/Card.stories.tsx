@@ -3,6 +3,7 @@ import { fn } from '@storybook/test'
 import { Provider } from 'react-redux'
 import store from 'src/app/store'
 import {
+  AzaranTheCruel,
   BookOfAsh,
   ElevatedAcolyte,
   GarrettMasterThief,
@@ -28,6 +29,8 @@ const meta = {
     onClickCard: undefined,
     isFaceDown: false,
     isSmall: false,
+    isAttacking: false,
+    isOnTop: false,
   },
   decorators: [(story) => <Provider store={store}>{story()}</Provider>],
 } satisfies Meta<typeof Card>
@@ -36,6 +39,12 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
+
+export const UniqueAgent: Story = {
+  args: {
+    card: createDuelCard(AzaranTheCruel),
+  },
+}
 
 export const Instant: Story = {
   args: {

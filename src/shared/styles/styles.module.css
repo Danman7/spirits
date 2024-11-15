@@ -4,7 +4,7 @@
 
 .positiveText {
   composes: shadowedText;
-  color: var(--positive-color);
+  color: var(--action-color);
 }
 
 .negativeText {
@@ -18,27 +18,38 @@
   height: 350px;
   display: flex;
   flex-direction: column;
-  background: var(--background-color);
   overflow: hidden;
-  box-shadow: 3px 3px 3px var(--shadow-color);
-  border-width: 2px;
+  box-shadow: var(--box-shadow-1);
+  background: var(--background-color);
+  border-width: 3px;
   border-style: solid;
+  border-color: var(--accent-color);
+  position: relative;
 }
 
-.commonCard {
-  border-color: var(--common-card-border);
+.card:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.1;
+  background: var(--noise-pattern);
+  background-size: cover;
+  pointer-events: none;
 }
 
 .uniqueCard {
-  border-color: var(--unique-card-border);
+  border-color: var(--hilight-color);
 }
 
 @keyframes activeGlow {
   from {
-    box-shadow: 0 0 2px 2px var(--positive-color);
+    box-shadow: 0 0 1px 1px var(--action-color);
   }
   to {
-    box-shadow: 0 0 5px 5px var(--positive-color);
+    box-shadow: 0 0 5px 5px var(--action-color);
   }
 }
 
@@ -54,10 +65,10 @@
   composes: card;
   background: repeating-linear-gradient(
     45deg,
-    #fff,
-    #fff 10px,
-    #999 10px,
-    #999 20px
+    var(--background-color),
+    var(--background-color) 10px,
+    var(--accent-color) 10px,
+    var(--accent-color) 20px
   );
 }
 
@@ -65,7 +76,7 @@
   composes: cardBack;
   width: 150px;
   height: 210px;
-  box-shadow: 1px 1px 1px var(--shadow-color);
+  box-shadow: var(--box-shadow-1);
   background: repeating-linear-gradient(
     45deg,
     #fff,
@@ -79,7 +90,7 @@
   padding: 0.5em;
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid var(--line-color);
+  border-bottom: 1px solid var(--accent-color);
   color: #fff;
 }
 
@@ -94,16 +105,7 @@
   width: 150px;
   height: 210px;
   font-size: 9.5px;
-  box-shadow: 1px 1px 1px var(--shadow-color);
-}
-
-.cardFooter {
-  color: var(--text-color);
-  bottom: 0;
-  padding: 0.5em;
-  display: flex;
-  flex-direction: column;
-  border-top: 1px solid var(--line-color);
+  box-shadow: var(--box-shadow-1);
 }
 
 .cardContent {
@@ -113,14 +115,25 @@
   flex-grow: 2;
 }
 
+.cardFooter {
+  color: var(--text-color);
+  bottom: 0;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--accent-color);
+}
+
 .cardFlavor {
   font-style: italic;
+  color: var(--accent-color);
 }
 
 .board {
   position: relative;
   height: 100vh;
   overflow: hidden;
+  background: var(--fabric-pattern);
 }
 
 .playerBoard {
@@ -156,7 +169,7 @@
 
     &:hover {
       bottom: 170px;
-      box-shadow: 5px 5px 5px var(--shadow-color);
+      box-shadow: var(--box-shadow-2);
     }
   }
 }
@@ -190,17 +203,29 @@
   transform: translate(-50%, -50%);
   text-align: center;
   overflow: hidden;
-  box-shadow: 2px 2px 2px var(--shadow-color);
+  box-shadow: var(--box-shadow-3);
   padding: 1em;
   border-radius: 8px;
-  background: var(--background-color);
   color: var(--text-color);
   scale: 1;
   z-index: 6;
-
+  background: var(--background-color);
   p {
     margin: 0.5rem 0 0;
   }
+}
+
+.modal:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  background: var(--paper-pattern);
+  pointer-events: none;
+  z-index: -1;
 }
 
 .overlay {
@@ -275,6 +300,7 @@
   display: inline-block;
   cursor: pointer;
   color: var(--primary-color);
+  font-weight: 700;
 }
 
 .cardBrowserModal {
