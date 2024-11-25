@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from '@storybook/test'
-import { Provider } from 'react-redux'
-import store from 'src/app/store'
 import {
   AzaranTheCruel,
   BookOfAsh,
@@ -32,7 +30,6 @@ const meta = {
     isAttacking: false,
     isOnTop: false,
   },
-  decorators: [(story) => <Provider store={store}>{story()}</Provider>],
 } satisfies Meta<typeof Card>
 
 export default meta

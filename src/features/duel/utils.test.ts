@@ -1,12 +1,10 @@
 import {
   getPlayableCardIds,
-  normalizeArrayOfPlayers,
   normalizeArrayOfCards,
   initializeCardsAndDeck,
 } from 'src/features/duel/utils'
 import { DEFAULT_COINS_AMOUNT, EMPTY_PLAYER } from 'src/features/duel/constants'
 import { Player } from 'src/features/duel/types'
-import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
 
 import {
   HammeriteNovice,
@@ -37,15 +35,6 @@ test('getPlayableCardIds should return all playable card ids for a given player'
     mockBudgetPlayer.hand[1],
   ])
   expect(getPlayableCardIds({ ...mockBudgetPlayer, coins: 0 })).toHaveLength(0)
-})
-
-test('normalizeArrayOfPlayers should normalize an array of players', () => {
-  const normalizedPlayers = normalizeArrayOfPlayers([MockPlayer1, MockPlayer2])
-
-  expect(normalizedPlayers).toEqual({
-    [MockPlayer1.id]: MockPlayer1,
-    [MockPlayer2.id]: MockPlayer2,
-  })
 })
 
 test('normalizeArrayOfCards should normalize an array of cards', () => {

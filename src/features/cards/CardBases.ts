@@ -1,7 +1,7 @@
 import {
   AZARAN_BOOST,
   DOWNWINDER_BOOST,
-  ELEVATED_ACOLYTE_BOOST,
+  ELEVATED_ACOLYTE_SELF_DAMAGE,
   GARRETT_COIN_GAIN,
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   HAUNT_DAMAGE,
@@ -44,7 +44,7 @@ export const HammeriteNovice: CardBase = {
   type: 'agent',
   name: 'Hammerite Novice',
   strength: 2,
-  cost: 3,
+  cost: 2,
   rank: 'common',
   factions: ['Order'],
   categories: ['Hammerite'],
@@ -62,13 +62,13 @@ export const HammeriteNovice: CardBase = {
 export const ElevatedAcolyte: CardBase = {
   type: 'agent',
   name: 'Elevated Acolyte',
-  strength: 5,
-  cost: 3,
+  strength: 3,
+  cost: 2,
   rank: 'common',
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
-    `If a card is boosted next to Elevated Acolyte, boost Elevated Acolyte by ${ELEVATED_ACOLYTE_BOOST}.`,
+    `On play, damage self by ${ELEVATED_ACOLYTE_SELF_DAMAGE} if not next to a Hammerite with higher strength.`,
   ],
   flavor:
     'He will endure a standard three-year contract of service, at the end of which he will be considered for indoctrination as an Elevated Acolyte.',
@@ -104,6 +104,21 @@ export const BrotherSachelman: CardBase = {
     predicate: 'BrotherSachelmanOnPlayPredicate',
     effect: 'BrotherSachelmanOnPlayEffect',
   },
+}
+
+export const HighPriestMarkander: CardBase = {
+  type: 'agent',
+  name: 'High Priest Markander',
+  strength: 4,
+  cost: 8,
+  rank: 'unique',
+  factions: ['Order'],
+  categories: ['Hammerite'],
+  description: [
+    `Once 10 Hammerite cards have been played, play High Priest Markander from your hand or deck.`,
+  ],
+  flavor:
+    "He is old, and the Master Forgers do jostle each other for precedence. But I spy not on my betters. 'Tis in The Builder's Hands.",
 }
 
 export const ViktoriaThiefPawn: CardBase = {
@@ -186,4 +201,17 @@ export const BookOfAsh: CardBase = {
     predicate: 'BookOfAshPredicate',
     effect: 'BookOfAshEffect',
   },
+}
+
+export const YoraSkull: CardBase = {
+  type: 'instant',
+  name: "Saint Yora's Skull",
+  cost: 5,
+  rank: 'unique',
+  factions: ['Order'],
+  categories: ['Artifact'],
+  description: [
+    'Boost every Hammerite on the board by 1. If staring deck contains only Order cards boost all Hammerites in hand also.',
+  ],
+  flavor: 'Yora was a builder of vision and devout keeper of the faith.',
 }

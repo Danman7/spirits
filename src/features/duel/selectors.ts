@@ -2,7 +2,7 @@ import { createSelector } from '@reduxjs/toolkit'
 
 import { RootState } from 'src/app/store'
 
-export const getDuelState = (state: RootState) => state.duel
+const getDuelState = (state: RootState) => state.duel
 
 export const getTurn = createSelector(
   getDuelState,
@@ -29,26 +29,9 @@ export const getLoggedInPlayerId = createSelector(
   (duelState) => duelState.loggedInPlayerId,
 )
 
-export const getPlayerPrespective = createSelector(
-  getPlayers,
-  getLoggedInPlayerId,
-  (players, loggedInPlayerId) => players[loggedInPlayerId],
-)
-
-export const getPlayerhasPerformedAction = createSelector(
-  getPlayerPrespective,
-  (player) => player.hasPerformedAction,
-)
-
 export const getActivePlayerId = createSelector(
   getDuelState,
   (duelState) => duelState.activePlayerId,
-)
-
-export const getActivePlayerName = createSelector(
-  getPlayers,
-  getActivePlayerId,
-  (players, activePlayerId) => players[activePlayerId].name,
 )
 
 export const getAttackingAgentId = createSelector(
@@ -68,10 +51,5 @@ export const getVictoriousPlayerName = createSelector(
       ? players[playerOrder[1]].name
       : players[playerOrder[1]].coins <= 0
         ? players[playerOrder[0]].name
-        : null,
-)
-
-export const getHasAddedCardEffectListeners = createSelector(
-  getDuelState,
-  (duelState) => duelState.hasAddedCardEffectListeners,
+        : undefined,
 )

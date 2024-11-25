@@ -1,5 +1,12 @@
+import { DuelCard } from 'src/features/cards/types'
+import { CARD_STACKS } from 'src/features/duel/constants'
 import { initialState } from 'src/features/duel/slice'
-import { DuelState, Player, PlayerCardAction } from 'src/features/duel/types'
+import {
+  CardStacks,
+  DuelState,
+  Player,
+  PlayerCardAction,
+} from 'src/features/duel/types'
 
 export const drawCardFromDeckTransformer = (
   state: DuelState,
@@ -25,19 +32,14 @@ export const moveCardToBoardTransformer = (
   const { cardId: playedCardId, playerId } = action.payload
   const { players } = state
 
-  const playedCard = players[playerId].cards[playedCardId]
+  moveCardBetweenStacks({
+    movedCardId: playedCardId,
+    playerId,
+    state,
+    to: 'board',
+  })
 
   players[playerId].hasPerformedAction = true
-  players[playerId].deck = players[playerId].deck.filter(
-    (cardId) => cardId !== playedCardId,
-  )
-  players[playerId].hand = players[playerId].hand.filter(
-    (cardId) => cardId !== playedCardId,
-  )
-  players[playerId].discard = players[playerId].discard.filter(
-    (cardId) => cardId !== playedCardId,
-  )
-  players[playerId].board = [...players[playerId].board, playedCard.id]
 }
 
 const endTurnTransformer = (state: DuelState) => {
@@ -132,19 +134,12 @@ export const moveCardToDiscardTransformer = (
   const { players } = state
   const { playerId, cardId: movedCardId } = action.payload
 
-  const player = players[playerId]
-
-  players[playerId].board = player.board.filter(
-    (cardId) => cardId !== movedCardId,
-  )
-  players[playerId].hand = player.hand.filter(
-    (cardId) => cardId !== movedCardId,
-  )
-  players[playerId].deck = player.deck.filter(
-    (cardId) => cardId !== movedCardId,
-  )
-
-  players[playerId].discard = [...player.discard, movedCardId]
+  moveCardBetweenStacks({
+    movedCardId,
+    playerId,
+    state,
+    to: 'discard',
+  })
 
   if (players[playerId].cards[movedCardId].base.strength) {
     players[playerId].cards[movedCardId].strength =
@@ -152,4 +147,28 @@ export const moveCardToDiscardTransformer = (
   }
 
   players[playerId].income += players[playerId].cards[movedCardId].cost
+}
+
+export const moveCardBetweenStacks = ({
+  state,
+  playerId,
+  movedCardId,
+  to,
+}: {
+  state: DuelState
+  playerId: Player['id']
+  movedCardId: DuelCard['id']
+  to: CardStacks
+}) => {
+  const { players } = state
+
+  CARD_STACKS.forEach((stack) => {
+    if (stack !== to) {
+      players[playerId][stack] = players[playerId][stack].filter(
+        (cardId) => cardId !== movedCardId,
+      )
+    }
+  })
+
+  players[playerId][to] = [...players[playerId][to], movedCardId]
 }

@@ -2,7 +2,18 @@ import {
   AnimationDefinition,
   TargetAndTransition,
   Variants,
-} from 'framer-motion'
+} from 'motion/react'
+
+export const LoadingDotsAnimation: TargetAndTransition = {
+  x: [0, 10],
+  color: [null, 'var(--primary-color)'],
+  letterSpacing: ['0.5px', '4px'],
+  transition: {
+    duration: 1,
+    repeat: Infinity,
+    repeatType: 'reverse',
+  },
+}
 
 export const NumberChangeAnimation: TargetAndTransition = {
   scale: [null, 1.4],
@@ -47,7 +58,7 @@ export const CardDamageAnimation: AnimationDefinition = {
   },
 }
 
-export const FadeInOutVariants: Variants = {
+export const FadeInOutStaggerVariants: Variants = {
   open: {
     opacity: 1,
     transition: {
@@ -64,7 +75,18 @@ export const FadeInOutVariants: Variants = {
   },
 }
 
-export const SlideInOutContentVariants: Variants = {
+export const SlideLeftVariants: Variants = {
+  open: {
+    opacity: 1,
+    x: [-320, 0],
+  },
+  closed: {
+    opacity: 0,
+    x: [0, -320],
+  },
+}
+
+export const SlideInOutOpacityVariants: Variants = {
   open: {
     opacity: 1,
     x: [-50, 0],

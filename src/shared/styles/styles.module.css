@@ -34,7 +34,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.1;
+  opacity: 0.08;
   background: var(--noise-pattern);
   background-size: cover;
   pointer-events: none;
@@ -53,6 +53,14 @@
   }
 }
 
+.smallCard {
+  border-width: 2px;
+  width: 150px;
+  height: 210px;
+  font-size: 0.594rem;
+  box-shadow: var(--box-shadow-1);
+}
+
 .activeCard {
   cursor: pointer;
   animation-name: activeGlow;
@@ -62,7 +70,6 @@
 }
 
 .cardBack {
-  composes: card;
   background: repeating-linear-gradient(
     45deg,
     var(--background-color),
@@ -72,17 +79,13 @@
   );
 }
 
-.smallCardBack {
-  composes: cardBack;
-  width: 150px;
-  height: 210px;
-  box-shadow: var(--box-shadow-1);
+.cardBack.smallCard {
   background: repeating-linear-gradient(
     45deg,
-    #fff,
-    #fff 5px,
-    #999 5px,
-    #999 10px
+    var(--background-color),
+    var(--background-color) 5px,
+    var(--accent-color) 5px,
+    var(--accent-color) 10px
   );
 }
 
@@ -98,14 +101,6 @@
   top: 0;
   display: flex;
   justify-content: space-between;
-}
-
-.smallCard {
-  border-width: 1px;
-  width: 150px;
-  height: 210px;
-  font-size: 9.5px;
-  box-shadow: var(--box-shadow-1);
 }
 
 .cardContent {
@@ -196,23 +191,27 @@
   }
 }
 
-.modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.box {
   text-align: center;
   overflow: hidden;
   box-shadow: var(--box-shadow-3);
-  padding: 1em;
+  padding: 2em;
   border-radius: 8px;
   color: var(--text-color);
   scale: 1;
-  z-index: 6;
   background: var(--background-color);
   p {
     margin: 0.5rem 0 0;
   }
+}
+
+.modal {
+  composes: box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
 }
 
 .modal:before {
@@ -229,7 +228,7 @@
 }
 
 .overlay {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.5);
   position: absolute;
   top: 0;
   left: 0;
@@ -238,9 +237,19 @@
   z-index: 5;
 }
 
+.sidePanel {
+  composes: box;
+  max-width: 300px;
+  position: absolute;
+  left: 1em;
+  bottom: 3em;
+  border-left: 3px solid var(--primary-color);
+  z-index: 3;
+}
+
 .playerInfo {
   position: fixed;
-  left: 1rem;
+  right: 1rem;
   font-weight: 400;
   z-index: 4;
 }
@@ -251,12 +260,12 @@
 
 .topPlayerInfo {
   composes: playerInfo;
-  top: 3rem;
+  top: 2em;
 }
 
 .bottomPlayerInfo {
   composes: playerInfo;
-  bottom: 3rem;
+  bottom: 2em;
 }
 
 .faceDownStack {

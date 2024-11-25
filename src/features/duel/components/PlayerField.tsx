@@ -1,24 +1,20 @@
-import { AnimatePresence, motion, useAnimationControls } from 'framer-motion'
+import { AnimatePresence, motion, useAnimationControls } from 'motion/react'
 import { FC, useEffect, useMemo, useState } from 'react'
-import { useAppDispatch, useAppSelector } from 'src/app/store'
+
+import { useAppDispatch } from 'src/app/store'
 import Card from 'src/features/cards/components/Card'
 import { CardProps, DuelCard } from 'src/features/cards/types'
-import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
 import { closeMessage } from 'src/features/duel/messages'
-import {
-  getActivePlayerId,
-  getAttackingAgentId,
-} from 'src/features/duel/selectors'
 import {
   completeRedraw,
   drawCardFromDeck,
   initializeEndTurn,
   moveCardToDiscard,
+  moveToNextAttacker,
   playCard,
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
 import { DuelPhase, Player } from 'src/features/duel/types'
-import { getPlayableCardIds } from 'src/features/duel/utils'
 import { NumberChangeAnimation } from 'src/shared/animations'
 import Link from 'src/shared/components/Link'
 import Modal from 'src/shared/components/Modal'
@@ -35,15 +31,24 @@ import {
   PLAYER_HAND_ID,
   PLAYER_INFO_ID,
 } from 'src/shared/testIds'
-import { getRandomArrayItem } from 'src/shared/utils'
 
 type browsedStack = 'deck' | 'discard' | null
 
-const PlayerHalfBoard: FC<{
+export interface PlayerFieldProps {
   player: Player
   phase: DuelPhase
   isOnTop: boolean
-}> = ({ player, phase, isOnTop }) => {
+  isActive: boolean
+  attackingAgentId: string
+}
+
+const PlayerField: FC<PlayerFieldProps> = ({
+  player,
+  phase,
+  isOnTop,
+  isActive,
+  attackingAgentId,
+}) => {
   const {
     id,
     name,
@@ -55,32 +60,14 @@ const PlayerHalfBoard: FC<{
     board,
     discard,
     hasPerformedAction,
-    isCPU,
   } = player
 
   const dispatch = useAppDispatch()
 
   const [browsedStack, setBrowsedStack] = useState<browsedStack>(null)
 
-  const activePlayerId = useAppSelector(getActivePlayerId)
-  const attackingAgentId = useAppSelector(getAttackingAgentId)
-
-  const isActive = activePlayerId === id
-
   const onPlayCard: CardProps['onClickCard'] = (cardId) => {
     dispatch(playCard({ cardId, playerId: id }))
-
-    if (process.env.NODE_ENV === 'test') {
-      triggerEndTurn(cards[cardId])
-    }
-  }
-
-  const triggerEndTurn = (card: DuelCard) => {
-    if (card.type === 'instant') {
-      dispatch(moveCardToDiscard({ cardId: card.id, playerId: id }))
-    }
-
-    dispatch(initializeEndTurn())
   }
 
   const onRedrawCard: CardProps['onClickCard'] = (cardId) => {
@@ -123,7 +110,17 @@ const PlayerHalfBoard: FC<{
       (phase === 'Player Turn' && card.id === board[board.length - 1]) ||
       card.type === 'instant'
     ) {
-      triggerEndTurn(card)
+      if (card.type === 'instant') {
+        dispatch(moveCardToDiscard({ cardId: card.id, playerId: id }))
+      }
+
+      dispatch(initializeEndTurn())
+    }
+  }
+
+  const onBoardCardAnimationComplete = (card: DuelCard) => {
+    if (card.id === attackingAgentId) {
+      dispatch(moveToNextAttacker())
     }
   }
 
@@ -152,39 +149,9 @@ const PlayerHalfBoard: FC<{
     coinsChangeAnimation.start(NumberChangeAnimation)
   }, [coins, coinsChangeAnimation])
 
-  useEffect(() => {
-    if (phase === 'Initial Draw' && hand.length < INITIAL_CARD_DRAW_AMOUNT) {
-      dispatch(drawCardFromDeck(id))
-    }
-  }, [dispatch, id, phase, hand.length])
-
-  useEffect(() => {
-    if (phase === 'Redrawing Phase' && isCPU && !hasPerformedAction) {
-      dispatch(completeRedraw(id))
-    }
-  }, [dispatch, id, hasPerformedAction, isCPU, phase])
-
-  useEffect(() => {
-    if (isCPU && isActive && phase === 'Player Turn' && !hasPerformedAction) {
-      // Play random card for now
-      const playableCardIds = getPlayableCardIds(player)
-
-      if (playableCardIds.length) {
-        const cardId = getRandomArrayItem(playableCardIds)
-
-        dispatch(
-          playCard({
-            cardId,
-            playerId: id,
-          }),
-        )
-      }
-    }
-  }, [dispatch, id, isActive, isCPU, phase, player, hasPerformedAction])
-
   return (
     <>
-      <h3
+      <h2
         data-testid={isOnTop ? OPPONENT_INFO_ID : PLAYER_INFO_ID}
         className={`${isOnTop ? styles.topPlayerInfo : styles.bottomPlayerInfo} ${isActive ? styles.activePlayerInfo : ''}`}
       >
@@ -197,7 +164,7 @@ const PlayerHalfBoard: FC<{
           {coins}
         </motion.span>
         {income ? <span> (+{income})</span> : null}
-      </h3>
+      </h2>
 
       <div className={isOnTop ? styles.topPlayerSide : styles.bottomPlayerSide}>
         {discard.length ? (
@@ -268,14 +235,18 @@ const PlayerHalfBoard: FC<{
         className={isOnTop ? styles.topPlayerBoard : styles.bottomPlayerBoard}
       >
         <AnimatePresence>
-          {board.map((cardId) => (
+          {board.map((cardId, i) => (
             <Card
               layout
               layoutId={cardId}
+              onAnimationComplete={() =>
+                onBoardCardAnimationComplete(cards[cardId])
+              }
               onLayoutAnimationComplete={() =>
                 onBoardCardLayoutComplete(cards[cardId])
               }
               key={`${cardId}-board`}
+              transition={{ layout: { delay: 0.1 * i } }}
               card={cards[cardId]}
               isSmall
               isAttacking={attackingAgentId === cardId}
@@ -292,7 +263,6 @@ const PlayerHalfBoard: FC<{
           zIndex: 6,
           padding: '1rem 0 2rem',
         }}
-        hasOverlay
       >
         {modalContent}
       </Modal>
@@ -300,4 +270,4 @@ const PlayerHalfBoard: FC<{
   )
 }
 
-export default PlayerHalfBoard
+export default PlayerField

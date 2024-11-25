@@ -1,10 +1,8 @@
-import { motion, useAnimationControls } from 'framer-motion'
+import { motion, useAnimationControls } from 'motion/react'
 import { forwardRef, useEffect } from 'react'
 
-import { useAppDispatch } from 'src/app/store'
 import { CardProps } from 'src/features/cards/types'
 import { getFactionColor, joinCardCategories } from 'src/features/cards/utils'
-import { moveToNextAttacker } from 'src/features/duel/slice'
 import {
   CardAttackAnimation,
   CardBoostAnimation,
@@ -14,6 +12,7 @@ import {
 import PositiveNegativeNumber from 'src/shared/components/PositiveNegativeNumber'
 import { usePrevious } from 'src/shared/customHooks'
 import styles from 'src/shared/styles/styles.module.css'
+import { CARD_TEST_ID } from 'src/shared/testIds'
 
 const CardComponent = motion.create(
   forwardRef<HTMLDivElement, CardProps>(
@@ -25,6 +24,7 @@ const CardComponent = motion.create(
         isAttacking = false,
         isOnTop = false,
         onClickCard,
+        onAnimationComplete,
       },
       ref,
     ) => {
@@ -42,16 +42,9 @@ const CardComponent = motion.create(
       } = card
 
       const prevStrength = usePrevious(strength)
-      const dispatch = useAppDispatch()
 
       const strengthChangeAnimation = useAnimationControls()
       const cardAnimationControls = useAnimationControls()
-
-      const onAnimationComplete = () => {
-        if (isAttacking) {
-          dispatch(moveToNextAttacker())
-        }
-      }
 
       useEffect(() => {
         if (strength && prevStrength) {
@@ -88,6 +81,7 @@ const CardComponent = motion.create(
       ) : (
         <motion.div
           ref={ref}
+          data-testid={`${CARD_TEST_ID}${id}`}
           animate={cardAnimationControls}
           onAnimationComplete={onAnimationComplete}
           onClick={onClickCard ? () => onClickCard(id) : undefined}
@@ -97,7 +91,7 @@ const CardComponent = motion.create(
             className={styles.cardHeader}
             style={{ background: getFactionColor(factions) }}
           >
-            <h4 className={styles.cardTitle}>
+            <h3 className={styles.cardTitle}>
               <span>{name}</span>
               {!!strength && (
                 <motion.div animate={strengthChangeAnimation}>
@@ -107,9 +101,9 @@ const CardComponent = motion.create(
                   />
                 </motion.div>
               )}
-            </h4>
+            </h3>
 
-            <h5>{joinCardCategories(categories)}</h5>
+            <small>{joinCardCategories(categories)}</small>
           </div>
           <div className={styles.cardContent}>
             {description.map((paragraph, index) => (
@@ -123,6 +117,9 @@ const CardComponent = motion.create(
       )
     },
   ),
+  {
+    forwardMotionProps: true,
+  },
 )
 
 export default CardComponent

@@ -13,7 +13,7 @@ import {
   Zombie,
 } from 'src/features/cards/CardBases'
 import { MockPlayer1, MockPlayer2 } from 'src/features/duel/__mocks__'
-import { configureStoreWithPreloadedState } from 'src/app/store'
+import { setupStore } from 'src/app/store'
 
 const meta = {
   title: 'Board',
@@ -45,7 +45,7 @@ export const Default: Story = {
   decorators: [
     (story) => (
       <Provider
-        store={configureStoreWithPreloadedState({
+        store={setupStore({
           duel: {
             ...initialState,
             turn: 1,

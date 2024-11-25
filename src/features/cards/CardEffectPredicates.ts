@@ -1,6 +1,7 @@
 import {
   BookOfAsh,
   BrotherSachelman,
+  ElevatedAcolyte,
   HammeriteNovice,
 } from 'src/features/cards/CardBases'
 import { CardEffectPredicate } from 'src/features/cards/types'
@@ -21,3 +22,8 @@ export const BookOfAshPredicate: CardEffectPredicate<PlayerCardAction> = (
   action,
   currentState,
 ) => getOnPlayPredicate(action, currentState, BookOfAsh.name)
+
+export const ElevatedAcolytePredicate: CardEffectPredicate<PlayerCardAction> = (
+  action,
+  currentState,
+) => getOnPlayPredicate(action, currentState, ElevatedAcolyte.name)

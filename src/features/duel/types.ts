@@ -3,6 +3,8 @@ import { DuelCard } from 'src/features/cards/types'
 
 export type PlayerCards = { [index: DuelCard['id']]: DuelCard }
 
+export type CardStacks = 'deck' | 'hand' | 'board' | 'discard'
+
 export interface Player {
   id: string
   name: string
@@ -37,7 +39,6 @@ export interface DuelState {
   loggedInPlayerId: Player['id']
   activePlayerId: Player['id']
   attackingAgentId: DuelCard['id']
-  hasAddedCardEffectListeners: boolean
 }
 
 export type PlayerCardAction = PayloadAction<{

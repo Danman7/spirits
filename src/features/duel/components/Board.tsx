@@ -1,30 +1,26 @@
 import { clearAllListeners } from '@reduxjs/toolkit'
-import { FC, ReactNode, useEffect, useState } from 'react'
+import { FC, useEffect } from 'react'
+
 import { addAppListener } from 'src/app/listenerMiddleware'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import * as CardEffectPredicates from 'src/features/cards/CardEffectPredicates'
 import * as CardEffects from 'src/features/cards/CardEffects'
-import InitialPhaseModal from 'src/features/duel/components/modals/InitialPhaseModal'
-import PlayerTurnModal from 'src/features/duel/components/modals/PlayerTurnModal'
-import RedrawPhaseModal from 'src/features/duel/components/modals/RedrawPhaseModal'
-import VictoryModal from 'src/features/duel/components/modals/VictoryModal'
-import PlayerHalfBoard from 'src/features/duel/components/PlayerHalfBoard'
-import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
+import DuelModals from 'src/features/duel/components/DuelModals'
+import PlayerField from 'src/features/duel/components/PlayerField'
 import {
-  getHasAddedCardEffectListeners,
+  getActivePlayerId,
+  getAttackingAgentId,
+  getLoggedInPlayerId,
   getPhase,
+  getPlayerNames,
   getPlayerOrder,
   getPlayers,
   getTurn,
   getVictoriousPlayerName,
 } from 'src/features/duel/selectors'
-import {
-  beginPlay,
-  setHasAddedCardEffectListeners,
-  startRedraw,
-} from 'src/features/duel/slice'
-import Modal from 'src/shared/components/Modal'
 import * as styles from 'src/shared/styles/styles.module.css'
+
+let hasAddedCardEffectListeners = false
 
 const Board: FC = () => {
   const dispatch = useAppDispatch()
@@ -33,59 +29,21 @@ const Board: FC = () => {
   const playerOrder = useAppSelector(getPlayerOrder)
   const phase = useAppSelector(getPhase)
   const turn = useAppSelector(getTurn)
+  const loggedInPlayerId = useAppSelector(getLoggedInPlayerId)
   const victorName = useAppSelector(getVictoriousPlayerName)
-  const hasAddedCardEffectListeners = useAppSelector(
-    getHasAddedCardEffectListeners,
-  )
+  const playerNames = useAppSelector(getPlayerNames)
+  const attackingAgentId = useAppSelector(getAttackingAgentId)
+  const activePlayerId = useAppSelector(getActivePlayerId)
 
-  const victoryModalContent: ReactNode = victorName ? (
-    <VictoryModal victorName={victorName} />
-  ) : null
+  const player = players[loggedInPlayerId]
+  const opponent = players[playerOrder[0]]
 
-  const [gameModalContent, setGameModalContent] = useState<ReactNode>(null)
-
-  useEffect(() => {
-    switch (phase) {
-      case 'Initial Draw':
-        setGameModalContent(<InitialPhaseModal />)
-        break
-
-      case 'Player Turn':
-        setGameModalContent(<PlayerTurnModal />)
-        break
-
-      case 'Redrawing Phase':
-        setGameModalContent(<RedrawPhaseModal />)
-        break
-    }
-  }, [phase, turn, playerOrder])
-
-  useEffect(() => {
-    if (
-      phase === 'Initial Draw' &&
-      Object.values(players).every(
-        ({ hand }) => hand.length === INITIAL_CARD_DRAW_AMOUNT,
-      )
-    ) {
-      dispatch(startRedraw())
-    }
-  }, [dispatch, phase, players])
-
-  useEffect(() => {
-    if (
-      phase === 'Redrawing Phase' &&
-      Object.values(players).every(
-        ({ hasPerformedAction }) => !!hasPerformedAction,
-      )
-    ) {
-      dispatch(beginPlay())
-    }
-  }, [dispatch, phase, players])
-
+  // This adds all store listeners for card effect triggers.
+  // It plugs into the redux middleware and cannot be done in the slice.
   useEffect(() => {
     if (!hasAddedCardEffectListeners) {
+      hasAddedCardEffectListeners = true
       dispatch(clearAllListeners())
-      dispatch(setHasAddedCardEffectListeners(true))
 
       const addedListeners: string[] = []
 
@@ -108,28 +66,30 @@ const Board: FC = () => {
         }),
       )
     }
-  }, [dispatch, players, hasAddedCardEffectListeners])
+  }, [dispatch, players])
 
   return (
     <div className={styles.board}>
       {playerOrder.map((playerId, index) => (
-        <PlayerHalfBoard
+        <PlayerField
           key={playerId}
           player={players[playerId]}
           phase={phase}
           isOnTop={!index}
+          isActive={playerId === activePlayerId}
+          attackingAgentId={attackingAgentId}
         />
       ))}
 
-      <Modal
-        style={{ left: '1em', transform: 'translate(0, -50%)', zIndex: 3 }}
-      >
-        {gameModalContent}
-      </Modal>
-
-      <Modal hasOverlay style={{ zIndex: 5 }}>
-        {victoryModalContent}
-      </Modal>
+      <DuelModals
+        player={player}
+        opponent={opponent}
+        isPlayerActive={player.id === activePlayerId}
+        turn={turn}
+        phase={phase}
+        victorName={victorName}
+        playerNames={playerNames}
+      />
     </div>
   )
 }

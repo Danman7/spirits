@@ -1,16 +1,9 @@
-import { DuelState, Player } from 'src/features/duel/types'
+import { Player } from 'src/features/duel/types'
 
 import { DuelCard } from 'src/features/cards/types'
 
 export const getPlayableCardIds = (player: Player) =>
   player.hand.filter((cardId) => player.cards[cardId].cost <= player.coins)
-
-export const normalizeArrayOfPlayers = (players: Player[]) =>
-  players.reduce((statePlayers: DuelState['players'], player) => {
-    statePlayers[player.id] = player
-
-    return statePlayers
-  }, {})
 
 export const normalizeArrayOfCards = (cards: DuelCard[]): Player['cards'] =>
   cards.reduce((playerCards: Player['cards'], cards) => {

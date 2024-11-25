@@ -23,6 +23,11 @@ const config: Config = {
     ],
   },
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  collectCoverageFrom: [
+    '**/src/**/*.{ts,tsx}',
+    '!**/*.stories.{ts,tsx}',
+    '!**/app/**',
+  ],
   coverageThreshold: {
     global: {
       branches: 80,

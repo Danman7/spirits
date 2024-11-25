@@ -12,8 +12,11 @@ import {
   ViktoriaThiefPawn,
   Zombie,
   BookOfAsh,
+  HighPriestMarkander,
+  YoraSkull,
 } from 'src/features/cards/CardBases'
 import { createDuelCard } from 'src/features/cards/utils'
+import { RootState } from 'src/app/store'
 
 export const MockPlayer1: Player = {
   ...EMPTY_PLAYER,
@@ -50,12 +53,12 @@ export const MockPlayer2: Player = {
 export const PlayTestPlayer1: Player = {
   ...MockPlayer1,
   coins: DEFAULT_COINS_AMOUNT,
-  isCPU: true,
 }
 
 export const PlayTestPlayer2: Player = {
   ...MockPlayer2,
   coins: DEFAULT_COINS_AMOUNT,
+  isCPU: true,
 }
 
 export const MockPlayerTurnState: DuelState = {
@@ -65,7 +68,6 @@ export const MockPlayerTurnState: DuelState = {
   turn: 1,
   activePlayerId: MockPlayer1.id,
   attackingAgentId: '',
-  hasAddedCardEffectListeners: true,
   players: {
     [MockPlayer1.id]: {
       ...EMPTY_PLAYER,
@@ -78,6 +80,41 @@ export const MockPlayerTurnState: DuelState = {
       id: MockPlayer2.id,
       name: 'Karras',
       coins: DEFAULT_COINS_AMOUNT,
+    },
+  },
+}
+
+const mockNovice = createDuelCard(HammeriteNovice)
+const mockAcolyte = createDuelCard(ElevatedAcolyte)
+const mockGuard = createDuelCard(TempleGuard)
+const mockBrother = createDuelCard(BrotherSachelman)
+const mockPriest = createDuelCard(HighPriestMarkander)
+const mockSkull = createDuelCard(YoraSkull)
+
+export const mockStackedPlayer: Player = {
+  ...MockPlayerTurnState.players[MockPlayer1.id],
+  income: 2,
+  cards: {
+    [mockNovice.id]: mockNovice,
+    [mockAcolyte.id]: mockAcolyte,
+    [mockGuard.id]: mockGuard,
+    [mockBrother.id]: mockBrother,
+    [mockPriest.id]: mockPriest,
+    [mockSkull.id]: mockSkull,
+  },
+  deck: [mockNovice.id, mockPriest.id],
+  hand: [mockAcolyte.id, mockSkull.id],
+  board: [mockGuard.id],
+  discard: [mockBrother.id],
+}
+
+export const stackedPreloadedState: Partial<RootState> = {
+  duel: {
+    ...MockPlayerTurnState,
+    players: {
+      [mockStackedPlayer.id]: mockStackedPlayer,
+      [MockPlayerTurnState.playerOrder[0]]:
+        MockPlayerTurnState.players[MockPlayerTurnState.playerOrder[0]],
     },
   },
 }

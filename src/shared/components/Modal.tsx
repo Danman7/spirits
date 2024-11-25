@@ -1,38 +1,37 @@
-import { AnimatePresence, motion, MotionStyle } from 'framer-motion'
+import { AnimatePresence, motion, MotionStyle } from 'motion/react'
 import { FC, ReactNode } from 'react'
-import { FadeInOutVariants } from 'src/shared/animations'
+
+import { FadeInOutStaggerVariants } from 'src/shared/animations'
 import styles from 'src/shared/styles/styles.module.css'
 
 interface ModalProps {
   children?: ReactNode
   style?: MotionStyle
-  hasOverlay?: boolean
+  onExitComplete?: () => void
 }
 
-const Modal: FC<ModalProps> = ({ children, style, hasOverlay }) => (
-  <AnimatePresence>
+const Modal: FC<ModalProps> = ({ children, style, onExitComplete }) => (
+  <AnimatePresence onExitComplete={onExitComplete}>
     {children ? (
       <motion.div
-        key="modal"
-        className={styles.modal}
+        key="modal-overlay"
         initial="closed"
-        style={style}
-        animate={children ? 'open' : 'closed'}
-        variants={FadeInOutVariants}
         exit="closed"
-      >
-        {children}
-      </motion.div>
-    ) : null}
-    {children && hasOverlay ? (
-      <motion.div
-        key="overlay"
         className={styles.overlay}
         animate={children ? 'open' : 'closed'}
-        variants={FadeInOutVariants}
-        initial="closed"
-        exit="closed"
-      />
+        variants={FadeInOutStaggerVariants}
+      >
+        <motion.div
+          initial="closed"
+          exit="closed"
+          style={style}
+          className={styles.modal}
+          animate={children ? 'open' : 'closed'}
+          variants={FadeInOutStaggerVariants}
+        >
+          {children}
+        </motion.div>
+      </motion.div>
     ) : null}
   </AnimatePresence>
 )

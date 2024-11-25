@@ -1,8 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DuelCard } from 'src/features/cards/types'
+import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
 import {
   drawCardFromDeckTransformer,
   initializeEndTurnTransformer,
+  moveCardBetweenStacks,
   moveCardToBoardTransformer,
   moveCardToDiscardTransformer,
   moveToNextAttackerTransformer,
@@ -25,7 +27,6 @@ export const initialState: DuelState = {
   loggedInPlayerId: '',
   attackingAgentId: '',
   activePlayerId: '',
-  hasAddedCardEffectListeners: false,
 }
 
 export const duelSlice = createSlice({
@@ -81,56 +82,63 @@ export const duelSlice = createSlice({
         )
         .map(({ id }) => id) as PlayerOrder
 
-      state.phase = phase || 'Initial Draw'
+      state.phase = phase || 'Pre-duel'
 
       if (loggedInPlayerId) {
         state.loggedInPlayerId = loggedInPlayerId
       }
     },
-    drawCardFromDeck: (state, action: PayloadAction<Player['id']>) => {
-      drawCardFromDeckTransformer(state, action.payload)
-    },
-    startRedraw: (state) => {
-      const [opponentId, playerId] = state.playerOrder
+    startInitialCardDraw: (state) => {
+      state.phase = 'Initial Draw'
+
+      Object.values(state.players).forEach(({ id }) => {
+        for (let index = 0; index < INITIAL_CARD_DRAW_AMOUNT; index++) {
+          drawCardFromDeckTransformer(state, id)
+        }
+      })
 
       state.phase = 'Redrawing Phase'
 
-      state.players[opponentId].hasPerformedAction = false
-      state.players[playerId].hasPerformedAction = false
+      state.playerOrder.forEach((playerId) => {
+        state.players[playerId].hasPerformedAction = state.players[playerId]
+          .isCPU
+          ? true
+          : false
+      })
+    },
+    drawCardFromDeck: (state, action: PayloadAction<Player['id']>) => {
+      drawCardFromDeckTransformer(state, action.payload)
     },
     putCardAtBottomOfDeck: (state, action: PlayerCardAction) => {
       const { cardId: movedCardId, playerId } = action.payload
 
-      const { players } = state
-
-      players[playerId].board = players[playerId].board.filter(
-        (cardId) => cardId !== movedCardId,
-      )
-      players[playerId].hand = players[playerId].hand.filter(
-        (cardId) => cardId !== movedCardId,
-      )
-      players[playerId].discard = players[playerId].discard.filter(
-        (cardId) => cardId !== movedCardId,
-      )
-
-      players[playerId].deck.push(movedCardId)
+      moveCardBetweenStacks({
+        playerId,
+        movedCardId,
+        state,
+        to: 'deck',
+      })
     },
     completeRedraw: (state, action: PayloadAction<Player['id']>) => {
-      const { players } = state
+      const { players, playerOrder, activePlayerId } = state
 
-      players[action.payload].hasPerformedAction = true
-    },
-    beginPlay: (state) => {
-      const { playerOrder, activePlayerId } = state
       const [opponentId, playerId] = playerOrder
 
-      state.phase = 'Player Turn'
-      state.turn = 1
+      players[action.payload].hasPerformedAction = true
 
-      state.players[opponentId].hasPerformedAction = false
-      state.players[playerId].hasPerformedAction = false
+      if (
+        Object.values(players).every(
+          ({ hasPerformedAction }) => !!hasPerformedAction,
+        )
+      ) {
+        state.phase = 'Player Turn'
+        state.turn = 1
 
-      drawCardFromDeckTransformer(state, activePlayerId)
+        state.players[opponentId].hasPerformedAction = false
+        state.players[playerId].hasPerformedAction = false
+
+        drawCardFromDeckTransformer(state, activePlayerId)
+      }
     },
     initializeEndTurn: (state) => {
       initializeEndTurnTransformer(state)
@@ -179,9 +187,7 @@ export const duelSlice = createSlice({
     moveCardToDiscard: (state, action: PlayerCardAction) => {
       moveCardToDiscardTransformer(state, action)
     },
-    setHasAddedCardEffectListeners: (state, action: PayloadAction<boolean>) => {
-      state.hasAddedCardEffectListeners = action.payload
-    },
+
     addNewCards: (state, action: AddNewCardsAction) => {
       const { players } = state
       const { playerId, cards } = action.payload
@@ -198,18 +204,16 @@ const { actions, reducer } = duelSlice
 
 export const {
   initializeDuel,
+  startInitialCardDraw,
   completeRedraw,
   drawCardFromDeck,
   initializeEndTurn,
   playCard,
   putCardAtBottomOfDeck,
-  beginPlay,
-  startRedraw,
   moveCardToBoard,
   updateCard,
   moveToNextAttacker,
   moveCardToDiscard,
-  setHasAddedCardEffectListeners,
   addNewCards,
 } = actions
 

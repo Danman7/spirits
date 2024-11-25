@@ -5,8 +5,8 @@ import * as CardEffectPredicates from 'src/features/cards/CardEffectPredicates'
 import * as CardEffects from 'src/features/cards/CardEffects'
 import { PlayerCardAction } from 'src/features/duel/types'
 
-type CardEffectPredicateName = keyof typeof CardEffectPredicates
-type CardEffectName = keyof typeof CardEffects
+export type CardEffectPredicateName = keyof typeof CardEffectPredicates
+export type CardEffectName = keyof typeof CardEffects
 
 /**
  * This is a typed replica of redux toolkit ListenerPredicate method which determines when an effect takes place.
@@ -91,6 +91,7 @@ export interface CardProps {
   isAttacking?: boolean
   isOnTop?: boolean
   onClickCard?: (cardId: DuelCard['id']) => void
+  onAnimationComplete?: () => void
 }
 
 export type GetOnPlayPredicate = (

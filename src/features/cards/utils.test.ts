@@ -1,5 +1,5 @@
 import { RootState } from 'src/app/store'
-import { Haunt, Zombie } from 'src/features/cards/CardBases'
+import { BookOfAsh, Haunt, Zombie } from 'src/features/cards/CardBases'
 import { DuelCard } from 'src/features/cards/types'
 import {
   copyDuelCard,
@@ -37,12 +37,17 @@ test('createPlayCardFromPrototype should create a new play ready card from a car
 })
 
 test('copyDuelCard', () => {
-  const newCard = createDuelCard(Haunt)
-  const updatedCard: DuelCard = { ...newCard, strength: newCard.strength - 1 }
+  const newAgent = createDuelCard(Haunt)
+  const updatedCard: DuelCard = { ...newAgent, strength: newAgent.strength - 1 }
   const copiedCard = copyDuelCard(updatedCard)
 
   expect(copiedCard.id).not.toBe(updatedCard.id)
-  expect(copiedCard.strength).toBe(newCard.strength)
+  expect(copiedCard.strength).toBe(newAgent.strength)
+
+  const newInstant = createDuelCard(BookOfAsh)
+  const copiedInstant = copyDuelCard(newInstant)
+
+  expect(copiedInstant.strength).toBe(0)
 })
 
 test('getOnPlayPredicate returns the correct check', () => {

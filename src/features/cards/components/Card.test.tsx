@@ -1,33 +1,36 @@
+import { fireEvent } from '@testing-library/dom'
 import '@testing-library/jest-dom'
-import { BrotherSachelman } from 'src/features/cards/CardBases'
+
+import { BookOfAsh, BrotherSachelman } from 'src/features/cards/CardBases'
 import Card from 'src/features/cards/components/Card'
 import { createDuelCard, joinCardCategories } from 'src/features/cards/utils'
-import { fireEvent, render, screen } from 'src/shared/test-utils'
+import { renderWithProviders } from 'src/shared/test-utils'
+import { CARD_TEST_ID } from 'src/shared/testIds'
 
 const mockCard = createDuelCard(BrotherSachelman)
 
-it('should display all shared UI segments of a card when face up', () => {
-  const { rerender } = render(<Card card={mockCard} />)
+it('should display all UI segments of a card when face up', () => {
+  const { rerender, getByRole, getByText } = renderWithProviders(
+    <Card card={mockCard} />,
+  )
 
-  expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
+  expect(getByRole('heading', { level: 3 })).toHaveTextContent(
     `${mockCard.name}${mockCard.strength}`,
   )
 
-  expect(screen.getByText(`Cost: ${mockCard.cost}`)).toBeInTheDocument()
+  expect(getByText(`Cost: ${mockCard.cost}`)).toBeInTheDocument()
 
-  expect(screen.getByRole('heading', { level: 5 })).toHaveTextContent(
-    joinCardCategories(mockCard.categories),
-  )
+  expect(getByText(joinCardCategories(mockCard.categories))).toBeInTheDocument()
 
-  expect(screen.getByText(mockCard.description[0])).toBeInTheDocument()
+  expect(getByText(mockCard.description[0])).toBeInTheDocument()
 
-  expect(screen.getByText(mockCard.flavor as string)).toBeInTheDocument()
+  expect(getByText(mockCard.flavor as string)).toBeInTheDocument()
 
   const boostedStrength = mockCard.strength + 2
 
   rerender(<Card card={{ ...mockCard, strength: boostedStrength }} />)
 
-  expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
+  expect(getByRole('heading', { level: 3 })).toHaveTextContent(
     `${mockCard.name}${boostedStrength}`,
   )
 
@@ -35,23 +38,48 @@ it('should display all shared UI segments of a card when face up', () => {
 
   rerender(<Card card={{ ...mockCard, strength: damagedStrength }} />)
 
-  expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
+  expect(getByRole('heading', { level: 3 })).toHaveTextContent(
     `${mockCard.name}${damagedStrength}`,
   )
 })
 
 it('should show card back when face down', async () => {
-  render(<Card card={mockCard} isFaceDown />)
+  const { queryByText } = renderWithProviders(
+    <Card card={mockCard} isFaceDown />,
+  )
 
-  expect(await screen.queryByText(mockCard.name)).not.toBeInTheDocument()
+  expect(queryByText(mockCard.name)).not.toBeInTheDocument()
 })
 
 it('should fire on click event passing card id', () => {
   const onCardClick = jest.fn()
 
-  render(<Card card={mockCard} onClickCard={onCardClick} />)
+  const { getByText } = renderWithProviders(
+    <Card card={mockCard} onClickCard={onCardClick} />,
+  )
 
-  fireEvent.click(screen.getByText(mockCard.name))
+  fireEvent.click(getByText(mockCard.name))
 
   expect(onCardClick).toHaveBeenCalledWith(mockCard.id)
+})
+
+it('should trigger attacking animation', () => {
+  const { getByTestId } = renderWithProviders(
+    <Card card={mockCard} isAttacking />,
+  )
+
+  expect(getByTestId(`${CARD_TEST_ID}${mockCard.id}`)).not.toHaveStyle({
+    transform: 'none',
+    boxShadow: '',
+  })
+})
+
+it('should display no strength for an instant', () => {
+  const { getByRole } = renderWithProviders(
+    <Card card={createDuelCard(BookOfAsh)} />,
+  )
+
+  expect(getByRole('heading', { level: 3 })).toHaveTextContent(
+    `${BookOfAsh.name}`,
+  )
 })

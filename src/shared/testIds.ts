@@ -9,3 +9,5 @@ export const OPPONENT_HAND_ID = 'opponentHand'
 export const OPPONENT_BOARD_ID = 'opponentBoard'
 export const OPPONENT_DECK_ID = 'opponentDeck'
 export const OPPONENT_DISCARD_ID = 'opponentDiscard'
+
+export const CARD_TEST_ID = 'cardTestId'
