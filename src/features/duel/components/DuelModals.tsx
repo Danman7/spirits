@@ -24,7 +24,7 @@ import {
   startInitialCardDraw,
 } from 'src/features/duel/slice'
 import { DuelPhase, Player } from 'src/features/duel/types'
-import { getPlayableCardIds } from 'src/features/duel/utils'
+import { getPlayableCardIds } from 'src/shared/utils'
 import { SlideInOutOpacityVariants } from 'src/shared/animations'
 import Link from 'src/shared/components/Link'
 import Modal from 'src/shared/components/Modal'

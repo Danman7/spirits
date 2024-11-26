@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
-import { PlayTestPlayer1, PlayTestPlayer2 } from 'src/features/duel/__mocks__'
+import { PlayTestPlayer1, PlayTestPlayer2 } from 'src/shared/__mocks__'
 import Board from 'src/features/duel/components/Board'
 import { getActivePlayerId } from 'src/features/duel/selectors'
 import { initializeDuel } from 'src/features/duel/slice'

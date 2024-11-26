@@ -5,7 +5,7 @@ import {
   HammeriteNovice,
 } from 'src/features/cards/CardBases'
 import { CardEffectPredicate } from 'src/features/cards/types'
-import { getOnPlayPredicate } from 'src/features/cards/utils'
+import { getOnPlayPredicate } from 'src/shared/utils'
 import { PlayerCardAction } from 'src/features/duel/types'
 
 export const BrotherSachelmanOnPlayPredicate: CardEffectPredicate<

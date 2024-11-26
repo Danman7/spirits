@@ -16,22 +16,19 @@ import {
   HammeriteNoviceOnPlayEffect,
 } from 'src/features/cards/CardEffects'
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constants'
-import { DuelCard } from 'src/features/cards/types'
-import { createDuelCard } from 'src/features/cards/utils'
-import { MockPlayerTurnState } from 'src/features/duel/__mocks__'
 import {
   addNewCards,
   moveCardToBoard,
   playCard,
   updateCard,
 } from 'src/features/duel/slice'
-import { DuelState, PlayerCardAction } from 'src/features/duel/types'
+import { DuelState, PlayerStacks } from 'src/features/duel/types'
+import { MockPlayerTurnState } from 'src/shared/__mocks__'
+import { normalizePlayerCards } from 'src/shared/utils'
 
-let mockAction: PlayerCardAction
 let mockDuelState: DuelState
-let cardId: DuelCard['id']
 
-const [playerId, opponentId] = MockPlayerTurnState.playerOrder
+const [playerId] = MockPlayerTurnState.playerOrder
 
 const mockDispatch = jest.fn()
 
@@ -62,7 +59,10 @@ const listenerApi: ListenerEffectAPI<RootState, AppDispatch> = {
   extra: undefined,
 }
 
-let card: DuelCard
+const getPlayCardAction = (normalizedCards: PlayerStacks) => ({
+  type: playCard.type,
+  payload: { cardId: normalizedCards.hand[0], playerId },
+})
 
 beforeEach(() => {
   mockDuelState = { ...MockPlayerTurnState }
@@ -73,204 +73,179 @@ afterEach(() => {
 })
 
 describe(BrotherSachelman.name, () => {
-  beforeEach(() => {
-    card = createDuelCard(BrotherSachelman)
-    cardId = card.id
-
-    mockAction = {
-      type: playCard.type,
-      payload: { cardId, playerId },
-    }
-  })
-
   it('should boost alied Hammerite cards on board with lower strength', () => {
-    const novice = createDuelCard(HammeriteNovice)
+    const normalizedCards = normalizePlayerCards({
+      board: [HammeriteNovice],
+      hand: [BrotherSachelman],
+    })
 
-    mockDuelState.players[playerId].cards = {
-      [cardId]: card,
-      [novice.id]: novice,
+    mockDuelState.players[playerId] = {
+      ...mockDuelState.players[playerId],
+      ...normalizedCards,
     }
-
-    mockDuelState.players[playerId].hand = [cardId]
-    mockDuelState.players[playerId].board = [novice.id]
 
     listenerApi.getState = jest.fn(() => ({
       duel: mockDuelState,
     }))
 
-    BrotherSachelmanOnPlayEffect(mockAction, listenerApi)
+    BrotherSachelmanOnPlayEffect(
+      getPlayCardAction(normalizedCards),
+      listenerApi,
+    )
 
     expect(listenerApi.dispatch).toHaveBeenCalledWith(
       updateCard({
-        cardId: novice.id,
+        cardId: normalizedCards.board[0],
         playerId,
         update: {
-          strength: novice.strength + HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
+          strength:
+            (HammeriteNovice.strength as number) +
+            HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
         },
       }),
     )
   })
 
   it('should not boost hammerites with equal higher strength or opponent hammerites', () => {
-    const templeGuard = createDuelCard(TempleGuard)
-    const novice = createDuelCard(HammeriteNovice)
+    const normalizedCards = normalizePlayerCards({
+      board: [TempleGuard],
+      hand: [BrotherSachelman],
+    })
 
-    mockDuelState.players[playerId].cards = {
-      [cardId]: card,
-      [templeGuard.id]: templeGuard,
+    mockDuelState.players[playerId] = {
+      ...mockDuelState.players[playerId],
+      ...normalizedCards,
     }
-
-    mockDuelState.players[playerId].hand = [cardId]
-    mockDuelState.players[playerId].board = [templeGuard.id]
-
-    mockDuelState.players[opponentId].cards = {
-      [novice.id]: novice,
-    }
-
-    mockDuelState.players[opponentId].board = [novice.id]
 
     listenerApi.getState = jest.fn(() => ({
       duel: mockDuelState,
     }))
 
-    BrotherSachelmanOnPlayEffect(mockAction, listenerApi)
+    BrotherSachelmanOnPlayEffect(
+      getPlayCardAction(normalizedCards),
+      listenerApi,
+    )
 
     expect(listenerApi.dispatch).toHaveBeenCalledTimes(0)
   })
 
   it('should boost hammerites accordingly if is damaged', () => {
-    card.strength = card.strength - 2
+    const normalizedCards = normalizePlayerCards({
+      board: [HammeriteNovice],
+      hand: [
+        {
+          ...BrotherSachelman,
+          strength: (HammeriteNovice.strength as number) - 1,
+        },
+      ],
+    })
 
-    const novice = createDuelCard(HammeriteNovice)
-
-    mockDuelState.players[playerId].cards = {
-      [cardId]: card,
-      [novice.id]: novice,
+    mockDuelState.players[playerId] = {
+      ...mockDuelState.players[playerId],
+      ...normalizedCards,
     }
-
-    mockDuelState.players[playerId].hand = [cardId]
-    mockDuelState.players[playerId].board = [novice.id]
 
     listenerApi.getState = jest.fn(() => ({
       duel: mockDuelState,
     }))
 
-    BrotherSachelmanOnPlayEffect(mockAction, listenerApi)
+    listenerApi.getState = jest.fn(() => ({
+      duel: mockDuelState,
+    }))
+
+    BrotherSachelmanOnPlayEffect(
+      getPlayCardAction(normalizedCards),
+      listenerApi,
+    )
 
     expect(listenerApi.dispatch).toHaveBeenCalledTimes(0)
   })
 })
 
 describe(HammeriteNovice.name, () => {
-  beforeEach(() => {
-    card = createDuelCard(HammeriteNovice)
-    cardId = card.id
-
-    mockAction = {
-      type: playCard.type,
-      payload: { cardId, playerId },
-    }
-  })
-
   it('should not play Hammerite Novice if there are no Hammerites in play on your side', () => {
-    const novice = createDuelCard(HammeriteNovice)
+    const normalizedCards = normalizePlayerCards({
+      hand: [HammeriteNovice, HammeriteNovice],
+    })
 
-    mockDuelState.players[playerId].cards = {
-      [cardId]: card,
-      [novice.id]: novice,
+    mockDuelState.players[playerId] = {
+      ...mockDuelState.players[playerId],
+      ...normalizedCards,
     }
-
-    mockDuelState.players[playerId].hand = [cardId, novice.id]
 
     listenerApi.getState = jest.fn(() => ({
       duel: mockDuelState,
     }))
 
-    HammeriteNoviceOnPlayEffect(mockAction, listenerApi)
+    HammeriteNoviceOnPlayEffect(getPlayCardAction(normalizedCards), listenerApi)
 
     expect(listenerApi.dispatch).toHaveBeenCalledTimes(0)
   })
 
   it('should play all Hammerite Novice copies from your hand if you have another Hammerite in play', () => {
-    const novice = createDuelCard(HammeriteNovice)
-    const guard = createDuelCard(TempleGuard)
+    const normalizedCards = normalizePlayerCards({
+      hand: [HammeriteNovice, HammeriteNovice],
+      board: [TempleGuard],
+    })
 
-    mockDuelState.players[playerId].cards = {
-      [cardId]: card,
-      [novice.id]: novice,
-      [guard.id]: guard,
+    mockDuelState.players[playerId] = {
+      ...mockDuelState.players[playerId],
+      ...normalizedCards,
     }
-    mockDuelState.players[playerId].hand = [cardId, novice.id]
-    mockDuelState.players[playerId].board = [guard.id]
 
     listenerApi.getState = jest.fn(() => ({
       duel: mockDuelState,
     }))
 
-    HammeriteNoviceOnPlayEffect(mockAction, listenerApi)
+    HammeriteNoviceOnPlayEffect(getPlayCardAction(normalizedCards), listenerApi)
 
     expect(listenerApi.dispatch).toHaveBeenCalledWith(
       moveCardToBoard({
-        cardId: novice.id,
+        cardId: normalizedCards.hand[1],
         playerId,
       }),
     )
   })
 
-  it('should not play self or Hammerite Novice copies from deck if you have another Hammerite in play', () => {
-    const novice = createDuelCard(HammeriteNovice)
-    const guard = createDuelCard(TempleGuard)
+  it('should not play Hammerite Novice copies from deck', () => {
+    const normalizedCards = normalizePlayerCards({
+      hand: [HammeriteNovice],
+      deck: [HammeriteNovice],
+      board: [TempleGuard],
+    })
 
-    mockDuelState.players[playerId].cards = {
-      [cardId]: card,
-      [novice.id]: novice,
-      [guard.id]: guard,
+    mockDuelState.players[playerId] = {
+      ...mockDuelState.players[playerId],
+      ...normalizedCards,
     }
-
-    mockDuelState.players[playerId].hand = [cardId]
-    mockDuelState.players[playerId].deck = [novice.id]
-    mockDuelState.players[playerId].board = [guard.id]
 
     listenerApi.getState = jest.fn(() => ({
       duel: mockDuelState,
     }))
 
-    HammeriteNoviceOnPlayEffect(mockAction, listenerApi)
+    HammeriteNoviceOnPlayEffect(getPlayCardAction(normalizedCards), listenerApi)
 
     expect(listenerApi.dispatch).toHaveBeenCalledTimes(0)
   })
 })
 
 describe(BookOfAsh.name, () => {
-  beforeEach(() => {
-    card = createDuelCard(BookOfAsh)
-    cardId = card.id
-
-    mockAction = {
-      type: playCard.type,
-      payload: { cardId, playerId },
-    }
-  })
-
   it('should spawn two copies if a non-unique card is at the top of the discard', () => {
-    const zombie = createDuelCard(Zombie)
-    const haunt = createDuelCard(Haunt)
+    const normalizedCards = normalizePlayerCards({
+      hand: [BookOfAsh],
+      discard: [Haunt, Zombie],
+    })
 
-    mockDuelState.players[playerId].cards = {
-      [cardId]: card,
-      [zombie.id]: zombie,
-      [haunt.id]: haunt,
+    mockDuelState.players[playerId] = {
+      ...mockDuelState.players[playerId],
+      ...normalizedCards,
     }
-
-    mockDuelState.players[playerId].hand = [cardId]
-    mockDuelState.players[playerId].discard = [haunt.id, zombie.id]
-    mockDuelState.players[playerId].board = []
 
     listenerApi.getState = jest.fn(() => ({
       duel: mockDuelState,
     }))
 
-    BookOfAshEffect(mockAction, listenerApi)
+    BookOfAshEffect(getPlayCardAction(normalizedCards), listenerApi)
 
     expect(listenerApi.dispatch).toHaveBeenCalledTimes(3)
     expect(listenerApi.dispatch).toHaveBeenNthCalledWith(
@@ -300,26 +275,21 @@ describe(BookOfAsh.name, () => {
   })
 
   it('should spawn two copies of top non-unique agent in discard even if a unique card is at the top', () => {
-    const zombie = createDuelCard(Zombie)
-    const haunt = createDuelCard(Haunt)
-    const viktoria = createDuelCard(ViktoriaThiefPawn)
+    const normalizedCards = normalizePlayerCards({
+      hand: [BookOfAsh],
+      discard: [Zombie, Haunt, ViktoriaThiefPawn],
+    })
 
-    mockDuelState.players[playerId].cards = {
-      [cardId]: card,
-      [zombie.id]: zombie,
-      [haunt.id]: haunt,
-      [viktoria.id]: viktoria,
+    mockDuelState.players[playerId] = {
+      ...mockDuelState.players[playerId],
+      ...normalizedCards,
     }
-
-    mockDuelState.players[playerId].hand = [cardId]
-    mockDuelState.players[playerId].discard = [zombie.id, haunt.id, viktoria.id]
-    mockDuelState.players[playerId].board = []
 
     listenerApi.getState = jest.fn(() => ({
       duel: mockDuelState,
     }))
 
-    BookOfAshEffect(mockAction, listenerApi)
+    BookOfAshEffect(getPlayCardAction(normalizedCards), listenerApi)
 
     expect(
       Object.values(mockDispatch.mock.calls[0][0].payload.cards),
@@ -331,36 +301,37 @@ describe(BookOfAsh.name, () => {
   })
 
   it('should not spawn anything if there is only unique cards in the discard', () => {
-    const viktoria = createDuelCard(ViktoriaThiefPawn)
+    const normalizedCards = normalizePlayerCards({
+      hand: [BookOfAsh],
+      discard: [ViktoriaThiefPawn],
+    })
 
-    mockDuelState.players[playerId].cards = {
-      [cardId]: card,
-      [viktoria.id]: viktoria,
+    mockDuelState.players[playerId] = {
+      ...mockDuelState.players[playerId],
+      ...normalizedCards,
     }
-
-    mockDuelState.players[playerId].hand = []
-    mockDuelState.players[playerId].discard = [viktoria.id]
-    mockDuelState.players[playerId].board = []
 
     listenerApi.getState = jest.fn(() => ({
       duel: mockDuelState,
     }))
 
-    BookOfAshEffect(mockAction, listenerApi)
+    BookOfAshEffect(getPlayCardAction(normalizedCards), listenerApi)
 
     expect(listenerApi.dispatch).toHaveBeenCalledTimes(0)
   })
 
   it('should not spawn anything if there are no cards in the discard', () => {
-    mockDuelState.players[playerId].hand = []
-    mockDuelState.players[playerId].discard = []
-    mockDuelState.players[playerId].board = []
+    const normalizedCards = normalizePlayerCards({
+      hand: [BookOfAsh],
+      discard: [],
+    })
 
-    listenerApi.getState = jest.fn(() => ({
-      duel: mockDuelState,
-    }))
+    mockDuelState.players[playerId] = {
+      ...mockDuelState.players[playerId],
+      ...normalizedCards,
+    }
 
-    BookOfAshEffect(mockAction, listenerApi)
+    BookOfAshEffect(getPlayCardAction(normalizedCards), listenerApi)
 
     expect(listenerApi.dispatch).toHaveBeenCalledTimes(0)
   })

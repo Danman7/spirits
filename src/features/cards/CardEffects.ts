@@ -1,7 +1,7 @@
 import { HammeriteNovice } from 'src/features/cards/CardBases'
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constants'
 import { CardEffect } from 'src/features/cards/types'
-import { copyDuelCard } from 'src/features/cards/utils'
+import { copyDuelCard } from 'src/shared/utils'
 import {
   addNewCards,
   moveCardToBoard,

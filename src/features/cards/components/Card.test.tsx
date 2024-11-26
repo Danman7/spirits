@@ -3,9 +3,9 @@ import '@testing-library/jest-dom'
 
 import { BookOfAsh, BrotherSachelman } from 'src/features/cards/CardBases'
 import Card from 'src/features/cards/components/Card'
-import { createDuelCard, joinCardCategories } from 'src/features/cards/utils'
-import { renderWithProviders } from 'src/shared/test-utils'
+import { renderWithProviders } from 'src/shared/rtlRender'
 import { CARD_TEST_ID } from 'src/shared/testIds'
+import { createDuelCard, joinCardCategories } from 'src/shared/utils'
 
 const mockCard = createDuelCard(BrotherSachelman)
 
@@ -17,13 +17,9 @@ it('should display all UI segments of a card when face up', () => {
   expect(getByRole('heading', { level: 3 })).toHaveTextContent(
     `${mockCard.name}${mockCard.strength}`,
   )
-
   expect(getByText(`Cost: ${mockCard.cost}`)).toBeInTheDocument()
-
   expect(getByText(joinCardCategories(mockCard.categories))).toBeInTheDocument()
-
   expect(getByText(mockCard.description[0])).toBeInTheDocument()
-
   expect(getByText(mockCard.flavor as string)).toBeInTheDocument()
 
   const boostedStrength = mockCard.strength + 2

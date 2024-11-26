@@ -2,7 +2,7 @@ import { motion, useAnimationControls } from 'motion/react'
 import { forwardRef, useEffect } from 'react'
 
 import { CardProps } from 'src/features/cards/types'
-import { getFactionColor, joinCardCategories } from 'src/features/cards/utils'
+import { getFactionColor, joinCardCategories } from 'src/shared/utils'
 import {
   CardAttackAnimation,
   CardBoostAnimation,

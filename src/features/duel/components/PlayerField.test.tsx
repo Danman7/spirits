@@ -4,7 +4,7 @@ import '@testing-library/jest-dom'
 import {
   mockStackedPlayer,
   stackedPreloadedState as preloadedState,
-} from 'src/features/duel/__mocks__'
+} from 'src/shared/__mocks__'
 import PlayerField, {
   PlayerFieldProps,
 } from 'src/features/duel/components/PlayerField'
@@ -16,7 +16,7 @@ import {
   playCard,
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
-import { renderWithProviders } from 'src/shared/test-utils'
+import { renderWithProviders } from 'src/shared/rtlRender'
 import {
   PLAYER_BOARD_ID,
   PLAYER_DECK_ID,

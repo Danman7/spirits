@@ -10,9 +10,9 @@ import {
 import {
   mockStackedPlayer,
   stackedPreloadedState as preloadedState,
-} from 'src/features/duel/__mocks__'
+} from 'src/shared/__mocks__'
 import Board from 'src/features/duel/components/Board'
-import { renderWithProviders } from 'src/shared/test-utils'
+import { renderWithProviders } from 'src/shared/rtlRender'
 
 it('should add card effect listeners on mount', () => {
   const { dispatchSpy } = renderWithProviders(<Board />, {

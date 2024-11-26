@@ -1,9 +1,3 @@
-export const FACTION_COLOR_MAP = {
-  Order: 'var(--order-faction-color)',
-  Chaos: 'var(--chaos-faction-color)',
-  Shadow: 'var(--shadow-faction-color)',
-}
-
 export const HAUNT_DAMAGE = 1
 export const ELEVATED_ACOLYTE_SELF_DAMAGE = 1
 export const HAMMERITES_WITH_LOWER_STRENGTH_BOOST = 1

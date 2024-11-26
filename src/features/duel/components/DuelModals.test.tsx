@@ -3,8 +3,8 @@ import '@testing-library/jest-dom'
 
 import { RootState } from 'src/app/store'
 import { HammeriteNovice } from 'src/features/cards/CardBases'
-import { createDuelCard } from 'src/features/cards/utils'
-import { MockPlayerTurnState } from 'src/features/duel/__mocks__'
+import { createDuelCard } from 'src/shared/utils'
+import { MockPlayerTurnState } from 'src/shared/__mocks__'
 import DuelModals, {
   DuelModalsProps,
 } from 'src/features/duel/components/DuelModals'
@@ -26,7 +26,7 @@ import {
   playCard,
 } from 'src/features/duel/slice'
 import { Player } from 'src/features/duel/types'
-import { renderWithProviders } from 'src/shared/test-utils'
+import { renderWithProviders } from 'src/shared/rtlRender'
 
 const playerId = MockPlayerTurnState.playerOrder[1]
 const opponentId = MockPlayerTurnState.playerOrder[0]
