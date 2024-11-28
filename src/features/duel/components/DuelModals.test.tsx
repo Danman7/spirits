@@ -27,6 +27,7 @@ import {
 } from 'src/features/duel/slice'
 import { Player } from 'src/features/duel/types'
 import { renderWithProviders } from 'src/shared/rtlRender'
+import { MODAL_TEST_ID } from 'src/shared/testIds'
 
 const playerId = MockPlayerTurnState.playerOrder[1]
 const opponentId = MockPlayerTurnState.playerOrder[0]
@@ -119,12 +120,14 @@ describe('Overlay Modal', () => {
 
 describe('Side Panel', () => {
   it('should show the redraw phase panel with skip redraw link', async () => {
-    const { getByText, dispatchSpy } = renderWithProviders(
+    const { getByText, getByTestId, dispatchSpy } = renderWithProviders(
       <DuelModals {...defaultProps} phase="Pre-duel" />,
       {
         preloadedState,
       },
     )
+
+    fireEvent.animationEnd(getByTestId(MODAL_TEST_ID))
 
     await waitFor(() => expect(getByText(redrawMessage)).toBeInTheDocument())
 
@@ -134,7 +137,7 @@ describe('Side Panel', () => {
   })
 
   it('should show the waiting for opponent message during redraw phase', async () => {
-    const { getByText } = renderWithProviders(
+    const { getByText, getByTestId } = renderWithProviders(
       <DuelModals
         {...defaultProps}
         phase="Pre-duel"
@@ -145,18 +148,22 @@ describe('Side Panel', () => {
       },
     )
 
+    fireEvent.animationEnd(getByTestId(MODAL_TEST_ID))
+
     await waitFor(() =>
       expect(getByText(opponentDecidingMessage)).toBeInTheDocument(),
     )
   })
 
   it('should show the your turn message with pass link', async () => {
-    const { getByText, dispatchSpy } = renderWithProviders(
+    const { getByText, getByTestId, dispatchSpy } = renderWithProviders(
       <DuelModals {...defaultProps} phase="Player Turn" />,
       {
         preloadedState,
       },
     )
+
+    fireEvent.animationEnd(getByTestId(MODAL_TEST_ID))
 
     await waitFor(() => expect(getByText(yourTurnMessage)).toBeInTheDocument())
 
@@ -166,7 +173,7 @@ describe('Side Panel', () => {
   })
 
   it("should show the waiting for opponent message during opponent's turn", async () => {
-    const { getByText } = renderWithProviders(
+    const { getByText, getByTestId } = renderWithProviders(
       <DuelModals
         {...defaultProps}
         phase="Player Turn"
@@ -177,6 +184,8 @@ describe('Side Panel', () => {
       },
     )
 
+    fireEvent.animationEnd(getByTestId(MODAL_TEST_ID))
+
     await waitFor(() =>
       expect(getByText(opponentDecidingMessage)).toBeInTheDocument(),
     )
@@ -185,7 +194,7 @@ describe('Side Panel', () => {
 
 describe('CPU triggers', () => {
   it('should play CPU turn', async () => {
-    const { getByText, dispatchSpy } = renderWithProviders(
+    const { getByText, getByTestId, dispatchSpy } = renderWithProviders(
       <DuelModals
         {...defaultProps}
         opponent={{ ...mockOpponent, isCPU: true }}
@@ -204,6 +213,8 @@ describe('CPU triggers', () => {
         },
       },
     )
+
+    fireEvent.animationEnd(getByTestId(MODAL_TEST_ID))
 
     await waitFor(() =>
       expect(getByText(opponentDecidingMessage)).toBeInTheDocument(),

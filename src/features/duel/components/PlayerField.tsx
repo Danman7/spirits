@@ -3,7 +3,7 @@ import { FC, useEffect, useMemo, useState } from 'react'
 
 import { useAppDispatch } from 'src/app/store'
 import Card from 'src/features/cards/components/Card'
-import { CardProps, DuelCard } from 'src/features/cards/types'
+import { DuelCard } from 'src/features/cards/types'
 import { closeMessage } from 'src/features/duel/messages'
 import {
   completeRedraw,
@@ -66,11 +66,10 @@ const PlayerField: FC<PlayerFieldProps> = ({
 
   const [browsedStack, setBrowsedStack] = useState<browsedStack>(null)
 
-  const onPlayCard: CardProps['onClickCard'] = (cardId) => {
+  const onPlayCard = (cardId: string) =>
     dispatch(playCard({ cardId, playerId: id }))
-  }
 
-  const onRedrawCard: CardProps['onClickCard'] = (cardId) => {
+  const onRedrawCard = (cardId: string) => {
     dispatch(
       putCardAtBottomOfDeck({
         cardId,
@@ -83,7 +82,7 @@ const PlayerField: FC<PlayerFieldProps> = ({
     dispatch(completeRedraw(id))
   }
 
-  const getOnClickCard = (): CardProps['onClickCard'] => {
+  const getOnClickCard = () => {
     if (
       phase === 'Player Turn' &&
       isActive &&
@@ -257,15 +256,7 @@ const PlayerField: FC<PlayerFieldProps> = ({
         </AnimatePresence>
       </div>
 
-      <Modal
-        style={{
-          height: '90vh',
-          zIndex: 6,
-          padding: '1rem 0 2rem',
-        }}
-      >
-        {modalContent}
-      </Modal>
+      <Modal isOpen={!!browsedStack}>{modalContent}</Modal>
     </>
   )
 }

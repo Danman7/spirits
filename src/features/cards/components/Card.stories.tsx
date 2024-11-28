@@ -21,7 +21,6 @@ const meta = {
     layout: 'centered',
     actions: { argTypesRegex: '^on.*' },
   },
-  tags: ['autodocs'],
   args: {
     card: mockCard,
     onClickCard: undefined,

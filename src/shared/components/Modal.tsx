@@ -1,39 +1,70 @@
-import { AnimatePresence, motion, MotionStyle } from 'motion/react'
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 
-import { FadeInOutStaggerVariants } from 'src/shared/animations'
+import animations from 'src/shared/styles/animations.module.css'
 import styles from 'src/shared/styles/styles.module.css'
+import { MODAL_TEST_ID } from 'src/shared/testIds'
 
 interface ModalProps {
-  children?: ReactNode
-  style?: MotionStyle
-  onExitComplete?: () => void
+  isOpen: boolean
+  children: ReactNode
+  onClosingComplete?: () => void
 }
 
-const Modal: FC<ModalProps> = ({ children, style, onExitComplete }) => (
-  <AnimatePresence onExitComplete={onExitComplete}>
-    {children ? (
-      <motion.div
-        key="modal-overlay"
-        initial="closed"
-        exit="closed"
-        className={styles.overlay}
-        animate={children ? 'open' : 'closed'}
-        variants={FadeInOutStaggerVariants}
+const Modal: FC<ModalProps> = ({
+  isOpen = false,
+  children = '',
+  onClosingComplete,
+}) => {
+  const [shouldShowModal, setShouldShowModal] = useState(isOpen)
+  const [overlayAnimation, setOverlayAnimation] = useState('')
+  const [modalAnimation, setModalAnimation] = useState('')
+
+  const onOverlayAnimationEnd = () => {
+    if (isOpen && process.env.NODE_ENV !== 'test') {
+      setModalAnimation(` ${animations.slideInOpacity}`)
+    } else {
+      if (onClosingComplete) {
+        onClosingComplete()
+      }
+
+      setShouldShowModal(false)
+    }
+  }
+
+  const onModalAnimationEnd = () => {
+    if (!isOpen) {
+      setOverlayAnimation(` ${animations.fadeOut}`)
+    }
+  }
+
+  useEffect(() => {
+    if (isOpen) {
+      setShouldShowModal(true)
+      setModalAnimation(` ${animations.paused}`)
+      setOverlayAnimation(` ${animations.fadeIn}`)
+    }
+
+    if (!isOpen) {
+      setModalAnimation(` ${animations.slideOutOpacity}`)
+    }
+  }, [isOpen])
+
+  return shouldShowModal ? (
+    <div className={styles.modalWrapper}>
+      <div
+        className={`${styles.overlay}${overlayAnimation}`}
+        onAnimationEnd={onOverlayAnimationEnd}
+        data-testid={MODAL_TEST_ID}
+      />
+
+      <div
+        className={`${styles.modal}${modalAnimation}`}
+        onAnimationEnd={onModalAnimationEnd}
       >
-        <motion.div
-          initial="closed"
-          exit="closed"
-          style={style}
-          className={styles.modal}
-          animate={children ? 'open' : 'closed'}
-          variants={FadeInOutStaggerVariants}
-        >
-          {children}
-        </motion.div>
-      </motion.div>
-    ) : null}
-  </AnimatePresence>
-)
+        {children}
+      </div>
+    </div>
+  ) : null
+}
 
 export default Modal

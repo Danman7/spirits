@@ -11,3 +11,4 @@ export const OPPONENT_DECK_ID = 'opponentDeck'
 export const OPPONENT_DISCARD_ID = 'opponentDiscard'
 
 export const CARD_TEST_ID = 'cardTestId'
+export const MODAL_TEST_ID = 'modalTestId'

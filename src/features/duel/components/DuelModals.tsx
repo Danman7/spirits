@@ -1,10 +1,8 @@
-import { motion } from 'motion/react'
-import { FC, ReactNode, useEffect, useState } from 'react'
+import { FC, ReactNode, useEffect, useMemo, useState } from 'react'
 
 import { useAppDispatch } from 'src/app/store'
 import LoadingMessage from 'src/features/duel/components/LoadingMessage'
-import SidePanel from 'src/features/duel/components/SidePanel'
-import { MODAL_TIMEOUT } from 'src/features/duel/constants'
+import SidePanel from 'src/shared/components/SidePanel'
 import {
   opponentDecidingMessage,
   opponentFirst,
@@ -24,11 +22,20 @@ import {
   startInitialCardDraw,
 } from 'src/features/duel/slice'
 import { DuelPhase, Player } from 'src/features/duel/types'
-import { getPlayableCardIds } from 'src/shared/utils'
-import { SlideInOutOpacityVariants } from 'src/shared/animations'
 import Link from 'src/shared/components/Link'
 import Modal from 'src/shared/components/Modal'
-import { getRandomArrayItem } from 'src/shared/utils'
+import { PHASE_MODAL_TIMEOUT } from 'src/shared/constants'
+import { getPlayableCardIds, getRandomArrayItem } from 'src/shared/utils'
+
+const openAndClosePhaseModal = (
+  setModalVisibility: (isOpen: boolean) => void,
+) => {
+  setModalVisibility(true)
+
+  setTimeout(() => {
+    setModalVisibility(false)
+  }, PHASE_MODAL_TIMEOUT)
+}
 
 export interface DuelModalsProps {
   player: Player
@@ -53,51 +60,17 @@ const DuelModals: FC<DuelModalsProps> = ({
 
   const dispatch = useAppDispatch()
 
-  const [gameModalContent, setGameModalContent] = useState<ReactNode>(null)
-  const [sidePanelContent, setSidePanelContent] = useState<ReactNode>(null)
+  const [isPhaseModalOpen, setIsPhaseModalOpen] = useState(false)
+  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false)
 
-  const onSkipRedraw = () => {
-    dispatch(completeRedraw(id))
-  }
-
-  const onPass = () => {
-    dispatch(initializeEndTurn())
-  }
-
-  const onModalExitComplete = () => {
+  const onPhaseModalClosed = () => {
     if (phase === 'Pre-duel') {
       dispatch(startInitialCardDraw())
-      setSidePanelContent(
-        <motion.div variants={SlideInOutOpacityVariants}>
-          {hasPerformedAction ? (
-            <LoadingMessage message={opponentDecidingMessage} />
-          ) : (
-            redrawMessage
-          )}
-
-          {!hasPerformedAction ? (
-            <Link onClick={onSkipRedraw}>{skipRedrawLinkMessage}</Link>
-          ) : null}
-        </motion.div>,
-      )
+      setIsSidePanelOpen(true)
     }
 
     if (phase === 'Player Turn') {
-      setSidePanelContent(
-        <>
-          <motion.div variants={SlideInOutOpacityVariants}>
-            {isPlayerActive ? (
-              yourTurnMessage
-            ) : (
-              <LoadingMessage message={opponentDecidingMessage} />
-            )}
-
-            {isPlayerActive && !hasPerformedAction ? (
-              <Link onClick={onPass}>{passButtonMessage}</Link>
-            ) : null}
-          </motion.div>
-        </>,
-      )
+      setIsSidePanelOpen(true)
     }
 
     if (
@@ -125,35 +98,13 @@ const DuelModals: FC<DuelModalsProps> = ({
   useEffect(() => {
     switch (phase) {
       case 'Pre-duel':
-        setGameModalContent(
-          <>
-            <motion.h1 variants={SlideInOutOpacityVariants}>
-              {`${playerNames[0]} vs ${playerNames[1]}`}
-            </motion.h1>
-            <motion.div variants={SlideInOutOpacityVariants}>
-              {isPlayerActive ? playerFirst : opponentFirst}
-            </motion.div>
-          </>,
-        )
-
-        setTimeout(() => {
-          setGameModalContent(null)
-        }, MODAL_TIMEOUT)
+        openAndClosePhaseModal(setIsPhaseModalOpen)
 
         break
       case 'Player Turn':
         if (!hasPerformedAction && !opponent.hasPerformedAction) {
-          setSidePanelContent(null)
-
-          setGameModalContent(
-            <motion.h1 variants={SlideInOutOpacityVariants}>
-              {isPlayerActive ? yourTurnTitle : opponentTurnTitle}
-            </motion.h1>,
-          )
-
-          setTimeout(() => {
-            setGameModalContent(null)
-          }, MODAL_TIMEOUT)
+          setIsSidePanelOpen(false)
+          openAndClosePhaseModal(setIsPhaseModalOpen)
         }
 
         break
@@ -161,25 +112,75 @@ const DuelModals: FC<DuelModalsProps> = ({
   }, [phase, turn, isPlayerActive, playerNames, hasPerformedAction, opponent])
 
   useEffect(() => {
-    if (victorName) {
-      setGameModalContent(
-        <motion.h1 variants={SlideInOutOpacityVariants}>
-          {`${victorName} ${victoryMessage}`}
-        </motion.h1>,
-      )
-    }
-  }, [victorName])
-
-  useEffect(() => {
     if (hasPerformedAction) {
-      setSidePanelContent(null)
+      setIsSidePanelOpen(false)
     }
   }, [hasPerformedAction])
 
+  const phaseModalContent: ReactNode = useMemo(() => {
+    if (victorName) {
+      return <h1>{`${victorName} ${victoryMessage}`}</h1>
+    }
+
+    switch (phase) {
+      case 'Pre-duel':
+        return (
+          <>
+            <h1>{`${playerNames[0]} vs ${playerNames[1]}`}</h1>
+            <div>{isPlayerActive ? playerFirst : opponentFirst}</div>
+          </>
+        )
+
+      case 'Player Turn':
+        return <h1>{isPlayerActive ? yourTurnTitle : opponentTurnTitle}</h1>
+    }
+  }, [phase, isPlayerActive, playerNames, victorName])
+
+  const sidePanelContent: ReactNode = useMemo(() => {
+    switch (phase) {
+      case 'Pre-duel':
+      case 'Redrawing Phase':
+        return (
+          <>
+            {hasPerformedAction ? (
+              <LoadingMessage message={opponentDecidingMessage} />
+            ) : (
+              redrawMessage
+            )}
+
+            {!hasPerformedAction ? (
+              <Link onClick={() => dispatch(completeRedraw(id))}>
+                {skipRedrawLinkMessage}
+              </Link>
+            ) : null}
+          </>
+        )
+
+      case 'Player Turn':
+        return (
+          <>
+            {isPlayerActive ? (
+              yourTurnMessage
+            ) : (
+              <LoadingMessage message={opponentDecidingMessage} />
+            )}
+
+            {isPlayerActive && !hasPerformedAction ? (
+              <Link onClick={() => dispatch(initializeEndTurn())}>
+                {passButtonMessage}
+              </Link>
+            ) : null}
+          </>
+        )
+    }
+  }, [dispatch, hasPerformedAction, id, isPlayerActive, phase])
+
   return (
     <>
-      <Modal onExitComplete={onModalExitComplete}>{gameModalContent}</Modal>
-      <SidePanel>{sidePanelContent}</SidePanel>
+      <Modal isOpen={isPhaseModalOpen} onClosingComplete={onPhaseModalClosed}>
+        {phaseModalContent}
+      </Modal>
+      <SidePanel isOpen={isSidePanelOpen}>{sidePanelContent}</SidePanel>
     </>
   )
 }

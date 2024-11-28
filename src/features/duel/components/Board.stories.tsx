@@ -21,7 +21,7 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
-  tags: ['autodocs'],
+
   argTypes: {},
 } satisfies Meta<typeof Board>
 

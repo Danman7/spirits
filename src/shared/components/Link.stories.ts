@@ -9,7 +9,7 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
+
   args: {
     children: 'This is a link',
     onClick: fn(),

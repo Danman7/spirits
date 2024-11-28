@@ -4,7 +4,7 @@ import { forwardRef, useEffect } from 'react'
 import { CardProps } from 'src/features/cards/types'
 import { getFactionColor, joinCardCategories } from 'src/shared/utils'
 import {
-  CardAttackAnimation,
+  getCardAttackAnimation,
   CardBoostAnimation,
   CardDamageAnimation,
   NumberChangeAnimation,
@@ -69,7 +69,7 @@ const CardComponent = motion.create(
 
       useEffect(() => {
         if (isAttacking) {
-          cardAnimationControls.start(CardAttackAnimation(isOnTop))
+          cardAnimationControls.start(getCardAttackAnimation(isOnTop))
         }
       }, [isAttacking, cardAnimationControls, isOnTop])
 

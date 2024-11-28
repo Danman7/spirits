@@ -29,7 +29,6 @@ import {
 } from 'src/shared/utils'
 
 it('should generate a UUID', () => {
-  console.log(generateUUID())
   expect(generateUUID()).toHaveLength(36)
 })
 
