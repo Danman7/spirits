@@ -1,3 +1,11 @@
+.animation {
+  animation-duration: var(--quick-animation-time);
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+}
+
+/* Fades */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -17,6 +25,22 @@
     opacity: 0;
   }
 }
+
+.paused {
+  opacity: 0;
+}
+
+.fadeIn {
+  composes: animation;
+  animation-name: fadeIn;
+}
+
+.fadeOut {
+  composes: animation;
+  animation-name: fadeOut;
+}
+
+/* Slides */
 
 @keyframes slideInOpacity {
   from {
@@ -62,26 +86,6 @@
   }
 }
 
-.animation {
-  animation-duration: var(--quick-animation-time);
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: both;
-}
-
-.paused {
-  opacity: 0;
-}
-
-.fadeIn {
-  composes: animation;
-  animation-name: fadeIn;
-}
-
-.fadeOut {
-  composes: animation;
-  animation-name: fadeOut;
-}
-
 .slideInOpacity {
   composes: animation;
   animation-name: slideInOpacity;
@@ -100,4 +104,17 @@
 .slideOutLeft {
   composes: animation;
   animation-name: slideOutLeft;
+}
+
+/* Pops */
+@keyframes popIn {
+  from {
+    opacity: 0;
+    scale: 0.5;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
 }

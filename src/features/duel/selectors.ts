@@ -38,18 +38,3 @@ export const getAttackingAgentId = createSelector(
   getDuelState,
   (duelState) => duelState.attackingAgentId,
 )
-
-export const getPlayerNames = createSelector(getPlayers, (players) =>
-  Object.values(players).map(({ name }) => name),
-)
-
-export const getVictoriousPlayerName = createSelector(
-  getPlayers,
-  getPlayerOrder,
-  (players, playerOrder) =>
-    players[playerOrder[0]].coins <= 0
-      ? players[playerOrder[1]].name
-      : players[playerOrder[1]].coins <= 0
-        ? players[playerOrder[0]].name
-        : undefined,
-)

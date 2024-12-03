@@ -1,42 +1,74 @@
 import { clearAllListeners } from '@reduxjs/toolkit'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import { addAppListener } from 'src/app/listenerMiddleware'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import * as CardEffectPredicates from 'src/features/cards/CardEffectPredicates'
 import * as CardEffects from 'src/features/cards/CardEffects'
-import DuelModals from 'src/features/duel/components/DuelModals'
+import { ActionPanel } from 'src/features/duel/components/ActionPanel'
+import { PhaseModal } from 'src/features/duel/components/PhaseModal'
 import PlayerField from 'src/features/duel/components/PlayerField'
+import { isCPUTurn, playCPUTurn } from 'src/features/duel/cpuUtils'
 import {
   getActivePlayerId,
   getAttackingAgentId,
   getLoggedInPlayerId,
   getPhase,
-  getPlayerNames,
   getPlayerOrder,
   getPlayers,
-  getTurn,
-  getVictoriousPlayerName,
 } from 'src/features/duel/selectors'
-import * as styles from 'src/shared/styles/styles.module.css'
+import { startInitialCardDraw } from 'src/features/duel/slice'
 
 let hasAddedCardEffectListeners = false
 
 const Board: FC = () => {
   const dispatch = useAppDispatch()
 
+  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false)
+
   const players = useAppSelector(getPlayers)
   const playerOrder = useAppSelector(getPlayerOrder)
   const phase = useAppSelector(getPhase)
-  const turn = useAppSelector(getTurn)
   const loggedInPlayerId = useAppSelector(getLoggedInPlayerId)
-  const victorName = useAppSelector(getVictoriousPlayerName)
-  const playerNames = useAppSelector(getPlayerNames)
   const attackingAgentId = useAppSelector(getAttackingAgentId)
   const activePlayerId = useAppSelector(getActivePlayerId)
 
-  const player = players[loggedInPlayerId]
+  const haveBothPlayersNotPerformedAction = Object.values(players).every(
+    ({ hasPerformedAction }) => !hasPerformedAction,
+  )
+  const loggedInPlayer = players[loggedInPlayerId]
   const opponent = players[playerOrder[0]]
+  const isLoggedInPlayerActive = loggedInPlayerId === activePlayerId
+  const victoriousPlayerName =
+    opponent.coins <= 0
+      ? loggedInPlayer.name
+      : loggedInPlayer.coins <= 0
+        ? opponent.name
+        : undefined
+
+  const onPhaseModalCloseEnd = () => {
+    if (phase === 'Pre-duel') {
+      dispatch(startInitialCardDraw())
+      setIsSidePanelOpen(true)
+    }
+
+    if (phase === 'Player Turn') {
+      setIsSidePanelOpen(true)
+    }
+
+    if (isCPUTurn(isLoggedInPlayerActive, opponent, phase)) {
+      playCPUTurn({
+        dispatch,
+        player: opponent,
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (phase === 'Player Turn' && haveBothPlayersNotPerformedAction) {
+      setIsSidePanelOpen(false)
+    }
+  }, [phase, haveBothPlayersNotPerformedAction])
 
   // This adds all store listeners for card effect triggers.
   // It plugs into the redux middleware and cannot be done in the slice.
@@ -69,7 +101,7 @@ const Board: FC = () => {
   }, [dispatch, players])
 
   return (
-    <div className={styles.board}>
+    <>
       {playerOrder.map((playerId, index) => (
         <PlayerField
           key={playerId}
@@ -81,16 +113,22 @@ const Board: FC = () => {
         />
       ))}
 
-      <DuelModals
-        player={player}
-        opponent={opponent}
-        isPlayerActive={player.id === activePlayerId}
-        turn={turn}
+      <PhaseModal
+        players={players}
         phase={phase}
-        victorName={victorName}
-        playerNames={playerNames}
+        isLoggedInPlayerActive={isLoggedInPlayerActive}
+        haveBothPlayersNotPerformedAction={haveBothPlayersNotPerformedAction}
+        victoriousPlayerName={victoriousPlayerName}
+        onPhaseModalCloseEnd={onPhaseModalCloseEnd}
       />
-    </div>
+
+      <ActionPanel
+        isOpen={isSidePanelOpen}
+        loggedInPlayer={players[loggedInPlayerId]}
+        isLoggedInPlayerActive={isLoggedInPlayerActive}
+        phase={phase}
+      />
+    </>
   )
 }
 

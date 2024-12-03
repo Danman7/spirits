@@ -111,12 +111,6 @@
   color: var(--accent-color);
 }
 
-.board {
-  position: relative;
-  height: 100vh;
-  overflow: hidden;
-}
-
 .playerBoard {
   height: 50vh;
   display: flex;

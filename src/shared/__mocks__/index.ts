@@ -97,13 +97,15 @@ export const mockStackedPlayer: Player = {
   }),
 }
 
-export const stackedPreloadedState: Partial<RootState> = {
-  duel: {
-    ...MockPlayerTurnState,
-    players: {
-      [mockStackedPlayer.id]: mockStackedPlayer,
-      [MockPlayerTurnState.playerOrder[0]]:
-        MockPlayerTurnState.players[MockPlayerTurnState.playerOrder[0]],
-    },
+export const stackedDuelState: DuelState = {
+  ...MockPlayerTurnState,
+  players: {
+    [mockStackedPlayer.id]: mockStackedPlayer,
+    [MockPlayerTurnState.playerOrder[0]]:
+      MockPlayerTurnState.players[MockPlayerTurnState.playerOrder[0]],
   },
+}
+
+export const stackedPreloadedState: RootState = {
+  duel: stackedDuelState,
 }

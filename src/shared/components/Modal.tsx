@@ -58,7 +58,7 @@ const Modal: FC<ModalProps> = ({
       />
 
       <div
-        className={`${styles.modal}${modalAnimation}`}
+        className={`${styles.modal} ${modalAnimation}`}
         onAnimationEnd={onModalAnimationEnd}
       >
         {children}
