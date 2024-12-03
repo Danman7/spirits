@@ -152,7 +152,7 @@ export const normalizePlayerCards = (
           ...partialPlayer.cards,
           [card.id]: card,
         }
-        partialPlayer[stack] = [...(partialPlayer[stack] || []), card.id]
+        partialPlayer[stack] = [...partialPlayer[stack], card.id]
       })
     }
   })

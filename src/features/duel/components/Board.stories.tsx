@@ -20,9 +20,13 @@ const meta = {
   component: Board,
   parameters: {
     layout: 'fullscreen',
+    docs: {
+      description: {
+        component:
+          'This is the main component for dueling (single and multi-player) that displays both player’s card stack and gameplay UI. It takes no properties as it gets all information from the app store and distributes it to the nested children.',
+      },
+    },
   },
-
-  argTypes: {},
 } satisfies Meta<typeof Board>
 
 export default meta

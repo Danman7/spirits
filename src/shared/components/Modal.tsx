@@ -2,17 +2,17 @@ import { FC, ReactNode, useEffect, useState } from 'react'
 
 import animations from 'src/shared/styles/animations.module.css'
 import styles from 'src/shared/styles/styles.module.css'
-import { MODAL_TEST_ID } from 'src/shared/testIds'
+import { MODAL_TEST_ID, OVERLAY_TEST_ID } from 'src/shared/testIds'
 
-interface ModalProps {
+export interface ModalProps {
   isOpen: boolean
   children: ReactNode
   onClosingComplete?: () => void
 }
 
-const Modal: FC<ModalProps> = ({
-  isOpen = false,
-  children = '',
+export const Modal: FC<ModalProps> = ({
+  isOpen,
+  children,
   onClosingComplete,
 }) => {
   const [shouldShowModal, setShouldShowModal] = useState(isOpen)
@@ -20,7 +20,7 @@ const Modal: FC<ModalProps> = ({
   const [modalAnimation, setModalAnimation] = useState('')
 
   const onOverlayAnimationEnd = () => {
-    if (isOpen && process.env.NODE_ENV !== 'test') {
+    if (isOpen) {
       setModalAnimation(` ${animations.slideInOpacity}`)
     } else {
       if (onClosingComplete) {
@@ -54,10 +54,11 @@ const Modal: FC<ModalProps> = ({
       <div
         className={`${styles.overlay}${overlayAnimation}`}
         onAnimationEnd={onOverlayAnimationEnd}
-        data-testid={MODAL_TEST_ID}
+        data-testid={OVERLAY_TEST_ID}
       />
 
       <div
+        data-testid={MODAL_TEST_ID}
         className={`${styles.modal} ${modalAnimation}`}
         onAnimationEnd={onModalAnimationEnd}
       >
@@ -66,5 +67,3 @@ const Modal: FC<ModalProps> = ({
     </div>
   ) : null
 }
-
-export default Modal

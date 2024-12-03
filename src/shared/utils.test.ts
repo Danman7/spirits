@@ -74,7 +74,7 @@ it('should get all playable card ids for a given player with getPlayableCardIds'
   expect(getPlayableCardIds({ ...mockBudgetPlayer, coins: 0 })).toHaveLength(0)
 })
 
-it("should normalize a player's cards into stacks with normalizePlayerCards", () => {
+it("should normalize a player's cards into all possible stacks with normalizePlayerCards", () => {
   const normalizedCards = normalizePlayerCards({
     board: [TempleGuard],
     hand: [HammeriteNovice],
@@ -89,6 +89,16 @@ it("should normalize a player's cards into stacks with normalizePlayerCards", ()
   CARD_STACKS.forEach((stack) => {
     expect(normalizedCards[stack]).toHaveLength(1)
   })
+})
+
+it("should normalize a player's cards into some stacks with normalizePlayerCards", () => {
+  const normalizedEmptyCards = normalizePlayerCards({
+    board: [TempleGuard],
+  })
+
+  expect(normalizedEmptyCards.deck).toHaveLength(0)
+  expect(normalizedEmptyCards.hand).toHaveLength(0)
+  expect(normalizedEmptyCards.discard).toHaveLength(0)
 })
 
 test('joinCardTypes should return a joined types string for a card', () => {

@@ -4,6 +4,6 @@ export const FACTION_COLOR_MAP = {
   Shadow: 'var(--shadow-faction-color)',
 }
 
-export const QUICK_ANIMATION_TIME = process.env.NODE_ENV === 'test' ? 10 : 200
+export const QUICK_ANIMATION_TIME = 200
 
-export const PHASE_MODAL_TIMEOUT = process.env.NODE_ENV === 'test' ? 10 : 2000
+export const PHASE_MODAL_TIMEOUT = 2000

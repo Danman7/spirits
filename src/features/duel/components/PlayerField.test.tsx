@@ -128,7 +128,7 @@ describe('Bottom (Player) Side', () => {
     })
   })
 
-  it('should be able to redraw a card', async () => {
+  it('should be able to redraw a card', () => {
     const { getByText, dispatchSpy } = renderWithProviders(
       <PlayerField
         {...defaultProps}
@@ -158,7 +158,7 @@ describe('Bottom (Player) Side', () => {
     )
   })
 
-  it('should be able to play a card', async () => {
+  it('should be able to play a card', () => {
     const { getByText, dispatchSpy } = renderWithProviders(
       <PlayerField {...defaultProps} />,
       {

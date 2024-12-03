@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
 import Link from 'src/shared/components/Link'
-import Modal from 'src/shared/components/Modal'
+import { Modal } from 'src/shared/components/Modal'
 
 const meta = {
   title: 'Modal',

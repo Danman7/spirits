@@ -8,7 +8,7 @@ import {
   yourTurnTitle,
 } from 'src/features/duel/messages'
 import { DuelPhase, DuelPlayers } from 'src/features/duel/types'
-import Modal from 'src/shared/components/Modal'
+import { Modal } from 'src/shared/components/Modal'
 import { PHASE_MODAL_TIMEOUT } from 'src/shared/constants'
 
 const flashModal = (setModalVisibility: (isOpen: boolean) => void) => {

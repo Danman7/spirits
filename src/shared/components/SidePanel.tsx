@@ -1,14 +1,15 @@
 import { FC, ReactNode, useEffect, useState } from 'react'
 
-import styles from 'src/shared/styles/styles.module.css'
 import animations from 'src/shared/styles/animations.module.css'
+import styles from 'src/shared/styles/styles.module.css'
+import { PANEL_TEST_ID } from 'src/shared/testIds'
 
-interface SidePanelProps {
+export interface SidePanelProps {
   isOpen: boolean
   children: ReactNode
 }
 
-const SidePanel: FC<SidePanelProps> = ({ isOpen, children }) => {
+export const SidePanel: FC<SidePanelProps> = ({ isOpen, children }) => {
   const [shouldShowPanel, setShouldShowPanel] = useState(isOpen)
   const [animation, setAnimation] = useState('')
 
@@ -31,6 +32,7 @@ const SidePanel: FC<SidePanelProps> = ({ isOpen, children }) => {
 
   return shouldShowPanel ? (
     <div
+      data-testid={PANEL_TEST_ID}
       className={`${styles.sidePanel}${animation}`}
       onAnimationEnd={onAnimationEnd}
     >
@@ -38,5 +40,3 @@ const SidePanel: FC<SidePanelProps> = ({ isOpen, children }) => {
     </div>
   ) : null
 }
-
-export default SidePanel

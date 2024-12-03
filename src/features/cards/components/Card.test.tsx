@@ -1,5 +1,5 @@
-import { fireEvent } from '@testing-library/dom'
 import '@testing-library/jest-dom'
+import { fireEvent } from '@testing-library/dom'
 
 import { BookOfAsh, BrotherSachelman } from 'src/features/cards/CardBases'
 import Card from 'src/features/cards/components/Card'
@@ -39,7 +39,7 @@ it('should display all UI segments of a card when face up', () => {
   )
 })
 
-it('should show card back when face down', async () => {
+it('should show card back when face down', () => {
   const { queryByText } = renderWithProviders(
     <Card card={mockCard} isFaceDown />,
   )

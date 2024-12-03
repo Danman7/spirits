@@ -17,7 +17,7 @@ import {
 import { DuelPhase, Player } from 'src/features/duel/types'
 import { NumberChangeAnimation } from 'src/shared/animations'
 import Link from 'src/shared/components/Link'
-import Modal from 'src/shared/components/Modal'
+import { Modal } from 'src/shared/components/Modal'
 import styles from 'src/shared/styles/styles.module.css'
 import {
   OPPONENT_BOARD_ID,

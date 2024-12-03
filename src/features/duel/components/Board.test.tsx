@@ -1,8 +1,10 @@
-import '@testing-library/jest-dom'
 import { clearAllListeners } from '@reduxjs/toolkit'
 import { fireEvent, waitFor } from '@testing-library/dom'
+import '@testing-library/jest-dom'
+import { act } from 'react'
 
 import { addAppListener } from 'src/app/listenerMiddleware'
+import { ElevatedAcolyte } from 'src/features/cards/CardBases'
 import * as CardEffectPredicates from 'src/features/cards/CardEffectPredicates'
 import * as CardEffects from 'src/features/cards/CardEffects'
 import {
@@ -10,14 +12,13 @@ import {
   CardEffectPredicateName,
 } from 'src/features/cards/types'
 import Board from 'src/features/duel/components/Board'
+import { EMPTY_PLAYER } from 'src/features/duel/constants'
 import { opponentDecidingMessage } from 'src/features/duel/messages'
-import { playCard } from 'src/features/duel/slice'
+import { playCard, startInitialCardDraw } from 'src/features/duel/slice'
 import { mockStackedPlayer, stackedDuelState } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
-import { MODAL_TEST_ID } from 'src/shared/testIds'
+import { OVERLAY_TEST_ID } from 'src/shared/testIds'
 import { normalizePlayerCards } from 'src/shared/utils'
-import { ElevatedAcolyte } from 'src/features/cards/CardBases'
-import { EMPTY_PLAYER } from 'src/features/duel/constants'
 
 it('should add card effect listeners on mount', () => {
   const { dispatchSpy } = renderWithProviders(<Board />, {
@@ -38,6 +39,22 @@ it('should add card effect listeners on mount', () => {
       effect: CardEffects[cardWithTrigger.trigger?.effect as CardEffectName],
     }),
   )
+})
+
+it('should initiate card drawing', async () => {
+  const { getByTestId, dispatchSpy } = renderWithProviders(<Board />, {
+    preloadedState: {
+      duel: { ...stackedDuelState, phase: 'Pre-duel' },
+    },
+  })
+
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 2500))
+  })
+
+  fireEvent.animationEnd(getByTestId(OVERLAY_TEST_ID))
+
+  expect(dispatchSpy).toHaveBeenCalledWith(startInitialCardDraw())
 })
 
 it('should play CPU turn', async () => {
@@ -69,7 +86,11 @@ it('should play CPU turn', async () => {
     },
   )
 
-  fireEvent.animationEnd(getByTestId(MODAL_TEST_ID))
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 2500))
+  })
+
+  fireEvent.animationEnd(getByTestId(OVERLAY_TEST_ID))
 
   await waitFor(() =>
     expect(getByText(opponentDecidingMessage)).toBeInTheDocument(),
