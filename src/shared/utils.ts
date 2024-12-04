@@ -111,11 +111,18 @@ export const getOnPlayPredicate: GetOnPlayPredicate = (
   action,
   currentState,
   cardName,
-) =>
-  action.type === 'duel/playCard' &&
-  currentState.duel.players[action.payload.playerId].cards[
-    action.payload.cardId
-  ].name === cardName
+) => {
+  if (action.type === 'duel/playCard') {
+    const card =
+      currentState.duel.players[action.payload.playerId].cards[
+        action.payload.cardId
+      ]
+
+    return !!card && card.name === cardName
+  }
+
+  return false
+}
 
 /**
  * Returns an array of ids of all cards in a player's hand that cost within the player's coins reserve.

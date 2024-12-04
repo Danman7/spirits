@@ -21,11 +21,13 @@ import duelReducer, {
   updateCard,
 } from 'src/features/duel/slice'
 import { CardStack, DuelState, PlayerCards } from 'src/features/duel/types'
-import { initialPlayerMock, initialOpponentMock } from 'src/shared/__mocks__'
+import {
+  initialPlayerMock,
+  initialOpponentMock,
+  playerId,
+  opponentId,
+} from 'src/shared/__mocks__'
 import { createDuelCard, normalizePlayerCards } from 'src/shared/utils'
-
-const playerId = initialPlayerMock.id
-const opponentId = initialOpponentMock.id
 
 const initialPlayers = [initialPlayerMock, initialOpponentMock]
 

@@ -97,7 +97,7 @@ const CardComponent = motion.create(
                 <motion.div animate={strengthChangeAnimation}>
                   <PositiveNegativeNumber
                     current={strength}
-                    base={base.strength || 0}
+                    base={base.strength}
                   />
                 </motion.div>
               )}

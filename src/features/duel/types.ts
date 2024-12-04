@@ -1,15 +1,15 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { DuelCard } from 'src/features/cards/types'
 
-export type PlayerCards = { [index: DuelCard['id']]: DuelCard }
+export type PlayerCards = { [index: string]: DuelCard }
 
 export type CardStack = 'deck' | 'hand' | 'board' | 'discard'
 
 export interface PlayerStacks {
-  deck: DuelCard['id'][]
-  hand: DuelCard['id'][]
-  board: DuelCard['id'][]
-  discard: DuelCard['id'][]
+  deck: string[]
+  hand: string[]
+  board: string[]
+  discard: string[]
   cards: PlayerCards
 }
 
@@ -41,11 +41,11 @@ export interface DuelState {
   players: DuelPlayers
   loggedInPlayerId: Player['id']
   activePlayerId: Player['id']
-  attackingAgentId: DuelCard['id']
+  attackingAgentId: string
 }
 
 export type PlayerCardAction = PayloadAction<{
-  cardId: DuelCard['id']
+  cardId: string
   playerId: Player['id']
 }>
 

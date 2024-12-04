@@ -79,8 +79,8 @@ export interface DuelCard extends CardBase {
   id: string
   strength: number
   base: {
-    cost: CardBase['cost']
-    strength: CardBase['strength']
+    cost: number
+    strength: number
   }
 }
 
@@ -90,7 +90,7 @@ export interface CardProps {
   isSmall?: boolean
   isAttacking?: boolean
   isOnTop?: boolean
-  onClickCard?: (cardId: DuelCard['id']) => void
+  onClickCard?: (cardId: string) => void
   onAnimationComplete?: () => void
 }
 

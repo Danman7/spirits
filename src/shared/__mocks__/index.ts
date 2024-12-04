@@ -13,6 +13,7 @@ import {
   Zombie,
 } from 'src/features/cards/CardBases'
 import { DEFAULT_COINS_AMOUNT, EMPTY_PLAYER } from 'src/features/duel/constants'
+import { initialState } from 'src/features/duel/slice'
 import { DuelState, Player } from 'src/features/duel/types'
 import { normalizePlayerCards } from 'src/shared/utils'
 
@@ -42,6 +43,7 @@ export const initialOpponentMock: Player = {
   id: opponentId,
   name: 'Karras',
   coins: DEFAULT_COINS_AMOUNT,
+  isCPU: true,
   ...normalizePlayerCards({
     deck: [
       Zombie,
@@ -100,4 +102,8 @@ export const stackedDuelState: DuelState = {
 
 export const stackedPreloadedState: RootState = {
   duel: { ...stackedDuelState },
+}
+
+export const mockRootState: RootState = {
+  duel: initialState,
 }

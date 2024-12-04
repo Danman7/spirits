@@ -4,11 +4,6 @@ import { RootState } from 'src/app/store'
 
 const getDuelState = (state: RootState) => state.duel
 
-export const getTurn = createSelector(
-  getDuelState,
-  (duelState) => duelState.turn,
-)
-
 export const getPhase = createSelector(
   getDuelState,
   (duelState) => duelState.phase,

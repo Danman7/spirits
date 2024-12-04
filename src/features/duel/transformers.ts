@@ -1,4 +1,3 @@
-import { DuelCard } from 'src/features/cards/types'
 import { CARD_STACKS } from 'src/features/duel/constants'
 import { initialState } from 'src/features/duel/slice'
 import {
@@ -157,7 +156,7 @@ export const moveCardBetweenStacks = ({
 }: {
   state: DuelState
   playerId: Player['id']
-  movedCardId: DuelCard['id']
+  movedCardId: string
   to: CardStack
 }) => {
   const { players } = state

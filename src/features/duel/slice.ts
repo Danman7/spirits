@@ -164,7 +164,7 @@ export const duelSlice = createSlice({
       state,
       action: PayloadAction<{
         playerId: Player['id']
-        cardId: DuelCard['id']
+        cardId: string
         update: Partial<DuelCard>
       }>,
     ) => {
