@@ -12,7 +12,7 @@ import {
 } from 'src/features/cards/CardBases'
 import Board from 'src/features/duel/components/Board'
 import { initialState } from 'src/features/duel/slice'
-import { MockPlayer1, MockPlayer2 } from 'src/shared/__mocks__'
+import { initialPlayerMock, initialOpponentMock } from 'src/shared/__mocks__'
 import { normalizePlayerCards } from 'src/shared/utils'
 
 const meta = {
@@ -23,7 +23,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'This is the main component for dueling (single and multi-player) that displays both player’s card stack and gameplay UI. It takes no properties as it gets all information from the app store and distributes it to the nested children.',
+          'This is the main component for dueling (single and multi-player) that displays both player’s card stacks and gameplay UI. It takes no properties as it gets all information from the app store and distributes it to the nested children.',
       },
     },
   },
@@ -40,18 +40,18 @@ export const Default: Story = {
           duel: {
             ...initialState,
             turn: 1,
-            activePlayerId: MockPlayer1.id,
+            activePlayerId: initialPlayerMock.id,
             players: {
-              [MockPlayer1.id]: {
-                ...MockPlayer1,
+              [initialPlayerMock.id]: {
+                ...initialPlayerMock,
                 ...normalizePlayerCards({
                   deck: [TempleGuard, TempleGuard, ElevatedAcolyte],
                   hand: [BrotherSachelman, ElevatedAcolyte],
                   board: [HammeriteNovice, HammeriteNovice],
                 }),
               },
-              [MockPlayer2.id]: {
-                ...MockPlayer2,
+              [initialOpponentMock.id]: {
+                ...initialOpponentMock,
                 ...normalizePlayerCards({
                   deck: [Zombie, Haunt, AzaranTheCruel],
                   hand: [Haunt],
@@ -59,9 +59,9 @@ export const Default: Story = {
                 }),
               },
             },
-            playerOrder: [MockPlayer2.id, MockPlayer1.id],
+            playerOrder: [initialOpponentMock.id, initialPlayerMock.id],
             phase: 'Player Turn',
-            loggedInPlayerId: MockPlayer1.id,
+            loggedInPlayerId: initialPlayerMock.id,
           },
         })}
       >

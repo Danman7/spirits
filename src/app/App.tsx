@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
-import { PlayTestPlayer1, PlayTestPlayer2 } from 'src/shared/__mocks__'
+import { initialPlayerMock, initialOpponentMock } from 'src/shared/__mocks__'
 import Board from 'src/features/duel/components/Board'
 import { getActivePlayerId } from 'src/features/duel/selectors'
 import { initializeDuel } from 'src/features/duel/slice'
@@ -18,9 +18,9 @@ const App = () => {
 
       dispatch(
         initializeDuel({
-          players: [PlayTestPlayer1, PlayTestPlayer2],
-          loggedInPlayerId: PlayTestPlayer1.id,
-          firstPlayerId: PlayTestPlayer1.id,
+          players: [initialPlayerMock, initialOpponentMock],
+          loggedInPlayerId: initialPlayerMock.id,
+          firstPlayerId: initialPlayerMock.id,
         }),
       )
     }

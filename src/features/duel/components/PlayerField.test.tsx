@@ -2,7 +2,7 @@ import { fireEvent, waitFor } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 
 import {
-  mockStackedPlayer,
+  stackedPlayerMock,
   stackedPreloadedState as preloadedState,
 } from 'src/shared/__mocks__'
 import PlayerField, {
@@ -24,10 +24,10 @@ import {
   PLAYER_HAND_ID,
 } from 'src/shared/testIds'
 
-const playerId = mockStackedPlayer.id
+const playerId = stackedPlayerMock.id
 
 const defaultProps: PlayerFieldProps = {
-  player: mockStackedPlayer,
+  player: stackedPlayerMock,
   isActive: true,
   phase: 'Player Turn',
   isOnTop: false,
@@ -44,86 +44,86 @@ describe('Bottom (Player) Side', () => {
     )
 
     expect(getByRole('heading', { level: 2 })).toHaveTextContent(
-      `${mockStackedPlayer.name} / ${mockStackedPlayer.coins} (+${mockStackedPlayer.income})`,
+      `${stackedPlayerMock.name} / ${stackedPlayerMock.coins} (+${stackedPlayerMock.income})`,
     )
   })
 
   it('should show player stacks', () => {
     const { getByTestId, getByText, queryByText } = renderWithProviders(
-      <PlayerField {...defaultProps} player={mockStackedPlayer} />,
+      <PlayerField {...defaultProps} player={stackedPlayerMock} />,
       {
         preloadedState,
       },
     )
 
     expect(getByTestId(PLAYER_DECK_ID).children).toHaveLength(
-      mockStackedPlayer.deck.length,
+      stackedPlayerMock.deck.length,
     )
     expect(getByTestId(PLAYER_HAND_ID).children).toHaveLength(
-      mockStackedPlayer.hand.length,
+      stackedPlayerMock.hand.length,
     )
     expect(getByTestId(PLAYER_BOARD_ID).children).toHaveLength(
-      mockStackedPlayer.board.length,
+      stackedPlayerMock.board.length,
     )
     expect(getByTestId(PLAYER_DISCARD_ID).children).toHaveLength(
-      mockStackedPlayer.discard.length,
+      stackedPlayerMock.discard.length,
     )
 
     expect(
-      getByText(mockStackedPlayer.cards[mockStackedPlayer.hand[0]].name),
+      getByText(stackedPlayerMock.cards[stackedPlayerMock.hand[0]].name),
     ).toBeInTheDocument()
     expect(
-      getByText(mockStackedPlayer.cards[mockStackedPlayer.board[0]].name),
+      getByText(stackedPlayerMock.cards[stackedPlayerMock.board[0]].name),
     ).toBeInTheDocument()
     expect(
-      queryByText(mockStackedPlayer.cards[mockStackedPlayer.deck[0]].name),
+      queryByText(stackedPlayerMock.cards[stackedPlayerMock.deck[0]].name),
     ).not.toBeInTheDocument()
     expect(
-      queryByText(mockStackedPlayer.cards[mockStackedPlayer.discard[0]].name),
+      queryByText(stackedPlayerMock.cards[stackedPlayerMock.discard[0]].name),
     ).not.toBeInTheDocument()
   })
 
   it('should be able to browse deck and discard stacks', async () => {
     const { getByTestId, getByText, queryByText } = renderWithProviders(
-      <PlayerField {...defaultProps} player={mockStackedPlayer} />,
+      <PlayerField {...defaultProps} player={stackedPlayerMock} />,
       {
         preloadedState,
       },
     )
 
     expect(
-      queryByText(mockStackedPlayer.cards[mockStackedPlayer.deck[0]].name),
+      queryByText(stackedPlayerMock.cards[stackedPlayerMock.deck[0]].name),
     ).not.toBeInTheDocument()
 
     fireEvent.click(getByTestId(PLAYER_DECK_ID))
 
     expect(
-      getByText(mockStackedPlayer.cards[mockStackedPlayer.deck[0]].name),
+      getByText(stackedPlayerMock.cards[stackedPlayerMock.deck[0]].name),
     ).toBeInTheDocument()
 
     fireEvent.click(getByText(closeMessage))
 
     await waitFor(() => {
       expect(
-        queryByText(mockStackedPlayer.cards[mockStackedPlayer.deck[0]].name),
+        queryByText(stackedPlayerMock.cards[stackedPlayerMock.deck[0]].name),
       ).not.toBeInTheDocument()
     })
 
     expect(
-      queryByText(mockStackedPlayer.cards[mockStackedPlayer.discard[0]].name),
+      queryByText(stackedPlayerMock.cards[stackedPlayerMock.discard[0]].name),
     ).not.toBeInTheDocument()
 
     fireEvent.click(getByTestId(PLAYER_DISCARD_ID))
 
     expect(
-      getByText(mockStackedPlayer.cards[mockStackedPlayer.discard[0]].name),
+      getByText(stackedPlayerMock.cards[stackedPlayerMock.discard[0]].name),
     ).toBeInTheDocument()
 
     fireEvent.click(getByText(closeMessage))
 
     await waitFor(() => {
       expect(
-        queryByText(mockStackedPlayer.cards[mockStackedPlayer.deck[0]].name),
+        queryByText(stackedPlayerMock.cards[stackedPlayerMock.deck[0]].name),
       ).not.toBeInTheDocument()
     })
   })
@@ -132,7 +132,7 @@ describe('Bottom (Player) Side', () => {
     const { getByText, dispatchSpy } = renderWithProviders(
       <PlayerField
         {...defaultProps}
-        player={mockStackedPlayer}
+        player={stackedPlayerMock}
         phase="Redrawing Phase"
       />,
       {
@@ -140,7 +140,7 @@ describe('Bottom (Player) Side', () => {
       },
     )
 
-    const redrawnCard = mockStackedPlayer.cards[mockStackedPlayer.hand[0]]
+    const redrawnCard = stackedPlayerMock.cards[stackedPlayerMock.hand[0]]
 
     fireEvent.click(getByText(redrawnCard.name))
 
@@ -151,10 +151,10 @@ describe('Bottom (Player) Side', () => {
       }),
     )
     expect(dispatchSpy).toHaveBeenCalledWith(
-      drawCardFromDeck(mockStackedPlayer.id),
+      drawCardFromDeck(stackedPlayerMock.id),
     )
     expect(dispatchSpy).toHaveBeenCalledWith(
-      completeRedraw(mockStackedPlayer.id),
+      completeRedraw(stackedPlayerMock.id),
     )
   })
 
@@ -166,7 +166,7 @@ describe('Bottom (Player) Side', () => {
       },
     )
 
-    const playedCard = mockStackedPlayer.cards[mockStackedPlayer.hand[0]]
+    const playedCard = stackedPlayerMock.cards[stackedPlayerMock.hand[0]]
 
     fireEvent.click(getByText(playedCard.name))
 
@@ -176,7 +176,7 @@ describe('Bottom (Player) Side', () => {
   })
 
   it('should show agent attacking', async () => {
-    const attackingAgentId = mockStackedPlayer.board[0]
+    const attackingAgentId = stackedPlayerMock.board[0]
 
     const { dispatchSpy } = renderWithProviders(
       <PlayerField {...defaultProps} attackingAgentId={attackingAgentId} />,
@@ -201,16 +201,16 @@ describe('Top (Opponent) Side', () => {
     )
 
     expect(
-      queryByText(mockStackedPlayer.cards[mockStackedPlayer.hand[0]].name),
+      queryByText(stackedPlayerMock.cards[stackedPlayerMock.hand[0]].name),
     ).not.toBeInTheDocument()
     expect(
-      getByText(mockStackedPlayer.cards[mockStackedPlayer.board[0]].name),
+      getByText(stackedPlayerMock.cards[stackedPlayerMock.board[0]].name),
     ).toBeInTheDocument()
     expect(
-      queryByText(mockStackedPlayer.cards[mockStackedPlayer.deck[0]].name),
+      queryByText(stackedPlayerMock.cards[stackedPlayerMock.deck[0]].name),
     ).not.toBeInTheDocument()
     expect(
-      queryByText(mockStackedPlayer.cards[mockStackedPlayer.discard[0]].name),
+      queryByText(stackedPlayerMock.cards[stackedPlayerMock.discard[0]].name),
     ).not.toBeInTheDocument()
   })
 })

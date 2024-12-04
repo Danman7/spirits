@@ -16,9 +16,12 @@ import { DEFAULT_COINS_AMOUNT, EMPTY_PLAYER } from 'src/features/duel/constants'
 import { DuelState, Player } from 'src/features/duel/types'
 import { normalizePlayerCards } from 'src/shared/utils'
 
-export const MockPlayer1: Player = {
+export const playerId = 'player'
+export const opponentId = 'opponent'
+
+export const initialPlayerMock: Player = {
   ...EMPTY_PLAYER,
-  id: 'player1',
+  id: playerId,
   name: 'Garret',
   coins: DEFAULT_COINS_AMOUNT,
   ...normalizePlayerCards({
@@ -34,9 +37,9 @@ export const MockPlayer1: Player = {
   }),
 }
 
-export const MockPlayer2: Player = {
+export const initialOpponentMock: Player = {
   ...EMPTY_PLAYER,
-  id: 'player2',
+  id: opponentId,
   name: 'Karras',
   coins: DEFAULT_COINS_AMOUNT,
   ...normalizePlayerCards({
@@ -52,42 +55,8 @@ export const MockPlayer2: Player = {
   }),
 }
 
-export const PlayTestPlayer1: Player = {
-  ...MockPlayer1,
-  coins: DEFAULT_COINS_AMOUNT,
-}
-
-export const PlayTestPlayer2: Player = {
-  ...MockPlayer2,
-  coins: DEFAULT_COINS_AMOUNT,
-  isCPU: true,
-}
-
-export const MockPlayerTurnState: DuelState = {
-  loggedInPlayerId: MockPlayer1.id,
-  phase: 'Player Turn',
-  playerOrder: [MockPlayer2.id, MockPlayer1.id],
-  turn: 1,
-  activePlayerId: MockPlayer1.id,
-  attackingAgentId: '',
-  players: {
-    [MockPlayer1.id]: {
-      ...EMPTY_PLAYER,
-      id: MockPlayer1.id,
-      name: 'Garret',
-      coins: DEFAULT_COINS_AMOUNT,
-    },
-    [MockPlayer2.id]: {
-      ...EMPTY_PLAYER,
-      id: MockPlayer2.id,
-      name: 'Karras',
-      coins: DEFAULT_COINS_AMOUNT,
-    },
-  },
-}
-
-export const mockStackedPlayer: Player = {
-  ...MockPlayerTurnState.players[MockPlayer1.id],
+export const stackedPlayerMock: Player = {
+  ...initialPlayerMock,
   income: 2,
   ...normalizePlayerCards({
     deck: [HammeriteNovice, HighPriestMarkander],
@@ -97,15 +66,38 @@ export const mockStackedPlayer: Player = {
   }),
 }
 
+export const stackedOpponentMock: Player = {
+  ...initialOpponentMock,
+  ...normalizePlayerCards({
+    deck: [ViktoriaThiefPawn],
+    hand: [Haunt, BookOfAsh],
+    board: [Zombie],
+    discard: [AzaranTheCruel],
+  }),
+}
+
+export const MockPlayerTurnState: DuelState = {
+  loggedInPlayerId: initialPlayerMock.id,
+  phase: 'Player Turn',
+  playerOrder: [initialOpponentMock.id, initialPlayerMock.id],
+  turn: 1,
+  activePlayerId: initialPlayerMock.id,
+  attackingAgentId: '',
+  players: {
+    [stackedPlayerMock.id]: stackedPlayerMock,
+    [stackedOpponentMock.id]: stackedOpponentMock,
+  },
+}
+
 export const stackedDuelState: DuelState = {
   ...MockPlayerTurnState,
   players: {
-    [mockStackedPlayer.id]: mockStackedPlayer,
+    [stackedPlayerMock.id]: stackedPlayerMock,
     [MockPlayerTurnState.playerOrder[0]]:
       MockPlayerTurnState.players[MockPlayerTurnState.playerOrder[0]],
   },
 }
 
 export const stackedPreloadedState: RootState = {
-  duel: stackedDuelState,
+  duel: { ...stackedDuelState },
 }
