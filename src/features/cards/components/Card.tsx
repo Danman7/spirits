@@ -2,17 +2,17 @@ import { motion, useAnimationControls } from 'motion/react'
 import { forwardRef, useEffect } from 'react'
 
 import { CardProps } from 'src/features/cards/types'
-import { getFactionColor, joinCardCategories } from 'src/shared/utils'
 import {
-  getCardAttackAnimation,
   CardBoostAnimation,
   CardDamageAnimation,
-  NumberChangeAnimation,
+  getCardAttackAnimation,
 } from 'src/shared/animations'
-import PositiveNegativeNumber from 'src/shared/components/PositiveNegativeNumber'
+import { ColoredNumber } from 'src/shared/components/ColoredNumber'
 import { usePrevious } from 'src/shared/customHooks'
-import styles from 'src/shared/styles/styles.module.css'
+import animations from 'src/shared/styles/animations.module.css'
+import styles from 'src/shared/styles/components.module.css'
 import { CARD_TEST_ID } from 'src/shared/testIds'
+import { getFactionColor, joinCardCategories } from 'src/shared/utils'
 
 const CardComponent = motion.create(
   forwardRef<HTMLDivElement, CardProps>(
@@ -43,15 +43,10 @@ const CardComponent = motion.create(
 
       const prevStrength = usePrevious(strength)
 
-      const strengthChangeAnimation = useAnimationControls()
       const cardAnimationControls = useAnimationControls()
 
       useEffect(() => {
         if (strength && prevStrength) {
-          if (prevStrength && prevStrength !== strength) {
-            strengthChangeAnimation.start(NumberChangeAnimation)
-          }
-
           if (prevStrength < strength) {
             cardAnimationControls.start(CardBoostAnimation)
           }
@@ -60,12 +55,7 @@ const CardComponent = motion.create(
             cardAnimationControls.start(CardDamageAnimation)
           }
         }
-      }, [
-        prevStrength,
-        strength,
-        strengthChangeAnimation,
-        cardAnimationControls,
-      ])
+      }, [prevStrength, strength, cardAnimationControls])
 
       useEffect(() => {
         if (isAttacking) {
@@ -85,7 +75,7 @@ const CardComponent = motion.create(
           animate={cardAnimationControls}
           onAnimationComplete={onAnimationComplete}
           onClick={onClickCard ? () => onClickCard(id) : undefined}
-          className={`${styles.card} ${isSmall ? styles.smallCard : ''} ${onClickCard ? styles.activeCard : ''} ${rank === 'unique' ? styles.uniqueCard : ''}`}
+          className={`${styles.card} ${isSmall ? styles.smallCard : ''} ${onClickCard ? animations.activeCard : ''} ${rank === 'unique' ? styles.uniqueCard : ''}`}
         >
           <div
             className={styles.cardHeader}
@@ -94,12 +84,7 @@ const CardComponent = motion.create(
             <h3 className={styles.cardTitle}>
               <span>{name}</span>
               {!!strength && (
-                <motion.div animate={strengthChangeAnimation}>
-                  <PositiveNegativeNumber
-                    current={strength}
-                    base={base.strength}
-                  />
-                </motion.div>
+                <ColoredNumber current={strength} base={base.strength} />
               )}
             </h3>
 

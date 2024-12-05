@@ -31,29 +31,12 @@
   border-color: var(--hilight-color);
 }
 
-@keyframes activeGlow {
-  from {
-    box-shadow: 0 0 1px 1px var(--action-color);
-  }
-  to {
-    box-shadow: 0 0 5px 5px var(--action-color);
-  }
-}
-
 .smallCard {
   border-width: 2px;
   width: 150px;
   height: 210px;
   font-size: 0.594rem;
   box-shadow: var(--box-shadow-1);
-}
-
-.activeCard {
-  cursor: pointer;
-  animation-name: activeGlow;
-  animation-duration: 0.5s;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
 }
 
 .cardBack {
@@ -252,6 +235,7 @@
 
 .inlineBlock {
   display: inline-block;
+  position: relative;
 }
 
 .playerSide {

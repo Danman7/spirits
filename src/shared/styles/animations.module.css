@@ -1,7 +1,12 @@
 .animation {
-  animation-duration: var(--quick-animation-time);
+  animation-duration: var(--transition-time);
   animation-timing-function: ease-in-out;
   animation-fill-mode: both;
+}
+
+.pulsation {
+  animation-duration: var(--pulsation-time);
+  animation-timing-function: ease-in-out;
 }
 
 /* Fades */
@@ -106,15 +111,100 @@
   animation-name: slideOutLeft;
 }
 
-/* Pops */
-@keyframes popIn {
-  from {
+@keyframes slideUpOpacity {
+  0% {
     opacity: 0;
-    scale: 0.5;
+    transform: translateY(0);
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-2em);
+  }
+}
+
+.slideUpOpacity {
+  composes: animation;
+  position: absolute;
+  top: 0;
+  animation-duration: 1s;
+  animation-name: slideUpOpacity;
+}
+
+/* Pops */
+@keyframes pop {
+  from {
+    scale: 1;
+    color: inherit;
   }
 
   to {
-    opacity: 1;
-    scale: 1;
+    scale: 1.5;
+    color: var(----hilight-color);
+  }
+}
+
+.pop {
+  animation-name: pop;
+  display: inline-block;
+  animation-duration: var(--transition-time);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+  animation-direction: alternate;
+}
+
+/* Pulsates */
+@keyframes activeGlow {
+  from {
+    box-shadow: 0 0 2px 2px var(--action-color);
+  }
+  to {
+    box-shadow: 0 0 5px 5px var(--action-color);
+  }
+}
+
+.activeCard {
+  composes: pulsation;
+  cursor: pointer;
+  animation-name: activeGlow;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-fill-mode: both;
+}
+
+@keyframes wave {
+  from {
+    transform: translateY(0);
+    color: inherit;
+  }
+
+  to {
+    transform: translateY(-5px);
+    color: var(--primary-color);
+  }
+}
+
+.loadingDots {
+  composes: pulsation;
+  animation-name: wave;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  display: inline-block;
+  margin-left: 3px;
+
+  &:nth-child(2) {
+    animation-delay: calc(var(--transition-time) * 1);
+  }
+
+  &:nth-child(3) {
+    animation-delay: calc(var(--transition-time) * 2);
+  }
+
+  &:nth-child(4) {
+    animation-delay: calc(var(--transition-time) * 3);
   }
 }

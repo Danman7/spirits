@@ -1,7 +1,7 @@
 import { motion } from 'motion/react'
 import { FC, ReactNode } from 'react'
 
-import styles from 'src/shared/styles/styles.module.css'
+import styles from 'src/shared/styles/components.module.css'
 
 interface LinkProps {
   children?: ReactNode

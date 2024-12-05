@@ -1,16 +1,14 @@
-import { motion } from 'motion/react'
 import { FC } from 'react'
-import { LoadingDotsAnimation } from 'src/shared/animations'
+
+import animations from 'src/shared/styles/animations.module.css'
 
 const LoadingMessage: FC<{ message: string }> = ({ message }) => (
   <>
     {message}
-    <motion.div
-      style={{ display: 'inline-block' }}
-      animate={LoadingDotsAnimation}
-    >
-      ...
-    </motion.div>
+    <span className={animations.loadingDots}>.</span>
+    <span className={animations.loadingDots}>.</span>
+    <span className={animations.loadingDots}>.</span>
+    <span className={animations.loadingDots}>.</span>
   </>
 )
 

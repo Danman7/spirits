@@ -1,5 +1,5 @@
-import { AnimatePresence, motion, useAnimationControls } from 'motion/react'
-import { FC, useEffect, useMemo, useState } from 'react'
+import { AnimatePresence } from 'motion/react'
+import { FC, useMemo, useState } from 'react'
 
 import { useAppDispatch } from 'src/app/store'
 import Card from 'src/features/cards/components/Card'
@@ -15,10 +15,10 @@ import {
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
 import { DuelPhase, Player } from 'src/features/duel/types'
-import { NumberChangeAnimation } from 'src/shared/animations'
+import { AnimatedNumber } from 'src/shared/components/AnimatedNumber'
 import Link from 'src/shared/components/Link'
 import { Modal } from 'src/shared/components/Modal'
-import styles from 'src/shared/styles/styles.module.css'
+import styles from 'src/shared/styles/components.module.css'
 import {
   OPPONENT_BOARD_ID,
   OPPONENT_DECK_ID,
@@ -142,26 +142,13 @@ const PlayerField: FC<PlayerFieldProps> = ({
     [browsedStack, cards, player],
   )
 
-  const coinsChangeAnimation = useAnimationControls()
-
-  useEffect(() => {
-    coinsChangeAnimation.start(NumberChangeAnimation)
-  }, [coins, coinsChangeAnimation])
-
   return (
     <>
       <h2
         data-testid={isOnTop ? OPPONENT_INFO_ID : PLAYER_INFO_ID}
         className={`${isOnTop ? styles.topPlayerInfo : styles.bottomPlayerInfo} ${isActive ? styles.activePlayerInfo : ''}`}
       >
-        <span>{name}</span> /{' '}
-        <motion.span
-          className={styles.inlineBlock}
-          initial={false}
-          animate={coinsChangeAnimation}
-        >
-          {coins}
-        </motion.span>
+        <span>{name}</span> / <AnimatedNumber value={coins} />
         {income ? <span> (+{income})</span> : null}
       </h2>
 
