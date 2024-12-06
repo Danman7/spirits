@@ -127,12 +127,105 @@
   }
 }
 
-.slideUpOpacity {
-  composes: animation;
+.difference {
   position: absolute;
   top: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.slideUpOpacity {
+  composes: animation difference;
+  position: absolute;
   animation-duration: 1s;
   animation-name: slideUpOpacity;
+}
+
+/* Card Animations */
+@keyframes attackFromTop {
+  from {
+    transform: translateY(0);
+    box-shadow: inherit;
+  }
+
+  to {
+    transform: translateY(20px);
+    box-shadow: 0 -5px 2px 2px var(--primary-color);
+  }
+}
+
+@keyframes attackFromBottom {
+  from {
+    transform: translateY(0);
+    box-shadow: inherit;
+  }
+
+  to {
+    transform: translateY(-20px);
+    box-shadow: 0 5px 2px 2px var(--primary-color);
+  }
+}
+
+.attackFromTop {
+  composes: animation;
+  animation-name: attackFromTop;
+  animation-iteration-count: 2;
+  animation-direction: alternate;
+}
+
+.attackFromBottom {
+  composes: animation;
+  animation-name: attackFromBottom;
+  animation-iteration-count: 2;
+  animation-direction: alternate;
+}
+
+@keyframes boost {
+  from {
+    scale: 1;
+    box-shadow: inherit;
+  }
+
+  to {
+    scale: 1.1;
+    box-shadow: 0 0 5px 5px var(--hilight-color);
+  }
+}
+
+.boost {
+  composes: animation;
+  animation-name: boost;
+  animation-iteration-count: 2;
+  animation-direction: alternate;
+}
+
+@keyframes damage {
+  0% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(10px);
+  }
+
+  50% {
+    transform: translateX(0);
+  }
+
+  75% {
+    transform: translateX(-10px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.damage {
+  composes: animation;
+  animation-name: damage;
+  animation-iteration-count: 2;
+  animation-direction: alternate;
 }
 
 /* Pops */
@@ -153,7 +246,7 @@
   display: inline-block;
   animation-duration: var(--transition-time);
   animation-timing-function: ease-in-out;
-  animation-iteration-count: 1;
+  animation-iteration-count: 2;
   animation-direction: alternate;
 }
 

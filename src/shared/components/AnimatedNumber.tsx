@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react'
+import { TICK } from 'src/shared/constants'
 
 import { usePrevious } from 'src/shared/customHooks'
 import animations from 'src/shared/styles/animations.module.css'
@@ -11,31 +12,30 @@ interface AnimatedNumberProps {
 export const AnimatedNumber: FC<AnimatedNumberProps> = ({ value = 0 }) => {
   const previousValue = usePrevious(value)
 
+  const [valueAnimation, setValueAnimation] = useState('')
+  const [differenceAnimation, setDifferenceAnimation] = useState('')
   const [difference, setDifference] = useState('')
-
-  const onDifferenceAnimationEnd = () => {
-    setDifference('')
-  }
 
   useEffect(() => {
     if (previousValue !== undefined && value !== previousValue) {
+      setValueAnimation('')
+      setDifferenceAnimation('')
       setDifference(
         `${value > previousValue ? '+' : ''}${value - previousValue}`,
       )
+
+      setTimeout(() => {
+        setValueAnimation(animations.pop)
+        setDifferenceAnimation(` ${animations.slideUpOpacity}`)
+      }, TICK)
     }
-  }, [value, previousValue])
+  }, [previousValue, value])
 
   return (
     <div className={components.inlineBlock}>
-      <span key={value} className={animations.pop}>
-        {value}
-      </span>
+      <span className={valueAnimation}>{value}</span>
 
-      <div
-        key={difference}
-        className={animations.slideUpOpacity}
-        onAnimationEnd={onDifferenceAnimationEnd}
-      >
+      <div className={`${animations.difference}${differenceAnimation}`}>
         {difference}
       </div>
     </div>

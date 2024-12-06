@@ -8,6 +8,11 @@ const meta = {
   component: Link,
   parameters: {
     layout: 'centered',
+    docs: {
+      description: {
+        component: 'A general link component with primary color.',
+      },
+    },
   },
 
   args: {

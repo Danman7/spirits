@@ -117,11 +117,7 @@ const PlayerField: FC<PlayerFieldProps> = ({
     }
   }
 
-  const onBoardCardAnimationComplete = (card: DuelCard) => {
-    if (card.id === attackingAgentId) {
-      dispatch(moveToNextAttacker())
-    }
-  }
+  const onAttackAnimationEnd = () => dispatch(moveToNextAttacker())
 
   const modalContent = useMemo(
     () =>
@@ -225,9 +221,7 @@ const PlayerField: FC<PlayerFieldProps> = ({
             <Card
               layout
               layoutId={cardId}
-              onAnimationComplete={() =>
-                onBoardCardAnimationComplete(cards[cardId])
-              }
+              onAttackAnimationEnd={onAttackAnimationEnd}
               onLayoutAnimationComplete={() =>
                 onBoardCardLayoutComplete(cards[cardId])
               }

@@ -5,10 +5,10 @@ import styles from 'src/shared/styles/components.module.css'
 
 interface LinkProps {
   children?: ReactNode
-  onClick: () => void
+  onClick?: () => void
 }
 
-const Link: FC<LinkProps> = ({ children, onClick }) => (
+const Link: FC<LinkProps> = ({ children = '', onClick }) => (
   <motion.button
     className={styles.link}
     onClick={onClick}

@@ -1,16 +1,12 @@
-import { motion, useAnimationControls } from 'motion/react'
-import { forwardRef, useEffect } from 'react'
+import { motion } from 'motion/react'
+import { forwardRef, useEffect, useState } from 'react'
 
 import { CardProps } from 'src/features/cards/types'
-import {
-  CardBoostAnimation,
-  CardDamageAnimation,
-  getCardAttackAnimation,
-} from 'src/shared/animations'
 import { ColoredNumber } from 'src/shared/components/ColoredNumber'
+import { TICK } from 'src/shared/constants'
 import { usePrevious } from 'src/shared/customHooks'
 import animations from 'src/shared/styles/animations.module.css'
-import styles from 'src/shared/styles/components.module.css'
+import components from 'src/shared/styles/components.module.css'
 import { CARD_TEST_ID } from 'src/shared/testIds'
 import { getFactionColor, joinCardCategories } from 'src/shared/utils'
 
@@ -24,7 +20,7 @@ const CardComponent = motion.create(
         isAttacking = false,
         isOnTop = false,
         onClickCard,
-        onAnimationComplete,
+        onAttackAnimationEnd,
       },
       ref,
     ) => {
@@ -43,61 +39,79 @@ const CardComponent = motion.create(
 
       const prevStrength = usePrevious(strength)
 
-      const cardAnimationControls = useAnimationControls()
+      const [cardStrengthAnimation, setCardStrengthAnimation] = useState('')
+      const [cardAttackAnimation, setCardAttackAnimation] = useState('')
+
+      const onClick = onClickCard ? () => onClickCard(id) : undefined
+
+      const onAnimationEnd = () => {
+        if (isAttacking && onAttackAnimationEnd) {
+          onAttackAnimationEnd()
+        }
+      }
 
       useEffect(() => {
-        if (strength && prevStrength) {
-          if (prevStrength < strength) {
-            cardAnimationControls.start(CardBoostAnimation)
-          }
+        if (prevStrength !== undefined && prevStrength !== strength) {
+          setCardStrengthAnimation('')
 
-          if (prevStrength > strength) {
-            cardAnimationControls.start(CardDamageAnimation)
-          }
+          setTimeout(() => {
+            setCardStrengthAnimation(
+              prevStrength < strength ? animations.boost : animations.damage,
+            )
+          }, TICK)
         }
-      }, [prevStrength, strength, cardAnimationControls])
+      }, [strength, prevStrength])
 
       useEffect(() => {
         if (isAttacking) {
-          cardAnimationControls.start(getCardAttackAnimation(isOnTop))
+          setCardAttackAnimation('')
+
+          setTimeout(() => {
+            setCardAttackAnimation(
+              isOnTop
+                ? ` ${animations.attackFromTop}`
+                : ` ${animations.attackFromBottom}`,
+            )
+          }, TICK)
         }
-      }, [isAttacking, cardAnimationControls, isOnTop])
+      }, [isAttacking, isOnTop])
 
       return isFaceDown ? (
         <motion.div
           ref={ref}
-          className={`${styles.card} ${styles.cardBack} ${isSmall ? styles.smallCard : ''}`}
+          className={`${components.card} ${components.cardBack} ${isSmall ? components.smallCard : ''}`}
         />
       ) : (
         <motion.div
           ref={ref}
           data-testid={`${CARD_TEST_ID}${id}`}
-          animate={cardAnimationControls}
-          onAnimationComplete={onAnimationComplete}
-          onClick={onClickCard ? () => onClickCard(id) : undefined}
-          className={`${styles.card} ${isSmall ? styles.smallCard : ''} ${onClickCard ? animations.activeCard : ''} ${rank === 'unique' ? styles.uniqueCard : ''}`}
+          onAnimationEnd={onAnimationEnd}
+          onClick={onClick}
+          className={`${components.cardAnimationWrapper} ${isSmall ? components.smallCard : ''} ${onClickCard ? animations.activeCard : ''} ${rank === 'unique' ? components.uniqueCard : ''}  ${cardStrengthAnimation}`}
         >
-          <div
-            className={styles.cardHeader}
-            style={{ background: getFactionColor(factions) }}
-          >
-            <h3 className={styles.cardTitle}>
-              <span>{name}</span>
-              {!!strength && (
-                <ColoredNumber current={strength} base={base.strength} />
-              )}
-            </h3>
+          <div className={`${components.card}${cardAttackAnimation}`}>
+            <div
+              className={components.cardHeader}
+              style={{ background: getFactionColor(factions) }}
+            >
+              <h3 className={components.cardTitle}>
+                <span>{name}</span>
+                {!!strength && (
+                  <ColoredNumber current={strength} base={base.strength} />
+                )}
+              </h3>
 
-            <small>{joinCardCategories(categories)}</small>
-          </div>
-          <div className={styles.cardContent}>
-            {description.map((paragraph, index) => (
-              <p key={`${id}-description-${index}`}>{paragraph}</p>
-            ))}
+              <small>{joinCardCategories(categories)}</small>
+            </div>
+            <div className={components.cardContent}>
+              {description.map((paragraph, index) => (
+                <p key={`${id}-description-${index}`}>{paragraph}</p>
+              ))}
 
-            <small className={styles.cardFlavor}>{flavor}</small>
+              <small className={components.cardFlavor}>{flavor}</small>
+            </div>
+            <div className={components.cardFooter}>Cost: {cost}</div>
           </div>
-          <div className={styles.cardFooter}>Cost: {cost}</div>
         </motion.div>
       )
     },

@@ -91,7 +91,7 @@ export interface CardProps {
   isAttacking?: boolean
   isOnTop?: boolean
   onClickCard?: (cardId: string) => void
-  onAnimationComplete?: () => void
+  onAttackAnimationEnd?: () => void
 }
 
 export type GetOnPlayPredicate = (

@@ -18,6 +18,7 @@ import {
 } from 'src/features/duel/slice'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import {
+  CARD_TEST_ID,
   PLAYER_BOARD_ID,
   PLAYER_DECK_ID,
   PLAYER_DISCARD_ID,
@@ -178,12 +179,14 @@ describe('Bottom (Player) Side', () => {
   it('should show agent attacking', async () => {
     const attackingAgentId = stackedPlayerMock.board[0]
 
-    const { dispatchSpy } = renderWithProviders(
+    const { getByTestId, dispatchSpy } = renderWithProviders(
       <PlayerField {...defaultProps} attackingAgentId={attackingAgentId} />,
       {
         preloadedState,
       },
     )
+
+    fireEvent.animationEnd(getByTestId(`${CARD_TEST_ID}${attackingAgentId}`))
 
     await waitFor(() =>
       expect(dispatchSpy).toHaveBeenCalledWith(moveToNextAttacker()),
