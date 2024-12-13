@@ -1,8 +1,10 @@
-import '@testing-library/jest-dom'
 import { fireEvent } from '@testing-library/dom'
+import '@testing-library/jest-dom'
+import { act } from 'react'
 
 import { BookOfAsh, BrotherSachelman } from 'src/features/cards/CardBases'
-import Card from 'src/features/cards/components/Card'
+import { Card } from 'src/features/cards/components/Card'
+import { TICK } from 'src/shared/constants'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { CARD_TEST_ID } from 'src/shared/testIds'
 import { createDuelCard, joinCardCategories } from 'src/shared/utils'
@@ -59,15 +61,45 @@ it('should fire on click event passing card id', () => {
   expect(onCardClick).toHaveBeenCalledWith(mockCard.id)
 })
 
-it('should trigger attacking animation', () => {
+it('should trigger attacking from bottom animation', async () => {
+  const onAttackAnimationEnd = jest.fn()
+
   const { getByTestId } = renderWithProviders(
-    <Card card={mockCard} isAttacking />,
+    <Card
+      card={mockCard}
+      isAttacking
+      onAttackAnimationEnd={onAttackAnimationEnd}
+    />,
   )
 
-  expect(getByTestId(`${CARD_TEST_ID}${mockCard.id}`)).not.toHaveStyle({
-    transform: 'none',
-    boxShadow: '',
+  fireEvent.animationEnd(getByTestId(`${CARD_TEST_ID}${mockCard.id}`))
+
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, TICK))
   })
+
+  expect(onAttackAnimationEnd).toHaveBeenCalled()
+})
+
+it('should trigger attacking from top animation', async () => {
+  const onAttackAnimationEnd = jest.fn()
+
+  const { getByTestId } = renderWithProviders(
+    <Card
+      card={mockCard}
+      isAttacking
+      onAttackAnimationEnd={onAttackAnimationEnd}
+      isOnTop
+    />,
+  )
+
+  fireEvent.animationEnd(getByTestId(`${CARD_TEST_ID}${mockCard.id}`))
+
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, TICK))
+  })
+
+  expect(onAttackAnimationEnd).toHaveBeenCalled()
 })
 
 it('should display no strength for an instant', () => {

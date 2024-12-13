@@ -2,7 +2,7 @@ import { AnimatePresence } from 'motion/react'
 import { FC, useMemo, useState } from 'react'
 
 import { useAppDispatch } from 'src/app/store'
-import Card from 'src/features/cards/components/Card'
+import { Card } from 'src/features/cards/components/Card'
 import { DuelCard } from 'src/features/cards/types'
 import { closeMessage } from 'src/features/duel/messages'
 import {
@@ -16,7 +16,7 @@ import {
 } from 'src/features/duel/slice'
 import { DuelPhase, Player } from 'src/features/duel/types'
 import { AnimatedNumber } from 'src/shared/components/AnimatedNumber'
-import Link from 'src/shared/components/Link'
+import { Link } from 'src/shared/components/Link'
 import { Modal } from 'src/shared/components/Modal'
 import styles from 'src/shared/styles/components.module.css'
 import {

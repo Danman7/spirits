@@ -59,20 +59,8 @@ body {
   letter-spacing: -0.022em;
 }
 
-h1 {
-  font-size: 2.5em;
-}
-
-h2 {
-  font-size: 1.842em;
-}
-
-h3 {
-  font-size: 1.3572em;
-}
-
 small {
-  font-size: 0.7368em;
+  font-size: 0.8em;
 }
 
 a:not([class]) {

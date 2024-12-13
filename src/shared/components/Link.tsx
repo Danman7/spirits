@@ -1,25 +1,14 @@
-import { motion } from 'motion/react'
 import { FC, ReactNode } from 'react'
 
 import styles from 'src/shared/styles/components.module.css'
 
 interface LinkProps {
-  children?: ReactNode
+  children: ReactNode
   onClick?: () => void
 }
 
-const Link: FC<LinkProps> = ({ children = '', onClick }) => (
-  <motion.button
-    className={styles.link}
-    onClick={onClick}
-    whileHover={{
-      scale: 1.1,
-      textDecoration: 'underline',
-    }}
-    whileTap={{ scale: 0.9 }}
-  >
+export const Link: FC<LinkProps> = ({ children, onClick }) => (
+  <button className={styles.link} onClick={onClick}>
     {children}
-  </motion.button>
+  </button>
 )
-
-export default Link

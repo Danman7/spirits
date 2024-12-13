@@ -6,10 +6,10 @@ import animations from 'src/shared/styles/animations.module.css'
 import components from 'src/shared/styles/components.module.css'
 
 interface AnimatedNumberProps {
-  value?: number
+  value: number
 }
 
-export const AnimatedNumber: FC<AnimatedNumberProps> = ({ value = 0 }) => {
+export const AnimatedNumber: FC<AnimatedNumberProps> = ({ value }) => {
   const previousValue = usePrevious(value)
 
   const [valueAnimation, setValueAnimation] = useState('')

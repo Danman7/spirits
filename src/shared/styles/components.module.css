@@ -12,37 +12,80 @@
   color: var(--primary-color);
 }
 
-.cardAnimationWrapper {
+/* Card size, shape and shadow */
+.cardOutline {
+  position: relative;
+  width: 250px;
+  height: 350px;
+  border-radius: 6px;
+  perspective: 1000px;
+}
+
+.smallCard {
+  width: 150px;
+  height: 210px;
+  font-size: 0.594rem;
+  border-radius: 3px;
+}
+
+/* Card border, contents and internal animation-only shadow */
+.cardPaper {
+  width: 100%;
+  height: 100%;
+  transition: transform var(--pulsation-time);
+  transform-style: preserve-3d;
+  box-shadow: var(--box-shadow-2);
   border-radius: 6px;
 }
 
-.card {
-  border-radius: 6px;
-  width: 250px;
-  height: 350px;
-  display: flex;
-  flex-direction: column;
+.cardFlipped .cardPaper {
+  transform: rotateY(180deg);
+}
+
+.smallCard .cardPaper {
   box-shadow: var(--box-shadow-1);
-  background: var(--background-color);
+}
+
+.cardFace {
+  backface-visibility: hidden;
+  width: 100%;
+  height: 100%;
   border-width: 3px;
   border-style: solid;
   border-color: var(--accent-color);
-  position: relative;
+}
+
+.cardFront {
+  composes: cardFace;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  background: var(--background-color);
+}
+
+.smallCard .cardFront,
+.smallCard .cardBack {
+  border-width: 1px;
+}
+
+.cardHeader {
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--accent-color);
+  color: var(--background-color);
+  border-radius: 3px 3px 0 0;
 }
 
 .uniqueCard {
   border-color: var(--hilight-color);
 }
 
-.smallCard {
-  border-width: 2px;
-  width: 150px;
-  height: 210px;
-  font-size: 0.594rem;
-  box-shadow: var(--box-shadow-1);
-}
-
 .cardBack {
+  composes: cardFace;
+  position: absolute;
+  top: 0;
+  transform: rotateY(180deg);
   background: repeating-linear-gradient(
     45deg,
     var(--background-color),
@@ -52,7 +95,7 @@
   );
 }
 
-.cardBack.smallCard {
+.smallCard .cardBack {
   background: repeating-linear-gradient(
     45deg,
     var(--background-color),
@@ -60,14 +103,6 @@
     var(--accent-color) 5px,
     var(--accent-color) 10px
   );
-}
-
-.cardHeader {
-  padding: 0.5em;
-  display: flex;
-  flex-direction: column;
-  border-bottom: 1px solid var(--accent-color);
-  color: var(--background-color);
 }
 
 .cardTitle {
@@ -95,7 +130,10 @@
 .cardFlavor {
   font-style: italic;
   color: var(--accent-color);
+  line-height: 1.3;
 }
+
+/* Board */
 
 .playerBoard {
   height: 50vh;
@@ -124,7 +162,7 @@
   justify-content: center;
   flex-grow: 2;
 
-  .card {
+  .cardOutline {
     margin: 0 -80px;
     transition: bottom 0.2s;
 
@@ -138,8 +176,7 @@
 .topPlayerHand {
   composes: playerHand;
 
-  .card {
-    position: relative;
+  .cardOutline {
     top: -120px;
   }
 }
@@ -147,8 +184,7 @@
 .bottomPlayerHand {
   composes: playerHand;
 
-  .card {
-    position: relative;
+  .cardOutline {
     bottom: -120px;
 
     &:hover {
@@ -227,11 +263,10 @@
 }
 
 .faceDownStack {
-  position: relative;
   width: 150px;
   height: 210px;
 
-  .card {
+  .cardOutline {
     position: absolute;
   }
 }
@@ -269,6 +304,16 @@
   cursor: pointer;
   color: var(--primary-color);
   font-weight: 700;
+  transition: all var(--transition-time);
+
+  &:hover {
+    scale: 1.1;
+    text-decoration: underline;
+  }
+
+  &:active {
+    scale: 0.9;
+  }
 }
 
 .cardBrowserModal {

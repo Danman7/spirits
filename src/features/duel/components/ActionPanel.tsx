@@ -11,7 +11,7 @@ import {
 } from 'src/features/duel/messages'
 import { completeRedraw, initializeEndTurn } from 'src/features/duel/slice'
 import { DuelPhase, Player } from 'src/features/duel/types'
-import Link from 'src/shared/components/Link'
+import { Link } from 'src/shared/components/Link'
 import { SidePanel } from 'src/shared/components/SidePanel'
 
 export interface ActionPanelProps {

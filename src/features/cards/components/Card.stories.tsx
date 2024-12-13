@@ -9,7 +9,7 @@ import {
   Haunt,
   ViktoriaThiefPawn,
 } from 'src/features/cards/CardBases'
-import Card from 'src/features/cards/components/Card'
+import { Card } from 'src/features/cards/components/Card'
 import { createDuelCard } from 'src/shared/utils'
 
 const mockCard = createDuelCard(Haunt)

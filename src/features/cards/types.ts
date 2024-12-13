@@ -84,16 +84,6 @@ export interface DuelCard extends CardBase {
   }
 }
 
-export interface CardProps {
-  card: DuelCard
-  isFaceDown?: boolean
-  isSmall?: boolean
-  isAttacking?: boolean
-  isOnTop?: boolean
-  onClickCard?: (cardId: string) => void
-  onAttackAnimationEnd?: () => void
-}
-
 export type GetOnPlayPredicate = (
   action: PlayerCardAction,
   currentState: RootState,

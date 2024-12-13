@@ -30,8 +30,8 @@ const Board: FC = () => {
   const playerOrder = useAppSelector(getPlayerOrder)
   const phase = useAppSelector(getPhase)
   const loggedInPlayerId = useAppSelector(getLoggedInPlayerId)
-  const attackingAgentId = useAppSelector(getAttackingAgentId)
   const activePlayerId = useAppSelector(getActivePlayerId)
+  const attackingAgentId = useAppSelector(getAttackingAgentId)
 
   const haveBothPlayersNotPerformedAction = Object.values(players).every(
     ({ hasPerformedAction }) => !hasPerformedAction,
@@ -51,11 +51,9 @@ const Board: FC = () => {
       dispatch(startInitialCardDraw())
       setIsSidePanelOpen(true)
     }
-
     if (phase === 'Player Turn') {
       setIsSidePanelOpen(true)
     }
-
     if (isCPUTurn(isLoggedInPlayerActive, opponent, phase)) {
       playCPUTurn({
         dispatch,
@@ -106,9 +104,9 @@ const Board: FC = () => {
         <PlayerField
           key={playerId}
           player={players[playerId]}
-          phase={phase}
           isOnTop={!index}
           isActive={playerId === activePlayerId}
+          phase={phase}
           attackingAgentId={attackingAgentId}
         />
       ))}

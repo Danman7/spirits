@@ -50,23 +50,23 @@ describe('Bottom (Player) Side', () => {
   })
 
   it('should show player stacks', () => {
-    const { getByTestId, getByText, queryByText } = renderWithProviders(
+    const { getByText, queryByText, getByTestId } = renderWithProviders(
       <PlayerField {...defaultProps} player={stackedPlayerMock} />,
       {
         preloadedState,
       },
     )
 
-    expect(getByTestId(PLAYER_DECK_ID).children).toHaveLength(
+    expect(getByTestId(PLAYER_DECK_ID)?.children).toHaveLength(
       stackedPlayerMock.deck.length,
     )
-    expect(getByTestId(PLAYER_HAND_ID).children).toHaveLength(
+    expect(getByTestId(PLAYER_HAND_ID)?.children).toHaveLength(
       stackedPlayerMock.hand.length,
     )
-    expect(getByTestId(PLAYER_BOARD_ID).children).toHaveLength(
+    expect(getByTestId(PLAYER_BOARD_ID)?.children).toHaveLength(
       stackedPlayerMock.board.length,
     )
-    expect(getByTestId(PLAYER_DISCARD_ID).children).toHaveLength(
+    expect(getByTestId(PLAYER_DISCARD_ID)?.children).toHaveLength(
       stackedPlayerMock.discard.length,
     )
 
@@ -96,7 +96,12 @@ describe('Bottom (Player) Side', () => {
       queryByText(stackedPlayerMock.cards[stackedPlayerMock.deck[0]].name),
     ).not.toBeInTheDocument()
 
-    fireEvent.click(getByTestId(PLAYER_DECK_ID))
+    const deck = getByTestId(PLAYER_DECK_ID)
+    const discard = getByTestId(PLAYER_DISCARD_ID)
+
+    if (deck) {
+      fireEvent.click(deck)
+    }
 
     expect(
       getByText(stackedPlayerMock.cards[stackedPlayerMock.deck[0]].name),
@@ -114,7 +119,9 @@ describe('Bottom (Player) Side', () => {
       queryByText(stackedPlayerMock.cards[stackedPlayerMock.discard[0]].name),
     ).not.toBeInTheDocument()
 
-    fireEvent.click(getByTestId(PLAYER_DISCARD_ID))
+    if (discard) {
+      fireEvent.click(discard)
+    }
 
     expect(
       getByText(stackedPlayerMock.cards[stackedPlayerMock.discard[0]].name),

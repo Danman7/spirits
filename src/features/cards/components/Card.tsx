@@ -1,7 +1,7 @@
 import { motion } from 'motion/react'
 import { forwardRef, useEffect, useState } from 'react'
 
-import { CardProps } from 'src/features/cards/types'
+import { DuelCard } from 'src/features/cards/types'
 import { ColoredNumber } from 'src/shared/components/ColoredNumber'
 import { TICK } from 'src/shared/constants'
 import { usePrevious } from 'src/shared/customHooks'
@@ -10,7 +10,17 @@ import components from 'src/shared/styles/components.module.css'
 import { CARD_TEST_ID } from 'src/shared/testIds'
 import { getFactionColor, joinCardCategories } from 'src/shared/utils'
 
-const CardComponent = motion.create(
+export interface CardProps {
+  card: DuelCard
+  isFaceDown?: boolean
+  isSmall?: boolean
+  isAttacking?: boolean
+  isOnTop?: boolean
+  onClickCard?: (cardId: string) => void
+  onAttackAnimationEnd?: () => void
+}
+
+export const Card = motion.create(
   forwardRef<HTMLDivElement, CardProps>(
     (
       {
@@ -38,9 +48,11 @@ const CardComponent = motion.create(
       } = card
 
       const prevStrength = usePrevious(strength)
+      const prevIsFaceDown = usePrevious(isFaceDown)
 
-      const [cardStrengthAnimation, setCardStrengthAnimation] = useState('')
-      const [cardAttackAnimation, setCardAttackAnimation] = useState('')
+      const [cardFaceAnimation, setCardFaceAnimation] = useState('')
+      const [cardOutlineAnimation, setCardOutlineAnimation] = useState('')
+      const [shouldShowFront, setShouldShowFront] = useState(!isFaceDown)
 
       const onClick = onClickCard ? () => onClickCard(id) : undefined
 
@@ -51,12 +63,26 @@ const CardComponent = motion.create(
       }
 
       useEffect(() => {
+        if (prevIsFaceDown !== undefined && prevIsFaceDown !== isFaceDown) {
+          if (isFaceDown) {
+            setTimeout(() => {
+              setShouldShowFront(false)
+            }, 500)
+          } else {
+            setShouldShowFront(true)
+          }
+        }
+      }, [isFaceDown, prevIsFaceDown])
+
+      useEffect(() => {
         if (prevStrength !== undefined && prevStrength !== strength) {
-          setCardStrengthAnimation('')
+          setCardFaceAnimation('')
 
           setTimeout(() => {
-            setCardStrengthAnimation(
-              prevStrength < strength ? animations.boost : animations.damage,
+            setCardFaceAnimation(
+              prevStrength < strength
+                ? ` ${animations.boost}`
+                : ` ${animations.damage}`,
             )
           }, TICK)
         }
@@ -64,53 +90,67 @@ const CardComponent = motion.create(
 
       useEffect(() => {
         if (isAttacking) {
-          setCardAttackAnimation('')
+          setCardOutlineAnimation('')
+          setCardFaceAnimation('')
 
           setTimeout(() => {
-            setCardAttackAnimation(
+            setCardOutlineAnimation(
               isOnTop
                 ? ` ${animations.attackFromTop}`
                 : ` ${animations.attackFromBottom}`,
+            )
+            setCardFaceAnimation(
+              isOnTop
+                ? ` ${animations.attackFromTopFace}`
+                : ` ${animations.attackFromBottomFace}`,
             )
           }, TICK)
         }
       }, [isAttacking, isOnTop])
 
-      return isFaceDown ? (
-        <motion.div
-          ref={ref}
-          className={`${components.card} ${components.cardBack} ${isSmall ? components.smallCard : ''}`}
-        />
-      ) : (
+      return (
         <motion.div
           ref={ref}
           data-testid={`${CARD_TEST_ID}${id}`}
           onAnimationEnd={onAnimationEnd}
           onClick={onClick}
-          className={`${components.cardAnimationWrapper} ${isSmall ? components.smallCard : ''} ${onClickCard ? animations.activeCard : ''} ${rank === 'unique' ? components.uniqueCard : ''}  ${cardStrengthAnimation}`}
+          initial={false}
+          className={`${components.cardOutline}${isSmall ? ` ${components.smallCard}` : ''}${isFaceDown ? ` ${components.cardFlipped}` : ''}${cardOutlineAnimation}`}
         >
-          <div className={`${components.card}${cardAttackAnimation}`}>
-            <div
-              className={components.cardHeader}
-              style={{ background: getFactionColor(factions) }}
-            >
-              <h3 className={components.cardTitle}>
-                <span>{name}</span>
-                {!!strength && (
-                  <ColoredNumber current={strength} base={base.strength} />
-                )}
-              </h3>
+          <div className={components.cardPaper}>
+            {/* Card Front */}
+            {shouldShowFront ? (
+              <div
+                className={`${components.cardFront}${onClickCard ? ` ${animations.activeCard}` : ''}${rank === 'unique' ? ` ${components.uniqueCard}` : ''}${cardFaceAnimation}`}
+              >
+                <div
+                  className={components.cardHeader}
+                  style={{ background: getFactionColor(factions) }}
+                >
+                  <h3 className={components.cardTitle}>
+                    <span>{name}</span>
+                    {!!strength && (
+                      <ColoredNumber current={strength} base={base.strength} />
+                    )}
+                  </h3>
 
-              <small>{joinCardCategories(categories)}</small>
-            </div>
-            <div className={components.cardContent}>
-              {description.map((paragraph, index) => (
-                <p key={`${id}-description-${index}`}>{paragraph}</p>
-              ))}
+                  <small>{joinCardCategories(categories)}</small>
+                </div>
+                <div className={components.cardContent}>
+                  {description.map((paragraph, index) => (
+                    <p key={`${id}-description-${index}`}>{paragraph}</p>
+                  ))}
 
-              <small className={components.cardFlavor}>{flavor}</small>
-            </div>
-            <div className={components.cardFooter}>Cost: {cost}</div>
+                  <div className={components.cardFlavor}>
+                    <small>{flavor}</small>
+                  </div>
+                </div>
+                <div className={components.cardFooter}>Cost: {cost}</div>
+              </div>
+            ) : null}
+
+            {/* Card Back */}
+            <div className={components.cardBack} />
           </div>
         </motion.div>
       )
@@ -120,5 +160,3 @@ const CardComponent = motion.create(
     forwardMotionProps: true,
   },
 )
-
-export default CardComponent

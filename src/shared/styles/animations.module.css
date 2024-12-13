@@ -114,10 +114,14 @@
 @keyframes slideUpOpacity {
   0% {
     opacity: 0;
-    transform: translateY(0);
+    transform: translateY(-1em);
   }
 
-  50% {
+  20% {
+    opacity: 1;
+  }
+
+  80% {
     opacity: 1;
   }
 
@@ -137,47 +141,75 @@
 .slideUpOpacity {
   composes: animation difference;
   position: absolute;
-  animation-duration: 1s;
+  animation-duration: 2s;
   animation-name: slideUpOpacity;
 }
 
 /* Card Animations */
-@keyframes attackFromTop {
+@keyframes attackFromTopOutline {
   from {
     transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(25px);
+  }
+}
+
+@keyframes attackFromBottomOutline {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-25px);
+  }
+}
+
+.attackAnimation {
+  composes: animation;
+  animation-iteration-count: 2;
+  animation-direction: alternate;
+}
+
+.attackFromTop {
+  composes: attackAnimation;
+  animation-name: attackFromTopOutline;
+}
+
+.attackFromBottom {
+  composes: attackAnimation;
+  animation-name: attackFromBottomOutline;
+}
+
+@keyframes attackFromTopFace {
+  from {
     box-shadow: inherit;
   }
 
   to {
-    transform: translateY(20px);
     box-shadow: 0 -5px 2px 2px var(--primary-color);
   }
 }
 
-@keyframes attackFromBottom {
+@keyframes attackFromBottomFace {
   from {
-    transform: translateY(0);
     box-shadow: inherit;
   }
 
   to {
-    transform: translateY(-20px);
     box-shadow: 0 5px 2px 2px var(--primary-color);
   }
 }
 
-.attackFromTop {
-  composes: animation;
-  animation-name: attackFromTop;
-  animation-iteration-count: 2;
-  animation-direction: alternate;
+.attackFromTopFace {
+  composes: attackAnimation;
+  animation-name: attackFromTopFace;
 }
 
-.attackFromBottom {
-  composes: animation;
-  animation-name: attackFromBottom;
-  animation-iteration-count: 2;
-  animation-direction: alternate;
+.attackFromBottomFace {
+  composes: attackAnimation;
+  animation-name: attackFromBottomFace;
 }
 
 @keyframes boost {
