@@ -1,8 +1,10 @@
 import { AppDispatch } from 'src/app/store'
-import { triggerPostCardPlay } from 'src/features/duel/components/utils'
 import { playCard } from 'src/features/duel/slice'
 import { DuelPhase, Player } from 'src/features/duel/types'
-import { getPlayableCardIds } from 'src/features/duel/utils'
+import {
+  getPlayableCardIds,
+  triggerPostCardPlay,
+} from 'src/features/duel/utils'
 import { getRandomArrayItem } from 'src/shared/utils'
 
 export const isCPUTurn = (

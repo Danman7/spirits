@@ -1,11 +1,6 @@
-import { CARD_STACKS } from 'src/features/duel/constants'
 import { initialState } from 'src/features/duel/slice'
-import {
-  CardStack,
-  DuelState,
-  Player,
-  PlayerCardAction,
-} from 'src/features/duel/types'
+import { DuelState, Player, PlayerCardAction } from 'src/features/duel/types'
+import { moveCardBetweenStacks } from 'src/features/duel/utils'
 
 export const drawCardFromDeckTransformer = (
   state: DuelState,
@@ -146,28 +141,4 @@ export const moveCardToDiscardTransformer = (
   }
 
   players[playerId].income += players[playerId].cards[movedCardId].cost
-}
-
-export const moveCardBetweenStacks = ({
-  state,
-  playerId,
-  movedCardId,
-  to,
-}: {
-  state: DuelState
-  playerId: Player['id']
-  movedCardId: string
-  to: CardStack
-}) => {
-  const { players } = state
-
-  CARD_STACKS.forEach((stack) => {
-    if (stack !== to) {
-      players[playerId][stack] = players[playerId][stack].filter(
-        (cardId) => cardId !== movedCardId,
-      )
-    }
-  })
-
-  players[playerId][to] = [...players[playerId][to], movedCardId]
 }

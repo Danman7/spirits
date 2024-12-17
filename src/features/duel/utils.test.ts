@@ -10,13 +10,22 @@ import {
   DEFAULT_COINS_AMOUNT,
   EMPTY_PLAYER,
 } from 'src/features/duel/constants'
-import { DuelCard, Player, PlayerCards } from 'src/features/duel/types'
+import { initializeEndTurn, moveCardToDiscard } from 'src/features/duel/slice'
+import {
+  DuelCard,
+  DuelState,
+  Player,
+  PlayerCards,
+} from 'src/features/duel/types'
 import {
   copyDuelCard,
   createDuelCard,
   getPlayableCardIds,
+  moveCardBetweenStacks,
   normalizePlayerCards,
+  triggerPostCardPlay,
 } from 'src/features/duel/utils'
+import { playerId, stackedDuelState } from 'src/shared/__mocks__'
 
 test('createPlayCardFromPrototype should create a new play ready card from a card prototype', () => {
   const newCard = createDuelCard(Haunt)
@@ -87,4 +96,55 @@ it("should normalize a player's cards into some stacks with normalizePlayerCards
   expect(normalizedEmptyCards.deck).toHaveLength(0)
   expect(normalizedEmptyCards.hand).toHaveLength(0)
   expect(normalizedEmptyCards.discard).toHaveLength(0)
+})
+
+it('should move a card between stacks', () => {
+  const player = stackedDuelState.players[playerId]
+
+  const state: DuelState = { ...stackedDuelState }
+
+  expect(player.deck).toHaveLength(2)
+  expect(player.hand).toHaveLength(2)
+
+  const movedCardId = player.deck[0]
+
+  moveCardBetweenStacks({
+    state: stackedDuelState,
+    playerId,
+    movedCardId,
+    to: 'hand',
+  })
+
+  const updatedPlayer = state.players[playerId]
+
+  expect(updatedPlayer.deck).toHaveLength(1)
+  expect(updatedPlayer.hand).toHaveLength(3)
+
+  expect(updatedPlayer.hand).toContain(movedCardId)
+})
+
+it('should trigger post play agent actions', () => {
+  const mockDispatch = jest.fn()
+
+  const card = createDuelCard(Haunt)
+
+  triggerPostCardPlay({ dispatch: mockDispatch, playerId, card })
+
+  expect(mockDispatch).toHaveBeenCalledWith(initializeEndTurn())
+})
+
+it('should trigger post play instant actions', () => {
+  const mockDispatch = jest.fn()
+
+  const card = createDuelCard(BookOfAsh)
+
+  triggerPostCardPlay({ dispatch: mockDispatch, playerId, card })
+
+  expect(mockDispatch).toHaveBeenCalledWith(
+    moveCardToDiscard({
+      cardId: card.id,
+      playerId,
+    }),
+  )
+  expect(mockDispatch).toHaveBeenCalledWith(initializeEndTurn())
 })

@@ -2,7 +2,7 @@ import { FC, ReactNode, useEffect, useState } from 'react'
 
 import animations from 'src/shared/styles/animations.module.css'
 import styles from 'src/shared/styles/components.module.css'
-import { OVERLAY_TEST_ID } from 'src/shared/testIds'
+import { MODAL_TEST_ID, OVERLAY_TEST_ID } from 'src/shared/testIds'
 
 export interface ModalProps {
   isOpen: boolean
@@ -60,6 +60,7 @@ export const Modal: FC<ModalProps> = ({
       <div
         className={`${styles.modal} ${modalAnimation}`}
         onAnimationEnd={onModalAnimationEnd}
+        data-testid={MODAL_TEST_ID}
       >
         {children}
       </div>

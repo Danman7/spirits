@@ -3,7 +3,6 @@ import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
 import {
   drawCardFromDeckTransformer,
   initializeEndTurnTransformer,
-  moveCardBetweenStacks,
   moveCardToBoardTransformer,
   moveCardToDiscardTransformer,
   moveToNextAttackerTransformer,
@@ -17,6 +16,7 @@ import {
   PlayerCardAction,
   PlayerOrder,
 } from 'src/features/duel/types'
+import { moveCardBetweenStacks } from 'src/features/duel/utils'
 import { getRandomArrayItem, shuffleArray } from 'src/shared/utils'
 
 export const initialState: DuelState = {

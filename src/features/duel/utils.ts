@@ -1,8 +1,11 @@
+import { AppDispatch } from 'src/app/store'
 import { CardBase } from 'src/features/cards/types'
 import { CARD_STACKS } from 'src/features/duel/constants'
+import { initializeEndTurn, moveCardToDiscard } from 'src/features/duel/slice'
 import {
   CardStack,
   DuelCard,
+  DuelState,
   Player,
   PlayerStacks,
 } from 'src/features/duel/types'
@@ -75,4 +78,62 @@ export const normalizePlayerCards = (
   })
 
   return partialPlayer
+}
+
+interface MoveCardBetweenStacksArgs {
+  state: DuelState
+  playerId: Player['id']
+  movedCardId: string
+  to: CardStack
+  inFront?: boolean
+}
+
+/**
+ * @param base A card base object (e.g. HammeriteNovice or Zombie)
+ * @returns A ready for duel card object with unique id and base properties for reference
+ * @example createDuelCard({...Haunt}) // {...Haunt, id: 'e4g34', base: {...Haunt}}
+ */
+export const moveCardBetweenStacks = ({
+  state,
+  playerId,
+  movedCardId,
+  to,
+  inFront,
+}: MoveCardBetweenStacksArgs) => {
+  const { players } = state
+
+  CARD_STACKS.forEach((stack) => {
+    if (stack !== to) {
+      players[playerId][stack] = players[playerId][stack].filter(
+        (cardId) => cardId !== movedCardId,
+      )
+    }
+  })
+
+  players[playerId][to] = inFront
+    ? [movedCardId, ...players[playerId][to]]
+    : [...players[playerId][to], movedCardId]
+}
+
+interface triggerPostCardPlayProps {
+  dispatch: AppDispatch
+  playerId: string
+  card: DuelCard
+}
+
+/**
+ * A utility that triggers all actions that have to happen after a card is played.
+ */
+export const triggerPostCardPlay = ({
+  dispatch,
+  playerId,
+  card,
+}: triggerPostCardPlayProps) => {
+  const { type, id } = card
+
+  if (type === 'instant') {
+    dispatch(moveCardToDiscard({ cardId: id, playerId }))
+  }
+
+  dispatch(initializeEndTurn())
 }
