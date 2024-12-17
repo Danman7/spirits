@@ -3,7 +3,6 @@ import {
   TempleGuard,
   Zombie,
 } from 'src/features/cards/CardBases'
-import { DuelCard } from 'src/features/cards/types'
 import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
 import duelReducer, {
   addNewCards,
@@ -20,14 +19,19 @@ import duelReducer, {
   startInitialCardDraw,
   updateCard,
 } from 'src/features/duel/slice'
-import { CardStack, DuelState, PlayerCards } from 'src/features/duel/types'
+import {
+  CardStack,
+  DuelCard,
+  DuelState,
+  PlayerCards,
+} from 'src/features/duel/types'
+import { createDuelCard, normalizePlayerCards } from 'src/features/duel/utils'
 import {
   initialPlayerMock,
   initialOpponentMock,
   playerId,
   opponentId,
 } from 'src/shared/__mocks__'
-import { createDuelCard, normalizePlayerCards } from 'src/shared/utils'
 
 const initialPlayers = [initialPlayerMock, initialOpponentMock]
 

@@ -10,15 +10,15 @@ import {
   ElevatedAcolytePredicate,
   HammeriteNoviceOnPlayPredicate,
 } from 'src/features/cards/CardEffectPredicates'
-import { DuelCard } from 'src/features/cards/types'
 import { EMPTY_PLAYER } from 'src/features/duel/constants'
 import { playCard } from 'src/features/duel/slice'
+import { DuelCard } from 'src/features/duel/types'
+import { createDuelCard } from 'src/features/duel/utils'
 import {
   initialPlayerMock,
   mockRootState,
   playerId,
 } from 'src/shared/__mocks__'
-import { createDuelCard } from 'src/shared/utils'
 
 const mockCardId = 'mock-card-id'
 

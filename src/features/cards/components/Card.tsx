@@ -1,14 +1,14 @@
 import { motion } from 'motion/react'
 import { FC, useEffect, useState } from 'react'
 
-import { DuelCard } from 'src/features/cards/types'
 import { ColoredNumber } from 'src/shared/components/ColoredNumber'
 import { TICK } from 'src/shared/constants'
 import { usePrevious } from 'src/shared/customHooks'
 import animations from 'src/shared/styles/animations.module.css'
 import components from 'src/shared/styles/components.module.css'
 import { CARD_TEST_ID } from 'src/shared/testIds'
-import { getFactionColor, joinCardCategories } from 'src/shared/utils'
+import { getFactionColor, joinCardCategories } from 'src/features/cards/utils'
+import { DuelCard } from 'src/features/duel/types'
 
 export interface CardProps {
   card: DuelCard

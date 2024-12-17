@@ -1,6 +1,6 @@
 import { AppDispatch } from 'src/app/store'
-import { DuelCard } from 'src/features/cards/types'
 import { initializeEndTurn, moveCardToDiscard } from 'src/features/duel/slice'
+import { DuelCard } from 'src/features/duel/types'
 import { ACTION_TIMEOUT } from 'src/shared/constants'
 
 interface triggerPostCardPlayProps {

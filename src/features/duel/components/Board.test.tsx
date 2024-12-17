@@ -22,7 +22,7 @@ import { playCard, startInitialCardDraw } from 'src/features/duel/slice'
 import { stackedPlayerMock, stackedDuelState } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { OVERLAY_TEST_ID } from 'src/shared/testIds'
-import { normalizePlayerCards } from 'src/shared/utils'
+import { normalizePlayerCards } from 'src/features/duel/utils'
 
 let preloadedState: RootState
 

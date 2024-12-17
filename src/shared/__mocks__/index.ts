@@ -15,7 +15,7 @@ import {
 import { DEFAULT_COINS_AMOUNT, EMPTY_PLAYER } from 'src/features/duel/constants'
 import { initialState } from 'src/features/duel/slice'
 import { DuelState, Player } from 'src/features/duel/types'
-import { normalizePlayerCards } from 'src/shared/utils'
+import { normalizePlayerCards } from 'src/features/duel/utils'
 
 export const playerId = 'player'
 export const opponentId = 'opponent'

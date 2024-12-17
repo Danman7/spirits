@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { DuelCard } from 'src/features/cards/types'
 import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
 import {
   drawCardFromDeckTransformer,
@@ -11,6 +10,7 @@ import {
 } from 'src/features/duel/transformers'
 import {
   AddNewCardsAction,
+  DuelCard,
   DuelPhase,
   DuelState,
   Player,

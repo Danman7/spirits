@@ -2,7 +2,6 @@ import { FC, useState } from 'react'
 
 import { useAppDispatch } from 'src/app/store'
 import { Card } from 'src/features/cards/components/Card'
-import { DuelCard } from 'src/features/cards/types'
 import { triggerPostCardPlay } from 'src/features/duel/components/utils'
 import { closeMessage } from 'src/features/duel/messages'
 import {
@@ -12,7 +11,7 @@ import {
   playCard,
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
-import { DuelPhase, Player } from 'src/features/duel/types'
+import { DuelCard, DuelPhase, Player } from 'src/features/duel/types'
 import { AnimatedNumber } from 'src/shared/components/AnimatedNumber'
 import { Link } from 'src/shared/components/Link'
 import { Modal } from 'src/shared/components/Modal'

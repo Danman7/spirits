@@ -72,18 +72,6 @@ export interface CardBase {
   }
 }
 
-/**
- *  A ready for duel card object with unique id and base properties for reference.
- */
-export interface DuelCard extends CardBase {
-  id: string
-  strength: number
-  base: {
-    cost: number
-    strength: number
-  }
-}
-
 export type GetOnPlayPredicate = (
   action: PlayerCardAction,
   currentState: RootState,

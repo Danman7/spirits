@@ -7,7 +7,8 @@ import { Card } from 'src/features/cards/components/Card'
 import { TICK } from 'src/shared/constants'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { CARD_TEST_ID } from 'src/shared/testIds'
-import { createDuelCard, joinCardCategories } from 'src/shared/utils'
+import { joinCardCategories } from 'src/features/cards/utils'
+import { createDuelCard } from 'src/features/duel/utils'
 
 const mockCard = createDuelCard(BrotherSachelman)
 

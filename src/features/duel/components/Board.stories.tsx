@@ -13,7 +13,7 @@ import {
 import Board from 'src/features/duel/components/Board'
 import { initialState } from 'src/features/duel/slice'
 import { initialPlayerMock, initialOpponentMock } from 'src/shared/__mocks__'
-import { normalizePlayerCards } from 'src/shared/utils'
+import { normalizePlayerCards } from 'src/features/duel/utils'
 
 const meta = {
   title: 'Board',

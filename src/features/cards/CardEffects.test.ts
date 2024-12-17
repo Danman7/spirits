@@ -24,7 +24,7 @@ import {
 } from 'src/features/duel/slice'
 import { DuelState, PlayerStacks } from 'src/features/duel/types'
 import { MockPlayerTurnState } from 'src/shared/__mocks__'
-import { normalizePlayerCards } from 'src/shared/utils'
+import { normalizePlayerCards } from 'src/features/duel/utils'
 
 let mockDuelState: DuelState
 
