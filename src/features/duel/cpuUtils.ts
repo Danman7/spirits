@@ -1,4 +1,5 @@
 import { AppDispatch } from 'src/app/store'
+import { triggerPostCardPlay } from 'src/features/duel/components/utils'
 import { playCard } from 'src/features/duel/slice'
 import { DuelPhase, Player } from 'src/features/duel/types'
 import { getPlayableCardIds, getRandomArrayItem } from 'src/shared/utils'
@@ -25,6 +26,7 @@ export const playCPUTurn = ({
   player: Player
 }) => {
   const playableCardIds = getPlayableCardIds(player)
+  const { id, cards } = player
 
   if (playableCardIds.length) {
     const cardId = getRandomArrayItem(playableCardIds)
@@ -32,8 +34,14 @@ export const playCPUTurn = ({
     dispatch(
       playCard({
         cardId,
-        playerId: player.id,
+        playerId: id,
       }),
     )
+
+    triggerPostCardPlay({
+      card: cards[cardId],
+      playerId: id,
+      dispatch,
+    })
   }
 }

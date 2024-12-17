@@ -1,4 +1,4 @@
-import { FC, ReactNode, useMemo } from 'react'
+import { FC, ReactNode, useEffect, useState } from 'react'
 
 import { useAppDispatch } from 'src/app/store'
 import LoadingMessage from 'src/features/duel/components/LoadingMessage'
@@ -21,6 +21,10 @@ export interface ActionPanelProps {
   phase: DuelPhase
 }
 
+const OppponentIsDeciding = () => (
+  <LoadingMessage message={opponentDecidingMessage} />
+)
+
 export const ActionPanel: FC<ActionPanelProps> = ({
   isOpen,
   loggedInPlayer,
@@ -31,41 +35,43 @@ export const ActionPanel: FC<ActionPanelProps> = ({
 
   const dispatch = useAppDispatch()
 
-  const sidePanelContent: ReactNode = useMemo(() => {
+  const [sidePanelContent, setSidePanelContent] = useState<ReactNode>(null)
+
+  useEffect(() => {
     switch (phase) {
       case 'Pre-duel':
       case 'Redrawing Phase':
-        return (
+        setSidePanelContent(
           <>
             {hasPerformedAction ? (
-              <LoadingMessage message={opponentDecidingMessage} />
+              <OppponentIsDeciding />
             ) : (
-              redrawMessage
+              <>
+                {redrawMessage}{' '}
+                <Link onClick={() => dispatch(completeRedraw(id))}>
+                  {skipRedrawLinkMessage}
+                </Link>
+              </>
             )}
-
-            {!hasPerformedAction ? (
-              <Link onClick={() => dispatch(completeRedraw(id))}>
-                {skipRedrawLinkMessage}
-              </Link>
-            ) : null}
-          </>
+          </>,
         )
 
+        break
+
       case 'Player Turn':
-        return (
+        setSidePanelContent(
           <>
             {isLoggedInPlayerActive ? (
-              yourTurnMessage
+              <>
+                {yourTurnMessage}{' '}
+                <Link onClick={() => dispatch(initializeEndTurn())}>
+                  {passButtonMessage}
+                </Link>
+              </>
             ) : (
-              <LoadingMessage message={opponentDecidingMessage} />
+              <OppponentIsDeciding />
             )}
-
-            {isLoggedInPlayerActive && !hasPerformedAction ? (
-              <Link onClick={() => dispatch(initializeEndTurn())}>
-                {passButtonMessage}
-              </Link>
-            ) : null}
-          </>
+          </>,
         )
     }
   }, [dispatch, hasPerformedAction, id, isLoggedInPlayerActive, phase])

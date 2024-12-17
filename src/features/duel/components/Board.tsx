@@ -63,10 +63,13 @@ const Board: FC = () => {
   }
 
   useEffect(() => {
-    if (phase === 'Player Turn' && haveBothPlayersNotPerformedAction) {
+    if (
+      phase === 'Player Turn' &&
+      (haveBothPlayersNotPerformedAction || loggedInPlayer.hasPerformedAction)
+    ) {
       setIsSidePanelOpen(false)
     }
-  }, [phase, haveBothPlayersNotPerformedAction])
+  }, [phase, loggedInPlayer, haveBothPlayersNotPerformedAction])
 
   // This adds all store listeners for card effect triggers.
   // It plugs into the redux middleware and cannot be done in the slice.
@@ -122,7 +125,7 @@ const Board: FC = () => {
 
       <ActionPanel
         isOpen={isSidePanelOpen}
-        loggedInPlayer={players[loggedInPlayerId]}
+        loggedInPlayer={loggedInPlayer}
         isLoggedInPlayerActive={isLoggedInPlayerActive}
         phase={phase}
       />

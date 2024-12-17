@@ -1,10 +1,6 @@
 import { fireEvent, waitFor } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 
-import {
-  stackedPlayerMock,
-  stackedPreloadedState as preloadedState,
-} from 'src/shared/__mocks__'
 import PlayerField, {
   PlayerFieldProps,
 } from 'src/features/duel/components/PlayerField'
@@ -16,9 +12,14 @@ import {
   playCard,
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
+import {
+  stackedPreloadedState as preloadedState,
+  stackedPlayerMock,
+} from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import {
   CARD_TEST_ID,
+  OVERLAY_TEST_ID,
   PLAYER_BOARD_ID,
   PLAYER_DECK_ID,
   PLAYER_DISCARD_ID,
@@ -108,6 +109,8 @@ describe('Bottom (Player) Side', () => {
     ).toBeInTheDocument()
 
     fireEvent.click(getByText(closeMessage))
+
+    fireEvent.animationEnd(getByTestId(OVERLAY_TEST_ID))
 
     await waitFor(() => {
       expect(

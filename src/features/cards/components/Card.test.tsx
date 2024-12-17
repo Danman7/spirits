@@ -49,7 +49,7 @@ it('should show card back when face down', () => {
   expect(queryByText(mockCard.name)).not.toBeInTheDocument()
 })
 
-it('should fire on click event passing card id', () => {
+it('should fire on click event passing card', () => {
   const onCardClick = jest.fn()
 
   const { getByText } = renderWithProviders(
@@ -58,7 +58,7 @@ it('should fire on click event passing card id', () => {
 
   fireEvent.click(getByText(mockCard.name))
 
-  expect(onCardClick).toHaveBeenCalledWith(mockCard.id)
+  expect(onCardClick).toHaveBeenCalledWith(mockCard)
 })
 
 it('should trigger attacking from bottom animation', async () => {

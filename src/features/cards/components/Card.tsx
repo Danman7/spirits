@@ -1,5 +1,5 @@
 import { motion } from 'motion/react'
-import { forwardRef, useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import { DuelCard } from 'src/features/cards/types'
 import { ColoredNumber } from 'src/shared/components/ColoredNumber'
@@ -16,147 +16,138 @@ export interface CardProps {
   isSmall?: boolean
   isAttacking?: boolean
   isOnTop?: boolean
-  onClickCard?: (cardId: string) => void
+  onClickCard?: (card: DuelCard) => void
   onAttackAnimationEnd?: () => void
 }
 
-export const Card = motion.create(
-  forwardRef<HTMLDivElement, CardProps>(
-    (
-      {
-        card,
-        isSmall = false,
-        isFaceDown = false,
-        isAttacking = false,
-        isOnTop = false,
-        onClickCard,
-        onAttackAnimationEnd,
-      },
-      ref,
-    ) => {
-      const {
-        id,
-        name,
-        description,
-        flavor,
-        categories,
-        factions,
-        cost,
-        base,
-        rank,
-        strength,
-      } = card
+export const Card: FC<CardProps> = ({
+  card,
+  isSmall = false,
+  isFaceDown = false,
+  isAttacking = false,
+  isOnTop = false,
+  onClickCard,
+  onAttackAnimationEnd,
+}) => {
+  const {
+    id,
+    name,
+    description,
+    flavor,
+    categories,
+    factions,
+    cost,
+    base,
+    rank,
+    strength,
+  } = card
 
-      const prevStrength = usePrevious(strength)
-      const prevIsFaceDown = usePrevious(isFaceDown)
+  const prevStrength = usePrevious(strength)
+  const prevIsFaceDown = usePrevious(isFaceDown)
 
-      const [cardFaceAnimation, setCardFaceAnimation] = useState('')
-      const [cardOutlineAnimation, setCardOutlineAnimation] = useState('')
-      const [shouldShowFront, setShouldShowFront] = useState(!isFaceDown)
+  const [cardFaceAnimation, setCardFaceAnimation] = useState('')
+  const [cardOutlineAnimation, setCardOutlineAnimation] = useState('')
+  const [shouldShowFront, setShouldShowFront] = useState(!isFaceDown)
 
-      const onClick = onClickCard ? () => onClickCard(id) : undefined
+  const onClick = onClickCard ? () => onClickCard(card) : undefined
 
-      const onAnimationEnd = () => {
-        if (isAttacking && onAttackAnimationEnd) {
-          onAttackAnimationEnd()
-        }
+  const onAnimationEnd = () => {
+    if (isAttacking && onAttackAnimationEnd) {
+      onAttackAnimationEnd()
+    }
+  }
+
+  useEffect(() => {
+    if (prevIsFaceDown !== undefined && prevIsFaceDown !== isFaceDown) {
+      if (isFaceDown) {
+        setTimeout(() => {
+          setShouldShowFront(false)
+        }, 500)
+      } else {
+        setShouldShowFront(true)
       }
+    }
+  }, [isFaceDown, prevIsFaceDown])
 
-      useEffect(() => {
-        if (prevIsFaceDown !== undefined && prevIsFaceDown !== isFaceDown) {
-          if (isFaceDown) {
-            setTimeout(() => {
-              setShouldShowFront(false)
-            }, 500)
-          } else {
-            setShouldShowFront(true)
-          }
-        }
-      }, [isFaceDown, prevIsFaceDown])
+  useEffect(() => {
+    if (prevStrength !== undefined && prevStrength !== strength) {
+      setCardFaceAnimation('')
 
-      useEffect(() => {
-        if (prevStrength !== undefined && prevStrength !== strength) {
-          setCardFaceAnimation('')
+      setTimeout(() => {
+        setCardFaceAnimation(
+          prevStrength < strength
+            ? ` ${animations.boost}`
+            : ` ${animations.damage}`,
+        )
+      }, TICK)
+    }
+  }, [strength, prevStrength])
 
-          setTimeout(() => {
-            setCardFaceAnimation(
-              prevStrength < strength
-                ? ` ${animations.boost}`
-                : ` ${animations.damage}`,
-            )
-          }, TICK)
-        }
-      }, [strength, prevStrength])
+  useEffect(() => {
+    if (isAttacking) {
+      setCardOutlineAnimation('')
+      setCardFaceAnimation('')
 
-      useEffect(() => {
-        if (isAttacking) {
-          setCardOutlineAnimation('')
-          setCardFaceAnimation('')
+      setTimeout(() => {
+        setCardOutlineAnimation(
+          isOnTop
+            ? ` ${animations.attackFromTop}`
+            : ` ${animations.attackFromBottom}`,
+        )
+        setCardFaceAnimation(
+          isOnTop
+            ? ` ${animations.attackFromTopFace}`
+            : ` ${animations.attackFromBottomFace}`,
+        )
+      }, TICK)
+    }
+  }, [isAttacking, isOnTop])
 
-          setTimeout(() => {
-            setCardOutlineAnimation(
-              isOnTop
-                ? ` ${animations.attackFromTop}`
-                : ` ${animations.attackFromBottom}`,
-            )
-            setCardFaceAnimation(
-              isOnTop
-                ? ` ${animations.attackFromTopFace}`
-                : ` ${animations.attackFromBottomFace}`,
-            )
-          }, TICK)
-        }
-      }, [isAttacking, isOnTop])
+  return (
+    <motion.div
+      layout
+      layoutId={id}
+      data-testid={`${CARD_TEST_ID}${id}`}
+      onAnimationEnd={onAnimationEnd}
+      onClick={onClick}
+      initial={false}
+      className={`${components.cardOutline}${isSmall ? ` ${components.smallCard}` : ''}${isFaceDown ? ` ${components.cardFlipped}` : ''}${cardOutlineAnimation}`}
+    >
+      <div className={components.cardPaper}>
+        {/* Card Front */}
+        {shouldShowFront ? (
+          <div
+            className={`${components.cardFront}${onClickCard ? ` ${animations.activeCard}` : ''}${rank === 'unique' ? ` ${components.uniqueCard}` : ''}${cardFaceAnimation}`}
+          >
+            <div
+              className={components.cardHeader}
+              style={{ background: getFactionColor(factions) }}
+            >
+              <h3 className={components.cardTitle}>
+                {name}
+                {!!strength && (
+                  <ColoredNumber current={strength} base={base.strength} />
+                )}
+              </h3>
 
-      return (
-        <motion.div
-          ref={ref}
-          data-testid={`${CARD_TEST_ID}${id}`}
-          onAnimationEnd={onAnimationEnd}
-          onClick={onClick}
-          initial={false}
-          className={`${components.cardOutline}${isSmall ? ` ${components.smallCard}` : ''}${isFaceDown ? ` ${components.cardFlipped}` : ''}${cardOutlineAnimation}`}
-        >
-          <div className={components.cardPaper}>
-            {/* Card Front */}
-            {shouldShowFront ? (
-              <div
-                className={`${components.cardFront}${onClickCard ? ` ${animations.activeCard}` : ''}${rank === 'unique' ? ` ${components.uniqueCard}` : ''}${cardFaceAnimation}`}
-              >
-                <div
-                  className={components.cardHeader}
-                  style={{ background: getFactionColor(factions) }}
-                >
-                  <h3 className={components.cardTitle}>
-                    <span>{name}</span>
-                    {!!strength && (
-                      <ColoredNumber current={strength} base={base.strength} />
-                    )}
-                  </h3>
+              <small>{joinCardCategories(categories)}</small>
+            </div>
+            <div className={components.cardContent}>
+              {description.map((paragraph, index) => (
+                <p key={`${id}-description-${index}`}>{paragraph}</p>
+              ))}
 
-                  <small>{joinCardCategories(categories)}</small>
-                </div>
-                <div className={components.cardContent}>
-                  {description.map((paragraph, index) => (
-                    <p key={`${id}-description-${index}`}>{paragraph}</p>
-                  ))}
-
-                  <div className={components.cardFlavor}>
-                    <small>{flavor}</small>
-                  </div>
-                </div>
-                <div className={components.cardFooter}>Cost: {cost}</div>
+              <div className={components.cardFlavor}>
+                <small>{flavor}</small>
               </div>
-            ) : null}
-
-            {/* Card Back */}
-            <div className={components.cardBack} />
+            </div>
+            <div className={components.cardFooter}>Cost: {cost}</div>
           </div>
-        </motion.div>
-      )
-    },
-  ),
-  {
-    forwardMotionProps: true,
-  },
-)
+        ) : null}
+
+        {/* Card Back */}
+        <div className={components.cardBack} />
+      </div>
+    </motion.div>
+  )
+}

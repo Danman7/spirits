@@ -3,7 +3,7 @@ import '@testing-library/jest-dom'
 
 import { Modal, ModalProps } from 'src/shared/components/Modal'
 import { renderWithProviders } from 'src/shared/rtlRender'
-import { MODAL_TEST_ID, OVERLAY_TEST_ID } from 'src/shared/testIds'
+import { OVERLAY_TEST_ID } from 'src/shared/testIds'
 
 const content = 'Modal content'
 
@@ -35,7 +35,6 @@ it('should fire onClosingComplete', async () => {
     />,
   )
 
-  fireEvent.animationEnd(getByTestId(MODAL_TEST_ID))
   fireEvent.animationEnd(getByTestId(OVERLAY_TEST_ID))
 
   await waitFor(() => {

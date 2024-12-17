@@ -1,15 +1,13 @@
-import { AnimatePresence } from 'motion/react'
-import { FC, useMemo, useState } from 'react'
+import { FC, useState } from 'react'
 
 import { useAppDispatch } from 'src/app/store'
 import { Card } from 'src/features/cards/components/Card'
 import { DuelCard } from 'src/features/cards/types'
+import { triggerPostCardPlay } from 'src/features/duel/components/utils'
 import { closeMessage } from 'src/features/duel/messages'
 import {
   completeRedraw,
   drawCardFromDeck,
-  initializeEndTurn,
-  moveCardToDiscard,
   moveToNextAttacker,
   playCard,
   putCardAtBottomOfDeck,
@@ -31,6 +29,7 @@ import {
   PLAYER_HAND_ID,
   PLAYER_INFO_ID,
 } from 'src/shared/testIds'
+import { shuffleArray } from 'src/shared/utils'
 
 type browsedStack = 'deck' | 'discard' | null
 
@@ -65,14 +64,22 @@ const PlayerField: FC<PlayerFieldProps> = ({
   const dispatch = useAppDispatch()
 
   const [browsedStack, setBrowsedStack] = useState<browsedStack>(null)
+  const [isBrowseStackOpen, setIsBrowseStackOpen] = useState(false)
 
-  const onPlayCard = (cardId: string) =>
-    dispatch(playCard({ cardId, playerId: id }))
+  const onPlayCard = (card: DuelCard) => {
+    dispatch(playCard({ cardId: card.id, playerId: id }))
 
-  const onRedrawCard = (cardId: string) => {
+    triggerPostCardPlay({
+      card,
+      playerId: id,
+      dispatch,
+    })
+  }
+
+  const onRedrawCard = (card: DuelCard) => {
     dispatch(
       putCardAtBottomOfDeck({
-        cardId,
+        cardId: card.id,
         playerId: id,
       }),
     )
@@ -99,145 +106,96 @@ const PlayerField: FC<PlayerFieldProps> = ({
     return undefined
   }
 
-  const closeBrowseCardsModal = () => setBrowsedStack(null)
+  const closeBrowseCardsModal = () => setIsBrowseStackOpen(false)
 
-  const openBrowseCardsModal = (cardList: browsedStack) =>
-    setBrowsedStack(cardList)
-
-  const onBoardCardLayoutComplete = (card: DuelCard) => {
-    if (
-      (phase === 'Player Turn' && card.id === board[board.length - 1]) ||
-      card.type === 'instant'
-    ) {
-      if (card.type === 'instant') {
-        dispatch(moveCardToDiscard({ cardId: card.id, playerId: id }))
-      }
-
-      dispatch(initializeEndTurn())
-    }
+  const openBrowseCardsModal = (stack: browsedStack) => {
+    setIsBrowseStackOpen(true)
+    setBrowsedStack(stack)
   }
 
   const onAttackAnimationEnd = () => dispatch(moveToNextAttacker())
-
-  const modalContent = useMemo(
-    () =>
-      browsedStack ? (
-        <div className={styles.cardBrowserModal}>
-          <h1>Browsing {browsedStack}</h1>
-          <div className={styles.cardList}>
-            {player[browsedStack].map((cardId) => (
-              <Card key={`${cardId}-browse`} card={cards[cardId]} />
-            ))}
-          </div>
-
-          <div className={styles.cardBrowseModalFooter}>
-            <Link onClick={closeBrowseCardsModal}>{closeMessage}</Link>
-          </div>
-        </div>
-      ) : null,
-    [browsedStack, cards, player],
-  )
 
   return (
     <>
       <h2
         data-testid={isOnTop ? OPPONENT_INFO_ID : PLAYER_INFO_ID}
-        className={`${isOnTop ? styles.topPlayerInfo : styles.bottomPlayerInfo} ${isActive ? styles.activePlayerInfo : ''}`}
+        className={`${isOnTop ? styles.topPlayerInfo : styles.bottomPlayerInfo}${isActive ? ` ${styles.activePlayerInfo}` : ''}`}
       >
         <span>{name}</span> / <AnimatedNumber value={coins} />
         {income ? <span> (+{income})</span> : null}
       </h2>
 
       <div className={isOnTop ? styles.topPlayerSide : styles.bottomPlayerSide}>
-        {discard.length ? (
-          <div
-            data-testid={isOnTop ? OPPONENT_DISCARD_ID : PLAYER_DISCARD_ID}
-            style={!isOnTop ? { cursor: 'pointer' } : {}}
-            className={styles.faceDownStack}
-            onClick={
-              !isOnTop ? () => openBrowseCardsModal('discard') : undefined
-            }
-          >
-            {discard.map((cardId) => (
-              <Card
-                layout
-                layoutId={cardId}
-                key={`${cardId}-discard`}
-                card={cards[cardId]}
-                isSmall
-                isFaceDown
-              />
-            ))}
-          </div>
-        ) : null}
+        <div
+          data-testid={isOnTop ? OPPONENT_DISCARD_ID : PLAYER_DISCARD_ID}
+          style={!isOnTop ? { cursor: 'pointer' } : {}}
+          className={styles.faceDownStack}
+          onClick={!isOnTop ? () => openBrowseCardsModal('discard') : undefined}
+        >
+          {discard.map((cardId) => (
+            <Card key={cardId} card={cards[cardId]} isSmall isFaceDown />
+          ))}
+        </div>
 
         <div
           data-testid={isOnTop ? OPPONENT_HAND_ID : PLAYER_HAND_ID}
           className={isOnTop ? styles.topPlayerHand : styles.bottomPlayerHand}
         >
-          {hand.map((cardId, i) => (
+          {hand.map((cardId) => (
             <Card
-              layout
-              layoutId={cardId}
-              key={`${cardId}-hand`}
+              key={cardId}
               card={cards[cardId]}
               onClickCard={getOnClickCard()}
               isFaceDown={isOnTop}
-              transition={{ layout: { delay: 0.1 * i } }}
             />
           ))}
         </div>
 
-        {deck.length ? (
-          <div
-            data-testid={isOnTop ? OPPONENT_DECK_ID : PLAYER_DECK_ID}
-            style={!isOnTop ? { cursor: 'pointer' } : {}}
-            className={styles.faceDownStack}
-            onClick={!isOnTop ? () => openBrowseCardsModal('deck') : undefined}
-          >
-            <AnimatePresence>
-              {deck.map((cardId) => (
-                <Card
-                  layout
-                  layoutId={cardId}
-                  key={`${cardId}-deck`}
-                  card={cards[cardId]}
-                  isSmall
-                  isFaceDown
-                  exit={{ opacity: 0 }}
-                />
-              ))}
-            </AnimatePresence>
-          </div>
-        ) : null}
+        <div
+          data-testid={isOnTop ? OPPONENT_DECK_ID : PLAYER_DECK_ID}
+          style={!isOnTop ? { cursor: 'pointer' } : {}}
+          className={styles.faceDownStack}
+          onClick={!isOnTop ? () => openBrowseCardsModal('deck') : undefined}
+        >
+          {deck.map((cardId) => (
+            <Card key={cardId} card={cards[cardId]} isSmall isFaceDown />
+          ))}
+        </div>
       </div>
 
       <div
         data-testid={isOnTop ? OPPONENT_BOARD_ID : PLAYER_BOARD_ID}
         className={isOnTop ? styles.topPlayerBoard : styles.bottomPlayerBoard}
       >
-        <AnimatePresence>
-          {board.map((cardId, i) => (
-            <Card
-              layout
-              layoutId={cardId}
-              onAttackAnimationEnd={onAttackAnimationEnd}
-              onLayoutAnimationComplete={() =>
-                onBoardCardLayoutComplete(cards[cardId])
-              }
-              key={`${cardId}-board`}
-              transition={{ layout: { delay: 0.1 * i } }}
-              card={cards[cardId]}
-              isSmall
-              isAttacking={attackingAgentId === cardId}
-              isOnTop={isOnTop}
-              exit={{ opacity: 0 }}
-            />
-          ))}
-        </AnimatePresence>
+        {board.map((cardId) => (
+          <Card
+            onAttackAnimationEnd={onAttackAnimationEnd}
+            key={cardId}
+            card={cards[cardId]}
+            isSmall
+            isAttacking={attackingAgentId === cardId}
+            isOnTop={isOnTop}
+          />
+        ))}
       </div>
 
-      <Modal isOpen={!!browsedStack}>{modalContent}</Modal>
+      {/* Browse facedown stacks modal */}
+      <Modal isOpen={isBrowseStackOpen}>
+        {browsedStack ? (
+          <div className={styles.cardBrowserModal}>
+            <h1>Browsing your {browsedStack} (randomized)</h1>
+            <div className={styles.cardList}>
+              {shuffleArray(player[browsedStack]).map((cardId) => (
+                <Card key={`${cardId}-browse`} card={cards[cardId]} />
+              ))}
+            </div>
+
+            <div className={styles.cardBrowseModalFooter}>
+              <Link onClick={closeBrowseCardsModal}>{closeMessage}</Link>
+            </div>
+          </div>
+        ) : null}
+      </Modal>
     </>
   )
 }

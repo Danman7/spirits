@@ -5,5 +5,5 @@ export const FACTION_COLOR_MAP = {
 }
 
 export const TICK = 50
-export const QUICK_ANIMATION_TIME = 200
+export const ACTION_TIMEOUT = 500
 export const PHASE_MODAL_TIMEOUT = 2000
