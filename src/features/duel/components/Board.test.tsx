@@ -19,9 +19,14 @@ import {
   victoryMessage,
 } from 'src/features/duel/messages'
 import { playCard, startInitialCardDraw } from 'src/features/duel/slice'
-import { stackedPlayerMock, stackedDuelState } from 'src/shared/__mocks__'
+import {
+  stackedPlayerMock,
+  stackedDuelState,
+  playerId,
+  opponentId,
+} from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
-import { OVERLAY_TEST_ID } from 'src/shared/testIds'
+import { OVERLAY_TEST_ID, PANEL_TEST_ID } from 'src/shared/testIds'
 import { normalizePlayerCards } from 'src/features/duel/utils'
 
 let preloadedState: RootState
@@ -66,7 +71,7 @@ it('should initiate card drawing', async () => {
 })
 
 it('should show if player is victorious', () => {
-  preloadedState.duel.players[stackedPlayerMock.id].coins = 0
+  preloadedState.duel.players[playerId].coins = 0
 
   const { getByText } = renderWithProviders(<Board />, {
     preloadedState,
@@ -80,16 +85,14 @@ it('should show if player is victorious', () => {
 })
 
 it('should show if opponent is victorious', () => {
-  preloadedState.duel.players[stackedDuelState.playerOrder[0]].coins = 0
+  preloadedState.duel.players[opponentId].coins = 0
 
   const { getByText } = renderWithProviders(<Board />, {
     preloadedState,
   })
 
   expect(
-    getByText(
-      `${stackedDuelState.players[stackedPlayerMock.id].name} ${victoryMessage}`,
-    ),
+    getByText(`${stackedDuelState.players[playerId].name} ${victoryMessage}`),
   ).toBeInTheDocument()
 })
 
@@ -106,9 +109,9 @@ it('should play CPU turn', async () => {
   }
 
   preloadedState.duel.activePlayerId = CPUId
-  preloadedState.duel.playerOrder = [CPUId, stackedPlayerMock.id]
+  preloadedState.duel.playerOrder = [CPUId, playerId]
   preloadedState.duel.players = {
-    [stackedPlayerMock.id]: stackedPlayerMock,
+    [playerId]: stackedPlayerMock,
     [CPUId]: CPUPlayer,
   }
 
@@ -133,4 +136,15 @@ it('should play CPU turn', async () => {
       playerId: CPUId,
     }),
   )
+})
+
+it('should hide the side panel if the logged in player has performed an action', () => {
+  preloadedState.duel.players[playerId] = {
+    ...preloadedState.duel.players[playerId],
+    hasPerformedAction: true,
+  }
+
+  const { queryByTestId } = renderWithProviders(<Board />, { preloadedState })
+
+  expect(queryByTestId(PANEL_TEST_ID)).not.toBeInTheDocument()
 })

@@ -99,7 +99,7 @@ it("should normalize a player's cards into some stacks with normalizePlayerCards
 })
 
 it('should move a card between stacks', () => {
-  const player = stackedDuelState.players[playerId]
+  const player = { ...stackedDuelState.players[playerId] }
 
   const state: DuelState = { ...stackedDuelState }
 
@@ -121,6 +121,34 @@ it('should move a card between stacks', () => {
   expect(updatedPlayer.hand).toHaveLength(3)
 
   expect(updatedPlayer.hand).toContain(movedCardId)
+  expect(updatedPlayer.hand.indexOf(movedCardId)).toBe(2)
+})
+
+it('should move a card to the front of a stack', () => {
+  const player = { ...stackedDuelState.players[playerId] }
+
+  const state: DuelState = { ...stackedDuelState }
+
+  expect(player.deck).toHaveLength(1)
+  expect(player.hand).toHaveLength(3)
+
+  const movedCardId = player.hand[0]
+
+  moveCardBetweenStacks({
+    state: stackedDuelState,
+    playerId,
+    movedCardId,
+    to: 'deck',
+    inFront: true,
+  })
+
+  const updatedPlayer = state.players[playerId]
+
+  expect(updatedPlayer.deck).toHaveLength(2)
+  expect(updatedPlayer.hand).toHaveLength(2)
+
+  expect(updatedPlayer.deck).toContain(movedCardId)
+  expect(updatedPlayer.deck.indexOf(movedCardId)).toBe(0)
 })
 
 it('should trigger post play agent actions', () => {
