@@ -1,14 +1,14 @@
-import { fireEvent } from '@testing-library/dom'
+import { fireEvent, waitFor } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 import { act } from 'react'
 
 import { BookOfAsh, BrotherSachelman } from 'src/features/cards/CardBases'
 import { Card } from 'src/features/cards/components/Card'
+import { joinCardCategories } from 'src/features/cards/utils'
+import { createDuelCard } from 'src/features/duel/utils'
 import { TICK } from 'src/shared/constants'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { CARD_TEST_ID } from 'src/shared/testIds'
-import { joinCardCategories } from 'src/features/cards/utils'
-import { createDuelCard } from 'src/features/duel/utils'
 
 const mockCard = createDuelCard(BrotherSachelman)
 
@@ -42,12 +42,22 @@ it('should display all UI segments of a card when face up', () => {
   )
 })
 
-it('should show card back when face down', () => {
-  const { queryByText } = renderWithProviders(
-    <Card card={mockCard} isFaceDown />,
+it('should flip card between faces', async () => {
+  const { rerender, getByText, queryByText } = renderWithProviders(
+    <Card card={mockCard} />,
   )
 
-  expect(queryByText(mockCard.name)).not.toBeInTheDocument()
+  expect(getByText(mockCard.name)).toBeInTheDocument()
+
+  rerender(<Card card={mockCard} isFaceDown />)
+
+  await waitFor(() => {
+    expect(queryByText(mockCard.name)).not.toBeInTheDocument()
+  })
+
+  rerender(<Card card={mockCard} />)
+
+  expect(getByText(mockCard.name)).toBeInTheDocument()
 })
 
 it('should fire on click event passing card', () => {
