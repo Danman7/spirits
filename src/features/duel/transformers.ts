@@ -1,6 +1,6 @@
 import { initialState } from 'src/features/duel/slice'
 import { DuelState, Player, PlayerCardAction } from 'src/features/duel/types'
-import { moveCardBetweenStacks } from 'src/features/duel/utils'
+import { getOpponentId, moveCardBetweenStacks } from 'src/features/duel/utils'
 
 export const drawCardFromDeckTransformer = (
   state: DuelState,
@@ -11,11 +11,12 @@ export const drawCardFromDeckTransformer = (
   const drawingPlayer = players[playerId]
 
   if (drawingPlayer.deck.length) {
-    const drawnCardId = drawingPlayer.deck.shift()
-
-    if (drawnCardId) {
-      drawingPlayer.hand.push(drawnCardId)
-    }
+    moveCardBetweenStacks({
+      movedCardId: drawingPlayer.deck[0],
+      playerId,
+      state,
+      to: 'hand',
+    })
   }
 }
 
@@ -37,33 +38,27 @@ export const moveCardToBoardTransformer = (
 }
 
 const endTurnTransformer = (state: DuelState) => {
-  state.turn += 1
+  const { activePlayerId, players } = state
+
   state.phase = 'Player Turn'
   state.attackingAgentId = initialState.attackingAgentId
 
-  state.activePlayerId =
-    state.playerOrder[0] === state.activePlayerId
-      ? state.playerOrder[1]
-      : state.playerOrder[0]
+  Object.values(players).forEach(({ id }) => {
+    const player = state.players[id]
 
-  state.playerOrder.forEach((playerId) => {
-    const player = state.players[playerId]
+    state.players[id].hasPerformedAction = false
 
-    state.players[playerId].hasPerformedAction = false
+    if (id !== activePlayerId) {
+      state.activePlayerId = id
+    }
 
     if (player.income) {
-      state.players[playerId].coins += 1
-      state.players[playerId].income -= 1
+      state.players[id].coins += 1
+      state.players[id].income -= 1
     }
   })
 
   drawCardFromDeckTransformer(state, state.activePlayerId)
-}
-
-export const initializeEndTurnTransformer = (state: DuelState) => {
-  state.phase = 'Resolving end of turn'
-
-  moveToNextAttackerTransformer(state)
 }
 
 export const moveToNextAttackerTransformer = (state: DuelState) => {
@@ -82,42 +77,35 @@ export const moveToNextAttackerTransformer = (state: DuelState) => {
   if (attackingAgentIndex === activePlayer.board.length - 1) {
     endTurnTransformer(state)
   } else {
-    agentAttackTransformer(state)
-    state.attackingAgentId = activePlayer.board[attackingAgentIndex + 1]
-  }
-}
+    if (state.attackingAgentId) {
+      const opponent = players[getOpponentId(players, activePlayerId)]
 
-const agentAttackTransformer = (state: DuelState) => {
-  const { players, playerOrder, activePlayerId, attackingAgentId } = state
+      if (opponent.board.length) {
+        const attackingCardIndex = players[activePlayerId].board.indexOf(
+          state.attackingAgentId,
+        )
+        const defendingCardId =
+          opponent.board[attackingCardIndex] ||
+          opponent.board[opponent.board.length - 1]
 
-  if (attackingAgentId) {
-    const opponent: Player =
-      players[playerOrder[0]].id === activePlayerId
-        ? players[playerOrder[1]]
-        : players[playerOrder[0]]
+        if (players[opponent.id].cards[defendingCardId].type === 'agent') {
+          players[opponent.id].cards[defendingCardId].strength -= 1
 
-    if (opponent.board.length) {
-      const attackingCardIndex =
-        players[activePlayerId].board.indexOf(attackingAgentId)
-      const defendingCardId =
-        opponent.board[attackingCardIndex] ||
-        opponent.board[opponent.board.length - 1]
-
-      if (players[opponent.id].cards[defendingCardId].type === 'agent') {
-        players[opponent.id].cards[defendingCardId].strength -= 1
-
-        if (players[opponent.id].cards[defendingCardId].strength <= 0) {
-          moveCardToDiscardTransformer(state, {
-            payload: {
-              cardId: defendingCardId,
-              playerId: opponent.id,
-            },
-          })
+          if (players[opponent.id].cards[defendingCardId].strength <= 0) {
+            moveCardToDiscardTransformer(state, {
+              payload: {
+                cardId: defendingCardId,
+                playerId: opponent.id,
+              },
+            })
+          }
         }
+      } else {
+        players[opponent.id].coins -= 1
       }
-    } else {
-      players[opponent.id].coins -= 1
     }
+
+    state.attackingAgentId = activePlayer.board[attackingAgentIndex + 1]
   }
 }
 
@@ -135,10 +123,11 @@ export const moveCardToDiscardTransformer = (
     to: 'discard',
   })
 
-  if (players[playerId].cards[movedCardId].base.strength) {
-    players[playerId].cards[movedCardId].strength =
-      players[playerId].cards[movedCardId].base.strength
+  const discardedCard = players[playerId].cards[movedCardId]
+
+  if (discardedCard.base.strength) {
+    players[playerId].cards[movedCardId].strength = discardedCard.base.strength
   }
 
-  players[playerId].income += players[playerId].cards[movedCardId].cost
+  players[playerId].income += discardedCard.cost
 }

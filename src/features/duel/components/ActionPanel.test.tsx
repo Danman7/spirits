@@ -15,10 +15,8 @@ import {
 } from 'src/features/duel/messages'
 import { completeRedraw, initializeEndTurn } from 'src/features/duel/slice'
 import { Player } from 'src/features/duel/types'
-import { MockPlayerTurnState } from 'src/shared/__mocks__'
+import { MockPlayerTurnState, playerId } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
-
-const playerId = MockPlayerTurnState.playerOrder[1]
 
 const mockPlayer: Player = MockPlayerTurnState.players[playerId]
 

@@ -12,7 +12,7 @@ import {
   victoryMessage,
   yourTurnTitle,
 } from 'src/features/duel/messages'
-import { MockPlayerTurnState } from 'src/shared/__mocks__'
+import { MockPlayerTurnState, opponentId, playerId } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 
 const defaultProps: PhaseModalProps = {
@@ -27,17 +27,15 @@ const preloadedState: Partial<RootState> = {
   duel: MockPlayerTurnState,
 }
 
-const playerName =
-  MockPlayerTurnState.players[MockPlayerTurnState.playerOrder[0]].name
-const opponentName =
-  MockPlayerTurnState.players[MockPlayerTurnState.playerOrder[1]].name
+const playerName = MockPlayerTurnState.players[playerId].name
+const opponentName = MockPlayerTurnState.players[opponentId].name
 
 it('should show player names and if player is first on initializing a duel and then hide itself', () => {
   const { getByText } = renderWithProviders(<PhaseModal {...defaultProps} />, {
     preloadedState,
   })
 
-  expect(getByText(`${opponentName} vs ${playerName}`)).toBeInTheDocument()
+  expect(getByText(`${playerName} vs ${opponentName}`)).toBeInTheDocument()
   expect(getByText(playerFirst)).toBeInTheDocument()
 })
 

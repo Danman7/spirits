@@ -78,9 +78,7 @@ it('should show if player is victorious', () => {
   })
 
   expect(
-    getByText(
-      `${stackedDuelState.players[stackedDuelState.playerOrder[0]].name} ${victoryMessage}`,
-    ),
+    getByText(`${stackedDuelState.players[opponentId].name} ${victoryMessage}`),
   ).toBeInTheDocument()
 })
 
@@ -109,7 +107,6 @@ it('should play CPU turn', async () => {
   }
 
   preloadedState.duel.activePlayerId = CPUId
-  preloadedState.duel.playerOrder = [CPUId, playerId]
   preloadedState.duel.players = {
     [playerId]: stackedPlayerMock,
     [CPUId]: CPUPlayer,

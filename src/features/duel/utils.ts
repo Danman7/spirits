@@ -5,6 +5,7 @@ import { initializeEndTurn, moveCardToDiscard } from 'src/features/duel/slice'
 import {
   CardStack,
   DuelCard,
+  DuelPlayers,
   DuelState,
   Player,
   PlayerStacks,
@@ -137,3 +138,22 @@ export const triggerPostCardPlay = ({
 
   dispatch(initializeEndTurn())
 }
+
+/**
+ * Sorts players so the logged in player prespective is on the bottom of the board.
+ */
+export const sortDuelPlayers = (
+  players: DuelPlayers,
+  loggedInPlayerId: string,
+) =>
+  Object.values(players).sort(
+    (playerA, playerB) =>
+      Number(playerA.id === loggedInPlayerId) -
+      Number(playerB.id === loggedInPlayerId),
+  )
+
+/**
+ * Get the id of the duel player not logged in as you.
+ */
+export const getOpponentId = (players: DuelPlayers, loggedInPlayerId: string) =>
+  Object.keys(players).filter((id) => id !== loggedInPlayerId)[0]

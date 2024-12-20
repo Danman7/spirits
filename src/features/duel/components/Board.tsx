@@ -14,10 +14,10 @@ import {
   getAttackingAgentId,
   getLoggedInPlayerId,
   getPhase,
-  getPlayerOrder,
   getPlayers,
 } from 'src/features/duel/selectors'
 import { startInitialCardDraw } from 'src/features/duel/slice'
+import { getOpponentId, sortDuelPlayers } from 'src/features/duel/utils'
 
 let hasAddedCardEffectListeners = false
 
@@ -27,7 +27,6 @@ const Board: FC = () => {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false)
 
   const players = useAppSelector(getPlayers)
-  const playerOrder = useAppSelector(getPlayerOrder)
   const phase = useAppSelector(getPhase)
   const loggedInPlayerId = useAppSelector(getLoggedInPlayerId)
   const activePlayerId = useAppSelector(getActivePlayerId)
@@ -37,7 +36,7 @@ const Board: FC = () => {
     ({ hasPerformedAction }) => !hasPerformedAction,
   )
   const loggedInPlayer = players[loggedInPlayerId]
-  const opponent = players[playerOrder[0]]
+  const opponent = players[getOpponentId(players, loggedInPlayerId)]
   const isLoggedInPlayerActive = loggedInPlayerId === activePlayerId
   const victoriousPlayerName =
     opponent.coins <= 0
@@ -103,12 +102,12 @@ const Board: FC = () => {
 
   return (
     <>
-      {playerOrder.map((playerId, index) => (
+      {sortDuelPlayers(players, loggedInPlayerId).map((player, index) => (
         <PlayerField
-          key={playerId}
-          player={players[playerId]}
+          key={player.id}
+          player={player}
           isOnTop={!index}
-          isActive={playerId === activePlayerId}
+          isActive={player.id === activePlayerId}
           phase={phase}
           attackingAgentId={attackingAgentId}
         />

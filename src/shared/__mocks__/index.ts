@@ -81,8 +81,6 @@ export const stackedOpponentMock: Player = {
 export const MockPlayerTurnState: DuelState = {
   loggedInPlayerId: initialPlayerMock.id,
   phase: 'Player Turn',
-  playerOrder: [initialOpponentMock.id, initialPlayerMock.id],
-  turn: 1,
   activePlayerId: initialPlayerMock.id,
   attackingAgentId: '',
   players: {
@@ -95,8 +93,7 @@ export const stackedDuelState: DuelState = {
   ...MockPlayerTurnState,
   players: {
     [stackedPlayerMock.id]: stackedPlayerMock,
-    [MockPlayerTurnState.playerOrder[0]]:
-      MockPlayerTurnState.players[MockPlayerTurnState.playerOrder[0]],
+    [opponentId]: MockPlayerTurnState.players[opponentId],
   },
 }
 

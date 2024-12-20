@@ -23,12 +23,10 @@ import {
   updateCard,
 } from 'src/features/duel/slice'
 import { DuelState, PlayerStacks } from 'src/features/duel/types'
-import { MockPlayerTurnState } from 'src/shared/__mocks__'
 import { normalizePlayerCards } from 'src/features/duel/utils'
+import { MockPlayerTurnState, playerId } from 'src/shared/__mocks__'
 
 let mockDuelState: DuelState
-
-const [playerId] = MockPlayerTurnState.playerOrder
 
 const mockDispatch = jest.fn()
 

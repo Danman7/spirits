@@ -47,7 +47,6 @@ const mockDuelState: DuelState = {
   ...initialState,
   players: mockPlayers,
   activePlayerId: playerId,
-  playerOrder: [opponentId, playerId],
 }
 
 let duelState: DuelState
@@ -66,9 +65,8 @@ describe('Initializing a duel', () => {
       }),
     )
 
-    const { turn, activePlayerId, phase } = state
+    const { activePlayerId, phase } = state
 
-    expect(turn).toBe(0)
     expect(activePlayerId).toBeTruthy()
     expect(phase).toBe('Pre-duel')
   })
@@ -84,9 +82,8 @@ describe('Initializing a duel', () => {
       }),
     )
 
-    const { turn, activePlayerId, phase } = state
+    const { activePlayerId, phase } = state
 
-    expect(turn).toBe(0)
     expect(activePlayerId).toBe(firstPlayerId)
     expect(phase).toBe('Pre-duel')
   })
@@ -207,13 +204,11 @@ describe('Sequence before play', () => {
       [playerId]: mockPlayer,
       [opponentId]: { ...mockOpponent, hasPerformedAction: true },
     }
-    duelState.playerOrder = [opponentId, playerId]
 
     const state = duelReducer(duelState, completeRedraw(playerId))
 
-    const { turn, phase, players, activePlayerId } = state
+    const { phase, players, activePlayerId } = state
 
-    expect(turn).toBe(1)
     expect(phase).toBe('Player Turn')
     expect(players[activePlayerId].hand).toHaveLength(
       mockPlayer.hand.length + 1,
@@ -230,7 +225,6 @@ describe('Playing turns', () => {
   beforeEach(() => {
     duelState = {
       ...mockDuelState,
-      turn: 1,
       phase: 'Player Turn',
     }
   })
@@ -346,11 +340,10 @@ describe('Playing turns', () => {
 
     const state = duelReducer(duelState, moveToNextAttacker())
 
-    const { phase, turn, activePlayerId, players } = state
+    const { phase, activePlayerId, players } = state
 
     const player = players[playerId]
 
-    expect(turn).toBe(duelState.turn + 1)
     expect(phase).toBe('Player Turn')
     expect(activePlayerId).toBe(opponentId)
     expect(player.coins).toBe(coins + 1)
@@ -450,9 +443,8 @@ describe('Playing turns', () => {
 
     const state = duelReducer(duelState, moveToNextAttacker())
 
-    const { phase, turn, activePlayerId } = state
+    const { phase, activePlayerId } = state
 
-    expect(turn).toBe(duelState.turn + 1)
     expect(phase).toBe('Player Turn')
     expect(activePlayerId).toBe(opponentId)
   })
@@ -463,9 +455,8 @@ describe('Playing turns', () => {
 
     const state = duelReducer(duelState, moveToNextAttacker())
 
-    const { phase, turn, activePlayerId } = state
+    const { phase, activePlayerId } = state
 
-    expect(turn).toBe(duelState.turn + 1)
     expect(phase).toBe('Player Turn')
     expect(activePlayerId).toBe(playerId)
   })

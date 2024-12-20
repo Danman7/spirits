@@ -39,7 +39,6 @@ export const Default: Story = {
         store={setupStore({
           duel: {
             ...initialState,
-            turn: 1,
             activePlayerId: initialPlayerMock.id,
             players: {
               [initialPlayerMock.id]: {
@@ -59,7 +58,6 @@ export const Default: Story = {
                 }),
               },
             },
-            playerOrder: [initialOpponentMock.id, initialPlayerMock.id],
             phase: 'Player Turn',
             loggedInPlayerId: initialPlayerMock.id,
           },

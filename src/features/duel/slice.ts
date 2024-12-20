@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
 import {
   drawCardFromDeckTransformer,
-  initializeEndTurnTransformer,
   moveCardToBoardTransformer,
   moveCardToDiscardTransformer,
   moveToNextAttackerTransformer,
@@ -14,16 +13,13 @@ import {
   DuelState,
   Player,
   PlayerCardAction,
-  PlayerOrder,
 } from 'src/features/duel/types'
 import { moveCardBetweenStacks } from 'src/features/duel/utils'
 import { getRandomArrayItem, shuffleArray } from 'src/shared/utils'
 
 export const initialState: DuelState = {
-  turn: 0,
   phase: 'Pre-duel',
   players: {},
-  playerOrder: ['', ''],
   loggedInPlayerId: '',
   attackingAgentId: '',
   activePlayerId: '',
@@ -74,14 +70,6 @@ export const duelSlice = createSlice({
         {},
       )
 
-      state.playerOrder = players
-        .sort(
-          (playerA, playerB) =>
-            Number(playerA.id === loggedInPlayerId) -
-            Number(playerB.id === loggedInPlayerId),
-        )
-        .map(({ id }) => id) as PlayerOrder
-
       state.phase = phase || 'Pre-duel'
 
       if (loggedInPlayerId) {
@@ -99,9 +87,8 @@ export const duelSlice = createSlice({
 
       state.phase = 'Redrawing Phase'
 
-      state.playerOrder.forEach((playerId) => {
-        state.players[playerId].hasPerformedAction = state.players[playerId]
-          .isCPU
+      Object.values(state.players).forEach(({ id }) => {
+        state.players[id].hasPerformedAction = state.players[id].isCPU
           ? true
           : false
       })
@@ -120,9 +107,7 @@ export const duelSlice = createSlice({
       })
     },
     completeRedraw: (state, action: PayloadAction<Player['id']>) => {
-      const { players, playerOrder, activePlayerId } = state
-
-      const [opponentId, playerId] = playerOrder
+      const { players, activePlayerId } = state
 
       players[action.payload].hasPerformedAction = true
 
@@ -132,16 +117,18 @@ export const duelSlice = createSlice({
         )
       ) {
         state.phase = 'Player Turn'
-        state.turn = 1
 
-        state.players[opponentId].hasPerformedAction = false
-        state.players[playerId].hasPerformedAction = false
+        Object.keys(state.players).forEach((playerId) => {
+          state.players[playerId].hasPerformedAction = false
+        })
 
         drawCardFromDeckTransformer(state, activePlayerId)
       }
     },
     initializeEndTurn: (state) => {
-      initializeEndTurnTransformer(state)
+      state.phase = 'Resolving end of turn'
+
+      moveToNextAttackerTransformer(state)
     },
     moveToNextAttacker: (state) => {
       moveToNextAttackerTransformer(state)
