@@ -24,14 +24,21 @@ import {
 } from 'src/features/duel/slice'
 import { DuelState, PlayerStacks } from 'src/features/duel/types'
 import { normalizePlayerCards } from 'src/features/duel/utils'
-import { MockPlayerTurnState, playerId } from 'src/shared/__mocks__'
+import {
+  MockPlayerTurnState,
+  mockRootState,
+  playerId,
+} from 'src/shared/__mocks__'
 
 let mockDuelState: DuelState
 
 const mockDispatch = jest.fn()
 
 const listenerApi: ListenerEffectAPI<RootState, AppDispatch> = {
-  getState: jest.fn(() => ({ duel: { ...MockPlayerTurnState } })),
+  getState: jest.fn(() => ({
+    ...mockRootState,
+    duel: { ...MockPlayerTurnState },
+  })),
   dispatch: mockDispatch,
   getOriginalState: jest.fn(),
   unsubscribe: jest.fn(),
@@ -83,6 +90,7 @@ describe(BrotherSachelman.name, () => {
     }
 
     listenerApi.getState = jest.fn(() => ({
+      ...mockRootState,
       duel: mockDuelState,
     }))
 
@@ -116,6 +124,7 @@ describe(BrotherSachelman.name, () => {
     }
 
     listenerApi.getState = jest.fn(() => ({
+      ...mockRootState,
       duel: mockDuelState,
     }))
 
@@ -144,10 +153,12 @@ describe(BrotherSachelman.name, () => {
     }
 
     listenerApi.getState = jest.fn(() => ({
+      ...mockRootState,
       duel: mockDuelState,
     }))
 
     listenerApi.getState = jest.fn(() => ({
+      ...mockRootState,
       duel: mockDuelState,
     }))
 
@@ -172,6 +183,7 @@ describe(HammeriteNovice.name, () => {
     }
 
     listenerApi.getState = jest.fn(() => ({
+      ...mockRootState,
       duel: mockDuelState,
     }))
 
@@ -192,6 +204,7 @@ describe(HammeriteNovice.name, () => {
     }
 
     listenerApi.getState = jest.fn(() => ({
+      ...mockRootState,
       duel: mockDuelState,
     }))
 
@@ -218,6 +231,7 @@ describe(HammeriteNovice.name, () => {
     }
 
     listenerApi.getState = jest.fn(() => ({
+      ...mockRootState,
       duel: mockDuelState,
     }))
 
@@ -240,6 +254,7 @@ describe(BookOfAsh.name, () => {
     }
 
     listenerApi.getState = jest.fn(() => ({
+      ...mockRootState,
       duel: mockDuelState,
     }))
 
@@ -284,6 +299,7 @@ describe(BookOfAsh.name, () => {
     }
 
     listenerApi.getState = jest.fn(() => ({
+      ...mockRootState,
       duel: mockDuelState,
     }))
 
@@ -310,6 +326,7 @@ describe(BookOfAsh.name, () => {
     }
 
     listenerApi.getState = jest.fn(() => ({
+      ...mockRootState,
       duel: mockDuelState,
     }))
 

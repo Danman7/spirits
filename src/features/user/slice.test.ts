@@ -1,8 +1,8 @@
 import { initialState, loadUser, userReducer } from 'src/features/user/slice'
-import { UserState } from 'src/features/user/types'
 import { playerId } from 'src/shared/__mocks__'
+import { User } from 'src/shared/types'
 
-let userState: UserState
+let userState: User
 
 describe('Load the user', () => {
   beforeEach(() => {

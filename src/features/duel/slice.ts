@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+
 import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
 import {
   drawCardFromDeckTransformer,
@@ -8,19 +9,18 @@ import {
 } from 'src/features/duel/transformers'
 import {
   AddNewCardsAction,
-  DuelCard,
   DuelPhase,
   DuelState,
   Player,
   PlayerCardAction,
 } from 'src/features/duel/types'
 import { moveCardBetweenStacks } from 'src/features/duel/utils'
+import { DuelCard } from 'src/shared/types'
 import { getRandomArrayItem, shuffleArray } from 'src/shared/utils'
 
 export const initialState: DuelState = {
   phase: 'Pre-duel',
   players: {},
-  loggedInPlayerId: '',
   attackingAgentId: '',
   activePlayerId: '',
 }
@@ -33,12 +33,11 @@ export const duelSlice = createSlice({
       state,
       action: PayloadAction<{
         players: Player[]
-        loggedInPlayerId: string
         firstPlayerId?: string
         phase?: DuelPhase
       }>,
     ) => {
-      const { players, firstPlayerId, loggedInPlayerId, phase } = action.payload
+      const { players, firstPlayerId, phase } = action.payload
 
       let startingPlayerId: string
 
@@ -71,8 +70,6 @@ export const duelSlice = createSlice({
       )
 
       state.phase = phase || 'Pre-duel'
-
-      state.loggedInPlayerId = loggedInPlayerId
     },
     startInitialCardDraw: (state) => {
       state.phase = 'Initial Draw'

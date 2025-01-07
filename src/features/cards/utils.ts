@@ -1,5 +1,6 @@
 import { FACTION_COLOR_MAP } from 'src/features/cards/constants'
-import { CardBase, GetOnPlayPredicate } from 'src/features/cards/types'
+import { GetOnPlayPredicate } from 'src/features/cards/types'
+import { CardBase } from 'src/shared/types'
 
 /**
  * This method plugs in the redux toolkit listener middleware and generates a Boolean predicate specifically for on card play triggers. Every on play should check if the card name is the correct one apart from other conditions.

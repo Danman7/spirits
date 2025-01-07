@@ -13,17 +13,24 @@ import {
   Zombie,
 } from 'src/features/cards/CardBases'
 import { DEFAULT_COINS_AMOUNT, EMPTY_PLAYER } from 'src/features/duel/constants'
-import { initialState } from 'src/features/duel/slice'
+import { initialState as initialDuelState } from 'src/features/duel/slice'
 import { DuelState, Player } from 'src/features/duel/types'
 import { normalizePlayerCards } from 'src/features/duel/utils'
+import { initialState as initialUserState } from 'src/features/user/slice'
+import { User } from 'src/shared/types'
 
 export const playerId = 'player'
 export const opponentId = 'opponent'
 
-export const initialPlayerMock: Player = {
-  ...EMPTY_PLAYER,
+export const userMock: User = {
   id: playerId,
   name: 'Garret',
+  cards: {},
+}
+
+export const initialPlayerMock: Player = {
+  ...EMPTY_PLAYER,
+  ...userMock,
   coins: DEFAULT_COINS_AMOUNT,
   ...normalizePlayerCards({
     deck: [
@@ -79,7 +86,6 @@ export const stackedOpponentMock: Player = {
 }
 
 export const MockPlayerTurnState: DuelState = {
-  loggedInPlayerId: initialPlayerMock.id,
   phase: 'Player Turn',
   activePlayerId: initialPlayerMock.id,
   attackingAgentId: '',
@@ -97,10 +103,12 @@ export const stackedDuelState: DuelState = {
   },
 }
 
-export const stackedPreloadedState: RootState = {
-  duel: { ...stackedDuelState },
+export const mockRootState: RootState = {
+  duel: { ...initialDuelState },
+  user: { ...initialUserState },
 }
 
-export const mockRootState: RootState = {
-  duel: initialState,
+export const stackedPreloadedState: RootState = {
+  duel: { ...stackedDuelState },
+  user: { ...userMock },
 }

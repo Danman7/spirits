@@ -5,10 +5,10 @@ import {
 } from 'src/features/cards/CardBases'
 import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
 import {
-  duelReducer,
   addNewCards,
   completeRedraw,
   drawCardFromDeck,
+  duelReducer,
   initializeDuel,
   initializeEndTurn,
   initialState,
@@ -20,19 +20,15 @@ import {
   startInitialCardDraw,
   updateCard,
 } from 'src/features/duel/slice'
-import {
-  CardStack,
-  DuelCard,
-  DuelState,
-  PlayerCards,
-} from 'src/features/duel/types'
+import { CardStack, DuelState } from 'src/features/duel/types'
 import { createDuelCard, normalizePlayerCards } from 'src/features/duel/utils'
 import {
-  initialPlayerMock,
   initialOpponentMock,
-  playerId,
+  initialPlayerMock,
   opponentId,
+  playerId,
 } from 'src/shared/__mocks__'
+import { DuelCard, UserCards } from 'src/shared/types'
 
 const initialPlayers = [initialPlayerMock, initialOpponentMock]
 
@@ -62,7 +58,6 @@ describe('Initializing a duel', () => {
       duelState,
       initializeDuel({
         players: [mockPlayer, mockOpponent],
-        loggedInPlayerId: mockOpponent.id,
       }),
     )
 
@@ -79,7 +74,6 @@ describe('Initializing a duel', () => {
       duelState,
       initializeDuel({
         players: initialPlayers,
-        loggedInPlayerId: playerId,
         firstPlayerId,
       }),
     )
@@ -96,7 +90,6 @@ describe('Initializing a duel', () => {
         duelState,
         initializeDuel({
           players: initialPlayers,
-          loggedInPlayerId: playerId,
           firstPlayerId: 'random-id',
         }),
       )
@@ -694,7 +687,7 @@ describe('Playing turns', () => {
       [opponentId]: mockOpponent,
     }
 
-    const addedCards: PlayerCards = {
+    const addedCards: UserCards = {
       [novice.id]: novice,
     }
 

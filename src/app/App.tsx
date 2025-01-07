@@ -1,30 +1,47 @@
 import { useEffect } from 'react'
+
 import { useAppDispatch, useAppSelector } from 'src/app/store'
-import { initialPlayerMock, initialOpponentMock } from 'src/shared/__mocks__'
 import Board from 'src/features/duel/components/Board'
 import { getActivePlayerId } from 'src/features/duel/selectors'
 import { initializeDuel } from 'src/features/duel/slice'
+import { getUserId } from 'src/features/user/selector'
+import { loadUser } from 'src/features/user/slice'
+import {
+  initialOpponentMock,
+  initialPlayerMock,
+  playerId,
+} from 'src/shared/__mocks__'
 
-let hasInitializedDuel = false
+let hasLoadedUser = false
 
 const App = () => {
   const dispatch = useAppDispatch()
 
   const activePlayerId = useAppSelector(getActivePlayerId)
+  const userId = useAppSelector(getUserId)
 
   useEffect(() => {
-    if (!hasInitializedDuel) {
-      hasInitializedDuel = true
+    if (!hasLoadedUser) {
+      hasLoadedUser = true
 
       dispatch(
-        initializeDuel({
-          players: [initialPlayerMock, initialOpponentMock],
-          loggedInPlayerId: initialPlayerMock.id,
-          firstPlayerId: initialPlayerMock.id,
+        loadUser({
+          id: playerId,
         }),
       )
     }
-  }, [activePlayerId, dispatch])
+  }, [dispatch])
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(
+        initializeDuel({
+          players: [initialPlayerMock, initialOpponentMock],
+          firstPlayerId: userId,
+        }),
+      )
+    }
+  }, [userId, dispatch])
 
   return activePlayerId ? <Board /> : null
 }

@@ -1,8 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { UserState } from 'src/features/user/types'
+import { User } from 'src/shared/types'
 
-export const initialState: UserState = {
+export const initialState: User = {
   id: '',
+  name: '',
+  cards: {},
 }
 
 export const userSlice = createSlice({

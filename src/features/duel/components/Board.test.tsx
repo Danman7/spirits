@@ -24,6 +24,7 @@ import {
   stackedDuelState,
   playerId,
   opponentId,
+  stackedPreloadedState,
 } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { OVERLAY_TEST_ID, PANEL_TEST_ID } from 'src/shared/testIds'
@@ -32,7 +33,7 @@ import { normalizePlayerCards } from 'src/features/duel/utils'
 let preloadedState: RootState
 
 beforeEach(() => {
-  preloadedState = { duel: { ...stackedDuelState } }
+  preloadedState = { ...stackedPreloadedState }
 })
 
 it('should add card effect listeners on mount', () => {
@@ -55,7 +56,7 @@ it('should add card effect listeners on mount', () => {
 })
 
 it('should initiate card drawing', async () => {
-  preloadedState.duel.phase = 'Pre-duel'
+  preloadedState.duel = { ...preloadedState.duel, phase: 'Pre-duel' }
 
   const { getByTestId, dispatchSpy } = renderWithProviders(<Board />, {
     preloadedState,
@@ -106,10 +107,13 @@ it('should play CPU turn', async () => {
     coins: 20,
   }
 
-  preloadedState.duel.activePlayerId = CPUId
-  preloadedState.duel.players = {
-    [playerId]: stackedPlayerMock,
-    [CPUId]: CPUPlayer,
+  preloadedState.duel = {
+    ...preloadedState.duel,
+    activePlayerId: CPUId,
+    players: {
+      [playerId]: stackedPlayerMock,
+      [CPUId]: CPUPlayer,
+    },
   }
 
   const { getByText, getByTestId, dispatchSpy } = renderWithProviders(

@@ -12,12 +12,12 @@ import { isCPUTurn, playCPUTurn } from 'src/features/duel/cpuUtils'
 import {
   getActivePlayerId,
   getAttackingAgentId,
-  getLoggedInPlayerId,
   getPhase,
   getPlayers,
 } from 'src/features/duel/selectors'
 import { startInitialCardDraw } from 'src/features/duel/slice'
 import { getOpponentId, sortDuelPlayers } from 'src/features/duel/utils'
+import { getUserId } from 'src/features/user/selector'
 
 let hasAddedCardEffectListeners = false
 
@@ -28,7 +28,7 @@ const Board: FC = () => {
 
   const players = useAppSelector(getPlayers)
   const phase = useAppSelector(getPhase)
-  const loggedInPlayerId = useAppSelector(getLoggedInPlayerId)
+  const loggedInPlayerId = useAppSelector(getUserId)
   const activePlayerId = useAppSelector(getActivePlayerId)
   const attackingAgentId = useAppSelector(getAttackingAgentId)
 

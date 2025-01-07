@@ -14,11 +14,6 @@ export const getPlayers = createSelector(
   (duelState) => duelState.players,
 )
 
-export const getLoggedInPlayerId = createSelector(
-  getDuelState,
-  (duelState) => duelState.loggedInPlayerId,
-)
-
 export const getActivePlayerId = createSelector(
   getDuelState,
   (duelState) => duelState.activePlayerId,

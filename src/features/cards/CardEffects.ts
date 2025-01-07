@@ -1,13 +1,14 @@
 import { HammeriteNovice } from 'src/features/cards/CardBases'
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/features/cards/constants'
 import { CardEffect } from 'src/features/cards/types'
-import { copyDuelCard } from 'src/features/duel/utils'
 import {
   addNewCards,
   moveCardToBoard,
   updateCard,
 } from 'src/features/duel/slice'
-import { PlayerCardAction, PlayerCards } from 'src/features/duel/types'
+import { PlayerCardAction } from 'src/features/duel/types'
+import { copyDuelCard } from 'src/features/duel/utils'
+import { UserCards } from 'src/shared/types'
 
 export const BrotherSachelmanOnPlayEffect: CardEffect<PlayerCardAction> = (
   action,
@@ -99,7 +100,7 @@ export const BookOfAshEffect: CardEffect<PlayerCardAction> = (
     const undead1 = copyDuelCard(topCommonDiscardCard)
     const undead2 = copyDuelCard(topCommonDiscardCard)
 
-    const cards: PlayerCards = {
+    const cards: UserCards = {
       [undead1.id]: undead1,
       [undead2.id]: undead2,
     }

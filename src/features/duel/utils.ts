@@ -1,15 +1,14 @@
 import { AppDispatch } from 'src/app/store'
-import { CardBase } from 'src/features/cards/types'
 import { CARD_STACKS } from 'src/features/duel/constants'
 import { initializeEndTurn, moveCardToDiscard } from 'src/features/duel/slice'
 import {
   CardStack,
-  DuelCard,
   DuelPlayers,
   DuelState,
   Player,
-  PlayerStacks,
+  PlayerStacksAndCards,
 } from 'src/features/duel/types'
+import { CardBase, DuelCard } from 'src/shared/types'
 import { generateUUID } from 'src/shared/utils'
 
 /**
@@ -55,8 +54,8 @@ export const getPlayableCardIds = (player: Player) =>
 */
 export const normalizePlayerCards = (
   stacks: Partial<Record<CardStack, CardBase[]>>,
-): PlayerStacks => {
-  const partialPlayer: PlayerStacks = {
+): PlayerStacksAndCards => {
+  const partialPlayer: PlayerStacksAndCards = {
     deck: [],
     hand: [],
     board: [],

@@ -12,7 +12,11 @@ import {
 } from 'src/features/cards/CardBases'
 import Board from 'src/features/duel/components/Board'
 import { initialState } from 'src/features/duel/slice'
-import { initialPlayerMock, initialOpponentMock } from 'src/shared/__mocks__'
+import {
+  initialPlayerMock,
+  initialOpponentMock,
+  userMock,
+} from 'src/shared/__mocks__'
 import { normalizePlayerCards } from 'src/features/duel/utils'
 
 const meta = {
@@ -37,6 +41,7 @@ export const Default: Story = {
     (story) => (
       <Provider
         store={setupStore({
+          user: userMock,
           duel: {
             ...initialState,
             activePlayerId: initialPlayerMock.id,
@@ -59,7 +64,6 @@ export const Default: Story = {
               },
             },
             phase: 'Player Turn',
-            loggedInPlayerId: initialPlayerMock.id,
           },
         })}
       >

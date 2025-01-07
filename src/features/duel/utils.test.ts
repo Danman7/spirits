@@ -11,12 +11,7 @@ import {
   EMPTY_PLAYER,
 } from 'src/features/duel/constants'
 import { initializeEndTurn, moveCardToDiscard } from 'src/features/duel/slice'
-import {
-  DuelCard,
-  DuelState,
-  Player,
-  PlayerCards,
-} from 'src/features/duel/types'
+import { DuelState, Player } from 'src/features/duel/types'
 import {
   copyDuelCard,
   createDuelCard,
@@ -26,6 +21,7 @@ import {
   triggerPostCardPlay,
 } from 'src/features/duel/utils'
 import { playerId, stackedDuelState } from 'src/shared/__mocks__'
+import { DuelCard, UserCards } from 'src/shared/types'
 
 test('createPlayCardFromPrototype should create a new play ready card from a card prototype', () => {
   const newCard = createDuelCard(Haunt)
@@ -79,7 +75,7 @@ it("should normalize a player's cards into all possible stacks with normalizePla
     discard: [Zombie],
   })
 
-  Object.values(normalizedCards.cards as PlayerCards).forEach((card) => {
+  Object.values(normalizedCards.cards as UserCards).forEach((card) => {
     expect(normalizedCards.cards?.[card.id]).toBe(card)
   })
 

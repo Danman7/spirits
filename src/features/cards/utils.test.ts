@@ -9,6 +9,7 @@ import { EMPTY_PLAYER } from 'src/features/duel/constants'
 import { initialState } from 'src/features/duel/slice'
 import { PlayerCardAction } from 'src/features/duel/types'
 import { createDuelCard } from 'src/features/duel/utils'
+import { mockRootState } from 'src/shared/__mocks__'
 
 test('joinCardTypes should return a joined types string for a card', () => {
   expect(joinCardCategories(Haunt.categories)).toBe('Undead, Hammerite')
@@ -36,6 +37,7 @@ test('getOnPlayPredicate returns the correct check', () => {
   }
 
   const mockState: RootState = {
+    ...mockRootState,
     duel: {
       ...initialState,
       players: {

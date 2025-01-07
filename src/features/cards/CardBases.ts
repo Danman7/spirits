@@ -7,7 +7,7 @@ import {
   HAUNT_DAMAGE,
   VIKTORIA_COIN_GAIN,
 } from 'src/features/cards/constants'
-import { CardBase } from 'src/features/cards/types'
+import { CardBase } from 'src/shared/types'
 import { getCoinsMessage } from 'src/shared/utils'
 
 export const Zombie: CardBase = {

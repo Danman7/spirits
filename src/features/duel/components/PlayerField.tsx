@@ -10,7 +10,7 @@ import {
   playCard,
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
-import { DuelCard, DuelPhase, Player } from 'src/features/duel/types'
+import { DuelPhase, Player } from 'src/features/duel/types'
 import { triggerPostCardPlay } from 'src/features/duel/utils'
 import { AnimatedNumber } from 'src/shared/components/AnimatedNumber'
 import { Link } from 'src/shared/components/Link'
@@ -28,6 +28,7 @@ import {
   PLAYER_HAND_ID,
   PLAYER_INFO_ID,
 } from 'src/shared/testIds'
+import { DuelCard } from 'src/shared/types'
 import { shuffleArray } from 'src/shared/utils'
 
 type browsedStack = 'deck' | 'discard' | null
