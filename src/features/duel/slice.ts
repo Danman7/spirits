@@ -33,14 +33,14 @@ export const duelSlice = createSlice({
       state,
       action: PayloadAction<{
         players: Player[]
-        loggedInPlayerId?: Player['id']
-        firstPlayerId?: Player['id']
+        loggedInPlayerId: string
+        firstPlayerId?: string
         phase?: DuelPhase
       }>,
     ) => {
       const { players, firstPlayerId, loggedInPlayerId, phase } = action.payload
 
-      let startingPlayerId: Player['id']
+      let startingPlayerId: string
 
       if (firstPlayerId) {
         const playerFromProp = players.find(({ id }) => id === firstPlayerId)
@@ -72,9 +72,7 @@ export const duelSlice = createSlice({
 
       state.phase = phase || 'Pre-duel'
 
-      if (loggedInPlayerId) {
-        state.loggedInPlayerId = loggedInPlayerId
-      }
+      state.loggedInPlayerId = loggedInPlayerId
     },
     startInitialCardDraw: (state) => {
       state.phase = 'Initial Draw'
@@ -93,7 +91,7 @@ export const duelSlice = createSlice({
           : false
       })
     },
-    drawCardFromDeck: (state, action: PayloadAction<Player['id']>) => {
+    drawCardFromDeck: (state, action: PayloadAction<string>) => {
       drawCardFromDeckTransformer(state, action.payload)
     },
     putCardAtBottomOfDeck: (state, action: PlayerCardAction) => {
@@ -106,7 +104,7 @@ export const duelSlice = createSlice({
         to: 'deck',
       })
     },
-    completeRedraw: (state, action: PayloadAction<Player['id']>) => {
+    completeRedraw: (state, action: PayloadAction<string>) => {
       const { players, activePlayerId } = state
 
       players[action.payload].hasPerformedAction = true
@@ -150,7 +148,7 @@ export const duelSlice = createSlice({
     updateCard: (
       state,
       action: PayloadAction<{
-        playerId: Player['id']
+        playerId: string
         cardId: string
         update: Partial<DuelCard>
       }>,
@@ -206,4 +204,4 @@ export const {
 
 export type DuelActionTypes = `${typeof duelSlice.name}/${keyof typeof actions}`
 
-export default reducer
+export const duelReducer = reducer

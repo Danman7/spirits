@@ -83,7 +83,7 @@ export const normalizePlayerCards = (
 
 interface MoveCardBetweenStacksArgs {
   state: DuelState
-  playerId: Player['id']
+  playerId: string
   movedCardId: string
   to: CardStack
   inFront?: boolean
@@ -102,6 +102,8 @@ export const moveCardBetweenStacks = ({
   inFront,
 }: MoveCardBetweenStacksArgs) => {
   const { players } = state
+
+  if (!players[playerId].cards[movedCardId]) return
 
   CARD_STACKS.forEach((stack) => {
     if (stack !== to) {

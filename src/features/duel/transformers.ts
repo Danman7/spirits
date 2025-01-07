@@ -1,23 +1,21 @@
 import { initialState } from 'src/features/duel/slice'
-import { DuelState, Player, PlayerCardAction } from 'src/features/duel/types'
+import { DuelState, PlayerCardAction } from 'src/features/duel/types'
 import { getOpponentId, moveCardBetweenStacks } from 'src/features/duel/utils'
 
 export const drawCardFromDeckTransformer = (
   state: DuelState,
-  playerId: Player['id'],
+  playerId: string,
 ) => {
   const { players } = state
 
   const drawingPlayer = players[playerId]
 
-  if (drawingPlayer.deck.length) {
-    moveCardBetweenStacks({
-      movedCardId: drawingPlayer.deck[0],
-      playerId,
-      state,
-      to: 'hand',
-    })
-  }
+  moveCardBetweenStacks({
+    movedCardId: drawingPlayer.deck[0],
+    playerId,
+    state,
+    to: 'hand',
+  })
 }
 
 export const moveCardToBoardTransformer = (

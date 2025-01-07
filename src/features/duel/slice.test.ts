@@ -4,7 +4,8 @@ import {
   Zombie,
 } from 'src/features/cards/CardBases'
 import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
-import duelReducer, {
+import {
+  duelReducer,
   addNewCards,
   completeRedraw,
   drawCardFromDeck,
@@ -78,6 +79,7 @@ describe('Initializing a duel', () => {
       duelState,
       initializeDuel({
         players: initialPlayers,
+        loggedInPlayerId: playerId,
         firstPlayerId,
       }),
     )
@@ -94,6 +96,7 @@ describe('Initializing a duel', () => {
         duelState,
         initializeDuel({
           players: initialPlayers,
+          loggedInPlayerId: playerId,
           firstPlayerId: 'random-id',
         }),
       )

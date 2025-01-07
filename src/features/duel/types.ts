@@ -30,24 +30,24 @@ export type DuelPhase =
   | 'Resolving end of turn'
 
 export type DuelPlayers = {
-  [index: Player['id']]: Player
+  [index: string]: Player
 }
 
 export interface DuelState {
   phase: DuelPhase
   players: DuelPlayers
-  loggedInPlayerId: Player['id']
-  activePlayerId: Player['id']
+  loggedInPlayerId: string
+  activePlayerId: string
   attackingAgentId: string
 }
 
 export type PlayerCardAction = PayloadAction<{
   cardId: string
-  playerId: Player['id']
+  playerId: string
 }>
 
 export type AddNewCardsAction = PayloadAction<{
-  playerId: Player['id']
+  playerId: string
   cards: PlayerCards
 }>
 
