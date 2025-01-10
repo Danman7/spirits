@@ -1,15 +1,20 @@
 import { AppDispatch } from 'src/app/store'
-import { CARD_STACKS } from 'src/features/duel/constants'
+import {
+  CARD_STACKS,
+  DEFAULT_DUEL_STARTING_COINS,
+} from 'src/features/duel/constants'
 import { initializeEndTurn, moveCardToDiscard } from 'src/features/duel/slice'
 import {
   CardStack,
+  DuelCard,
   DuelPlayers,
   DuelState,
+  DuelUser,
   Player,
   PlayerStacksAndCards,
 } from 'src/features/duel/types'
-import { CardBase, DuelCard } from 'src/shared/types'
-import { generateUUID } from 'src/shared/utils'
+import { CardBase } from 'src/shared/types'
+import { generateUUID, shuffleArray } from 'src/shared/utils'
 
 /**
  * @param base A card base object (e.g. HammeriteNovice or Zombie)
@@ -48,9 +53,9 @@ export const getPlayableCardIds = (player: Player) =>
  * Takes a record with a card stack as key and an array of card bases as value and returns a partial player object with normalized cards and stacks with the card ids to be concatenated with a player object.
  * @example
  * normalizePlayerCards({
-	 board: [TempleGuard],
-	hand: [HammeriteNovice],
-})
+	   board: [TempleGuard],
+	   hand: [HammeriteNovice],
+  })
 */
 export const normalizePlayerCards = (
   stacks: Partial<Record<CardStack, CardBase[]>>,
@@ -80,6 +85,20 @@ export const normalizePlayerCards = (
   return partialPlayer
 }
 
+/**
+ * Takes a user object and returns a player object in its expected initial state for a duel.
+ */
+export const setupInitialDuelPlayerFromUser = (user: DuelUser): Player => ({
+  ...user,
+  ...normalizePlayerCards({ deck: shuffleArray(user.deck) }),
+  coins: DEFAULT_DUEL_STARTING_COINS,
+  hand: [],
+  board: [],
+  discard: [],
+  hasPerformedAction: false,
+  income: 0,
+})
+
 interface MoveCardBetweenStacksArgs {
   state: DuelState
   playerId: string
@@ -89,9 +108,14 @@ interface MoveCardBetweenStacksArgs {
 }
 
 /**
- * @param base A card base object (e.g. HammeriteNovice or Zombie)
- * @returns A ready for duel card object with unique id and base properties for reference
- * @example createDuelCard({...Haunt}) // {...Haunt, id: 'e4g34', base: {...Haunt}}
+ * A state utility method for moving cards between stacks. It removes the given card id from whichever stack it is and appends or prepends it to the target. Manipulates the state directly.
+ * @example 
+ * moveCardBetweenStacks({
+    movedCardId: deck[0],
+    playerId: id,
+    state,
+    to: 'hand',
+})
  */
 export const moveCardBetweenStacks = ({
   state,

@@ -1,11 +1,10 @@
 import { clearAllListeners } from '@reduxjs/toolkit'
-import { fireEvent, waitFor } from '@testing-library/dom'
+import { fireEvent } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 import { act } from 'react'
 
 import { addAppListener } from 'src/app/listenerMiddleware'
 import { RootState } from 'src/app/store'
-import { ElevatedAcolyte } from 'src/features/cards/CardBases'
 import * as CardEffectPredicates from 'src/features/cards/CardEffectPredicates'
 import * as CardEffects from 'src/features/cards/CardEffects'
 import {
@@ -13,22 +12,14 @@ import {
   CardEffectPredicateName,
 } from 'src/features/cards/types'
 import Board from 'src/features/duel/components/Board'
-import { EMPTY_PLAYER } from 'src/features/duel/constants'
+import { drawInitialCardsFromDeck } from 'src/features/duel/slice'
 import {
-  opponentDecidingMessage,
-  victoryMessage,
-} from 'src/features/duel/messages'
-import { playCard, startInitialCardDraw } from 'src/features/duel/slice'
-import {
-  stackedPlayerMock,
-  stackedDuelState,
   playerId,
-  opponentId,
+  stackedPlayerMock,
   stackedPreloadedState,
 } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { OVERLAY_TEST_ID, PANEL_TEST_ID } from 'src/shared/testIds'
-import { normalizePlayerCards } from 'src/features/duel/utils'
 
 let preloadedState: RootState
 
@@ -56,7 +47,7 @@ it('should add card effect listeners on mount', () => {
 })
 
 it('should initiate card drawing', async () => {
-  preloadedState.duel = { ...preloadedState.duel, phase: 'Pre-duel' }
+  preloadedState.duel = { ...preloadedState.duel, phase: 'Initial Draw' }
 
   const { getByTestId, dispatchSpy } = renderWithProviders(<Board />, {
     preloadedState,
@@ -68,75 +59,7 @@ it('should initiate card drawing', async () => {
 
   fireEvent.animationEnd(getByTestId(OVERLAY_TEST_ID))
 
-  expect(dispatchSpy).toHaveBeenCalledWith(startInitialCardDraw())
-})
-
-it('should show if player is victorious', () => {
-  preloadedState.duel.players[playerId].coins = 0
-
-  const { getByText } = renderWithProviders(<Board />, {
-    preloadedState,
-  })
-
-  expect(
-    getByText(`${stackedDuelState.players[opponentId].name} ${victoryMessage}`),
-  ).toBeInTheDocument()
-})
-
-it('should show if opponent is victorious', () => {
-  preloadedState.duel.players[opponentId].coins = 0
-
-  const { getByText } = renderWithProviders(<Board />, {
-    preloadedState,
-  })
-
-  expect(
-    getByText(`${stackedDuelState.players[playerId].name} ${victoryMessage}`),
-  ).toBeInTheDocument()
-})
-
-it('should play CPU turn', async () => {
-  const CPUId = 'cpu-player'
-  const CPUPlayer = {
-    ...EMPTY_PLAYER,
-    ...normalizePlayerCards({
-      hand: [ElevatedAcolyte],
-    }),
-    id: CPUId,
-    isCPU: true,
-    coins: 20,
-  }
-
-  preloadedState.duel = {
-    ...preloadedState.duel,
-    activePlayerId: CPUId,
-    players: {
-      [playerId]: stackedPlayerMock,
-      [CPUId]: CPUPlayer,
-    },
-  }
-
-  const { getByText, getByTestId, dispatchSpy } = renderWithProviders(
-    <Board />,
-    { preloadedState },
-  )
-
-  await act(async () => {
-    await new Promise((r) => setTimeout(r, 2500))
-  })
-
-  fireEvent.animationEnd(getByTestId(OVERLAY_TEST_ID))
-
-  await waitFor(() =>
-    expect(getByText(opponentDecidingMessage)).toBeInTheDocument(),
-  )
-
-  expect(dispatchSpy).toHaveBeenCalledWith(
-    playCard({
-      cardId: CPUPlayer.hand[0],
-      playerId: CPUId,
-    }),
-  )
+  expect(dispatchSpy).toHaveBeenCalledWith(drawInitialCardsFromDeck())
 })
 
 it('should hide the side panel if the logged in player has performed an action', () => {

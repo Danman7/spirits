@@ -1,11 +1,10 @@
 import { FC, ReactNode, useEffect, useMemo, useState } from 'react'
 
 import {
+  initialDrawMessage,
   opponentFirst,
-  opponentTurnTitle,
   playerFirst,
   victoryMessage,
-  yourTurnTitle,
 } from 'src/features/duel/messages'
 import { DuelPhase, DuelPlayers } from 'src/features/duel/types'
 import { Modal } from 'src/shared/components/Modal'
@@ -21,7 +20,6 @@ const flashModal = (setModalVisibility: (isOpen: boolean) => void) => {
 
 export interface PhaseModalProps {
   isLoggedInPlayerActive: boolean
-  haveBothPlayersNotPerformedAction: boolean
   players: DuelPlayers
   phase: DuelPhase
   victoriousPlayerName?: string
@@ -30,7 +28,6 @@ export interface PhaseModalProps {
 
 export const PhaseModal: FC<PhaseModalProps> = ({
   isLoggedInPlayerActive,
-  haveBothPlayersNotPerformedAction,
   players,
   phase,
   victoriousPlayerName,
@@ -42,18 +39,12 @@ export const PhaseModal: FC<PhaseModalProps> = ({
 
   useEffect(() => {
     switch (phase) {
-      case 'Pre-duel':
+      case 'Initial Draw':
         flashModal(setIsPhaseModalOpen)
 
         break
-      case 'Player Turn':
-        if (haveBothPlayersNotPerformedAction) {
-          flashModal(setIsPhaseModalOpen)
-        }
-
-        break
     }
-  }, [haveBothPlayersNotPerformedAction, phase])
+  }, [phase])
 
   const phaseModalContent: ReactNode = useMemo(() => {
     if (victoriousPlayerName) {
@@ -61,17 +52,13 @@ export const PhaseModal: FC<PhaseModalProps> = ({
     }
 
     switch (phase) {
-      case 'Pre-duel':
+      case 'Initial Draw':
         return (
           <>
             <h1>{`${playerNames[0]} vs ${playerNames[1]}`}</h1>
-            <div>{isLoggedInPlayerActive ? playerFirst : opponentFirst}</div>
+            <p>{initialDrawMessage}</p>
+            <h3>{isLoggedInPlayerActive ? playerFirst : opponentFirst}</h3>
           </>
-        )
-
-      case 'Player Turn':
-        return (
-          <h1>{isLoggedInPlayerActive ? yourTurnTitle : opponentTurnTitle}</h1>
         )
     }
   }, [phase, isLoggedInPlayerActive, playerNames, victoriousPlayerName])

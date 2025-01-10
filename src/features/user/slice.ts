@@ -4,11 +4,11 @@ import { User } from 'src/shared/types'
 export const initialState: User = {
   id: '',
   name: '',
-  cards: {},
+  deck: [],
 }
 
 export const userSlice = createSlice({
-  name: 'duel',
+  name: 'user',
   initialState,
   reducers: {
     loadUser: (

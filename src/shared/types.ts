@@ -50,22 +50,12 @@ export interface CardBase {
   }
 }
 
-/**
- *  A ready for duel card object with unique id and base properties for reference.
- */
-export interface DuelCard extends CardBase {
-  id: string
-  strength: number
-  base: {
-    cost: number
-    strength: number
-  }
-}
-
-export type UserCards = { [index: string]: DuelCard }
-
 export interface User {
   id: string
   name: string
-  cards: UserCards
+  deck: CardBase[]
+}
+
+export interface Bot extends User {
+  isBot: true
 }

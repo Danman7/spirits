@@ -7,19 +7,16 @@ import {
 } from 'src/features/duel/components/PhaseModal'
 import {
   opponentFirst,
-  opponentTurnTitle,
   playerFirst,
   victoryMessage,
-  yourTurnTitle,
 } from 'src/features/duel/messages'
 import { MockPlayerTurnState, opponentId, playerId } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 
 const defaultProps: PhaseModalProps = {
   players: MockPlayerTurnState.players,
-  haveBothPlayersNotPerformedAction: true,
   isLoggedInPlayerActive: true,
-  phase: 'Pre-duel',
+  phase: 'Initial Draw',
   onPhaseModalCloseEnd: jest.fn(),
 }
 
@@ -48,29 +45,6 @@ it('should show that opponent is first if they win coin toss', () => {
   )
 
   expect(getByText(opponentFirst)).toBeInTheDocument()
-})
-
-it("should show that it is the player's turn", () => {
-  const { getByText } = renderWithProviders(
-    <PhaseModal {...defaultProps} phase="Player Turn" />,
-    {
-      preloadedState,
-    },
-  )
-
-  expect(getByText(yourTurnTitle)).toBeInTheDocument()
-})
-
-it("should show that it is the opponent's turn", () => {
-  const { getByText } = renderWithProviders(
-    <PhaseModal
-      {...defaultProps}
-      phase="Player Turn"
-      isLoggedInPlayerActive={false}
-    />,
-  )
-
-  expect(getByText(opponentTurnTitle)).toBeInTheDocument()
 })
 
 it("should show the duel victor's name", () => {

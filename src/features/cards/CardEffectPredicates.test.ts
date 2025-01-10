@@ -12,13 +12,13 @@ import {
 } from 'src/features/cards/CardEffectPredicates'
 import { EMPTY_PLAYER } from 'src/features/duel/constants'
 import { playCard } from 'src/features/duel/slice'
+import { DuelCard } from 'src/features/duel/types'
 import { createDuelCard } from 'src/features/duel/utils'
 import {
   initialPlayerMock,
   mockRootState,
   playerId,
 } from 'src/shared/__mocks__'
-import { DuelCard } from 'src/shared/types'
 
 const mockCardId = 'mock-card-id'
 

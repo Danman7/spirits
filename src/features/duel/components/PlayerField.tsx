@@ -10,12 +10,13 @@ import {
   playCard,
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
-import { DuelPhase, Player } from 'src/features/duel/types'
+import { DuelCard, DuelPhase, Player } from 'src/features/duel/types'
 import { triggerPostCardPlay } from 'src/features/duel/utils'
 import { AnimatedNumber } from 'src/shared/components/AnimatedNumber'
 import { Link } from 'src/shared/components/Link'
 import { Modal } from 'src/shared/components/Modal'
-import styles from 'src/shared/styles/components.module.css'
+import components from 'src/shared/styles/components.module.css'
+import animations from 'src/shared/styles/animations.module.css'
 import {
   OPPONENT_BOARD_ID,
   OPPONENT_DECK_ID,
@@ -28,8 +29,8 @@ import {
   PLAYER_HAND_ID,
   PLAYER_INFO_ID,
 } from 'src/shared/testIds'
-import { DuelCard } from 'src/shared/types'
 import { shuffleArray } from 'src/shared/utils'
+import { BotController } from 'src/features/duel/components/BotController'
 
 type browsedStack = 'deck' | 'discard' | null
 
@@ -59,6 +60,7 @@ const PlayerField: FC<PlayerFieldProps> = ({
     board,
     discard,
     hasPerformedAction,
+    isBot,
   } = player
 
   const dispatch = useAppDispatch()
@@ -119,17 +121,21 @@ const PlayerField: FC<PlayerFieldProps> = ({
     <>
       <h2
         data-testid={isOnTop ? OPPONENT_INFO_ID : PLAYER_INFO_ID}
-        className={`${isOnTop ? styles.topPlayerInfo : styles.bottomPlayerInfo}${isActive ? ` ${styles.activePlayerInfo}` : ''}`}
+        className={`${isOnTop ? components.topPlayerInfo : components.bottomPlayerInfo}${isActive ? ` ${components.activePlayerInfo} ${animations.pop}` : ''}`}
       >
         <span>{name}</span> / <AnimatedNumber value={coins} />
         {income ? <span> (+{income})</span> : null}
       </h2>
 
-      <div className={isOnTop ? styles.topPlayerSide : styles.bottomPlayerSide}>
+      <div
+        className={
+          isOnTop ? components.topPlayerSide : components.bottomPlayerSide
+        }
+      >
         <div
           data-testid={isOnTop ? OPPONENT_DISCARD_ID : PLAYER_DISCARD_ID}
           style={!isOnTop ? { cursor: 'pointer' } : {}}
-          className={styles.faceDownStack}
+          className={components.faceDownStack}
           onClick={!isOnTop ? () => openBrowseCardsModal('discard') : undefined}
         >
           {discard.map((cardId) => (
@@ -139,7 +145,9 @@ const PlayerField: FC<PlayerFieldProps> = ({
 
         <div
           data-testid={isOnTop ? OPPONENT_HAND_ID : PLAYER_HAND_ID}
-          className={isOnTop ? styles.topPlayerHand : styles.bottomPlayerHand}
+          className={
+            isOnTop ? components.topPlayerHand : components.bottomPlayerHand
+          }
         >
           {hand.map((cardId) => (
             <Card
@@ -154,7 +162,7 @@ const PlayerField: FC<PlayerFieldProps> = ({
         <div
           data-testid={isOnTop ? OPPONENT_DECK_ID : PLAYER_DECK_ID}
           style={!isOnTop ? { cursor: 'pointer' } : {}}
-          className={styles.faceDownStack}
+          className={components.faceDownStack}
           onClick={!isOnTop ? () => openBrowseCardsModal('deck') : undefined}
         >
           {deck.map((cardId) => (
@@ -165,7 +173,9 @@ const PlayerField: FC<PlayerFieldProps> = ({
 
       <div
         data-testid={isOnTop ? OPPONENT_BOARD_ID : PLAYER_BOARD_ID}
-        className={isOnTop ? styles.topPlayerBoard : styles.bottomPlayerBoard}
+        className={
+          isOnTop ? components.topPlayerBoard : components.bottomPlayerBoard
+        }
       >
         {board.map((cardId) => (
           <Card
@@ -182,20 +192,24 @@ const PlayerField: FC<PlayerFieldProps> = ({
       {/* Browse facedown stacks modal */}
       <Modal isOpen={isBrowseStackOpen}>
         {browsedStack ? (
-          <div className={styles.cardBrowserModal}>
+          <div className={components.cardBrowserModal}>
             <h1>Browsing your {browsedStack} (randomized)</h1>
-            <div className={styles.cardList}>
+            <div className={components.cardList}>
               {shuffleArray(player[browsedStack]).map((cardId) => (
                 <Card key={`${cardId}-browse`} card={cards[cardId]} />
               ))}
             </div>
 
-            <div className={styles.cardBrowseModalFooter}>
+            <div className={components.cardBrowseModalFooter}>
               <Link onClick={closeBrowseCardsModal}>{closeMessage}</Link>
             </div>
           </div>
         ) : null}
       </Modal>
+
+      {isBot ? (
+        <BotController player={player} phase={phase} isActive={isActive} />
+      ) : null}
     </>
   )
 }

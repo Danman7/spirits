@@ -8,14 +8,13 @@ import * as CardEffects from 'src/features/cards/CardEffects'
 import { ActionPanel } from 'src/features/duel/components/ActionPanel'
 import { PhaseModal } from 'src/features/duel/components/PhaseModal'
 import PlayerField from 'src/features/duel/components/PlayerField'
-import { isCPUTurn, playCPUTurn } from 'src/features/duel/cpuUtils'
 import {
   getActivePlayerId,
   getAttackingAgentId,
   getPhase,
   getPlayers,
 } from 'src/features/duel/selectors'
-import { startInitialCardDraw } from 'src/features/duel/slice'
+import { drawInitialCardsFromDeck } from 'src/features/duel/slice'
 import { getOpponentId, sortDuelPlayers } from 'src/features/duel/utils'
 import { getUserId } from 'src/features/user/selector'
 
@@ -32,9 +31,6 @@ const Board: FC = () => {
   const activePlayerId = useAppSelector(getActivePlayerId)
   const attackingAgentId = useAppSelector(getAttackingAgentId)
 
-  const haveBothPlayersNotPerformedAction = Object.values(players).every(
-    ({ hasPerformedAction }) => !hasPerformedAction,
-  )
   const loggedInPlayer = players[loggedInPlayerId]
   const opponent = players[getOpponentId(players, loggedInPlayerId)]
   const isLoggedInPlayerActive = loggedInPlayerId === activePlayerId
@@ -46,29 +42,11 @@ const Board: FC = () => {
         : undefined
 
   const onPhaseModalCloseEnd = () => {
-    if (phase === 'Pre-duel') {
-      dispatch(startInitialCardDraw())
+    if (phase === 'Initial Draw') {
+      dispatch(drawInitialCardsFromDeck())
       setIsSidePanelOpen(true)
-    }
-    if (phase === 'Player Turn') {
-      setIsSidePanelOpen(true)
-    }
-    if (isCPUTurn(isLoggedInPlayerActive, opponent, phase)) {
-      playCPUTurn({
-        dispatch,
-        player: opponent,
-      })
     }
   }
-
-  useEffect(() => {
-    if (
-      phase === 'Player Turn' &&
-      (haveBothPlayersNotPerformedAction || loggedInPlayer.hasPerformedAction)
-    ) {
-      setIsSidePanelOpen(false)
-    }
-  }, [phase, loggedInPlayer, haveBothPlayersNotPerformedAction])
 
   // This adds all store listeners for card effect triggers.
   // It plugs into the redux middleware and cannot be done in the slice.
@@ -117,7 +95,6 @@ const Board: FC = () => {
         players={players}
         phase={phase}
         isLoggedInPlayerActive={isLoggedInPlayerActive}
-        haveBothPlayersNotPerformedAction={haveBothPlayersNotPerformedAction}
         victoriousPlayerName={victoriousPlayerName}
         onPhaseModalCloseEnd={onPhaseModalCloseEnd}
       />

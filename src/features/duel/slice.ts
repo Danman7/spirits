@@ -1,25 +1,26 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
+import { DEFAULT_DUEL_INITIAL_CARDS_DRAWN } from 'src/features/duel/constants'
 import {
-  drawCardFromDeckTransformer,
   moveCardToBoardTransformer,
   moveCardToDiscardTransformer,
   moveToNextAttackerTransformer,
 } from 'src/features/duel/transformers'
 import {
   AddNewCardsAction,
-  DuelPhase,
+  DuelCard,
+  DuelStartUsers,
   DuelState,
-  Player,
   PlayerCardAction,
 } from 'src/features/duel/types'
-import { moveCardBetweenStacks } from 'src/features/duel/utils'
-import { DuelCard } from 'src/shared/types'
-import { getRandomArrayItem, shuffleArray } from 'src/shared/utils'
+import {
+  moveCardBetweenStacks,
+  setupInitialDuelPlayerFromUser,
+} from 'src/features/duel/utils'
+import { getRandomArrayItem } from 'src/shared/utils'
 
 export const initialState: DuelState = {
-  phase: 'Pre-duel',
+  phase: 'Initial Draw',
   players: {},
   attackingAgentId: '',
   activePlayerId: '',
@@ -29,67 +30,55 @@ export const duelSlice = createSlice({
   name: 'duel',
   initialState,
   reducers: {
-    initializeDuel: (
+    startDuel: (
       state,
       action: PayloadAction<{
-        players: Player[]
+        users: DuelStartUsers
         firstPlayerId?: string
-        phase?: DuelPhase
       }>,
     ) => {
-      const { players, firstPlayerId, phase } = action.payload
+      const { users, firstPlayerId } = action.payload
 
-      let startingPlayerId: string
-
-      if (firstPlayerId) {
-        const playerFromProp = players.find(({ id }) => id === firstPlayerId)
-
-        if (playerFromProp) {
-          startingPlayerId = playerFromProp.id
-        } else {
-          throw new Error(
-            'The firstPlayerId prop does not match any of the player ids passed to initialize.',
-          )
-        }
-      } else {
-        startingPlayerId = getRandomArrayItem(players).id
-      }
-
-      state.activePlayerId = startingPlayerId
-
-      state.players = players.reduce(
-        (statePlayers: DuelState['players'], player) => {
-          statePlayers[player.id] = {
-            ...player,
-            deck: shuffleArray(player.deck),
-          }
+      state.players = users.reduce(
+        (statePlayers: DuelState['players'], user) => {
+          statePlayers[user.id] = setupInitialDuelPlayerFromUser(user)
 
           return statePlayers
         },
         {},
       )
 
-      state.phase = phase || 'Pre-duel'
-    },
-    startInitialCardDraw: (state) => {
-      state.phase = 'Initial Draw'
+      if (firstPlayerId && !state.players[firstPlayerId]) {
+        throw new Error('Invalid firstPlayerId passed to startDuel.')
+      }
 
-      Object.values(state.players).forEach(({ id }) => {
-        for (let index = 0; index < INITIAL_CARD_DRAW_AMOUNT; index++) {
-          drawCardFromDeckTransformer(state, id)
+      state.activePlayerId = firstPlayerId || getRandomArrayItem(users).id
+
+      state.phase = 'Initial Draw'
+    },
+    drawInitialCardsFromDeck: (state) => {
+      Object.values(state.players).forEach(({ id, deck }) => {
+        for (let index = 0; index < DEFAULT_DUEL_INITIAL_CARDS_DRAWN; index++) {
+          moveCardBetweenStacks({
+            movedCardId: deck[index],
+            playerId: id,
+            state,
+            to: 'hand',
+          })
         }
       })
 
       state.phase = 'Redrawing Phase'
-
-      Object.values(state.players).forEach(({ id }) => {
-        state.players[id].hasPerformedAction = state.players[id].isCPU
-          ? true
-          : false
-      })
     },
     drawCardFromDeck: (state, action: PayloadAction<string>) => {
-      drawCardFromDeckTransformer(state, action.payload)
+      const { id, deck } = state.players[action.payload]
+
+      moveCardBetweenStacks({
+        movedCardId: deck[0],
+        playerId: id,
+        state,
+        to: 'hand',
+      })
     },
     putCardAtBottomOfDeck: (state, action: PlayerCardAction) => {
       const { cardId: movedCardId, playerId } = action.payload
@@ -113,13 +102,19 @@ export const duelSlice = createSlice({
       ) {
         state.phase = 'Player Turn'
 
-        Object.keys(state.players).forEach((playerId) => {
+        Object.keys(players).forEach((playerId) => {
           state.players[playerId].hasPerformedAction = false
         })
 
-        drawCardFromDeckTransformer(state, activePlayerId)
+        moveCardBetweenStacks({
+          movedCardId: players[activePlayerId].deck[0],
+          playerId: activePlayerId,
+          state,
+          to: 'hand',
+        })
       }
     },
+
     initializeEndTurn: (state) => {
       state.phase = 'Resolving end of turn'
 
@@ -185,8 +180,8 @@ export const duelSlice = createSlice({
 const { actions, reducer } = duelSlice
 
 export const {
-  initializeDuel,
-  startInitialCardDraw,
+  startDuel,
+  drawInitialCardsFromDeck,
   completeRedraw,
   drawCardFromDeck,
   initializeEndTurn,

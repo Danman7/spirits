@@ -1,4 +1,4 @@
-import { fireEvent, waitFor } from '@testing-library/dom'
+import { fireEvent } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 
 import { RootState } from 'src/app/store'
@@ -24,33 +24,33 @@ const defaultProps: ActionPanelProps = {
   isOpen: true,
   loggedInPlayer: mockPlayer,
   isLoggedInPlayerActive: true,
-  phase: 'Pre-duel',
+  phase: 'Initial Draw',
 }
 
 const preloadedState: Partial<RootState> = {
   duel: MockPlayerTurnState,
 }
 
-it('should show the redraw phase panel with skip redraw link', async () => {
+it('should show the redraw phase panel with skip redraw link', () => {
   const { getByText, dispatchSpy } = renderWithProviders(
-    <ActionPanel {...defaultProps} phase="Pre-duel" />,
+    <ActionPanel {...defaultProps} phase="Redrawing Phase" />,
     {
       preloadedState,
     },
   )
 
-  await waitFor(() => expect(getByText(redrawMessage)).toBeInTheDocument())
+  expect(getByText(redrawMessage)).toBeInTheDocument()
 
   fireEvent.click(getByText(skipRedrawLinkMessage))
 
   expect(dispatchSpy).toHaveBeenCalledWith(completeRedraw(playerId))
 })
 
-it('should show the waiting for opponent message during redraw phase', async () => {
+it('should show the waiting for opponent message during redraw phase', () => {
   const { getByText } = renderWithProviders(
     <ActionPanel
       {...defaultProps}
-      phase="Pre-duel"
+      phase="Redrawing Phase"
       loggedInPlayer={{ ...mockPlayer, hasPerformedAction: true }}
     />,
     {
@@ -58,12 +58,10 @@ it('should show the waiting for opponent message during redraw phase', async () 
     },
   )
 
-  await waitFor(() =>
-    expect(getByText(opponentDecidingMessage)).toBeInTheDocument(),
-  )
+  expect(getByText(opponentDecidingMessage)).toBeInTheDocument()
 })
 
-it('should show the your turn message with pass link', async () => {
+it('should show the your turn message with pass link', () => {
   const { getByText, dispatchSpy } = renderWithProviders(
     <ActionPanel {...defaultProps} phase="Player Turn" />,
     {
@@ -71,14 +69,14 @@ it('should show the your turn message with pass link', async () => {
     },
   )
 
-  await waitFor(() => expect(getByText(yourTurnMessage)).toBeInTheDocument())
+  expect(getByText(yourTurnMessage)).toBeInTheDocument()
 
   fireEvent.click(getByText(passButtonMessage))
 
   expect(dispatchSpy).toHaveBeenCalledWith(initializeEndTurn())
 })
 
-it("should show the waiting for opponent message during opponent's turn", async () => {
+it("should show the waiting for opponent message during opponent's turn", () => {
   const { getByText } = renderWithProviders(
     <ActionPanel
       {...defaultProps}
@@ -90,7 +88,5 @@ it("should show the waiting for opponent message during opponent's turn", async 
     },
   )
 
-  await waitFor(() =>
-    expect(getByText(opponentDecidingMessage)).toBeInTheDocument(),
-  )
+  expect(getByText(opponentDecidingMessage)).toBeInTheDocument()
 })

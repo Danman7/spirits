@@ -195,7 +195,7 @@
   text-align: center;
   overflow: hidden;
   box-shadow: var(--box-shadow-3);
-  padding: var(--padding);
+  padding: calc(2 * var(--padding));
   border-radius: var(--border-radius);
   color: var(--text-color);
   background: var(--background-color);
@@ -231,8 +231,9 @@
 
 .sidePanel {
   composes: box;
-  max-width: 300px;
+  max-width: 280px;
   position: absolute;
+  text-align: left;
   left: 1em;
   bottom: 3em;
   border-left: 3px solid var(--primary-color);

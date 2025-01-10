@@ -1,2 +1,2 @@
 export const TICK = 50
-export const PHASE_MODAL_TIMEOUT = 2000
+export const PHASE_MODAL_TIMEOUT = 2500

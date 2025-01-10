@@ -8,7 +8,6 @@ const LoadingMessage: FC<{ message: string }> = ({ message }) => (
     <span className={animations.loadingDots}>.</span>
     <span className={animations.loadingDots}>.</span>
     <span className={animations.loadingDots}>.</span>
-    <span className={animations.loadingDots}>.</span>
   </>
 )
 

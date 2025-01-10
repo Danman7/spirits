@@ -12,12 +12,14 @@ import {
   YoraSkull,
   Zombie,
 } from 'src/features/cards/CardBases'
-import { DEFAULT_COINS_AMOUNT, EMPTY_PLAYER } from 'src/features/duel/constants'
 import { initialState as initialDuelState } from 'src/features/duel/slice'
 import { DuelState, Player } from 'src/features/duel/types'
-import { normalizePlayerCards } from 'src/features/duel/utils'
+import {
+  normalizePlayerCards,
+  setupInitialDuelPlayerFromUser,
+} from 'src/features/duel/utils'
 import { initialState as initialUserState } from 'src/features/user/slice'
-import { User } from 'src/shared/types'
+import { Bot, User } from 'src/shared/types'
 
 export const playerId = 'player'
 export const opponentId = 'opponent'
@@ -25,44 +27,37 @@ export const opponentId = 'opponent'
 export const userMock: User = {
   id: playerId,
   name: 'Garret',
-  cards: {},
+  deck: [
+    BrotherSachelman,
+    HammeriteNovice,
+    HammeriteNovice,
+    ElevatedAcolyte,
+    ElevatedAcolyte,
+    TempleGuard,
+    TempleGuard,
+  ],
 }
 
-export const initialPlayerMock: Player = {
-  ...EMPTY_PLAYER,
-  ...userMock,
-  coins: DEFAULT_COINS_AMOUNT,
-  ...normalizePlayerCards({
-    deck: [
-      BrotherSachelman,
-      HammeriteNovice,
-      HammeriteNovice,
-      ElevatedAcolyte,
-      ElevatedAcolyte,
-      TempleGuard,
-      TempleGuard,
-    ],
-  }),
-}
-
-export const initialOpponentMock: Player = {
-  ...EMPTY_PLAYER,
+export const opponentMock: Bot = {
   id: opponentId,
   name: 'Karras',
-  coins: DEFAULT_COINS_AMOUNT,
-  isCPU: true,
-  ...normalizePlayerCards({
-    deck: [
-      Zombie,
-      Zombie,
-      Haunt,
-      Haunt,
-      ViktoriaThiefPawn,
-      AzaranTheCruel,
-      BookOfAsh,
-    ],
-  }),
+  isBot: true,
+  deck: [
+    Zombie,
+    Zombie,
+    Haunt,
+    Haunt,
+    ViktoriaThiefPawn,
+    AzaranTheCruel,
+    BookOfAsh,
+  ],
 }
+
+export const initialPlayerMock: Player =
+  setupInitialDuelPlayerFromUser(userMock)
+
+export const initialOpponentMock: Player =
+  setupInitialDuelPlayerFromUser(opponentMock)
 
 export const stackedPlayerMock: Player = {
   ...initialPlayerMock,

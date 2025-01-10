@@ -4,10 +4,12 @@ import { useAppDispatch } from 'src/app/store'
 import LoadingMessage from 'src/features/duel/components/LoadingMessage'
 import {
   opponentDecidingMessage,
+  opponentTurnTitle,
   passButtonMessage,
   redrawMessage,
   skipRedrawLinkMessage,
   yourTurnMessage,
+  yourTurnTitle,
 } from 'src/features/duel/messages'
 import { completeRedraw, initializeEndTurn } from 'src/features/duel/slice'
 import { DuelPhase, Player } from 'src/features/duel/types'
@@ -39,15 +41,15 @@ export const ActionPanel: FC<ActionPanelProps> = ({
 
   useEffect(() => {
     switch (phase) {
-      case 'Pre-duel':
       case 'Redrawing Phase':
         setSidePanelContent(
           <>
+            <h3>Redrawing Phase</h3>
             {hasPerformedAction ? (
               <OppponentIsDeciding />
             ) : (
               <>
-                {redrawMessage}{' '}
+                {redrawMessage}
                 <Link onClick={() => dispatch(completeRedraw(id))}>
                   {skipRedrawLinkMessage}
                 </Link>
@@ -63,13 +65,17 @@ export const ActionPanel: FC<ActionPanelProps> = ({
           <>
             {isLoggedInPlayerActive ? (
               <>
-                {yourTurnMessage}{' '}
+                <h3>{yourTurnTitle}</h3>
+                {yourTurnMessage}
                 <Link onClick={() => dispatch(initializeEndTurn())}>
                   {passButtonMessage}
                 </Link>
               </>
             ) : (
-              <OppponentIsDeciding />
+              <>
+                <h3>{opponentTurnTitle}</h3>
+                <OppponentIsDeciding />
+              </>
             )}
           </>,
         )

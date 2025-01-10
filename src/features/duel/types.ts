@@ -1,5 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { UserCards, User } from 'src/shared/types'
+
+import { User, CardBase, Bot } from 'src/shared/types'
 
 export type CardStack = 'deck' | 'hand' | 'board' | 'discard'
 
@@ -10,19 +11,23 @@ export interface PlayerStacks {
   discard: string[]
 }
 
+export type PlayerCards = { [index: string]: DuelCard }
+
 export interface PlayerStacksAndCards extends PlayerStacks {
-  cards: UserCards
+  cards: PlayerCards
 }
 
-export interface Player extends User, PlayerStacks {
+/**
+ * A user object which has all necessary properties for a duel.
+ */
+export interface Player extends Omit<User, 'deck'>, PlayerStacksAndCards {
   coins: number
   income: number
   hasPerformedAction: boolean
-  isCPU?: boolean
+  isBot?: boolean
 }
 
 export type DuelPhase =
-  | 'Pre-duel'
   | 'Initial Draw'
   | 'Redrawing Phase'
   | 'Player Turn'
@@ -46,5 +51,21 @@ export type PlayerCardAction = PayloadAction<{
 
 export type AddNewCardsAction = PayloadAction<{
   playerId: string
-  cards: UserCards
+  cards: PlayerCards
 }>
+
+/**
+ *  A ready for duel card object with unique id and base properties for reference.
+ */
+export interface DuelCard extends CardBase {
+  id: string
+  strength: number
+  base: {
+    cost: number
+    strength: number
+  }
+}
+
+export type DuelUser = User | Bot
+
+export type DuelStartUsers = [DuelUser, DuelUser]

@@ -3,13 +3,13 @@ import {
   TempleGuard,
   Zombie,
 } from 'src/features/cards/CardBases'
-import { INITIAL_CARD_DRAW_AMOUNT } from 'src/features/duel/constants'
+import { DEFAULT_DUEL_INITIAL_CARDS_DRAWN } from 'src/features/duel/constants'
 import {
   addNewCards,
   completeRedraw,
   drawCardFromDeck,
   duelReducer,
-  initializeDuel,
+  startDuel,
   initializeEndTurn,
   initialState,
   moveCardToBoard,
@@ -17,20 +17,27 @@ import {
   moveToNextAttacker,
   playCard,
   putCardAtBottomOfDeck,
-  startInitialCardDraw,
+  drawInitialCardsFromDeck,
   updateCard,
 } from 'src/features/duel/slice'
-import { CardStack, DuelState } from 'src/features/duel/types'
+import {
+  CardStack,
+  DuelCard,
+  DuelStartUsers,
+  DuelState,
+  PlayerCards,
+} from 'src/features/duel/types'
 import { createDuelCard, normalizePlayerCards } from 'src/features/duel/utils'
 import {
   initialOpponentMock,
   initialPlayerMock,
   opponentId,
+  opponentMock,
   playerId,
+  userMock,
 } from 'src/shared/__mocks__'
-import { DuelCard, UserCards } from 'src/shared/types'
 
-const initialPlayers = [initialPlayerMock, initialOpponentMock]
+const users: DuelStartUsers = [userMock, opponentMock]
 
 const mockPlayers: DuelState['players'] = {
   [opponentId]: initialOpponentMock,
@@ -56,15 +63,15 @@ describe('Initializing a duel', () => {
   test('initialize a new game with a random first player', () => {
     const state = duelReducer(
       duelState,
-      initializeDuel({
-        players: [mockPlayer, mockOpponent],
+      startDuel({
+        users,
       }),
     )
 
     const { activePlayerId, phase } = state
 
     expect(activePlayerId).toBeTruthy()
-    expect(phase).toBe('Pre-duel')
+    expect(phase).toBe('Initial Draw')
   })
 
   test('initialize a new game with a preset first player', () => {
@@ -72,8 +79,8 @@ describe('Initializing a duel', () => {
 
     const state = duelReducer(
       duelState,
-      initializeDuel({
-        players: initialPlayers,
+      startDuel({
+        users,
         firstPlayerId,
       }),
     )
@@ -81,15 +88,15 @@ describe('Initializing a duel', () => {
     const { activePlayerId, phase } = state
 
     expect(activePlayerId).toBe(firstPlayerId)
-    expect(phase).toBe('Pre-duel')
+    expect(phase).toBe('Initial Draw')
   })
 
   test('throw an error when initializing game if firstPlayerId is set to a non existent player', () => {
     expect(() => {
       duelReducer(
         duelState,
-        initializeDuel({
-          players: initialPlayers,
+        startDuel({
+          users,
           firstPlayerId: 'random-id',
         }),
       )
@@ -105,8 +112,6 @@ describe('Sequence before play', () => {
   test("draw a card from a player's deck if it has cards", () => {
     const mockDrawingPlayer = duelState.players[playerId]
 
-    duelState.phase = 'Initial Draw'
-
     const state = duelReducer(duelState, drawCardFromDeck(playerId))
 
     const drawingPlayer = state.players[playerId]
@@ -117,8 +122,6 @@ describe('Sequence before play', () => {
   })
 
   test('should draw no card if deck has no cards', () => {
-    duelState.phase = 'Initial Draw'
-
     duelState.players = {
       [playerId]: {
         ...mockPlayer,
@@ -139,14 +142,14 @@ describe('Sequence before play', () => {
   })
 
   test('initial card draw', () => {
-    const state = duelReducer(duelState, startInitialCardDraw())
+    const state = duelReducer(duelState, drawInitialCardsFromDeck())
 
     const { players } = state
 
     Object.values(players).forEach(({ id, hand, deck }) => {
-      expect(hand).toHaveLength(INITIAL_CARD_DRAW_AMOUNT)
+      expect(hand).toHaveLength(DEFAULT_DUEL_INITIAL_CARDS_DRAWN)
       expect(deck).toHaveLength(
-        mockPlayers[id].deck.length - INITIAL_CARD_DRAW_AMOUNT,
+        mockPlayers[id].deck.length - DEFAULT_DUEL_INITIAL_CARDS_DRAWN,
       )
     })
 
@@ -687,7 +690,7 @@ describe('Playing turns', () => {
       [opponentId]: mockOpponent,
     }
 
-    const addedCards: UserCards = {
+    const addedCards: PlayerCards = {
       [novice.id]: novice,
     }
 

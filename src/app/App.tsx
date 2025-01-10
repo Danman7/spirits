@@ -3,14 +3,10 @@ import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import Board from 'src/features/duel/components/Board'
 import { getActivePlayerId } from 'src/features/duel/selectors'
-import { initializeDuel } from 'src/features/duel/slice'
+import { startDuel } from 'src/features/duel/slice'
 import { getUserId } from 'src/features/user/selector'
 import { loadUser } from 'src/features/user/slice'
-import {
-  initialOpponentMock,
-  initialPlayerMock,
-  playerId,
-} from 'src/shared/__mocks__'
+import { opponentMock, playerId, userMock } from 'src/shared/__mocks__'
 
 let hasLoadedUser = false
 
@@ -35,8 +31,8 @@ const App = () => {
   useEffect(() => {
     if (userId) {
       dispatch(
-        initializeDuel({
-          players: [initialPlayerMock, initialOpponentMock],
+        startDuel({
+          users: [userMock, opponentMock],
           firstPlayerId: userId,
         }),
       )
