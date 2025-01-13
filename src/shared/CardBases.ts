@@ -6,7 +6,7 @@ import {
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   HAUNT_DAMAGE,
   VIKTORIA_COIN_GAIN,
-} from 'src/features/cards/constants'
+} from 'src/shared/constants'
 import { CardBase } from 'src/shared/types'
 import { getCoinsMessage } from 'src/shared/utils'
 

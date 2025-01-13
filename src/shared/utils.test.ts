@@ -1,7 +1,10 @@
+import { Haunt } from 'src/shared/CardBases'
 import {
   generateUUID,
   getCoinsMessage,
+  getFactionColor,
   getRandomArrayItem,
+  joinCardCategories,
   shuffleArray,
 } from 'src/shared/utils'
 
@@ -30,4 +33,17 @@ it('should shuffle an array', () => {
 it('should show the proper coins message', () => {
   expect(getCoinsMessage(1)).toBe('1 coin')
   expect(getCoinsMessage(2)).toBe('2 coins')
+})
+
+it('should return a joined types string for a card', () => {
+  expect(joinCardCategories(Haunt.categories)).toBe('Undead, Hammerite')
+})
+
+it('should get the proper faction color', () => {
+  expect(getFactionColor(['Chaos'])).toBe('var(--chaos-faction-color)')
+  expect(getFactionColor(['Order'])).toBe('var(--order-faction-color)')
+  expect(getFactionColor(['Shadow'])).toBe('var(--shadow-faction-color)')
+  expect(getFactionColor(['Chaos', 'Shadow'])).toBe(
+    `linear-gradient(300deg, ${'var(--chaos-faction-color)'}, ${'var(--shadow-faction-color)'})`,
+  )
 })

@@ -1,10 +1,10 @@
 import { motion } from 'motion/react'
 import { FC } from 'react'
 
-import { getFactionColor, joinCardCategories } from 'src/features/cards/utils'
 import components from 'src/shared/styles/components.module.css'
 import { CARD_TEST_ID } from 'src/shared/testIds'
 import { CardBase } from 'src/shared/types'
+import { getFactionColor, joinCardCategories } from 'src/shared/utils'
 
 export interface CardProps {
   card: CardBase

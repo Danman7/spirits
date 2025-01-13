@@ -9,7 +9,7 @@ import {
   Haunt,
   TempleGuard,
   Zombie,
-} from 'src/features/cards/CardBases'
+} from 'src/shared/CardBases'
 import { Board } from 'src/features/duel/components/Board'
 import { initialState } from 'src/features/duel/slice'
 import {

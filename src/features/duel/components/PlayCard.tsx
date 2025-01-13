@@ -2,7 +2,7 @@ import { motion } from 'motion/react'
 import { FC, useEffect, useState } from 'react'
 
 import { useAppDispatch } from 'src/app/store'
-import { getFactionColor, joinCardCategories } from 'src/features/cards/utils'
+import { getFactionColor, joinCardCategories } from 'src/shared/utils'
 import {
   agentAttack,
   discardCard,

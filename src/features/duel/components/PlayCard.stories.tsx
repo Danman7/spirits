@@ -3,7 +3,7 @@ import { fn } from '@storybook/test'
 import { Provider } from 'react-redux'
 
 import { setupStore } from 'src/app/store'
-import { ElevatedAcolyte, Haunt } from 'src/features/cards/CardBases'
+import { ElevatedAcolyte, Haunt } from 'src/shared/CardBases'
 import { PlayCard } from 'src/features/duel/components/PlayCard'
 import { createDuelCard } from 'src/features/duel/utils'
 

@@ -11,7 +11,7 @@ import {
   ViktoriaThiefPawn,
   YoraSkull,
   Zombie,
-} from 'src/features/cards/CardBases'
+} from 'src/shared/CardBases'
 import {
   initialState as initialDuelState,
   initialState,

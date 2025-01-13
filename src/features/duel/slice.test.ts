@@ -1,4 +1,4 @@
-import { HammeriteNovice, TempleGuard } from 'src/features/cards/CardBases'
+import { HammeriteNovice, TempleGuard } from 'src/shared/CardBases'
 import {
   DUEL_INCOME_PER_TURN,
   DUEL_INITIAL_CARDS_DRAWN,

@@ -1,7 +1,7 @@
 import { FC, useState } from 'react'
 
 import { useAppDispatch } from 'src/app/store'
-import { Card } from 'src/features/cards/components/Card'
+import { Card } from 'src/shared/components/Card'
 import { BotController } from 'src/features/duel/components/BotController'
 import { PlayCard } from 'src/features/duel/components/PlayCard'
 import { closeMessage } from 'src/features/duel/messages'

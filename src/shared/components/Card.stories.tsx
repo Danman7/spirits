@@ -7,8 +7,8 @@ import {
   HammeriteNovice,
   Haunt,
   ViktoriaThiefPawn,
-} from 'src/features/cards/CardBases'
-import { Card } from 'src/features/cards/components/Card'
+} from 'src/shared/CardBases'
+import { Card } from 'src/shared/components/Card'
 
 const meta = {
   title: 'Card',
