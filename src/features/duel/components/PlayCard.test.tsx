@@ -2,17 +2,27 @@ import { fireEvent, waitFor } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 import { act } from 'react'
 
-import { BookOfAsh, BrotherSachelman } from 'src/shared/CardBases'
+import { BookOfAsh } from 'src/shared/CardBases'
 import { joinCardCategories } from 'src/shared/utils'
 import { PlayCard } from 'src/features/duel/components/PlayCard'
-import { agentAttack, moveToNextAttackingAgent } from 'src/features/duel/slice'
+import {
+  agentAttack,
+  discardCard,
+  moveToNextAttackingAgent,
+} from 'src/features/duel/slice'
 import { createDuelCard } from 'src/features/duel/utils'
-import { playerId, stackedPreloadedState } from 'src/shared/__mocks__'
+import {
+  playerId,
+  stackedPreloadedState as preloadedState,
+} from 'src/shared/__mocks__'
 import { TICK } from 'src/shared/constants'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { CARD_TEST_ID } from 'src/shared/testIds'
 
-const mockCard = createDuelCard(BrotherSachelman)
+const mockCard =
+  preloadedState.duel.players[playerId].cards[
+    preloadedState.duel.players[playerId].board[0]
+  ]
 
 it('should display all UI segments of a card when face up', () => {
   const { rerender, getByRole, getByText } = renderWithProviders(
@@ -88,7 +98,7 @@ it('should trigger attacking from bottom animation', async () => {
   const { getByTestId, dispatchSpy } = renderWithProviders(
     <PlayCard card={mockCard} isAttacking playerId={playerId} />,
     {
-      preloadedState: stackedPreloadedState,
+      preloadedState,
     },
   )
 
@@ -106,7 +116,7 @@ it('should trigger attacking from top animation', async () => {
   const { getByTestId, dispatchSpy } = renderWithProviders(
     <PlayCard card={mockCard} isAttacking isOnTop playerId={playerId} />,
     {
-      preloadedState: stackedPreloadedState,
+      preloadedState,
     },
   )
 
@@ -127,5 +137,18 @@ it('should display no strength for an instant', () => {
 
   expect(getByRole('heading', { level: 3 })).toHaveTextContent(
     `${BookOfAsh.name}`,
+  )
+})
+
+it('should discard card if strength is 0 or below', () => {
+  const { dispatchSpy } = renderWithProviders(
+    <PlayCard card={{ ...mockCard, strength: 0 }} playerId={playerId} />,
+    {
+      preloadedState,
+    },
+  )
+
+  expect(dispatchSpy).toHaveBeenCalledWith(
+    discardCard({ cardId: mockCard.id, playerId }),
   )
 })
