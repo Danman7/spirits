@@ -24,7 +24,7 @@ export const BotController: FC<BotControllerProps> = ({
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    if (phase === 'Redrawing Phase') {
+    if (phase === 'Redrawing') {
       dispatch(completeRedraw(playerId))
     }
   }, [playerId, phase, dispatch])

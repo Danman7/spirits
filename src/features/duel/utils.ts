@@ -3,7 +3,7 @@ import {
   CARD_STACKS,
   DEFAULT_DUEL_STARTING_COINS,
 } from 'src/features/duel/constants'
-import { initializeEndTurn, moveCardToDiscard } from 'src/features/duel/slice'
+import { resolveTurn, discardCard } from 'src/features/duel/slice'
 import {
   CardStack,
   DuelCard,
@@ -158,10 +158,10 @@ export const triggerPostCardPlay = ({
   const { type, id } = card
 
   if (type === 'instant') {
-    dispatch(moveCardToDiscard({ cardId: id, playerId }))
+    dispatch(discardCard({ cardId: id, playerId }))
   }
 
-  dispatch(initializeEndTurn())
+  dispatch(resolveTurn())
 }
 
 /**
@@ -178,7 +178,18 @@ export const sortDuelPlayers = (
   )
 
 /**
- * Get the id of the duel player not logged in as you.
+ * Get the id of the duel player not set as active.
  */
-export const getOpponentId = (players: DuelPlayers, loggedInPlayerId: string) =>
-  Object.keys(players).filter((id) => id !== loggedInPlayerId)[0]
+export const getInactivePlayerId = (
+  players: DuelPlayers,
+  activePlayerId: string,
+) => Object.keys(players).filter((id) => id !== activePlayerId)[0]
+
+/**
+ * Get the index of the current attacker.
+ */
+export const getAttackingAgentIndex = (
+  players: DuelPlayers,
+  activePlayerId: string,
+  attackingAgentId: string,
+) => players[activePlayerId].board.indexOf(attackingAgentId)

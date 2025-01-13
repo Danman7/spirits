@@ -13,7 +13,7 @@ import {
   skipRedrawLinkMessage,
   yourTurnMessage,
 } from 'src/features/duel/messages'
-import { completeRedraw, initializeEndTurn } from 'src/features/duel/slice'
+import { completeRedraw, resolveTurn } from 'src/features/duel/slice'
 import { Player } from 'src/features/duel/types'
 import { MockPlayerTurnState, playerId } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
@@ -33,7 +33,7 @@ const preloadedState: Partial<RootState> = {
 
 it('should show the redraw phase panel with skip redraw link', () => {
   const { getByText, dispatchSpy } = renderWithProviders(
-    <ActionPanel {...defaultProps} phase="Redrawing Phase" />,
+    <ActionPanel {...defaultProps} phase="Redrawing" />,
     {
       preloadedState,
     },
@@ -50,7 +50,7 @@ it('should show the waiting for opponent message during redraw phase', () => {
   const { getByText } = renderWithProviders(
     <ActionPanel
       {...defaultProps}
-      phase="Redrawing Phase"
+      phase="Redrawing"
       loggedInPlayer={{ ...mockPlayer, hasPerformedAction: true }}
     />,
     {
@@ -73,7 +73,7 @@ it('should show the your turn message with pass link', () => {
 
   fireEvent.click(getByText(passButtonMessage))
 
-  expect(dispatchSpy).toHaveBeenCalledWith(initializeEndTurn())
+  expect(dispatchSpy).toHaveBeenCalledWith(resolveTurn())
 })
 
 it("should show the waiting for opponent message during opponent's turn", () => {

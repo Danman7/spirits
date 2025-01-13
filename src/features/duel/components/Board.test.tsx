@@ -12,7 +12,7 @@ import {
   CardEffectPredicateName,
 } from 'src/features/cards/types'
 import Board from 'src/features/duel/components/Board'
-import { drawInitialCardsFromDeck } from 'src/features/duel/slice'
+import { playersDrawInitialCards } from 'src/features/duel/slice'
 import {
   playerId,
   stackedPlayerMock,
@@ -59,7 +59,7 @@ it('should initiate card drawing', async () => {
 
   fireEvent.animationEnd(getByTestId(OVERLAY_TEST_ID))
 
-  expect(dispatchSpy).toHaveBeenCalledWith(drawInitialCardsFromDeck())
+  expect(dispatchSpy).toHaveBeenCalledWith(playersDrawInitialCards())
 })
 
 it('should hide the side panel if the logged in player has performed an action', () => {

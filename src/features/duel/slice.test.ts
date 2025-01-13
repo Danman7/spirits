@@ -6,18 +6,19 @@ import {
 import { DEFAULT_DUEL_INITIAL_CARDS_DRAWN } from 'src/features/duel/constants'
 import {
   addNewCards,
+  attack,
   completeRedraw,
+  discardCard,
   drawCardFromDeck,
   duelReducer,
-  startDuel,
-  initializeEndTurn,
   initialState,
   moveCardToBoard,
-  moveCardToDiscard,
-  moveToNextAttacker,
+  moveToNextTurn,
   playCard,
+  playersDrawInitialCards,
   putCardAtBottomOfDeck,
-  drawInitialCardsFromDeck,
+  resolveTurn,
+  startDuel,
   updateCard,
 } from 'src/features/duel/slice'
 import {
@@ -142,7 +143,7 @@ describe('Sequence before play', () => {
   })
 
   test('initial card draw', () => {
-    const state = duelReducer(duelState, drawInitialCardsFromDeck())
+    const state = duelReducer(duelState, playersDrawInitialCards())
 
     const { players } = state
 
@@ -153,7 +154,7 @@ describe('Sequence before play', () => {
       )
     })
 
-    expect(state.phase).toBe('Redrawing Phase')
+    expect(state.phase).toBe('Redrawing')
   })
 
   test('put a card at the bottom of the deck', () => {
@@ -198,13 +199,14 @@ describe('Sequence before play', () => {
     expect(players[opponentId].hasPerformedAction).toBeFalsy()
   })
 
-  test('start the game if both players have completed redraw', () => {
-    duelState.players = {
-      [playerId]: mockPlayer,
-      [opponentId]: { ...mockOpponent, hasPerformedAction: true },
-    }
-
+  test('mark that player has completed redrawing', () => {
     const state = duelReducer(duelState, completeRedraw(playerId))
+
+    expect(state.players[playerId].hasPerformedAction).toBe(true)
+  })
+
+  test('begin the player turn', () => {
+    const state = duelReducer(duelState, moveToNextTurn())
 
     const { phase, players, activePlayerId } = state
 
@@ -240,11 +242,11 @@ describe('Playing turns', () => {
       },
     }
 
-    const state = duelReducer(mockState, initializeEndTurn())
+    const state = duelReducer(mockState, resolveTurn())
 
     const { phase, attackingAgentId } = state
 
-    expect(phase).toBe('Player Turn')
+    expect(phase).toBe('Resolving turn')
     expect(attackingAgentId).toBe('')
   })
 
@@ -261,11 +263,11 @@ describe('Playing turns', () => {
       [opponentId]: duelState.players[opponentId],
     }
 
-    const state = duelReducer(duelState, initializeEndTurn())
+    const state = duelReducer(duelState, resolveTurn())
 
     const { phase, attackingAgentId } = state
 
-    expect(phase).toBe('Resolving end of turn')
+    expect(phase).toBe('Resolving turn')
     expect(attackingAgentId).toBe(normalizedCards.board?.[0])
   })
 
@@ -283,7 +285,7 @@ describe('Playing turns', () => {
       [opponentId]: { ...duelState.players[opponentId], board: [] },
     }
 
-    const state = duelReducer(duelState, initializeEndTurn())
+    const state = duelReducer(duelState, attack())
 
     const { players } = state
 
@@ -295,7 +297,7 @@ describe('Playing turns', () => {
       board: [Zombie],
     })
 
-    duelState.phase = 'Resolving end of turn'
+    duelState.phase = 'Resolving turn'
     duelState.players = {
       [playerId]: {
         ...duelState.players[playerId],
@@ -309,7 +311,7 @@ describe('Playing turns', () => {
       },
     }
 
-    const state = duelReducer(duelState, initializeEndTurn())
+    const state = duelReducer(duelState, attack())
 
     const { players } = state
 
@@ -322,7 +324,7 @@ describe('Playing turns', () => {
   })
 
   test('end of turn as player', () => {
-    duelState.phase = 'Resolving end of turn'
+    duelState.phase = 'Resolving turn'
     duelState.activePlayerId = playerId
 
     const coins = 20
@@ -337,7 +339,7 @@ describe('Playing turns', () => {
       [opponentId]: mockOpponent,
     }
 
-    const state = duelReducer(duelState, moveToNextAttacker())
+    const state = duelReducer(duelState, moveToNextTurn())
 
     const { phase, activePlayerId, players } = state
 
@@ -350,7 +352,6 @@ describe('Playing turns', () => {
   })
 
   test('agent attacking agent on opposite slot', () => {
-    duelState.phase = 'Resolving end of turn'
     duelState.activePlayerId = opponentId
     duelState.players = {
       [playerId]: {
@@ -366,20 +367,15 @@ describe('Playing turns', () => {
         }),
       },
     }
+    duelState.attackingAgentId = duelState.players[opponentId].board[0]
 
     const mockDefendingCard =
       duelState.players[playerId].cards[duelState.players[playerId].board[0]]
-
-    const state = duelReducer(duelState, moveToNextAttacker())
-
-    const { players, attackingAgentId } = state
-
+    const state = duelReducer(duelState, attack())
+    const { players } = state
     const player = players[playerId]
-    const opponent = players[opponentId]
-
     const defendingCard = player.cards[player.board[0]]
 
-    expect(attackingAgentId).toBe(opponent.board[0])
     expect(defendingCard.strength).toBe(mockDefendingCard.strength - 1)
   })
 
@@ -388,9 +384,8 @@ describe('Playing turns', () => {
       board: [Zombie, Zombie],
     })
 
-    duelState.phase = 'Resolving end of turn'
+    duelState.phase = 'Resolving turn'
     duelState.activePlayerId = playerId
-    duelState.attackingAgentId = normalizedCards.board[0]
     duelState.players = {
       [playerId]: {
         ...mockPlayer,
@@ -409,55 +404,15 @@ describe('Playing turns', () => {
         duelState.players[opponentId].board[0]
       ]
 
-    const state = duelReducer(duelState, moveToNextAttacker())
+    const state = duelReducer(duelState, attack())
 
-    const { players, attackingAgentId } = state
+    const { players } = state
 
-    const player = players[playerId]
     const opponent = players[opponentId]
 
     const defendingCard = opponent.cards[opponent.board[0]]
 
-    expect(attackingAgentId).toBe(player.board[1])
     expect(defendingCard.strength).toBe(mockDefendingCard.strength - 1)
-  })
-
-  test('end turn on last attacker', () => {
-    duelState.phase = 'Resolving end of turn'
-
-    const normalizedCards = normalizePlayerCards({
-      board: [HammeriteNovice],
-    })
-
-    duelState.phase = 'Resolving end of turn'
-    duelState.activePlayerId = playerId
-    duelState.attackingAgentId = normalizedCards.board[0]
-    duelState.players = {
-      [playerId]: {
-        ...mockPlayer,
-        ...normalizedCards,
-      },
-      [opponentId]: mockOpponent,
-    }
-
-    const state = duelReducer(duelState, moveToNextAttacker())
-
-    const { phase, activePlayerId } = state
-
-    expect(phase).toBe('Player Turn')
-    expect(activePlayerId).toBe(opponentId)
-  })
-
-  test('end turn when there are no attackers', () => {
-    duelState.phase = 'Resolving end of turn'
-    duelState.activePlayerId = opponentId
-
-    const state = duelReducer(duelState, moveToNextAttacker())
-
-    const { phase, activePlayerId } = state
-
-    expect(phase).toBe('Player Turn')
-    expect(activePlayerId).toBe(playerId)
   })
 
   test('play card', () => {
@@ -577,70 +532,6 @@ describe('Playing turns', () => {
     expect(updatedCard.cost).toBe(update.cost)
   })
 
-  test('remove agent with no strength as a result of update', () => {
-    const normalizedCards = normalizePlayerCards({
-      board: [HammeriteNovice],
-    })
-
-    const cardId = normalizedCards.board[0]
-
-    duelState.activePlayerId = playerId
-
-    duelState.players = {
-      [playerId]: {
-        ...mockPlayer,
-        ...normalizedCards,
-      },
-      [opponentId]: mockOpponent,
-    }
-
-    const update: Partial<DuelCard> = {
-      strength: 0,
-    }
-
-    const state = duelReducer(
-      duelState,
-      updateCard({
-        playerId,
-        cardId,
-        update,
-      }),
-    )
-
-    const player = state.players[playerId]
-
-    expect(player.board).toHaveLength(0)
-    expect(player.discard).toContain(cardId)
-  })
-
-  test('remove agent with no strength as a result of an attack', () => {
-    const normalizedOpponentCards = normalizePlayerCards({
-      board: [{ ...Zombie, strength: 1 }],
-    })
-
-    duelState.activePlayerId = playerId
-
-    duelState.players = {
-      [playerId]: {
-        ...mockPlayer,
-        ...normalizePlayerCards({
-          board: [HammeriteNovice],
-        }),
-      },
-      [opponentId]: {
-        ...mockOpponent,
-        ...normalizedOpponentCards,
-      },
-    }
-
-    const state = duelReducer(duelState, moveToNextAttacker())
-
-    const opponent = state.players[opponentId]
-
-    expect(opponent.board).toHaveLength(0)
-    expect(opponent.discard).toContain(normalizedOpponentCards.board[0])
-  })
-
   test('move a card from board to discard pile', () => {
     const stacks: CardStack[] = ['hand', 'board', 'deck']
 
@@ -658,7 +549,7 @@ describe('Playing turns', () => {
 
       const state = duelReducer(
         duelState,
-        moveCardToDiscard({
+        discardCard({
           playerId,
           cardId,
         }),

@@ -14,8 +14,11 @@ import {
   getPhase,
   getPlayers,
 } from 'src/features/duel/selectors'
-import { drawInitialCardsFromDeck } from 'src/features/duel/slice'
-import { getOpponentId, sortDuelPlayers } from 'src/features/duel/utils'
+import {
+  moveToNextTurn,
+  playersDrawInitialCards,
+} from 'src/features/duel/slice'
+import { getInactivePlayerId, sortDuelPlayers } from 'src/features/duel/utils'
 import { getUserId } from 'src/features/user/selector'
 
 let hasAddedCardEffectListeners = false
@@ -32,7 +35,7 @@ const Board: FC = () => {
   const attackingAgentId = useAppSelector(getAttackingAgentId)
 
   const loggedInPlayer = players[loggedInPlayerId]
-  const opponent = players[getOpponentId(players, loggedInPlayerId)]
+  const opponent = players[getInactivePlayerId(players, loggedInPlayerId)]
   const isLoggedInPlayerActive = loggedInPlayerId === activePlayerId
   const victoriousPlayerName =
     opponent.coins <= 0
@@ -43,10 +46,29 @@ const Board: FC = () => {
 
   const onPhaseModalCloseEnd = () => {
     if (phase === 'Initial Draw') {
-      dispatch(drawInitialCardsFromDeck())
+      dispatch(playersDrawInitialCards())
       setIsSidePanelOpen(true)
     }
   }
+
+  // Begin player turn if both players completed redraw
+  useEffect(() => {
+    if (
+      phase === 'Redrawing' &&
+      Object.values(players).every(
+        ({ hasPerformedAction }) => !!hasPerformedAction,
+      )
+    ) {
+      dispatch(moveToNextTurn())
+    }
+  }, [players, phase, dispatch])
+
+  // If there is no attacker at turn resolving, move to the next round
+  useEffect(() => {
+    if (phase === 'Resolving turn' && !attackingAgentId) {
+      dispatch(moveToNextTurn())
+    }
+  }, [attackingAgentId, phase, dispatch])
 
   // This adds all store listeners for card effect triggers.
   // It plugs into the redux middleware and cannot be done in the slice.

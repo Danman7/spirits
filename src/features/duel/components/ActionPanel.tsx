@@ -11,7 +11,7 @@ import {
   yourTurnMessage,
   yourTurnTitle,
 } from 'src/features/duel/messages'
-import { completeRedraw, initializeEndTurn } from 'src/features/duel/slice'
+import { completeRedraw, resolveTurn } from 'src/features/duel/slice'
 import { DuelPhase, Player } from 'src/features/duel/types'
 import { Link } from 'src/shared/components/Link'
 import { SidePanel } from 'src/shared/components/SidePanel'
@@ -41,7 +41,7 @@ export const ActionPanel: FC<ActionPanelProps> = ({
 
   useEffect(() => {
     switch (phase) {
-      case 'Redrawing Phase':
+      case 'Redrawing':
         setSidePanelContent(
           <>
             <h3>Redrawing Phase</h3>
@@ -67,7 +67,7 @@ export const ActionPanel: FC<ActionPanelProps> = ({
               <>
                 <h3>{yourTurnTitle}</h3>
                 {yourTurnMessage}
-                <Link onClick={() => dispatch(initializeEndTurn())}>
+                <Link onClick={() => dispatch(resolveTurn())}>
                   {passButtonMessage}
                 </Link>
               </>

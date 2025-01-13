@@ -29,9 +29,9 @@ export interface Player extends Omit<User, 'deck'>, PlayerStacksAndCards {
 
 export type DuelPhase =
   | 'Initial Draw'
-  | 'Redrawing Phase'
+  | 'Redrawing'
   | 'Player Turn'
-  | 'Resolving end of turn'
+  | 'Resolving turn'
 
 export type DuelPlayers = {
   [index: string]: Player

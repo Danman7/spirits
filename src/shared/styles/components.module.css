@@ -112,6 +112,7 @@
 }
 
 .cardContent {
+  text-align: left;
   color: var(--text-color);
   overflow: auto;
   padding: var(--padding);
@@ -119,6 +120,7 @@
 }
 
 .cardFooter {
+  text-align: left;
   color: var(--text-color);
   bottom: 0;
   padding: var(--padding);
@@ -199,10 +201,6 @@
   border-radius: var(--border-radius);
   color: var(--text-color);
   background: var(--background-color);
-
-  p {
-    margin: 0.5rem 0 0;
-  }
 }
 
 .modal {

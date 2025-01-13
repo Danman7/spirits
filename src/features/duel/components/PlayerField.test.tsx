@@ -8,7 +8,7 @@ import { closeMessage } from 'src/features/duel/messages'
 import {
   completeRedraw,
   drawCardFromDeck,
-  moveToNextAttacker,
+  moveToNextAttackingAgent,
   playCard,
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
@@ -144,7 +144,7 @@ describe('Bottom (Player) Side', () => {
       <PlayerField
         {...defaultProps}
         player={stackedPlayerMock}
-        phase="Redrawing Phase"
+        phase="Redrawing"
       />,
       {
         preloadedState,
@@ -199,7 +199,7 @@ describe('Bottom (Player) Side', () => {
     fireEvent.animationEnd(getByTestId(`${CARD_TEST_ID}${attackingAgentId}`))
 
     await waitFor(() =>
-      expect(dispatchSpy).toHaveBeenCalledWith(moveToNextAttacker()),
+      expect(dispatchSpy).toHaveBeenCalledWith(moveToNextAttackingAgent()),
     )
   })
 })

@@ -2,11 +2,12 @@ import { FC, useState } from 'react'
 
 import { useAppDispatch } from 'src/app/store'
 import { Card } from 'src/features/cards/components/Card'
+import { BotController } from 'src/features/duel/components/BotController'
+import { PlayCard } from 'src/features/duel/components/PlayCard'
 import { closeMessage } from 'src/features/duel/messages'
 import {
   completeRedraw,
   drawCardFromDeck,
-  moveToNextAttacker,
   playCard,
   putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
@@ -15,8 +16,8 @@ import { triggerPostCardPlay } from 'src/features/duel/utils'
 import { AnimatedNumber } from 'src/shared/components/AnimatedNumber'
 import { Link } from 'src/shared/components/Link'
 import { Modal } from 'src/shared/components/Modal'
-import components from 'src/shared/styles/components.module.css'
 import animations from 'src/shared/styles/animations.module.css'
+import components from 'src/shared/styles/components.module.css'
 import {
   OPPONENT_BOARD_ID,
   OPPONENT_DECK_ID,
@@ -30,7 +31,6 @@ import {
   PLAYER_INFO_ID,
 } from 'src/shared/testIds'
 import { shuffleArray } from 'src/shared/utils'
-import { BotController } from 'src/features/duel/components/BotController'
 
 type browsedStack = 'deck' | 'discard' | null
 
@@ -101,7 +101,7 @@ const PlayerField: FC<PlayerFieldProps> = ({
       return onPlayCard
     }
 
-    if (phase === 'Redrawing Phase' && !hasPerformedAction && !isOnTop) {
+    if (phase === 'Redrawing' && !hasPerformedAction && !isOnTop) {
       return onRedrawCard
     }
 
@@ -114,8 +114,6 @@ const PlayerField: FC<PlayerFieldProps> = ({
     setIsBrowseStackOpen(true)
     setBrowsedStack(stack)
   }
-
-  const onAttackAnimationEnd = () => dispatch(moveToNextAttacker())
 
   return (
     <>
@@ -139,7 +137,13 @@ const PlayerField: FC<PlayerFieldProps> = ({
           onClick={!isOnTop ? () => openBrowseCardsModal('discard') : undefined}
         >
           {discard.map((cardId) => (
-            <Card key={cardId} card={cards[cardId]} isSmall isFaceDown />
+            <PlayCard
+              key={cardId}
+              playerId={id}
+              card={cards[cardId]}
+              isSmall
+              isFaceDown
+            />
           ))}
         </div>
 
@@ -150,8 +154,9 @@ const PlayerField: FC<PlayerFieldProps> = ({
           }
         >
           {hand.map((cardId) => (
-            <Card
+            <PlayCard
               key={cardId}
+              playerId={id}
               card={cards[cardId]}
               onClickCard={getOnClickCard()}
               isFaceDown={isOnTop}
@@ -166,7 +171,13 @@ const PlayerField: FC<PlayerFieldProps> = ({
           onClick={!isOnTop ? () => openBrowseCardsModal('deck') : undefined}
         >
           {deck.map((cardId) => (
-            <Card key={cardId} card={cards[cardId]} isSmall isFaceDown />
+            <PlayCard
+              key={cardId}
+              playerId={id}
+              card={cards[cardId]}
+              isSmall
+              isFaceDown
+            />
           ))}
         </div>
       </div>
@@ -178,9 +189,9 @@ const PlayerField: FC<PlayerFieldProps> = ({
         }
       >
         {board.map((cardId) => (
-          <Card
-            onAttackAnimationEnd={onAttackAnimationEnd}
+          <PlayCard
             key={cardId}
+            playerId={id}
             card={cards[cardId]}
             isSmall
             isAttacking={attackingAgentId === cardId}
@@ -193,7 +204,7 @@ const PlayerField: FC<PlayerFieldProps> = ({
       <Modal isOpen={isBrowseStackOpen}>
         {browsedStack ? (
           <div className={components.cardBrowserModal}>
-            <h1>Browsing your {browsedStack} (randomized)</h1>
+            <h1>Browsing your {browsedStack} (not in order)</h1>
             <div className={components.cardList}>
               {shuffleArray(player[browsedStack]).map((cardId) => (
                 <Card key={`${cardId}-browse`} card={cards[cardId]} />

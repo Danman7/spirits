@@ -10,7 +10,7 @@ import {
   DEFAULT_DUEL_STARTING_COINS,
   EMPTY_PLAYER,
 } from 'src/features/duel/constants'
-import { initializeEndTurn, moveCardToDiscard } from 'src/features/duel/slice'
+import { resolveTurn, discardCard } from 'src/features/duel/slice'
 import { DuelCard, DuelState, Player } from 'src/features/duel/types'
 import {
   copyDuelCard,
@@ -153,7 +153,7 @@ it('should trigger post play agent actions', () => {
 
   triggerPostCardPlay({ dispatch: mockDispatch, playerId, card })
 
-  expect(mockDispatch).toHaveBeenCalledWith(initializeEndTurn())
+  expect(mockDispatch).toHaveBeenCalledWith(resolveTurn())
 })
 
 it('should trigger post play instant actions', () => {
@@ -164,10 +164,10 @@ it('should trigger post play instant actions', () => {
   triggerPostCardPlay({ dispatch: mockDispatch, playerId, card })
 
   expect(mockDispatch).toHaveBeenCalledWith(
-    moveCardToDiscard({
+    discardCard({
       cardId: card.id,
       playerId,
     }),
   )
-  expect(mockDispatch).toHaveBeenCalledWith(initializeEndTurn())
+  expect(mockDispatch).toHaveBeenCalledWith(resolveTurn())
 })
