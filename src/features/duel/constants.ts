@@ -13,7 +13,8 @@ export const EMPTY_PLAYER: Player = {
   hasPerformedAction: false,
 }
 
-export const DEFAULT_DUEL_STARTING_COINS = 30
-export const DEFAULT_DUEL_INITIAL_CARDS_DRAWN = 4
+export const DUEL_STARTING_COINS = 30
+export const DUEL_INITIAL_CARDS_DRAWN = 4
+export const DUEL_INCOME_PER_TURN = 1
 
 export const CARD_STACKS: CardStack[] = ['deck', 'hand', 'board', 'discard']

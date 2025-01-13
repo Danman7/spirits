@@ -53,10 +53,6 @@ export const HammeriteNovice: CardBase = {
   ],
   flavor:
     'This novice has been instructed in the rules and strictures of the Order and has sworn his warrants to be silent in his vigils.',
-  trigger: {
-    predicate: 'HammeriteNoviceOnPlayPredicate',
-    effect: 'HammeriteNoviceOnPlayEffect',
-  },
 }
 
 export const ElevatedAcolyte: CardBase = {
@@ -100,10 +96,6 @@ export const BrotherSachelman: CardBase = {
   ],
   flavor:
     'May the Hammer fall on the unrighteous. Officially, Brother Sachelman',
-  trigger: {
-    predicate: 'BrotherSachelmanOnPlayPredicate',
-    effect: 'BrotherSachelmanOnPlayEffect',
-  },
 }
 
 export const HighPriestMarkander: CardBase = {
@@ -197,10 +189,6 @@ export const BookOfAsh: CardBase = {
   ],
   flavor:
     'I owe my transcendence to the Book of Ash, that tome of legend I recovered so long ago from the sands of long forgotten kings. Within its pages lie the secrets of life, death ...and undeath. -- Azaran the Cruel',
-  trigger: {
-    predicate: 'BookOfAshPredicate',
-    effect: 'BookOfAshEffect',
-  },
 }
 
 export const YoraSkull: CardBase = {

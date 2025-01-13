@@ -1,10 +1,6 @@
-import { clearAllListeners } from '@reduxjs/toolkit'
 import { FC, useEffect, useState } from 'react'
 
-import { addAppListener } from 'src/app/listenerMiddleware'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
-import * as CardEffectPredicates from 'src/features/cards/CardEffectPredicates'
-import * as CardEffects from 'src/features/cards/CardEffects'
 import { ActionPanel } from 'src/features/duel/components/ActionPanel'
 import { PhaseModal } from 'src/features/duel/components/PhaseModal'
 import PlayerField from 'src/features/duel/components/PlayerField'
@@ -21,19 +17,14 @@ import {
 import { getInactivePlayerId, sortDuelPlayers } from 'src/features/duel/utils'
 import { getUserId } from 'src/features/user/selector'
 
-let hasAddedCardEffectListeners = false
-
-const Board: FC = () => {
+export const Board: FC = () => {
   const dispatch = useAppDispatch()
-
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false)
-
   const players = useAppSelector(getPlayers)
   const phase = useAppSelector(getPhase)
   const loggedInPlayerId = useAppSelector(getUserId)
   const activePlayerId = useAppSelector(getActivePlayerId)
   const attackingAgentId = useAppSelector(getAttackingAgentId)
-
   const loggedInPlayer = players[loggedInPlayerId]
   const opponent = players[getInactivePlayerId(players, loggedInPlayerId)]
   const isLoggedInPlayerActive = loggedInPlayerId === activePlayerId
@@ -70,36 +61,6 @@ const Board: FC = () => {
     }
   }, [attackingAgentId, phase, dispatch])
 
-  // This adds all store listeners for card effect triggers.
-  // It plugs into the redux middleware and cannot be done in the slice.
-  useEffect(() => {
-    if (!hasAddedCardEffectListeners) {
-      hasAddedCardEffectListeners = true
-      dispatch(clearAllListeners())
-
-      const addedListeners: string[] = []
-
-      Object.values(players).forEach(({ cards }) =>
-        Object.keys(cards).forEach((cardId) => {
-          const { trigger, name } = cards[cardId]
-
-          if (trigger && !addedListeners.includes(name)) {
-            const { predicate, effect } = trigger
-
-            dispatch(
-              addAppListener({
-                predicate: CardEffectPredicates[predicate],
-                effect: CardEffects[effect],
-              }),
-            )
-
-            addedListeners.push(name)
-          }
-        }),
-      )
-    }
-  }, [dispatch, players])
-
   return (
     <>
       {sortDuelPlayers(players, loggedInPlayerId).map((player, index) => (
@@ -114,7 +75,7 @@ const Board: FC = () => {
       ))}
 
       <PhaseModal
-        players={players}
+        playerNames={Object.values(players).map(({ name }) => name)}
         phase={phase}
         isLoggedInPlayerActive={isLoggedInPlayerActive}
         victoriousPlayerName={victoriousPlayerName}
@@ -130,5 +91,3 @@ const Board: FC = () => {
     </>
   )
 }
-
-export default Board

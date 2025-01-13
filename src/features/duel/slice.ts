@@ -1,6 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { DEFAULT_DUEL_INITIAL_CARDS_DRAWN } from 'src/features/duel/constants'
+import {
+  DUEL_INCOME_PER_TURN,
+  DUEL_INITIAL_CARDS_DRAWN,
+} from 'src/features/duel/constants'
+import { invalidFirstPlayerIdError } from 'src/features/duel/messages'
 import {
   AddNewCardsAction,
   DuelCard,
@@ -46,7 +50,7 @@ export const duelSlice = createSlice({
       )
 
       if (firstPlayerId && !state.players[firstPlayerId]) {
-        throw new Error('Invalid firstPlayerId passed to startDuel.')
+        throw new Error(invalidFirstPlayerIdError)
       }
 
       state.activePlayerId = firstPlayerId || getRandomArrayItem(users).id
@@ -55,7 +59,7 @@ export const duelSlice = createSlice({
     },
     playersDrawInitialCards: (state) => {
       Object.values(state.players).forEach(({ id, deck }) => {
-        for (let index = 0; index < DEFAULT_DUEL_INITIAL_CARDS_DRAWN; index++) {
+        for (let index = 0; index < DUEL_INITIAL_CARDS_DRAWN; index++) {
           moveCardBetweenStacks({
             movedCardId: deck[index],
             playerId: id,
@@ -104,8 +108,8 @@ export const duelSlice = createSlice({
         }
 
         if (state.players[playerId].income) {
-          state.players[playerId].coins += 1
-          state.players[playerId].income -= 1
+          state.players[playerId].coins += DUEL_INCOME_PER_TURN
+          state.players[playerId].income -= DUEL_INCOME_PER_TURN
         }
       })
 
@@ -123,10 +127,9 @@ export const duelSlice = createSlice({
       const { players, activePlayerId } = state
 
       state.phase = 'Resolving turn'
-
       state.attackingAgentId = players[activePlayerId].board[0] || ''
     },
-    attack: (state) => {
+    agentAttack: (state) => {
       const { players, activePlayerId, attackingAgentId } = state
       const defendingPlayer =
         players[getInactivePlayerId(players, activePlayerId)]
@@ -135,6 +138,9 @@ export const duelSlice = createSlice({
         activePlayerId,
         attackingAgentId,
       )
+
+      // Prevent change if no attacker is set
+      if (attackingCardIndex < 0) return
 
       // Set the defending agent to either the one opposite the attacker,
       // or the last agent on the defending player's board
@@ -161,7 +167,8 @@ export const duelSlice = createSlice({
       )
 
       state.attackingAgentId =
-        activePlayer.board[currentAttackingAgentIndex + 1] || ''
+        activePlayer.board[currentAttackingAgentIndex + 1] ||
+        initialState.attackingAgentId
     },
     playCard: (state, action: PlayerCardAction) => {
       const { cardId: playedCardId, playerId } = action.payload
@@ -249,7 +256,7 @@ export const {
   putCardAtBottomOfDeck,
   moveCardToBoard,
   updateCard,
-  attack,
+  agentAttack,
   moveToNextAttackingAgent,
   discardCard,
   addNewCards,

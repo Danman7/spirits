@@ -5,7 +5,7 @@ import { act } from 'react'
 import { BookOfAsh, BrotherSachelman } from 'src/features/cards/CardBases'
 import { joinCardCategories } from 'src/features/cards/utils'
 import { PlayCard } from 'src/features/duel/components/PlayCard'
-import { attack, moveToNextAttackingAgent } from 'src/features/duel/slice'
+import { agentAttack, moveToNextAttackingAgent } from 'src/features/duel/slice'
 import { createDuelCard } from 'src/features/duel/utils'
 import { playerId, stackedPreloadedState } from 'src/shared/__mocks__'
 import { TICK } from 'src/shared/constants'
@@ -98,7 +98,7 @@ it('should trigger attacking from bottom animation', async () => {
     await new Promise((r) => setTimeout(r, TICK))
   })
 
-  expect(dispatchSpy).toHaveBeenCalledWith(attack())
+  expect(dispatchSpy).toHaveBeenCalledWith(agentAttack())
   expect(dispatchSpy).toHaveBeenCalledWith(moveToNextAttackingAgent())
 })
 
@@ -116,7 +116,7 @@ it('should trigger attacking from top animation', async () => {
     await new Promise((r) => setTimeout(r, TICK))
   })
 
-  expect(dispatchSpy).toHaveBeenCalledWith(attack())
+  expect(dispatchSpy).toHaveBeenCalledWith(agentAttack())
   expect(dispatchSpy).toHaveBeenCalledWith(moveToNextAttackingAgent())
 })
 

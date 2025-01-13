@@ -4,7 +4,7 @@ import { FC, useEffect, useState } from 'react'
 import { useAppDispatch } from 'src/app/store'
 import { getFactionColor, joinCardCategories } from 'src/features/cards/utils'
 import {
-  attack,
+  agentAttack,
   discardCard,
   moveToNextAttackingAgent,
 } from 'src/features/duel/slice'
@@ -59,7 +59,7 @@ export const PlayCard: FC<PlayCardProps> = ({
   const onAnimationEnd = () => {
     // Move to next agent on end of attacking animation.
     if (isAttacking) {
-      dispatch(attack())
+      dispatch(agentAttack())
       dispatch(moveToNextAttackingAgent())
     }
   }

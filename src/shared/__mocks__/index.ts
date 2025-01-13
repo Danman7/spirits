@@ -12,7 +12,10 @@ import {
   YoraSkull,
   Zombie,
 } from 'src/features/cards/CardBases'
-import { initialState as initialDuelState } from 'src/features/duel/slice'
+import {
+  initialState as initialDuelState,
+  initialState,
+} from 'src/features/duel/slice'
 import { DuelState, Player } from 'src/features/duel/types'
 import {
   normalizePlayerCards,
@@ -59,6 +62,15 @@ export const initialPlayerMock: Player =
 export const initialOpponentMock: Player =
   setupInitialDuelPlayerFromUser(opponentMock)
 
+export const initialDuelStateMock: DuelState = {
+  ...initialState,
+  players: {
+    [opponentId]: initialOpponentMock,
+    [playerId]: initialPlayerMock,
+  },
+  activePlayerId: playerId,
+}
+
 export const stackedPlayerMock: Player = {
   ...initialPlayerMock,
   income: 2,
@@ -80,21 +92,13 @@ export const stackedOpponentMock: Player = {
   }),
 }
 
-export const MockPlayerTurnState: DuelState = {
+export const stackedDuelStateMock: DuelState = {
   phase: 'Player Turn',
-  activePlayerId: initialPlayerMock.id,
+  activePlayerId: playerId,
   attackingAgentId: '',
   players: {
     [stackedPlayerMock.id]: stackedPlayerMock,
     [stackedOpponentMock.id]: stackedOpponentMock,
-  },
-}
-
-export const stackedDuelState: DuelState = {
-  ...MockPlayerTurnState,
-  players: {
-    [stackedPlayerMock.id]: stackedPlayerMock,
-    [opponentId]: MockPlayerTurnState.players[opponentId],
   },
 }
 
@@ -104,6 +108,6 @@ export const mockRootState: RootState = {
 }
 
 export const stackedPreloadedState: RootState = {
-  duel: { ...stackedDuelState },
+  duel: { ...stackedDuelStateMock },
   user: { ...userMock },
 }

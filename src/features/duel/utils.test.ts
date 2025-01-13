@@ -7,7 +7,7 @@ import {
 } from 'src/features/cards/CardBases'
 import {
   CARD_STACKS,
-  DEFAULT_DUEL_STARTING_COINS,
+  DUEL_STARTING_COINS,
   EMPTY_PLAYER,
 } from 'src/features/duel/constants'
 import { resolveTurn, discardCard } from 'src/features/duel/slice'
@@ -20,7 +20,7 @@ import {
   normalizePlayerCards,
   triggerPostCardPlay,
 } from 'src/features/duel/utils'
-import { playerId, stackedDuelState } from 'src/shared/__mocks__'
+import { playerId, stackedDuelStateMock } from 'src/shared/__mocks__'
 
 test('createPlayCardFromPrototype should create a new play ready card from a card prototype', () => {
   const newCard = createDuelCard(Haunt)
@@ -52,7 +52,7 @@ it('should get all playable card ids for a given player with getPlayableCardIds'
     ...EMPTY_PLAYER,
     id: 'player3',
     name: 'Hume',
-    coins: DEFAULT_DUEL_STARTING_COINS,
+    coins: DUEL_STARTING_COINS,
     ...normalizePlayerCards({
       hand: [TempleGuard, HammeriteNovice],
     }),
@@ -94,9 +94,9 @@ it("should normalize a player's cards into some stacks with normalizePlayerCards
 })
 
 it('should move a card between stacks', () => {
-  const player = { ...stackedDuelState.players[playerId] }
+  const player = { ...stackedDuelStateMock.players[playerId] }
 
-  const state: DuelState = { ...stackedDuelState }
+  const state: DuelState = { ...stackedDuelStateMock }
 
   expect(player.deck).toHaveLength(2)
   expect(player.hand).toHaveLength(2)
@@ -104,7 +104,7 @@ it('should move a card between stacks', () => {
   const movedCardId = player.deck[0]
 
   moveCardBetweenStacks({
-    state: stackedDuelState,
+    state: stackedDuelStateMock,
     playerId,
     movedCardId,
     to: 'hand',
@@ -120,9 +120,9 @@ it('should move a card between stacks', () => {
 })
 
 it('should move a card to the front of a stack', () => {
-  const player = { ...stackedDuelState.players[playerId] }
+  const player = { ...stackedDuelStateMock.players[playerId] }
 
-  const state: DuelState = { ...stackedDuelState }
+  const state: DuelState = { ...stackedDuelStateMock }
 
   expect(player.deck).toHaveLength(1)
   expect(player.hand).toHaveLength(3)
@@ -130,7 +130,7 @@ it('should move a card to the front of a stack', () => {
   const movedCardId = player.hand[0]
 
   moveCardBetweenStacks({
-    state: stackedDuelState,
+    state: stackedDuelStateMock,
     playerId,
     movedCardId,
     to: 'deck',

@@ -1,7 +1,6 @@
 import { fireEvent } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 
-import { RootState } from 'src/app/store'
 import {
   ActionPanel,
   ActionPanelProps,
@@ -14,21 +13,19 @@ import {
   yourTurnMessage,
 } from 'src/features/duel/messages'
 import { completeRedraw, resolveTurn } from 'src/features/duel/slice'
-import { Player } from 'src/features/duel/types'
-import { MockPlayerTurnState, playerId } from 'src/shared/__mocks__'
-import { renderWithProviders } from 'src/shared/rtlRender'
 
-const mockPlayer: Player = MockPlayerTurnState.players[playerId]
+import {
+  playerId,
+  stackedPreloadedState as preloadedState,
+  stackedPlayerMock as loggedInPlayer,
+} from 'src/shared/__mocks__'
+import { renderWithProviders } from 'src/shared/rtlRender'
 
 const defaultProps: ActionPanelProps = {
   isOpen: true,
-  loggedInPlayer: mockPlayer,
+  loggedInPlayer,
   isLoggedInPlayerActive: true,
   phase: 'Initial Draw',
-}
-
-const preloadedState: Partial<RootState> = {
-  duel: MockPlayerTurnState,
 }
 
 it('should show the redraw phase panel with skip redraw link', () => {
@@ -51,7 +48,7 @@ it('should show the waiting for opponent message during redraw phase', () => {
     <ActionPanel
       {...defaultProps}
       phase="Redrawing"
-      loggedInPlayer={{ ...mockPlayer, hasPerformedAction: true }}
+      loggedInPlayer={{ ...loggedInPlayer, hasPerformedAction: true }}
     />,
     {
       preloadedState,

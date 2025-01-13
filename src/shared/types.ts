@@ -1,8 +1,3 @@
-import {
-  CardEffectName,
-  CardEffectPredicateName,
-} from 'src/features/cards/types'
-
 /**
  * A card’s rank controls how many copies of a card one can have in a deck. Sometimes it also directs card effects.
  */
@@ -44,10 +39,6 @@ export interface CardBase {
   rank: CardRank
   description: string[]
   flavor?: string
-  trigger?: {
-    predicate: CardEffectPredicateName
-    effect: CardEffectName
-  }
 }
 
 export interface User {

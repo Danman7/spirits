@@ -45,3 +45,8 @@ export const shuffleArray = <T>(array: T[]): T[] => {
  */
 export const getCoinsMessage = (coins: number) =>
   `${coins} ${coins > 1 ? 'coins' : 'coin'}`
+
+/**
+ * Clone an object using the JSON method.
+ */
+export const deepClone = <T>(object: T) => JSON.parse(JSON.stringify(object))

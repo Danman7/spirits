@@ -1,18 +1,19 @@
+import { HammeriteNovice, TempleGuard } from 'src/features/cards/CardBases'
 import {
-  HammeriteNovice,
-  TempleGuard,
-  Zombie,
-} from 'src/features/cards/CardBases'
-import { DEFAULT_DUEL_INITIAL_CARDS_DRAWN } from 'src/features/duel/constants'
+  DUEL_INCOME_PER_TURN,
+  DUEL_INITIAL_CARDS_DRAWN,
+} from 'src/features/duel/constants'
+import { invalidFirstPlayerIdError } from 'src/features/duel/messages'
 import {
   addNewCards,
-  attack,
+  agentAttack,
   completeRedraw,
   discardCard,
   drawCardFromDeck,
   duelReducer,
   initialState,
   moveCardToBoard,
+  moveToNextAttackingAgent,
   moveToNextTurn,
   playCard,
   playersDrawInitialCards,
@@ -30,56 +31,58 @@ import {
 } from 'src/features/duel/types'
 import { createDuelCard, normalizePlayerCards } from 'src/features/duel/utils'
 import {
-  initialOpponentMock,
+  initialDuelStateMock,
   initialPlayerMock,
   opponentId,
   opponentMock,
   playerId,
+  stackedDuelStateMock,
+  stackedOpponentMock,
+  stackedPlayerMock,
   userMock,
 } from 'src/shared/__mocks__'
+import { deepClone } from 'src/shared/utils'
 
 const users: DuelStartUsers = [userMock, opponentMock]
 
-const mockPlayers: DuelState['players'] = {
-  [opponentId]: initialOpponentMock,
-  [playerId]: initialPlayerMock,
-}
+let mockDuelState: DuelState
 
-const mockPlayer = mockPlayers[playerId]
-const mockOpponent = mockPlayers[opponentId]
-
-const mockDuelState: DuelState = {
-  ...initialState,
-  players: mockPlayers,
-  activePlayerId: playerId,
-}
-
-let duelState: DuelState
-
-describe('Initializing a duel', () => {
+describe('Starting a duel', () => {
   beforeEach(() => {
-    duelState = { ...initialState }
+    mockDuelState = { ...initialState }
   })
 
-  test('initialize a new game with a random first player', () => {
+  test('start a new duel with a random first player', () => {
     const state = duelReducer(
-      duelState,
+      mockDuelState,
       startDuel({
         users,
       }),
     )
 
-    const { activePlayerId, phase } = state
+    const { activePlayerId, phase, players } = state
 
     expect(activePlayerId).toBeTruthy()
     expect(phase).toBe('Initial Draw')
+    expect(players[playerId]).toEqual(
+      expect.objectContaining({
+        name: userMock.name,
+      }),
+    )
+    expect(players[playerId].deck).toHaveLength(userMock.deck.length)
+    expect(players[opponentId]).toEqual(
+      expect.objectContaining({
+        name: opponentMock.name,
+      }),
+    )
+    expect(players[opponentId].deck).toHaveLength(opponentMock.deck.length)
   })
 
-  test('initialize a new game with a preset first player', () => {
+  test('start a new duel with a preset first player', () => {
     const firstPlayerId = opponentId
 
     const state = duelReducer(
-      duelState,
+      mockDuelState,
       startDuel({
         users,
         firstPlayerId,
@@ -95,65 +98,54 @@ describe('Initializing a duel', () => {
   test('throw an error when initializing game if firstPlayerId is set to a non existent player', () => {
     expect(() => {
       duelReducer(
-        duelState,
+        mockDuelState,
         startDuel({
           users,
           firstPlayerId: 'random-id',
         }),
       )
-    }).toThrow()
+    }).toThrow(invalidFirstPlayerIdError)
   })
 })
 
 describe('Sequence before play', () => {
   beforeEach(() => {
-    duelState = { ...mockDuelState }
+    mockDuelState = deepClone(initialDuelStateMock)
   })
 
   test("draw a card from a player's deck if it has cards", () => {
-    const mockDrawingPlayer = duelState.players[playerId]
-
-    const state = duelReducer(duelState, drawCardFromDeck(playerId))
-
+    const state = duelReducer(mockDuelState, drawCardFromDeck(playerId))
     const drawingPlayer = state.players[playerId]
 
-    expect(drawingPlayer.deck).toHaveLength(mockDrawingPlayer.deck.length - 1)
-    expect(drawingPlayer.hand).toHaveLength(mockDrawingPlayer.hand.length + 1)
-    expect(drawingPlayer.hand).toContain(mockDrawingPlayer.deck[0])
+    expect(drawingPlayer.deck).toHaveLength(initialPlayerMock.deck.length - 1)
+    expect(drawingPlayer.hand).toHaveLength(initialPlayerMock.hand.length + 1)
+    expect(drawingPlayer.hand).toContain(initialPlayerMock.deck[0])
   })
 
   test('should draw no card if deck has no cards', () => {
-    duelState.players = {
-      [playerId]: {
-        ...mockPlayer,
-        hand: [],
-        deck: [],
-      },
-      [opponentId]: mockOpponent,
+    mockDuelState.players[playerId] = {
+      ...initialPlayerMock,
+      hand: [],
+      deck: [],
     }
 
-    const mockDrawingPlayer = duelState.players[playerId]
-
-    const state = duelReducer(duelState, drawCardFromDeck(playerId))
-
+    const state = duelReducer(mockDuelState, drawCardFromDeck(playerId))
     const drawingPlayer = state.players[playerId]
 
-    expect(drawingPlayer.deck).toHaveLength(mockDrawingPlayer.deck.length)
-    expect(drawingPlayer.hand).toHaveLength(mockDrawingPlayer.hand.length)
+    expect(drawingPlayer.deck).toHaveLength(0)
+    expect(drawingPlayer.hand).toHaveLength(0)
   })
 
   test('initial card draw', () => {
-    const state = duelReducer(duelState, playersDrawInitialCards())
-
+    const state = duelReducer(mockDuelState, playersDrawInitialCards())
     const { players } = state
 
-    Object.values(players).forEach(({ id, hand, deck }) => {
-      expect(hand).toHaveLength(DEFAULT_DUEL_INITIAL_CARDS_DRAWN)
+    Object.values(players).forEach(({ hand, deck }) => {
+      expect(hand).toHaveLength(DUEL_INITIAL_CARDS_DRAWN)
       expect(deck).toHaveLength(
-        mockPlayers[id].deck.length - DEFAULT_DUEL_INITIAL_CARDS_DRAWN,
+        initialPlayerMock.deck.length - DUEL_INITIAL_CARDS_DRAWN,
       )
     })
-
     expect(state.phase).toBe('Redrawing')
   })
 
@@ -165,24 +157,19 @@ describe('Sequence before play', () => {
         [stack]: [HammeriteNovice],
       })
 
-      duelState.players = {
-        [playerId]: {
-          ...mockPlayer,
-          ...normalizedCards,
-        },
-        [opponentId]: mockOpponent,
+      mockDuelState.players[playerId] = {
+        ...initialPlayerMock,
+        ...normalizedCards,
       }
 
       const cardId = normalizedCards[stack]?.[0] as string
-
       const state = duelReducer(
-        duelState,
+        mockDuelState,
         putCardAtBottomOfDeck({
           playerId,
           cardId,
         }),
       )
-
       const player = state.players[playerId]
 
       expect(player[stack]).toHaveLength(0)
@@ -191,228 +178,138 @@ describe('Sequence before play', () => {
     })
   })
 
-  test('mark that one player has completed redraw', () => {
-    const state = duelReducer(duelState, completeRedraw(playerId))
+  test('mark that a player has completed redraw', () => {
+    const state = duelReducer(mockDuelState, completeRedraw(playerId))
     const { players } = state
 
     expect(players[playerId].hasPerformedAction).toBeTruthy()
     expect(players[opponentId].hasPerformedAction).toBeFalsy()
   })
+})
 
-  test('mark that player has completed redrawing', () => {
-    const state = duelReducer(duelState, completeRedraw(playerId))
-
-    expect(state.players[playerId].hasPerformedAction).toBe(true)
+describe('Playing turns', () => {
+  beforeEach(() => {
+    mockDuelState = deepClone(stackedDuelStateMock)
   })
 
-  test('begin the player turn', () => {
-    const state = duelReducer(duelState, moveToNextTurn())
+  test('begin player turn after redrawing is completed without switching active player', () => {
+    mockDuelState.phase = 'Redrawing'
+    Object.keys(mockDuelState.players).forEach((id) => {
+      mockDuelState.players[id] = {
+        ...mockDuelState.players[id],
+        hasPerformedAction: true,
+      }
+    })
 
+    console.log(mockDuelState)
+    const state = duelReducer(mockDuelState, moveToNextTurn())
     const { phase, players, activePlayerId } = state
 
     expect(phase).toBe('Player Turn')
     expect(players[activePlayerId].hand).toHaveLength(
-      mockPlayer.hand.length + 1,
+      stackedPlayerMock.hand.length + 1,
     )
     expect(
       Object.values(players).every(
         ({ hasPerformedAction }) => !hasPerformedAction,
       ),
     ).toBeTruthy()
-  })
-})
-
-describe('Playing turns', () => {
-  beforeEach(() => {
-    duelState = {
-      ...mockDuelState,
-      phase: 'Player Turn',
-    }
+    expect(activePlayerId).toBe(playerId)
   })
 
-  test('initialize end of turn resolution if active player has no units on board', () => {
-    const mockState: DuelState = {
-      ...duelState,
-      players: {
-        [playerId]: {
-          ...duelState.players[playerId],
-          board: [],
-        },
-        [opponentId]: duelState.players[opponentId],
-      },
-    }
+  test('advance turn, reset attackingAgentId and resolve income', () => {
+    const coins = 20
+    const income = 2
 
-    const state = duelReducer(mockState, resolveTurn())
+    mockDuelState.players[opponentId].coins = coins
+    mockDuelState.players[opponentId].income = income
+    mockDuelState.attackingAgentId = mockDuelState.players[playerId].board[0]
+    mockDuelState.phase = 'Resolving turn'
 
+    const state = duelReducer(mockDuelState, moveToNextTurn())
+    const { players, attackingAgentId, activePlayerId } = state
+    const opponent = players[opponentId]
+
+    expect(attackingAgentId).toBe(initialState.attackingAgentId)
+    expect(activePlayerId).toBe(opponentId)
+    expect(opponent.coins).toBe(coins + DUEL_INCOME_PER_TURN)
+    expect(opponent.income).toBe(income - DUEL_INCOME_PER_TURN)
+  })
+
+  test('resolve end of turn', () => {
+    const state = duelReducer(mockDuelState, resolveTurn())
+    const { phase, attackingAgentId } = state
+
+    expect(phase).toBe('Resolving turn')
+    expect(attackingAgentId).toBe(stackedPlayerMock.board?.[0])
+  })
+
+  test('resolve end of turn if active player has no units on board', () => {
+    mockDuelState.players[playerId].board = []
+
+    const state = duelReducer(mockDuelState, resolveTurn())
     const { phase, attackingAgentId } = state
 
     expect(phase).toBe('Resolving turn')
     expect(attackingAgentId).toBe('')
   })
 
-  test('initialize end of turn resolution if active player has units on board', () => {
-    const normalizedCards = normalizePlayerCards({
-      board: [HammeriteNovice],
-    })
-
-    duelState.players = {
-      [playerId]: {
-        ...duelState.players[playerId],
-        ...normalizedCards,
-      },
-      [opponentId]: duelState.players[opponentId],
-    }
-
-    const state = duelReducer(duelState, resolveTurn())
-
-    const { phase, attackingAgentId } = state
-
-    expect(phase).toBe('Resolving turn')
-    expect(attackingAgentId).toBe(normalizedCards.board?.[0])
-  })
-
   test('agent attacking player', () => {
-    const normalizedCards = normalizePlayerCards({
-      board: [HammeriteNovice],
-    })
+    mockDuelState.attackingAgentId = stackedPlayerMock.board[0]
+    mockDuelState.players[opponentId].board = []
 
-    duelState.phase = 'Player Turn'
-    duelState.players = {
-      [playerId]: {
-        ...duelState.players[playerId],
-        ...normalizedCards,
-      },
-      [opponentId]: { ...duelState.players[opponentId], board: [] },
-    }
-
-    const state = duelReducer(duelState, attack())
-
+    const state = duelReducer(mockDuelState, agentAttack())
     const { players } = state
 
-    expect(players[opponentId].coins).toBe(mockOpponent.coins - 1)
-  })
-
-  test('agent attacking agent', () => {
-    const normalizedOpponentCards = normalizePlayerCards({
-      board: [Zombie],
-    })
-
-    duelState.phase = 'Resolving turn'
-    duelState.players = {
-      [playerId]: {
-        ...duelState.players[playerId],
-        ...normalizePlayerCards({
-          board: [HammeriteNovice],
-        }),
-      },
-      [opponentId]: {
-        ...duelState.players[opponentId],
-        ...normalizedOpponentCards,
-      },
-    }
-
-    const state = duelReducer(duelState, attack())
-
-    const { players } = state
-
-    const damagedAgent =
-      players[opponentId].cards[normalizedOpponentCards.board[0]]
-
-    expect(damagedAgent.strength).toBe(
-      (damagedAgent.base.strength as number) - 1,
-    )
-  })
-
-  test('end of turn as player', () => {
-    duelState.phase = 'Resolving turn'
-    duelState.activePlayerId = playerId
-
-    const coins = 20
-    const income = 2
-
-    duelState.players = {
-      [playerId]: {
-        ...mockPlayer,
-        income,
-        coins,
-      },
-      [opponentId]: mockOpponent,
-    }
-
-    const state = duelReducer(duelState, moveToNextTurn())
-
-    const { phase, activePlayerId, players } = state
-
-    const player = players[playerId]
-
-    expect(phase).toBe('Player Turn')
-    expect(activePlayerId).toBe(opponentId)
-    expect(player.coins).toBe(coins + 1)
-    expect(player.income).toBe(income - 1)
+    expect(players[opponentId].coins).toBe(stackedOpponentMock.coins - 1)
   })
 
   test('agent attacking agent on opposite slot', () => {
-    duelState.activePlayerId = opponentId
-    duelState.players = {
-      [playerId]: {
-        ...mockPlayer,
-        ...normalizePlayerCards({
-          board: [Zombie, Zombie],
-        }),
-      },
-      [opponentId]: {
-        ...mockOpponent,
-        ...normalizePlayerCards({
-          board: [HammeriteNovice, HammeriteNovice],
-        }),
-      },
-    }
-    duelState.attackingAgentId = duelState.players[opponentId].board[0]
+    mockDuelState.attackingAgentId = stackedPlayerMock.board[0]
 
-    const mockDefendingCard =
-      duelState.players[playerId].cards[duelState.players[playerId].board[0]]
-    const state = duelReducer(duelState, attack())
+    const state = duelReducer(mockDuelState, agentAttack())
     const { players } = state
-    const player = players[playerId]
-    const defendingCard = player.cards[player.board[0]]
+    const damagedAgent = players[opponentId].cards[stackedOpponentMock.board[0]]
 
-    expect(defendingCard.strength).toBe(mockDefendingCard.strength - 1)
+    expect(damagedAgent.strength).toBe(damagedAgent.base.strength - 1)
   })
 
   test('agent attacking agent on previous slot', () => {
-    const normalizedCards = normalizePlayerCards({
-      board: [Zombie, Zombie],
-    })
-
-    duelState.phase = 'Resolving turn'
-    duelState.activePlayerId = playerId
-    duelState.players = {
-      [playerId]: {
-        ...mockPlayer,
-        ...normalizedCards,
-      },
-      [opponentId]: {
-        ...mockOpponent,
-        ...normalizePlayerCards({
-          board: [HammeriteNovice],
-        }),
-      },
+    mockDuelState.players[playerId] = {
+      ...stackedPlayerMock,
+      ...normalizePlayerCards({
+        board: [TempleGuard, TempleGuard],
+      }),
     }
+    mockDuelState.attackingAgentId = mockDuelState.players[playerId].board[1]
 
-    const mockDefendingCard =
-      duelState.players[opponentId].cards[
-        duelState.players[opponentId].board[0]
-      ]
-
-    const state = duelReducer(duelState, attack())
-
+    const state = duelReducer(mockDuelState, agentAttack())
     const { players } = state
+    const damagedAgent = players[opponentId].cards[stackedOpponentMock.board[0]]
 
-    const opponent = players[opponentId]
+    expect(damagedAgent.strength).toBe(damagedAgent.base.strength - 1)
+  })
 
-    const defendingCard = opponent.cards[opponent.board[0]]
+  test('move to next attacking agent', () => {
+    mockDuelState.players[playerId] = {
+      ...stackedPlayerMock,
+      ...normalizePlayerCards({
+        board: [TempleGuard, TempleGuard],
+      }),
+    }
+    mockDuelState.attackingAgentId = mockDuelState.players[playerId].board[0]
+    const state = duelReducer(mockDuelState, moveToNextAttackingAgent())
+    const { attackingAgentId } = state
 
-    expect(defendingCard.strength).toBe(mockDefendingCard.strength - 1)
+    expect(attackingAgentId).toBe(mockDuelState.players[playerId].board[1])
+  })
+
+  test('reset attacking agent id if there is no suitable attacker', () => {
+    mockDuelState.attackingAgentId = mockDuelState.players[playerId].board[0]
+    const state = duelReducer(mockDuelState, moveToNextAttackingAgent())
+    const { attackingAgentId } = state
+
+    expect(attackingAgentId).toBe(initialState.attackingAgentId)
   })
 
   test('play card', () => {
@@ -423,26 +320,20 @@ describe('Playing turns', () => {
         [stack]: [HammeriteNovice],
       })
 
-      duelState.players = {
-        [playerId]: {
-          ...mockPlayer,
-          ...normalizedCards,
-        },
-        [opponentId]: mockOpponent,
+      mockDuelState.players[playerId] = {
+        ...stackedPlayerMock,
+        ...normalizedCards,
       }
 
       const cardId = normalizedCards[stack]?.[0] as string
-
-      const mockPlayingPlayer = duelState.players[playerId]
-
+      const mockPlayingPlayer = mockDuelState.players[playerId]
       const state = duelReducer(
-        duelState,
+        mockDuelState,
         playCard({
           cardId,
           playerId,
         }),
       )
-
       const playingPlayer = state.players[playerId]
 
       expect(playingPlayer.coins).toBe(
@@ -464,26 +355,20 @@ describe('Playing turns', () => {
         [stack]: [HammeriteNovice],
       })
 
-      duelState.players = {
-        [playerId]: {
-          ...mockPlayer,
-          ...normalizedCards,
-        },
-        [opponentId]: mockOpponent,
+      mockDuelState.players[playerId] = {
+        ...stackedPlayerMock,
+        ...normalizedCards,
       }
 
       const cardId = normalizedCards[stack]?.[0] as string
-
-      const mockPlayingPlayer = duelState.players[playerId]
-
+      const mockPlayingPlayer = mockDuelState.players[playerId]
       const state = duelReducer(
-        duelState,
+        mockDuelState,
         moveCardToBoard({
           cardId,
           playerId,
         }),
       )
-
       const playingPlayer = state.players[playerId]
 
       expect(playingPlayer.coins).toBe(mockPlayingPlayer.coins)
@@ -495,44 +380,7 @@ describe('Playing turns', () => {
     })
   })
 
-  test('update an agent', () => {
-    const normalizedCards = normalizePlayerCards({
-      board: [HammeriteNovice],
-    })
-
-    const cardId = normalizedCards.board[0]
-
-    duelState.activePlayerId = playerId
-
-    duelState.players = {
-      [playerId]: {
-        ...mockPlayer,
-        ...normalizedCards,
-      },
-      [opponentId]: mockOpponent,
-    }
-
-    const update: Partial<DuelCard> = {
-      cost: 1,
-      strength: 5,
-    }
-
-    const state = duelReducer(
-      duelState,
-      updateCard({
-        playerId,
-        cardId,
-        update,
-      }),
-    )
-
-    const updatedCard = state.players[playerId].cards[cardId]
-
-    expect(updatedCard.strength).toBe(update.strength)
-    expect(updatedCard.cost).toBe(update.cost)
-  })
-
-  test('move a card from board to discard pile', () => {
+  test('move a card from board to discard pile, reset its stats and add income', () => {
     const stacks: CardStack[] = ['hand', 'board', 'deck']
 
     stacks.forEach((stack: 'hand' | 'board' | 'deck') => {
@@ -540,59 +388,70 @@ describe('Playing turns', () => {
         [stack]: [HammeriteNovice, TempleGuard],
       })
 
-      duelState.players[playerId] = {
-        ...mockPlayer,
+      mockDuelState.players[playerId] = {
+        ...stackedPlayerMock,
         ...normalizedCards,
       }
 
       const cardId = normalizedCards[stack]?.[0] as string
-
       const state = duelReducer(
-        duelState,
+        mockDuelState,
         discardCard({
           playerId,
           cardId,
         }),
       )
-
       const player = state.players[playerId]
-
       const discardedCard = player.cards[cardId]
 
       expect(player[stack]).toHaveLength(1)
       expect(player.discard).toHaveLength(1)
       expect(player.discard).toContain(cardId)
       expect(discardedCard.strength).toBe(discardedCard.base.strength)
-      expect(player.income).toBe(HammeriteNovice.cost)
+      expect(player.income).toBe(discardedCard.cost + stackedPlayerMock.income)
     })
+  })
+
+  test('update a card', () => {
+    const cardId = mockDuelState.players[playerId].board[0]
+    const update: Partial<DuelCard> = {
+      cost: 1,
+      strength: 5,
+    }
+    const state = duelReducer(
+      mockDuelState,
+      updateCard({
+        playerId,
+        cardId,
+        update,
+      }),
+    )
+    const updatedCard = state.players[playerId].cards[cardId]
+
+    expect(updatedCard.strength).toBe(update.strength)
+    expect(updatedCard.cost).toBe(update.cost)
   })
 
   test('summon new cards for a player', () => {
     const novice = createDuelCard(HammeriteNovice)
 
-    duelState.activePlayerId = playerId
-
-    duelState.players = {
-      [playerId]: {
-        ...mockPlayer,
-        deck: [],
-        cards: {},
-      },
-      [opponentId]: mockOpponent,
+    mockDuelState.activePlayerId = playerId
+    mockDuelState.players[playerId] = {
+      ...stackedPlayerMock,
+      deck: [],
+      cards: {},
     }
 
     const addedCards: PlayerCards = {
       [novice.id]: novice,
     }
-
     const state = duelReducer(
-      duelState,
+      mockDuelState,
       addNewCards({
         playerId,
         cards: addedCards,
       }),
     )
-
     const player = state.players[playerId]
 
     expect(player.cards).toEqual(addedCards)

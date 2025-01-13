@@ -1,8 +1,5 @@
 import { AppDispatch } from 'src/app/store'
-import {
-  CARD_STACKS,
-  DEFAULT_DUEL_STARTING_COINS,
-} from 'src/features/duel/constants'
+import { CARD_STACKS, DUEL_STARTING_COINS } from 'src/features/duel/constants'
 import { resolveTurn, discardCard } from 'src/features/duel/slice'
 import {
   CardStack,
@@ -91,7 +88,7 @@ export const normalizePlayerCards = (
 export const setupInitialDuelPlayerFromUser = (user: DuelUser): Player => ({
   ...user,
   ...normalizePlayerCards({ deck: shuffleArray(user.deck) }),
-  coins: DEFAULT_DUEL_STARTING_COINS,
+  coins: DUEL_STARTING_COINS,
   hand: [],
   board: [],
   discard: [],

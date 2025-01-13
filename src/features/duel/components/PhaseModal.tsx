@@ -6,7 +6,8 @@ import {
   playerFirst,
   victoryMessage,
 } from 'src/features/duel/messages'
-import { DuelPhase, DuelPlayers } from 'src/features/duel/types'
+import { DuelPhase } from 'src/features/duel/types'
+
 import { Modal } from 'src/shared/components/Modal'
 import { PHASE_MODAL_TIMEOUT } from 'src/shared/constants'
 
@@ -20,7 +21,7 @@ const flashModal = (setModalVisibility: (isOpen: boolean) => void) => {
 
 export interface PhaseModalProps {
   isLoggedInPlayerActive: boolean
-  players: DuelPlayers
+  playerNames: string[]
   phase: DuelPhase
   victoriousPlayerName?: string
   onPhaseModalCloseEnd: () => void
@@ -28,14 +29,12 @@ export interface PhaseModalProps {
 
 export const PhaseModal: FC<PhaseModalProps> = ({
   isLoggedInPlayerActive,
-  players,
+  playerNames,
   phase,
   victoriousPlayerName,
   onPhaseModalCloseEnd,
 }) => {
   const [isPhaseModalOpen, setIsPhaseModalOpen] = useState(false)
-
-  const playerNames = Object.values(players).map(({ name }) => name)
 
   useEffect(() => {
     switch (phase) {
