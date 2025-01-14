@@ -21,7 +21,7 @@ import { getUserId } from 'src/features/user/selector'
 
 export const Board: FC = () => {
   const dispatch = useAppDispatch()
-  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false)
+  const [isActionPanelOpen, setIsActionPanelOpen] = useState(false)
   const players = useAppSelector(getPlayers)
   const phase = useAppSelector(getPhase)
   const loggedInPlayerId = useAppSelector(getUserId)
@@ -34,7 +34,7 @@ export const Board: FC = () => {
   const onPhaseModalCloseEnd = () => {
     if (phase === 'Initial Draw') {
       dispatch(playersDrawInitialCards())
-      setIsSidePanelOpen(true)
+      setIsActionPanelOpen(true)
     }
   }
 
@@ -66,6 +66,24 @@ export const Board: FC = () => {
     }
   }, [players, dispatch])
 
+  // Hide action panel if the user has performed an action
+  // to prevent multiple passes
+  useEffect(() => {
+    if (players[activePlayerId].hasPerformedAction) {
+      setIsActionPanelOpen(false)
+    }
+  }, [activePlayerId, players])
+
+  // Show action panel on advacing turns
+  useEffect(() => {
+    if (
+      phase === 'Player Turn' &&
+      !players[activePlayerId].hasPerformedAction
+    ) {
+      setIsActionPanelOpen(true)
+    }
+  }, [phase, activePlayerId, players])
+
   return (
     <>
       {sortDuelPlayers(players, loggedInPlayerId).map((player, index) => (
@@ -90,7 +108,7 @@ export const Board: FC = () => {
       />
 
       <ActionPanel
-        isOpen={isSidePanelOpen}
+        isOpen={isActionPanelOpen}
         loggedInPlayer={loggedInPlayer}
         isLoggedInPlayerActive={isLoggedInPlayerActive}
         phase={phase}

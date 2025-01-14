@@ -55,7 +55,6 @@ export const duelSlice = createSlice({
       }
 
       state.activePlayerId = firstPlayerId || getRandomArrayItem(users).id
-
       state.phase = 'Initial Draw'
     },
     playersDrawInitialCards: (state) => {
@@ -93,18 +92,16 @@ export const duelSlice = createSlice({
       })
     },
     completeRedraw: (state, action: PayloadAction<string>) => {
-      const { players } = state
-
-      players[action.payload].hasPerformedAction = true
+      state.players[action.payload].hasPerformedAction = true
     },
 
     moveToNextTurn: (state) => {
-      const { players, activePlayerId } = state
+      const { players, activePlayerId, phase } = state
 
       Object.keys(players).forEach((playerId) => {
         state.players[playerId].hasPerformedAction = false
 
-        if (state.phase === 'Resolving turn' && playerId !== activePlayerId) {
+        if (phase === 'Resolving turn' && playerId !== activePlayerId) {
           state.activePlayerId = playerId
         }
 
@@ -232,11 +229,10 @@ export const duelSlice = createSlice({
       players[playerId].income += discardedCard.cost
     },
     addNewCards: (state, action: AddNewCardsAction) => {
-      const { players } = state
       const { playerId, cards } = action.payload
 
-      players[playerId].cards = {
-        ...players[playerId].cards,
+      state.players[playerId].cards = {
+        ...state.players[playerId].cards,
         ...cards,
       }
     },

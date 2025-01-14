@@ -4,15 +4,14 @@ import { act } from 'react'
 
 import { RootState } from 'src/app/store'
 import { Board } from 'src/features/duel/components/Board'
-import { victoryMessage } from 'src/features/duel/messages'
+import { victoryMessage, yourTurnMessage } from 'src/features/duel/messages'
 import {
   endDuel,
   moveToNextTurn,
   playersDrawInitialCards,
 } from 'src/features/duel/slice'
+
 import {
-  initialOpponentMock,
-  initialPlayerMock,
   opponentId,
   playerId,
   stackedPreloadedState,
@@ -45,14 +44,8 @@ it('should initiate card drawing', async () => {
 
 it('should begin the player turn if both players have completed redraw', () => {
   preloadedState.duel.phase = 'Redrawing'
-  preloadedState.duel.players[playerId] = {
-    ...initialPlayerMock,
-    hasPerformedAction: true,
-  }
-  preloadedState.duel.players[opponentId] = {
-    ...initialOpponentMock,
-    hasPerformedAction: true,
-  }
+  preloadedState.duel.players[playerId].hasPerformedAction = true
+  preloadedState.duel.players[opponentId].hasPerformedAction = true
 
   const { dispatchSpy } = renderWithProviders(<Board />, {
     preloadedState,
@@ -84,4 +77,16 @@ it('should show the end duel modal if one of the players has no coins', () => {
       `${preloadedState.duel.players[opponentId].name} ${victoryMessage}`,
     ),
   )
+})
+
+it('should hide the action panel if the user performs an action', () => {
+  preloadedState.duel.players[
+    preloadedState.duel.activePlayerId
+  ].hasPerformedAction = true
+
+  const { queryByText } = renderWithProviders(<Board />, {
+    preloadedState,
+  })
+
+  expect(queryByText(yourTurnMessage)).not.toBeInTheDocument()
 })
