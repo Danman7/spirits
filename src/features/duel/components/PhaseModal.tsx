@@ -40,16 +40,15 @@ export const PhaseModal: FC<PhaseModalProps> = ({
     switch (phase) {
       case 'Initial Draw':
         flashModal(setIsPhaseModalOpen)
+        break
 
+      case 'Duel End':
+        setIsPhaseModalOpen(true)
         break
     }
   }, [phase])
 
   const phaseModalContent: ReactNode = useMemo(() => {
-    if (victoriousPlayerName) {
-      return <h1>{`${victoriousPlayerName} ${victoryMessage}`}</h1>
-    }
-
     switch (phase) {
       case 'Initial Draw':
         return (
@@ -59,6 +58,9 @@ export const PhaseModal: FC<PhaseModalProps> = ({
             <h3>{isLoggedInPlayerActive ? playerFirst : opponentFirst}</h3>
           </>
         )
+
+      case 'Duel End':
+        return <h1>{`${victoriousPlayerName} ${victoryMessage}`}</h1>
     }
   }, [phase, isLoggedInPlayerActive, playerNames, victoriousPlayerName])
 

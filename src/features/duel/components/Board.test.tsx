@@ -4,7 +4,9 @@ import { act } from 'react'
 
 import { RootState } from 'src/app/store'
 import { Board } from 'src/features/duel/components/Board'
+import { victoryMessage } from 'src/features/duel/messages'
 import {
+  endDuel,
   moveToNextTurn,
   playersDrawInitialCards,
 } from 'src/features/duel/slice'
@@ -67,4 +69,19 @@ it('should move to next round if there is no agent on board for the active playe
   })
 
   expect(dispatchSpy).toHaveBeenCalledWith(moveToNextTurn())
+})
+
+it('should show the end duel modal if one of the players has no coins', () => {
+  preloadedState.duel.players[playerId].coins = 0
+
+  const { getByText, dispatchSpy } = renderWithProviders(<Board />, {
+    preloadedState,
+  })
+
+  expect(dispatchSpy).toHaveBeenCalledWith(endDuel(opponentId))
+  expect(
+    getByText(
+      `${preloadedState.duel.players[opponentId].name} ${victoryMessage}`,
+    ),
+  )
 })

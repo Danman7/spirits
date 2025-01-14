@@ -1,5 +1,4 @@
 import { createSelector } from '@reduxjs/toolkit'
-
 import { RootState } from 'src/app/store'
 
 const getDuelState = (state: RootState) => state.duel
@@ -22,4 +21,9 @@ export const getActivePlayerId = createSelector(
 export const getAttackingAgentId = createSelector(
   getDuelState,
   (duelState) => duelState.attackingAgentId,
+)
+
+export const getVictoriousPlayerId = createSelector(
+  getDuelState,
+  (duelState) => duelState.victoriousPlayerId,
 )

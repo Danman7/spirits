@@ -25,6 +25,7 @@ export const initialState: DuelState = {
   players: {},
   attackingAgentId: '',
   activePlayerId: '',
+  victoriousPlayerId: '',
 }
 
 export const duelSlice = createSlice({
@@ -230,7 +231,6 @@ export const duelSlice = createSlice({
 
       players[playerId].income += discardedCard.cost
     },
-
     addNewCards: (state, action: AddNewCardsAction) => {
       const { players } = state
       const { playerId, cards } = action.payload
@@ -239,6 +239,10 @@ export const duelSlice = createSlice({
         ...players[playerId].cards,
         ...cards,
       }
+    },
+    endDuel: (state, action: PayloadAction<string>) => {
+      state.phase = 'Duel End'
+      state.victoriousPlayerId = action.payload
     },
   },
 })
@@ -260,6 +264,7 @@ export const {
   moveToNextAttackingAgent,
   discardCard,
   addNewCards,
+  endDuel,
 } = actions
 
 export type DuelActionTypes = `${typeof duelSlice.name}/${keyof typeof actions}`

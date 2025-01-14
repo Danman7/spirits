@@ -52,6 +52,7 @@ it("should show the duel victor's name", () => {
   const { getByText } = renderWithProviders(
     <PhaseModal
       {...defaultProps}
+      phase="Duel End"
       victoriousPlayerName={defaultProps.playerNames[0]}
     />,
     {

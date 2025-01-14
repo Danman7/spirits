@@ -32,6 +32,7 @@ export type DuelPhase =
   | 'Redrawing'
   | 'Player Turn'
   | 'Resolving turn'
+  | 'Duel End'
 
 export type DuelPlayers = {
   [index: string]: Player
@@ -42,6 +43,7 @@ export interface DuelState {
   players: DuelPlayers
   activePlayerId: string
   attackingAgentId: string
+  victoriousPlayerId: string
 }
 
 export type PlayerCardAction = PayloadAction<{

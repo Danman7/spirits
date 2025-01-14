@@ -9,12 +9,14 @@ import {
   getAttackingAgentId,
   getPhase,
   getPlayers,
+  getVictoriousPlayerId,
 } from 'src/features/duel/selectors'
 import {
+  endDuel,
   moveToNextTurn,
   playersDrawInitialCards,
 } from 'src/features/duel/slice'
-import { getInactivePlayerId, sortDuelPlayers } from 'src/features/duel/utils'
+import { sortDuelPlayers } from 'src/features/duel/utils'
 import { getUserId } from 'src/features/user/selector'
 
 export const Board: FC = () => {
@@ -25,15 +27,9 @@ export const Board: FC = () => {
   const loggedInPlayerId = useAppSelector(getUserId)
   const activePlayerId = useAppSelector(getActivePlayerId)
   const attackingAgentId = useAppSelector(getAttackingAgentId)
+  const victoriousPlayerId = useAppSelector(getVictoriousPlayerId)
   const loggedInPlayer = players[loggedInPlayerId]
-  const opponent = players[getInactivePlayerId(players, loggedInPlayerId)]
   const isLoggedInPlayerActive = loggedInPlayerId === activePlayerId
-  const victoriousPlayerName =
-    opponent.coins <= 0
-      ? loggedInPlayer.name
-      : loggedInPlayer.coins <= 0
-        ? opponent.name
-        : undefined
 
   const onPhaseModalCloseEnd = () => {
     if (phase === 'Initial Draw') {
@@ -61,6 +57,15 @@ export const Board: FC = () => {
     }
   }, [attackingAgentId, phase, dispatch])
 
+  // Show end duel modal
+  useEffect(() => {
+    if (Object.values(players).some(({ coins }) => coins <= 0)) {
+      Object.values(players).forEach(({ id, coins }) => {
+        if (coins > 0) dispatch(endDuel(id))
+      })
+    }
+  }, [players, dispatch])
+
   return (
     <>
       {sortDuelPlayers(players, loggedInPlayerId).map((player, index) => (
@@ -78,7 +83,9 @@ export const Board: FC = () => {
         playerNames={Object.values(players).map(({ name }) => name)}
         phase={phase}
         isLoggedInPlayerActive={isLoggedInPlayerActive}
-        victoriousPlayerName={victoriousPlayerName}
+        victoriousPlayerName={
+          victoriousPlayerId && players[victoriousPlayerId].name
+        }
         onPhaseModalCloseEnd={onPhaseModalCloseEnd}
       />
 

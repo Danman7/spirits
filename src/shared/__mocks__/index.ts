@@ -12,10 +12,7 @@ import {
   YoraSkull,
   Zombie,
 } from 'src/shared/CardBases'
-import {
-  initialState as initialDuelState,
-  initialState,
-} from 'src/features/duel/slice'
+import { initialState as initialDuelState } from 'src/features/duel/slice'
 import { DuelState, Player } from 'src/features/duel/types'
 import {
   normalizePlayerCards,
@@ -63,7 +60,7 @@ export const initialOpponentMock: Player =
   setupInitialDuelPlayerFromUser(opponentMock)
 
 export const initialDuelStateMock: DuelState = {
-  ...initialState,
+  ...initialDuelState,
   players: {
     [opponentId]: initialOpponentMock,
     [playerId]: initialPlayerMock,
@@ -93,9 +90,9 @@ export const stackedOpponentMock: Player = {
 }
 
 export const stackedDuelStateMock: DuelState = {
+  ...initialDuelState,
   phase: 'Player Turn',
   activePlayerId: playerId,
-  attackingAgentId: '',
   players: {
     [stackedPlayerMock.id]: stackedPlayerMock,
     [stackedOpponentMock.id]: stackedOpponentMock,
