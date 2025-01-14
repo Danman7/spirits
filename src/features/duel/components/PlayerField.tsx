@@ -1,21 +1,25 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 
 import { useAppDispatch } from 'src/app/store'
-import { Card } from 'src/shared/components/Card'
+
 import { BotController } from 'src/features/duel/components/BotController'
 import { PlayCard } from 'src/features/duel/components/PlayCard'
-import { closeMessage } from 'src/features/duel/messages'
 import {
   completeRedraw,
   drawCardFromDeck,
   playCard,
   putCardAtBottomOfDeck,
+  setBrowsedStack,
 } from 'src/features/duel/slice'
-import { DuelCard, DuelPhase, Player } from 'src/features/duel/types'
+import {
+  BrowsedStack,
+  DuelCard,
+  DuelPhase,
+  Player,
+} from 'src/features/duel/types'
 import { triggerPostCardPlay } from 'src/features/duel/utils'
+
 import { AnimatedNumber } from 'src/shared/components/AnimatedNumber'
-import { Link } from 'src/shared/components/Link'
-import { Modal } from 'src/shared/components/Modal'
 import animations from 'src/shared/styles/animations.module.css'
 import components from 'src/shared/styles/components.module.css'
 import {
@@ -30,9 +34,6 @@ import {
   PLAYER_HAND_ID,
   PLAYER_INFO_ID,
 } from 'src/shared/testIds'
-import { shuffleArray } from 'src/shared/utils'
-
-type browsedStack = 'deck' | 'discard' | null
 
 export interface PlayerFieldProps {
   player: Player
@@ -64,9 +65,6 @@ const PlayerField: FC<PlayerFieldProps> = ({
   } = player
 
   const dispatch = useAppDispatch()
-
-  const [browsedStack, setBrowsedStack] = useState<browsedStack>(null)
-  const [isBrowseStackOpen, setIsBrowseStackOpen] = useState(false)
 
   const onPlayCard = (card: DuelCard) => {
     dispatch(playCard({ cardId: card.id, playerId: id }))
@@ -108,12 +106,8 @@ const PlayerField: FC<PlayerFieldProps> = ({
     return undefined
   }
 
-  const closeBrowseCardsModal = () => setIsBrowseStackOpen(false)
-
-  const openBrowseCardsModal = (stack: browsedStack) => {
-    setIsBrowseStackOpen(true)
-    setBrowsedStack(stack)
-  }
+  const openBrowseCardsModal = (stack: BrowsedStack) =>
+    dispatch(setBrowsedStack(stack))
 
   return (
     <>
@@ -199,24 +193,6 @@ const PlayerField: FC<PlayerFieldProps> = ({
           />
         ))}
       </div>
-
-      {/* Browse facedown stacks modal */}
-      <Modal isOpen={isBrowseStackOpen}>
-        {browsedStack ? (
-          <div className={components.cardBrowserModal}>
-            <h1>Browsing your {browsedStack} (not in order)</h1>
-            <div className={components.cardList}>
-              {shuffleArray(player[browsedStack]).map((cardId) => (
-                <Card key={`${cardId}-browse`} card={cards[cardId]} />
-              ))}
-            </div>
-
-            <div className={components.cardBrowseModalFooter}>
-              <Link onClick={closeBrowseCardsModal}>{closeMessage}</Link>
-            </div>
-          </div>
-        ) : null}
-      </Modal>
 
       {isBot ? (
         <BotController player={player} phase={phase} isActive={isActive} />

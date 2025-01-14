@@ -11,11 +11,7 @@ import {
   playersDrawInitialCards,
 } from 'src/features/duel/slice'
 
-import {
-  opponentId,
-  playerId,
-  stackedPreloadedState,
-} from 'src/shared/__mocks__'
+import { opponentId, playerId, stackedStateMock } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { OVERLAY_TEST_ID } from 'src/shared/testIds'
 import { deepClone } from 'src/shared/utils'
@@ -23,7 +19,7 @@ import { deepClone } from 'src/shared/utils'
 let preloadedState: RootState
 
 beforeEach(() => {
-  preloadedState = deepClone(stackedPreloadedState)
+  preloadedState = deepClone(stackedStateMock)
 })
 
 it('should initiate card drawing', async () => {

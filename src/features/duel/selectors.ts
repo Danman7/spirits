@@ -1,5 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { RootState } from 'src/app/store'
+import { getUserId } from 'src/features/user/selectors'
 
 const getDuelState = (state: RootState) => state.duel
 
@@ -26,4 +27,15 @@ export const getAttackingAgentId = createSelector(
 export const getVictoriousPlayerId = createSelector(
   getDuelState,
   (duelState) => duelState.victoriousPlayerId,
+)
+
+export const getBrowsedStack = createSelector(
+  getDuelState,
+  (duelState) => duelState.browsedStack,
+)
+
+export const getUserPlayer = createSelector(
+  getPlayers,
+  getUserId,
+  (players, userId) => players[userId],
 )

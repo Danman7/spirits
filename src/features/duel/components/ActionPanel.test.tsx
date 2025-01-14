@@ -16,7 +16,7 @@ import { completeRedraw, resolveTurn } from 'src/features/duel/slice'
 
 import {
   playerId,
-  stackedPreloadedState as preloadedState,
+  stackedStateMock as preloadedState,
   stackedPlayerMock as loggedInPlayer,
 } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'

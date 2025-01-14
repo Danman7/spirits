@@ -12,6 +12,7 @@ export const skipRedrawLinkMessage = 'skip redraw.'
 export const victoryMessage = 'has won the duel!'
 export const closeMessage = 'Close'
 export const initialDrawMessage = `The duel begins! Both players draw ${DUEL_INITIAL_CARDS_DRAWN} cards.`
+export const browsingStackModalTitle = 'Browsing your shufled'
 
 export const invalidFirstPlayerIdError =
   'Invalid firstPlayerId passed to startDuel.'

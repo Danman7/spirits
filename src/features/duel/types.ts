@@ -38,12 +38,15 @@ export type DuelPlayers = {
   [index: string]: Player
 }
 
+export type BrowsedStack = 'deck' | 'discard' | ''
+
 export interface DuelState {
   phase: DuelPhase
   players: DuelPlayers
   activePlayerId: string
   attackingAgentId: string
   victoriousPlayerId: string
+  browsedStack: BrowsedStack
 }
 
 export type PlayerCardAction = PayloadAction<{

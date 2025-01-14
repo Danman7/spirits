@@ -104,7 +104,7 @@ export const mockRootState: RootState = {
   user: { ...initialUserState },
 }
 
-export const stackedPreloadedState: RootState = {
+export const stackedStateMock: RootState = {
   duel: { ...stackedDuelStateMock },
   user: { ...userMock },
 }

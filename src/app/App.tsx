@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { Board } from 'src/features/duel/components/Board'
 import { getActivePlayerId } from 'src/features/duel/selectors'
 import { startDuel } from 'src/features/duel/slice'
-import { getUserId } from 'src/features/user/selector'
+import { getUserId } from 'src/features/user/selectors'
 import { loadUser } from 'src/features/user/slice'
 import { opponentMock, playerId, userMock } from 'src/shared/__mocks__'
 

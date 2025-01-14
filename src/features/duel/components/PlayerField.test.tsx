@@ -4,22 +4,21 @@ import '@testing-library/jest-dom'
 import PlayerField, {
   PlayerFieldProps,
 } from 'src/features/duel/components/PlayerField'
-import { closeMessage } from 'src/features/duel/messages'
 import {
   completeRedraw,
   drawCardFromDeck,
   moveToNextAttackingAgent,
   playCard,
   putCardAtBottomOfDeck,
+  setBrowsedStack,
 } from 'src/features/duel/slice'
 import {
-  stackedPreloadedState as preloadedState,
+  stackedStateMock as preloadedState,
   stackedPlayerMock,
 } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import {
   CARD_TEST_ID,
-  OVERLAY_TEST_ID,
   PLAYER_BOARD_ID,
   PLAYER_DECK_ID,
   PLAYER_DISCARD_ID,
@@ -85,17 +84,13 @@ describe('Bottom (Player) Side', () => {
     ).not.toBeInTheDocument()
   })
 
-  it('should be able to browse deck and discard stacks', async () => {
-    const { getByTestId, getByText, queryByText } = renderWithProviders(
+  it('should be able to browse deck and discard stacks', () => {
+    const { getByTestId, dispatchSpy } = renderWithProviders(
       <PlayerField {...defaultProps} player={stackedPlayerMock} />,
       {
         preloadedState,
       },
     )
-
-    expect(
-      queryByText(stackedPlayerMock.cards[stackedPlayerMock.deck[0]].name),
-    ).not.toBeInTheDocument()
 
     const deck = getByTestId(PLAYER_DECK_ID)
     const discard = getByTestId(PLAYER_DISCARD_ID)
@@ -104,39 +99,13 @@ describe('Bottom (Player) Side', () => {
       fireEvent.click(deck)
     }
 
-    expect(
-      getByText(stackedPlayerMock.cards[stackedPlayerMock.deck[0]].name),
-    ).toBeInTheDocument()
-
-    fireEvent.click(getByText(closeMessage))
-
-    fireEvent.animationEnd(getByTestId(OVERLAY_TEST_ID))
-
-    await waitFor(() => {
-      expect(
-        queryByText(stackedPlayerMock.cards[stackedPlayerMock.deck[0]].name),
-      ).not.toBeInTheDocument()
-    })
-
-    expect(
-      queryByText(stackedPlayerMock.cards[stackedPlayerMock.discard[0]].name),
-    ).not.toBeInTheDocument()
+    expect(dispatchSpy).toHaveBeenCalledWith(setBrowsedStack('deck'))
 
     if (discard) {
       fireEvent.click(discard)
     }
 
-    expect(
-      getByText(stackedPlayerMock.cards[stackedPlayerMock.discard[0]].name),
-    ).toBeInTheDocument()
-
-    fireEvent.click(getByText(closeMessage))
-
-    await waitFor(() => {
-      expect(
-        queryByText(stackedPlayerMock.cards[stackedPlayerMock.deck[0]].name),
-      ).not.toBeInTheDocument()
-    })
+    expect(dispatchSpy).toHaveBeenCalledWith(setBrowsedStack('discard'))
   })
 
   it('should be able to redraw a card', () => {

@@ -13,7 +13,7 @@ import {
 import { createDuelCard } from 'src/features/duel/utils'
 import {
   playerId,
-  stackedPreloadedState as preloadedState,
+  stackedStateMock as preloadedState,
 } from 'src/shared/__mocks__'
 import { TICK } from 'src/shared/constants'
 import { renderWithProviders } from 'src/shared/rtlRender'

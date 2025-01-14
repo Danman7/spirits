@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { ActionPanel } from 'src/features/duel/components/ActionPanel'
-import { PhaseModal } from 'src/features/duel/components/PhaseModal'
+import { DuelModal } from 'src/features/duel/components/DuelModal'
 import PlayerField from 'src/features/duel/components/PlayerField'
 import {
   getActivePlayerId,
@@ -17,7 +17,8 @@ import {
   playersDrawInitialCards,
 } from 'src/features/duel/slice'
 import { sortDuelPlayers } from 'src/features/duel/utils'
-import { getUserId } from 'src/features/user/selector'
+
+import { getUserId } from 'src/features/user/selectors'
 
 export const Board: FC = () => {
   const dispatch = useAppDispatch()
@@ -31,7 +32,7 @@ export const Board: FC = () => {
   const loggedInPlayer = players[loggedInPlayerId]
   const isLoggedInPlayerActive = loggedInPlayerId === activePlayerId
 
-  const onPhaseModalCloseEnd = () => {
+  const onDuelModalCloseEnd = () => {
     if (phase === 'Initial Draw') {
       dispatch(playersDrawInitialCards())
       setIsActionPanelOpen(true)
@@ -97,14 +98,13 @@ export const Board: FC = () => {
         />
       ))}
 
-      <PhaseModal
+      <DuelModal
         playerNames={Object.values(players).map(({ name }) => name)}
-        phase={phase}
         isLoggedInPlayerActive={isLoggedInPlayerActive}
         victoriousPlayerName={
           victoriousPlayerId && players[victoriousPlayerId].name
         }
-        onPhaseModalCloseEnd={onPhaseModalCloseEnd}
+        onDuelModalCloseEnd={onDuelModalCloseEnd}
       />
 
       <ActionPanel
