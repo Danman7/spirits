@@ -39,8 +39,6 @@ export const BotController: FC<BotControllerProps> = ({ playerId }) => {
     if (phase === 'Player Turn' && isActive) {
       const playableCardIds = getPlayableCardIds(player)
 
-      console.log(playableCardIds)
-
       if (playableCardIds.length) {
         const cardId = getRandomArrayItem(playableCardIds)
 

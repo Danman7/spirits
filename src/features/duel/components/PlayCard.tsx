@@ -37,7 +37,7 @@ export interface PlayCardProps {
 export const PlayCard: FC<PlayCardProps> = ({
   card,
   player,
-  stack = 'hand',
+  stack,
   isOnTop = false,
 }) => {
   const {

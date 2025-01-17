@@ -201,7 +201,6 @@ describe('Playing turns', () => {
       }
     })
 
-    console.log(mockDuelState)
     const state = duelReducer(mockDuelState, moveToNextTurn())
     const { phase, players, activePlayerId } = state
 
