@@ -1,32 +1,45 @@
 import { fireEvent, waitFor } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 import { act } from 'react'
+import { RootState } from 'src/app/store'
 
-import { BookOfAsh } from 'src/shared/CardBases'
-import { joinCardCategories } from 'src/shared/utils'
 import { PlayCard } from 'src/features/duel/components/PlayCard'
 import {
   agentAttack,
+  completeRedraw,
   discardCard,
+  drawCardFromDeck,
   moveToNextAttackingAgent,
+  playCard,
+  putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
-import { createDuelCard } from 'src/features/duel/utils'
 import {
   playerId,
-  stackedStateMock as preloadedState,
+  stackedPlayerMock,
+  stackedStateMock,
 } from 'src/shared/__mocks__'
 import { TICK } from 'src/shared/constants'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { CARD_TEST_ID } from 'src/shared/testIds'
+import { deepClone, joinCardCategories } from 'src/shared/utils'
 
 const mockCard =
-  preloadedState.duel.players[playerId].cards[
-    preloadedState.duel.players[playerId].board[0]
+  stackedStateMock.duel.players[playerId].cards[
+    stackedStateMock.duel.players[playerId].hand[0]
   ]
+
+let preloadedState: RootState
+
+beforeEach(() => {
+  preloadedState = deepClone(stackedStateMock)
+})
 
 it('should display all UI segments of a card when face up', () => {
   const { rerender, getByRole, getByText } = renderWithProviders(
-    <PlayCard card={mockCard} playerId={playerId} />,
+    <PlayCard card={mockCard} player={stackedPlayerMock} stack="hand" />,
+    {
+      preloadedState,
+    },
   )
 
   expect(getByRole('heading', { level: 3 })).toHaveTextContent(
@@ -42,7 +55,8 @@ it('should display all UI segments of a card when face up', () => {
   rerender(
     <PlayCard
       card={{ ...mockCard, strength: boostedStrength }}
-      playerId={playerId}
+      player={stackedPlayerMock}
+      stack="hand"
     />,
   )
 
@@ -55,7 +69,8 @@ it('should display all UI segments of a card when face up', () => {
   rerender(
     <PlayCard
       card={{ ...mockCard, strength: damagedStrength }}
-      playerId={playerId}
+      player={stackedPlayerMock}
+      stack="hand"
     />,
   )
 
@@ -66,37 +81,67 @@ it('should display all UI segments of a card when face up', () => {
 
 it('should flip card between faces', async () => {
   const { rerender, getByText, queryByText } = renderWithProviders(
-    <PlayCard card={mockCard} playerId={playerId} />,
+    <PlayCard card={mockCard} player={stackedPlayerMock} stack="hand" />,
+    {
+      preloadedState,
+    },
   )
 
   expect(getByText(mockCard.name)).toBeInTheDocument()
 
-  rerender(<PlayCard card={mockCard} isFaceDown playerId={playerId} />)
+  rerender(<PlayCard card={mockCard} stack="deck" player={stackedPlayerMock} />)
 
   await waitFor(() => {
     expect(queryByText(mockCard.name)).not.toBeInTheDocument()
   })
 
-  rerender(<PlayCard card={mockCard} playerId={playerId} />)
+  rerender(<PlayCard card={mockCard} player={stackedPlayerMock} stack="hand" />)
 
   expect(getByText(mockCard.name)).toBeInTheDocument()
 })
 
-it('should fire on click event passing card', () => {
-  const onCardClick = jest.fn()
+it('should be able to redraw', () => {
+  preloadedState.duel.phase = 'Redrawing'
 
-  const { getByText } = renderWithProviders(
-    <PlayCard card={mockCard} onClickCard={onCardClick} playerId={playerId} />,
+  const { getByText, dispatchSpy } = renderWithProviders(
+    <PlayCard card={mockCard} player={stackedPlayerMock} stack="hand" />,
+    {
+      preloadedState,
+    },
   )
 
   fireEvent.click(getByText(mockCard.name))
 
-  expect(onCardClick).toHaveBeenCalledWith(mockCard)
+  expect(dispatchSpy).toHaveBeenCalledWith(
+    putCardAtBottomOfDeck({
+      cardId: mockCard.id,
+      playerId,
+    }),
+  )
+  expect(dispatchSpy).toHaveBeenCalledWith(drawCardFromDeck(playerId))
+  expect(dispatchSpy).toHaveBeenCalledWith(completeRedraw(playerId))
+})
+
+it('should be able to be played', () => {
+  const { getByText, dispatchSpy } = renderWithProviders(
+    <PlayCard card={mockCard} player={stackedPlayerMock} stack="hand" />,
+    {
+      preloadedState,
+    },
+  )
+
+  fireEvent.click(getByText(mockCard.name))
+
+  expect(dispatchSpy).toHaveBeenCalledWith(
+    playCard({ cardId: mockCard.id, playerId }),
+  )
 })
 
 it('should trigger attacking from bottom animation', async () => {
+  preloadedState.duel.attackingAgentId = mockCard.id
+
   const { getByTestId, dispatchSpy } = renderWithProviders(
-    <PlayCard card={mockCard} isAttacking playerId={playerId} />,
+    <PlayCard card={mockCard} player={stackedPlayerMock} stack="board" />,
     {
       preloadedState,
     },
@@ -113,8 +158,15 @@ it('should trigger attacking from bottom animation', async () => {
 })
 
 it('should trigger attacking from top animation', async () => {
+  preloadedState.duel.attackingAgentId = mockCard.id
+
   const { getByTestId, dispatchSpy } = renderWithProviders(
-    <PlayCard card={mockCard} isAttacking isOnTop playerId={playerId} />,
+    <PlayCard
+      card={mockCard}
+      isOnTop
+      player={stackedPlayerMock}
+      stack="board"
+    />,
     {
       preloadedState,
     },
@@ -130,19 +182,13 @@ it('should trigger attacking from top animation', async () => {
   expect(dispatchSpy).toHaveBeenCalledWith(moveToNextAttackingAgent())
 })
 
-it('should display no strength for an instant', () => {
-  const { getByRole } = renderWithProviders(
-    <PlayCard card={createDuelCard(BookOfAsh)} playerId={playerId} />,
-  )
-
-  expect(getByRole('heading', { level: 3 })).toHaveTextContent(
-    `${BookOfAsh.name}`,
-  )
-})
-
 it('should discard card if strength is 0 or below', () => {
   const { dispatchSpy } = renderWithProviders(
-    <PlayCard card={{ ...mockCard, strength: 0 }} playerId={playerId} />,
+    <PlayCard
+      card={{ ...mockCard, strength: 0 }}
+      player={stackedPlayerMock}
+      stack="board"
+    />,
     {
       preloadedState,
     },

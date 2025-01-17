@@ -1,8 +1,9 @@
 import { FC, useEffect } from 'react'
 
-import { useAppDispatch } from 'src/app/store'
+import { useAppDispatch, useAppSelector } from 'src/app/store'
+import { getPhase } from 'src/features/duel/selectors'
 import { completeRedraw, playCard } from 'src/features/duel/slice'
-import { DuelPhase, Player } from 'src/features/duel/types'
+import { Player } from 'src/features/duel/types'
 import {
   getPlayableCardIds,
   triggerPostCardPlay,
@@ -11,17 +12,14 @@ import { getRandomArrayItem } from 'src/shared/utils'
 
 interface BotControllerProps {
   player: Player
-  phase: DuelPhase
   isActive: boolean
 }
 
-export const BotController: FC<BotControllerProps> = ({
-  player,
-  phase,
-  isActive,
-}) => {
+export const BotController: FC<BotControllerProps> = ({ player, isActive }) => {
   const { id: playerId, cards } = player
+
   const dispatch = useAppDispatch()
+  const phase = useAppSelector(getPhase)
 
   useEffect(() => {
     if (phase === 'Redrawing') {

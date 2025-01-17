@@ -1,5 +1,6 @@
 import { fireEvent, waitFor } from '@testing-library/dom'
 import '@testing-library/jest-dom'
+import { RootState } from 'src/app/store'
 
 import PlayerField, {
   PlayerFieldProps,
@@ -12,10 +13,7 @@ import {
   putCardAtBottomOfDeck,
   setBrowsedStack,
 } from 'src/features/duel/slice'
-import {
-  stackedStateMock as preloadedState,
-  stackedPlayerMock,
-} from 'src/shared/__mocks__'
+import { stackedStateMock, stackedPlayerMock } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import {
   CARD_TEST_ID,
@@ -24,16 +22,21 @@ import {
   PLAYER_DISCARD_ID,
   PLAYER_HAND_ID,
 } from 'src/shared/testIds'
+import { deepClone } from 'src/shared/utils'
 
 const playerId = stackedPlayerMock.id
 
 const defaultProps: PlayerFieldProps = {
   player: stackedPlayerMock,
   isActive: true,
-  phase: 'Player Turn',
   isOnTop: false,
-  attackingAgentId: '',
 }
+
+let preloadedState: RootState
+
+beforeEach(() => {
+  preloadedState = deepClone(stackedStateMock)
+})
 
 describe('Bottom (Player) Side', () => {
   it('should show player info', () => {
@@ -95,26 +98,20 @@ describe('Bottom (Player) Side', () => {
     const deck = getByTestId(PLAYER_DECK_ID)
     const discard = getByTestId(PLAYER_DISCARD_ID)
 
-    if (deck) {
-      fireEvent.click(deck)
-    }
+    fireEvent.click(deck)
 
     expect(dispatchSpy).toHaveBeenCalledWith(setBrowsedStack('deck'))
 
-    if (discard) {
-      fireEvent.click(discard)
-    }
+    fireEvent.click(discard)
 
     expect(dispatchSpy).toHaveBeenCalledWith(setBrowsedStack('discard'))
   })
 
   it('should be able to redraw a card', () => {
+    preloadedState.duel.phase = 'Redrawing'
+
     const { getByText, dispatchSpy } = renderWithProviders(
-      <PlayerField
-        {...defaultProps}
-        player={stackedPlayerMock}
-        phase="Redrawing"
-      />,
+      <PlayerField {...defaultProps} player={stackedPlayerMock} />,
       {
         preloadedState,
       },
@@ -157,9 +154,10 @@ describe('Bottom (Player) Side', () => {
 
   it('should show agent attacking', async () => {
     const attackingAgentId = stackedPlayerMock.board[0]
+    preloadedState.duel.attackingAgentId = attackingAgentId
 
     const { getByTestId, dispatchSpy } = renderWithProviders(
-      <PlayerField {...defaultProps} attackingAgentId={attackingAgentId} />,
+      <PlayerField {...defaultProps} />,
       {
         preloadedState,
       },

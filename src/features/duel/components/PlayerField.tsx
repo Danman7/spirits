@@ -1,24 +1,9 @@
-import { FC } from 'react'
-
 import { useAppDispatch } from 'src/app/store'
-
 import { BotController } from 'src/features/duel/components/BotController'
 import { PlayCard } from 'src/features/duel/components/PlayCard'
-import {
-  completeRedraw,
-  drawCardFromDeck,
-  playCard,
-  putCardAtBottomOfDeck,
-  setBrowsedStack,
-} from 'src/features/duel/slice'
-import {
-  BrowsedStack,
-  DuelCard,
-  DuelPhase,
-  Player,
-} from 'src/features/duel/types'
-import { triggerPostCardPlay } from 'src/features/duel/utils'
-
+import { CARD_STACKS } from 'src/features/duel/constants'
+import { setBrowsedStack, setIsBrowsingStack } from 'src/features/duel/slice'
+import { CardStack, Player } from 'src/features/duel/types'
 import { AnimatedNumber } from 'src/shared/components/AnimatedNumber'
 import animations from 'src/shared/styles/animations.module.css'
 import components from 'src/shared/styles/components.module.css'
@@ -35,79 +20,71 @@ import {
   PLAYER_INFO_ID,
 } from 'src/shared/testIds'
 
-export interface PlayerFieldProps {
-  player: Player
-  phase: DuelPhase
-  isOnTop: boolean
-  isActive: boolean
-  attackingAgentId: string
+interface StackConfiguration {
+  className: string
+  testId: string
+  isSmall?: boolean
+  isFaceDown?: boolean
+  onClickStack?: React.MouseEventHandler<HTMLDivElement>
 }
 
-const PlayerField: FC<PlayerFieldProps> = ({
+export interface PlayerFieldProps {
+  player: Player
+  isOnTop: boolean
+  isActive: boolean
+}
+
+const PlayerField: React.FC<PlayerFieldProps> = ({
   player,
-  phase,
   isOnTop,
   isActive,
-  attackingAgentId,
 }) => {
-  const {
-    id,
-    name,
-    coins,
-    income,
-    cards,
-    deck,
-    hand,
-    board,
-    discard,
-    hasPerformedAction,
-    isBot,
-  } = player
+  const { name, coins, income, cards, isBot } = player
 
   const dispatch = useAppDispatch()
-
-  const onPlayCard = (card: DuelCard) => {
-    dispatch(playCard({ cardId: card.id, playerId: id }))
-
-    triggerPostCardPlay({
-      card,
-      playerId: id,
-      dispatch,
-    })
-  }
-
-  const onRedrawCard = (card: DuelCard) => {
-    dispatch(
-      putCardAtBottomOfDeck({
-        cardId: card.id,
-        playerId: id,
-      }),
-    )
-
-    dispatch(drawCardFromDeck(id))
-
-    dispatch(completeRedraw(id))
-  }
-
-  const getOnClickCard = () => {
-    if (
-      phase === 'Player Turn' &&
-      isActive &&
-      !isOnTop &&
-      !hasPerformedAction
-    ) {
-      return onPlayCard
-    }
-
-    if (phase === 'Redrawing' && !hasPerformedAction && !isOnTop) {
-      return onRedrawCard
-    }
-
-    return undefined
-  }
-
-  const openBrowseCardsModal = (stack: BrowsedStack) =>
+  const browseStack = (stack: CardStack) => {
     dispatch(setBrowsedStack(stack))
+    dispatch(setIsBrowsingStack(true))
+  }
+
+  const getStackConfiguration = (stack: CardStack): StackConfiguration => {
+    const stackConfigs: Record<CardStack, StackConfiguration> = {
+      board: {
+        testId: isOnTop ? OPPONENT_BOARD_ID : PLAYER_BOARD_ID,
+        className: isOnTop
+          ? components.topPlayerBoard
+          : components.bottomPlayerBoard,
+        isSmall: true,
+      },
+      deck: {
+        testId: isOnTop ? OPPONENT_DECK_ID : PLAYER_DECK_ID,
+        className: isOnTop
+          ? components.topPlayerDeck
+          : components.bottomPlayerDeck,
+        onClickStack: !isOnTop ? () => browseStack(stack) : undefined,
+        isFaceDown: true,
+        isSmall: true,
+      },
+      discard: {
+        testId: isOnTop ? OPPONENT_DISCARD_ID : PLAYER_DISCARD_ID,
+        className: isOnTop
+          ? components.topPlayerDiscard
+          : components.bottomPlayerDiscard,
+        onClickStack: !isOnTop ? () => browseStack(stack) : undefined,
+        isFaceDown: true,
+        isSmall: true,
+      },
+      hand: {
+        testId: isOnTop ? OPPONENT_HAND_ID : PLAYER_HAND_ID,
+        className: isOnTop
+          ? components.topPlayerHand
+          : components.bottomPlayerHand,
+        isFaceDown: isOnTop,
+      },
+    }
+
+    return stackConfigs[stack]
+  }
 
   return (
     <>
@@ -121,82 +98,34 @@ const PlayerField: FC<PlayerFieldProps> = ({
 
       <div
         className={
-          isOnTop ? components.topPlayerSide : components.bottomPlayerSide
+          isOnTop ? components.topPlayerField : components.bottomPlayerField
         }
       >
-        <div
-          data-testid={isOnTop ? OPPONENT_DISCARD_ID : PLAYER_DISCARD_ID}
-          style={!isOnTop ? { cursor: 'pointer' } : {}}
-          className={components.faceDownStack}
-          onClick={!isOnTop ? () => openBrowseCardsModal('discard') : undefined}
-        >
-          {discard.map((cardId) => (
-            <PlayCard
-              key={cardId}
-              playerId={id}
-              card={cards[cardId]}
-              isSmall
-              isFaceDown
-            />
-          ))}
-        </div>
+        {CARD_STACKS.map((stack) => {
+          const config = getStackConfiguration(stack)
 
-        <div
-          data-testid={isOnTop ? OPPONENT_HAND_ID : PLAYER_HAND_ID}
-          className={
-            isOnTop ? components.topPlayerHand : components.bottomPlayerHand
-          }
-        >
-          {hand.map((cardId) => (
-            <PlayCard
-              key={cardId}
-              playerId={id}
-              card={cards[cardId]}
-              onClickCard={getOnClickCard()}
-              isFaceDown={isOnTop}
-            />
-          ))}
-        </div>
-
-        <div
-          data-testid={isOnTop ? OPPONENT_DECK_ID : PLAYER_DECK_ID}
-          style={!isOnTop ? { cursor: 'pointer' } : {}}
-          className={components.faceDownStack}
-          onClick={!isOnTop ? () => openBrowseCardsModal('deck') : undefined}
-        >
-          {deck.map((cardId) => (
-            <PlayCard
-              key={cardId}
-              playerId={id}
-              card={cards[cardId]}
-              isSmall
-              isFaceDown
-            />
-          ))}
-        </div>
+          return (
+            <div
+              key={stack}
+              data-testid={config.testId}
+              className={config.className}
+              onClick={config.onClickStack}
+            >
+              {player[stack].map((cardId) => (
+                <PlayCard
+                  key={cardId}
+                  stack={stack}
+                  player={player}
+                  card={cards[cardId]}
+                  isOnTop={isOnTop}
+                />
+              ))}
+            </div>
+          )
+        })}
       </div>
 
-      <div
-        data-testid={isOnTop ? OPPONENT_BOARD_ID : PLAYER_BOARD_ID}
-        className={
-          isOnTop ? components.topPlayerBoard : components.bottomPlayerBoard
-        }
-      >
-        {board.map((cardId) => (
-          <PlayCard
-            key={cardId}
-            playerId={id}
-            card={cards[cardId]}
-            isSmall
-            isAttacking={attackingAgentId === cardId}
-            isOnTop={isOnTop}
-          />
-        ))}
-      </div>
-
-      {isBot ? (
-        <BotController player={player} phase={phase} isActive={isActive} />
-      ) : null}
+      {isBot ? <BotController player={player} isActive={isActive} /> : null}
     </>
   )
 }

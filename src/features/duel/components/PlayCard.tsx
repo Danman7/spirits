@@ -1,39 +1,44 @@
 import { motion } from 'motion/react'
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 
-import { useAppDispatch } from 'src/app/store'
-import { getFactionColor, joinCardCategories } from 'src/shared/utils'
+import { useAppDispatch, useAppSelector } from 'src/app/store'
+import {
+  getActivePlayerId,
+  getAttackingAgentId,
+  getPhase,
+} from 'src/features/duel/selectors'
 import {
   agentAttack,
+  completeRedraw,
   discardCard,
+  drawCardFromDeck,
   moveToNextAttackingAgent,
+  playCard,
+  putCardAtBottomOfDeck,
 } from 'src/features/duel/slice'
-import { DuelCard } from 'src/features/duel/types'
+import { CardStack, DuelCard, Player } from 'src/features/duel/types'
+import { triggerPostCardPlay } from 'src/features/duel/utils'
+import { getUserId } from 'src/features/user/selectors'
 import { ColoredNumber } from 'src/shared/components/ColoredNumber'
 import { TICK } from 'src/shared/constants'
 import { usePrevious } from 'src/shared/customHooks'
 import animations from 'src/shared/styles/animations.module.css'
 import components from 'src/shared/styles/components.module.css'
 import { CARD_TEST_ID } from 'src/shared/testIds'
+import { getFactionColor, joinCardCategories } from 'src/shared/utils'
 
 export interface PlayCardProps {
   card: DuelCard
-  playerId: string
-  isFaceDown?: boolean
-  isSmall?: boolean
-  isAttacking?: boolean
+  player: Player
+  stack: CardStack
   isOnTop?: boolean
-  onClickCard?: (card: DuelCard) => void
 }
 
 export const PlayCard: FC<PlayCardProps> = ({
   card,
-  playerId,
-  isSmall = false,
-  isFaceDown = false,
-  isAttacking = false,
+  player,
+  stack = 'hand',
   isOnTop = false,
-  onClickCard,
 }) => {
   const {
     id,
@@ -48,13 +53,68 @@ export const PlayCard: FC<PlayCardProps> = ({
     strength,
     type,
   } = card
+
+  const { id: playerId, hasPerformedAction } = player
+
   const dispatch = useAppDispatch()
+  const phase = useAppSelector(getPhase)
+  const activePlayerId = useAppSelector(getActivePlayerId)
+  const attackingAgentId = useAppSelector(getAttackingAgentId)
+  const userId = useAppSelector(getUserId)
+
+  const isFaceDown = isOnTop
+    ? ['deck', 'discard', 'hand'].includes(stack)
+    : ['deck', 'discard'].includes(stack)
+  const isSmall = ['deck', 'discard', 'board'].includes(stack)
+  const isUserActive = playerId === userId && playerId === activePlayerId
+  const isAttacking = id === attackingAgentId
+
   const prevStrength = usePrevious(strength)
   const prevIsFaceDown = usePrevious(isFaceDown)
+
   const [cardFaceAnimation, setCardFaceAnimation] = useState('')
   const [cardOutlineAnimation, setCardOutlineAnimation] = useState('')
   const [shouldShowFront, setShouldShowFront] = useState(!isFaceDown)
-  const onClick = onClickCard ? () => onClickCard(card) : undefined
+
+  const onClick = useMemo(() => {
+    if (stack === 'hand' && !hasPerformedAction && !isOnTop) {
+      if (phase === 'Player Turn' && isUserActive) {
+        return () => {
+          dispatch(playCard({ cardId: card.id, playerId }))
+
+          triggerPostCardPlay({
+            card,
+            playerId,
+            dispatch,
+          })
+        }
+      }
+
+      if (phase === 'Redrawing') {
+        return () => {
+          dispatch(
+            putCardAtBottomOfDeck({
+              cardId: card.id,
+              playerId,
+            }),
+          )
+          dispatch(drawCardFromDeck(playerId))
+          dispatch(completeRedraw(playerId))
+        }
+      }
+    }
+
+    return undefined
+  }, [
+    card,
+    stack,
+    isOnTop,
+    hasPerformedAction,
+    isUserActive,
+    phase,
+    playerId,
+    dispatch,
+  ])
 
   const onAnimationEnd = () => {
     // Move to next agent on end of attacking animation.
@@ -134,7 +194,7 @@ export const PlayCard: FC<PlayCardProps> = ({
         {/* Card Front */}
         {shouldShowFront ? (
           <div
-            className={`${components.cardFront}${onClickCard ? ` ${animations.activeCard}` : ''}${rank === 'unique' ? ` ${components.uniqueCard}` : ''}${cardFaceAnimation}`}
+            className={`${components.cardFront}${onClick ? ` ${animations.activeCard}` : ''}${rank === 'unique' ? ` ${components.uniqueCard}` : ''}${cardFaceAnimation}`}
           >
             <div
               className={components.cardHeader}

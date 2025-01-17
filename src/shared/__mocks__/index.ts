@@ -1,4 +1,11 @@
 import { RootState } from 'src/app/store'
+import { initialState as initialDuelState } from 'src/features/duel/slice'
+import { DuelState, Player } from 'src/features/duel/types'
+import {
+  normalizePlayerCards,
+  setupInitialDuelPlayerFromUser,
+} from 'src/features/duel/utils'
+import { initialState as initialUserState } from 'src/features/user/slice'
 import {
   AzaranTheCruel,
   BookOfAsh,
@@ -12,13 +19,6 @@ import {
   YoraSkull,
   Zombie,
 } from 'src/shared/CardBases'
-import { initialState as initialDuelState } from 'src/features/duel/slice'
-import { DuelState, Player } from 'src/features/duel/types'
-import {
-  normalizePlayerCards,
-  setupInitialDuelPlayerFromUser,
-} from 'src/features/duel/utils'
-import { initialState as initialUserState } from 'src/features/user/slice'
 import { Bot, User } from 'src/shared/types'
 
 export const playerId = 'player'

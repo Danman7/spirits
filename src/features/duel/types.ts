@@ -1,8 +1,8 @@
 import { PayloadAction } from '@reduxjs/toolkit'
+import { CARD_STACKS } from 'src/features/duel/constants'
+import { Bot, CardBase, User } from 'src/shared/types'
 
-import { User, CardBase, Bot } from 'src/shared/types'
-
-export type CardStack = 'deck' | 'hand' | 'board' | 'discard'
+export type CardStack = (typeof CARD_STACKS)[number]
 
 export interface PlayerStacks {
   deck: string[]
@@ -38,15 +38,14 @@ export type DuelPlayers = {
   [index: string]: Player
 }
 
-export type BrowsedStack = 'deck' | 'discard' | ''
-
 export interface DuelState {
   phase: DuelPhase
   players: DuelPlayers
   activePlayerId: string
   attackingAgentId: string
   victoriousPlayerId: string
-  browsedStack: BrowsedStack
+  browsedStack: CardStack
+  isBrowsingStack: boolean
 }
 
 export type PlayerCardAction = PayloadAction<{

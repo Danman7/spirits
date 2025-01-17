@@ -58,10 +58,6 @@ select {
   font: inherit;
 }
 
-p {
-  margin-bottom: 1em;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html:focus-within {
     scroll-behavior: auto;

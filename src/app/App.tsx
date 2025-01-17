@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { Board } from 'src/features/duel/components/Board'
 import { getActivePlayerId } from 'src/features/duel/selectors'
@@ -12,7 +11,6 @@ let hasLoadedUser = false
 
 const App = () => {
   const dispatch = useAppDispatch()
-
   const activePlayerId = useAppSelector(getActivePlayerId)
   const userId = useAppSelector(getUserId)
 

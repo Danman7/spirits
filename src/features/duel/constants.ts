@@ -1,4 +1,4 @@
-import { CardStack, Player } from 'src/features/duel/types'
+import { Player } from 'src/features/duel/types'
 
 export const EMPTY_PLAYER: Player = {
   id: '',
@@ -17,4 +17,4 @@ export const DUEL_STARTING_COINS = 30
 export const DUEL_INITIAL_CARDS_DRAWN = 4
 export const DUEL_INCOME_PER_TURN = 1
 
-export const CARD_STACKS: CardStack[] = ['deck', 'hand', 'board', 'discard']
+export const CARD_STACKS = ['board', 'discard', 'hand', 'deck'] as const

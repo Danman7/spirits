@@ -1,14 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { fn } from '@storybook/test'
 import { Provider } from 'react-redux'
-
-import { setupStore } from 'src/app/store'
-import { ElevatedAcolyte, Haunt } from 'src/shared/CardBases'
+import { RootState, setupStore } from 'src/app/store'
 import { PlayCard } from 'src/features/duel/components/PlayCard'
+import { CARD_STACKS } from 'src/features/duel/constants'
 import { createDuelCard } from 'src/features/duel/utils'
+import {
+  stackedOpponentMock,
+  stackedPlayerMock,
+  stackedStateMock,
+} from 'src/shared/__mocks__'
+import { ElevatedAcolyte, Haunt } from 'src/shared/CardBases'
+import { deepClone } from 'src/shared/utils'
 
 const mockCard = createDuelCard(Haunt)
-const playerId = 'player'
 
 const meta = {
   title: 'PlayCard',
@@ -25,11 +29,8 @@ const meta = {
   },
   args: {
     card: mockCard,
-    playerId,
-    onClickCard: undefined,
-    isFaceDown: false,
-    isSmall: false,
-    isAttacking: false,
+    player: stackedOpponentMock,
+    stack: 'hand',
     isOnTop: false,
   },
   argTypes: {
@@ -37,26 +38,24 @@ const meta = {
       description:
         'This is a whole DuelCard object that is used to control what and how the component displays. Changes in strength trigger boost and damage animations.',
     },
-    isFaceDown: {
-      description: 'Determines which side of the card is up.',
+    player: {
+      description: 'The player controlling the card.',
     },
-    isSmall: {
-      description: 'Controls weather to show on board smaller style.',
-    },
-    isAttacking: {
-      description: 'Controls weather to show attacking animation.',
+    stack: {
+      control: 'radio',
+      options: CARD_STACKS,
+      description:
+        'A callback function for the card’s onClick. If this is defined it also triggers the isActive card animation.',
     },
     isOnTop: {
       description: 'Controls the direction of the attacking animation.',
     },
-    onClickCard: {
-      control: 'radio',
-      options: [undefined, 'has onClickCard'],
-      description:
-        'A callback function for the card’s onClick. If this is defined it also triggers the isActive card animation.',
-    },
   },
-  decorators: [(story) => <Provider store={setupStore()}>{story()}</Provider>],
+  decorators: [
+    (story) => (
+      <Provider store={setupStore(stackedStateMock)}>{story()}</Provider>
+    ),
+  ],
 } satisfies Meta<typeof PlayCard>
 
 export default meta
@@ -66,22 +65,29 @@ export const Default: Story = {}
 
 export const SmallerVariant: Story = {
   args: {
-    playerId,
-    card: { ...mockCard },
-    isSmall: true,
+    stack: 'board',
   },
 }
 
 export const IsActive: Story = {
   args: {
-    playerId,
-    onClickCard: fn(),
+    player: stackedPlayerMock,
   },
+}
+
+export const IsAttacking: Story = {
+  decorators: [
+    (story) => {
+      const preloadedState: RootState = deepClone(stackedStateMock)
+      preloadedState.duel.attackingAgentId = mockCard.id
+
+      return <Provider store={setupStore(preloadedState)}>{story()}</Provider>
+    },
+  ],
 }
 
 export const Boosted: Story = {
   args: {
-    playerId,
     card: { ...mockCard, strength: mockCard.strength + 2 },
   },
 }
@@ -90,7 +96,6 @@ const mockAcolyte = createDuelCard(ElevatedAcolyte)
 
 export const Damaged: Story = {
   args: {
-    playerId,
     card: {
       ...mockAcolyte,
       strength: mockAcolyte.strength - 1,
@@ -100,8 +105,6 @@ export const Damaged: Story = {
 
 export const FaceDown: Story = {
   args: {
-    playerId,
-    onClickCard: undefined,
-    isFaceDown: true,
+    isOnTop: true,
   },
 }

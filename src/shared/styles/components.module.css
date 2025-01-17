@@ -1,3 +1,7 @@
+.cursor {
+  cursor: pointer;
+}
+
 .shadowedText {
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
 }
@@ -117,6 +121,10 @@
   overflow: auto;
   padding: var(--padding);
   flex-grow: 2;
+
+  p {
+    margin-bottom: 0.5em;
+  }
 }
 
 .cardFooter {
@@ -133,8 +141,36 @@
 }
 
 /* Board */
-.playerBoard {
+.board {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.playerField {
   height: 50vh;
+  display: grid;
+  grid-template-columns: 1fr 5fr 1fr;
+  grid-template-rows: auto;
+  gap: var(--padding);
+  justify-items: center;
+}
+
+.topPlayerField {
+  composes: playerField;
+  grid-template-areas:
+    'discard hand deck'
+    'board board board';
+}
+
+.bottomPlayerField {
+  composes: playerField;
+  grid-template-areas:
+    'board board board'
+    'discard hand deck';
+}
+
+.playerBoard {
+  grid-area: board;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -145,52 +181,90 @@
 .topPlayerBoard {
   composes: playerBoard;
   align-items: flex-end;
-  padding-bottom: 0.5em;
 }
 
 .bottomPlayerBoard {
   composes: playerBoard;
   align-items: flex-start;
-  padding-top: 0.5em;
 }
 
 .playerHand {
+  grid-area: hand;
   display: flex;
   flex-direction: row;
   justify-content: center;
   flex-grow: 2;
   z-index: 2;
+  height: 64px;
 
   .cardOutline {
     position: relative;
     margin: 0 -80px;
-    transition: bottom 0.2s;
-
-    &:hover {
-      bottom: 170px;
-      box-shadow: var(--box-shadow-3);
-    }
   }
 }
 
 .topPlayerHand {
   composes: playerHand;
-
-  .cardOutline {
-    top: -120px;
-  }
+  align-items: flex-end;
 }
 
 .bottomPlayerHand {
   composes: playerHand;
+  align-self: end;
 
   .cardOutline {
-    bottom: -120px;
+    transition: bottom 0.2s;
 
     &:hover {
+      bottom: calc(350px - 64px);
       z-index: 2;
+      box-shadow: var(--box-shadow-3);
     }
   }
+}
+
+.faceDownStack {
+  composes: smallOutline;
+  height: 25px;
+  display: flex;
+
+  .cardOutline {
+    position: absolute;
+  }
+}
+
+.deck {
+  composes: faceDownStack;
+  grid-area: deck;
+}
+
+.discard {
+  composes: faceDownStack;
+  grid-area: discard;
+}
+
+.topPlayerDeck {
+  composes: deck;
+  align-items: flex-end;
+}
+
+.topPlayerDiscard {
+  composes: discard;
+  align-items: flex-end;
+}
+
+.bottomPlayerDeck {
+  composes: deck;
+  align-self: end;
+  cursor: pointer;
+  position: relative;
+}
+
+.bottomPlayerDiscard {
+  composes: discard;
+  align-self: end;
+  cursor: pointer;
+  position: relative;
 }
 
 .box {
@@ -259,38 +333,9 @@
   bottom: 2em;
 }
 
-.faceDownStack {
-  composes: smallOutline;
-
-  .cardOutline {
-    position: absolute;
-  }
-}
-
 .inlineBlock {
   display: inline-block;
   position: relative;
-}
-
-.playerSide {
-  height: 50vh;
-  display: flex;
-  position: fixed;
-  left: var(--padding);
-  right: var(--padding);
-  z-index: 3;
-}
-
-.topPlayerSide {
-  composes: playerSide;
-  top: -170px;
-  align-items: flex-start;
-}
-
-.bottomPlayerSide {
-  composes: playerSide;
-  bottom: -170px;
-  align-items: flex-end;
 }
 
 .link {
@@ -319,6 +364,11 @@
   display: flex;
   flex-direction: column;
   width: 820px;
+  padding-bottom: 2em;
+
+  h1 {
+    padding-bottom: 1em;
+  }
 }
 
 .cardBrowseModalFooter {

@@ -7,7 +7,7 @@ import {
 import { invalidFirstPlayerIdError } from 'src/features/duel/messages'
 import {
   AddNewCardsAction,
-  BrowsedStack,
+  CardStack,
   DuelCard,
   DuelStartUsers,
   DuelState,
@@ -27,7 +27,8 @@ export const initialState: DuelState = {
   attackingAgentId: '',
   activePlayerId: '',
   victoriousPlayerId: '',
-  browsedStack: '',
+  browsedStack: 'deck',
+  isBrowsingStack: false,
 }
 
 export const duelSlice = createSlice({
@@ -242,8 +243,11 @@ export const duelSlice = createSlice({
       state.phase = 'Duel End'
       state.victoriousPlayerId = action.payload
     },
-    setBrowsedStack: (state, action: PayloadAction<BrowsedStack>) => {
+    setBrowsedStack: (state, action: PayloadAction<CardStack>) => {
       state.browsedStack = action.payload
+    },
+    setIsBrowsingStack: (state, action: PayloadAction<boolean>) => {
+      state.isBrowsingStack = action.payload
     },
   },
 })
@@ -267,6 +271,7 @@ export const {
   addNewCards,
   endDuel,
   setBrowsedStack,
+  setIsBrowsingStack,
 } = actions
 
 export type DuelActionTypes = `${typeof duelSlice.name}/${keyof typeof actions}`

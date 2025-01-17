@@ -11,12 +11,19 @@ import {
   playerFirst,
   victoryMessage,
 } from 'src/features/duel/messages'
-import { setBrowsedStack } from 'src/features/duel/slice'
-import { opponentMock, stackedStateMock, userMock } from 'src/shared/__mocks__'
+import { setIsBrowsingStack } from 'src/features/duel/slice'
+import {
+  opponentMock,
+  stackedPlayerMock,
+  stackedStateMock,
+  userMock,
+} from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { deepClone } from 'src/shared/utils'
 
 const defaultProps: DuelModalProps = {
+  phase: 'Player Turn',
+  player: stackedPlayerMock,
   playerNames: [userMock.name, opponentMock.name],
   isLoggedInPlayerActive: true,
   onDuelModalCloseEnd: jest.fn(),
@@ -29,11 +36,12 @@ beforeEach(() => {
 })
 
 it('should show player names and if player is first on initializing a duel and then hide itself', () => {
-  preloadedState.duel.phase = 'Initial Draw'
-
-  const { getByText } = renderWithProviders(<DuelModal {...defaultProps} />, {
-    preloadedState,
-  })
+  const { getByText } = renderWithProviders(
+    <DuelModal {...defaultProps} phase="Initial Draw" />,
+    {
+      preloadedState,
+    },
+  )
 
   expect(
     getByText(
@@ -44,10 +52,12 @@ it('should show player names and if player is first on initializing a duel and t
 })
 
 it('should show that opponent is first if they win coin toss', () => {
-  preloadedState.duel.phase = 'Initial Draw'
-
   const { getByText } = renderWithProviders(
-    <DuelModal {...defaultProps} isLoggedInPlayerActive={false} />,
+    <DuelModal
+      {...defaultProps}
+      phase="Initial Draw"
+      isLoggedInPlayerActive={false}
+    />,
     {
       preloadedState,
     },
@@ -57,12 +67,11 @@ it('should show that opponent is first if they win coin toss', () => {
 })
 
 it("should show the duel victor's name", () => {
-  preloadedState.duel.phase = 'Duel End'
-
   const { getByText } = renderWithProviders(
     <DuelModal
       {...defaultProps}
       victoriousPlayerName={defaultProps.playerNames[0]}
+      phase="Duel End"
     />,
     {
       preloadedState,
@@ -74,8 +83,8 @@ it("should show the duel victor's name", () => {
   ).toBeInTheDocument()
 })
 
-it("should be able to browse the player's deck", async () => {
-  preloadedState.duel.browsedStack = 'deck'
+it("should be able to browse the player's deck", () => {
+  preloadedState.duel.isBrowsingStack = true
 
   const { getByText, dispatchSpy } = renderWithProviders(
     <DuelModal {...defaultProps} />,
@@ -91,10 +100,11 @@ it("should be able to browse the player's deck", async () => {
 
   fireEvent.click(getByText(closeMessage))
 
-  expect(dispatchSpy).toHaveBeenCalledWith(setBrowsedStack(''))
+  expect(dispatchSpy).toHaveBeenCalledWith(setIsBrowsingStack(false))
 })
 
 it("should be able to browse the player's discard", async () => {
+  preloadedState.duel.isBrowsingStack = true
   preloadedState.duel.browsedStack = 'discard'
 
   const { getByText } = renderWithProviders(<DuelModal {...defaultProps} />, {

@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from 'react'
-
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { ActionPanel } from 'src/features/duel/components/ActionPanel'
 import { DuelModal } from 'src/features/duel/components/DuelModal'
@@ -17,8 +16,8 @@ import {
   playersDrawInitialCards,
 } from 'src/features/duel/slice'
 import { sortDuelPlayers } from 'src/features/duel/utils'
-
 import { getUserId } from 'src/features/user/selectors'
+import components from 'src/shared/styles/components.module.css'
 
 export const Board: FC = () => {
   const dispatch = useAppDispatch()
@@ -86,15 +85,13 @@ export const Board: FC = () => {
   }, [phase, activePlayerId, players])
 
   return (
-    <>
+    <div className={components.board}>
       {sortDuelPlayers(players, loggedInPlayerId).map((player, index) => (
         <PlayerField
           key={player.id}
           player={player}
           isOnTop={!index}
           isActive={player.id === activePlayerId}
-          phase={phase}
-          attackingAgentId={attackingAgentId}
         />
       ))}
 
@@ -104,6 +101,8 @@ export const Board: FC = () => {
         victoriousPlayerName={
           victoriousPlayerId && players[victoriousPlayerId].name
         }
+        phase={phase}
+        player={players[loggedInPlayerId]}
         onDuelModalCloseEnd={onDuelModalCloseEnd}
       />
 
@@ -113,6 +112,6 @@ export const Board: FC = () => {
         isLoggedInPlayerActive={isLoggedInPlayerActive}
         phase={phase}
       />
-    </>
+    </div>
   )
 }

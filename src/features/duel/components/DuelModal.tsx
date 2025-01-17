@@ -10,10 +10,10 @@ import {
 } from 'src/features/duel/messages'
 import {
   getBrowsedStack,
-  getPhase,
-  getUserPlayer,
+  getIsBrowsingStack,
 } from 'src/features/duel/selectors'
-import { setBrowsedStack } from 'src/features/duel/slice'
+import { setIsBrowsingStack } from 'src/features/duel/slice'
+import { DuelPhase, Player } from 'src/features/duel/types'
 import { Card } from 'src/shared/components/Card'
 import { Link } from 'src/shared/components/Link'
 import { Modal } from 'src/shared/components/Modal'
@@ -33,23 +33,26 @@ const flashModal = (setModalVisibility: (isOpen: boolean) => void) => {
 export interface DuelModalProps {
   isLoggedInPlayerActive: boolean
   playerNames: string[]
+  phase: DuelPhase
   victoriousPlayerName?: string
+  player: Player
   onDuelModalCloseEnd: () => void
 }
 
 export const DuelModal: FC<DuelModalProps> = ({
   isLoggedInPlayerActive,
   playerNames,
+  phase,
+  player,
   victoriousPlayerName,
   onDuelModalCloseEnd,
 }) => {
   const [isDuelModalOpen, setIsDuelModalOpen] = useState(false)
+
   const dispatch = useAppDispatch()
-  const player = useAppSelector(getUserPlayer)
+  const isBrowsingStack = useAppSelector(getIsBrowsingStack)
   const browsedStack = useAppSelector(getBrowsedStack)
-  const phase = useAppSelector(getPhase)
-  const previousBrowsedStack = usePrevious(browsedStack)
-  const { cards } = player
+  const previousIsBrowsingStack = usePrevious(isBrowsingStack)
 
   const duelModalContent: ReactNode = useMemo(() => {
     switch (phase) {
@@ -73,12 +76,12 @@ export const DuelModal: FC<DuelModalProps> = ({
             <h1>{`${browsingStackModalTitle} ${browsedStack}`} </h1>
             <div className={components.cardList}>
               {shuffleArray(player[browsedStack]).map((cardId) => (
-                <Card key={`${cardId}-browse`} card={cards[cardId]} />
+                <Card key={`${cardId}-browse`} card={player.cards[cardId]} />
               ))}
             </div>
 
             <div className={components.cardBrowseModalFooter}>
-              <Link onClick={() => dispatch(setBrowsedStack(''))}>
+              <Link onClick={() => dispatch(setIsBrowsingStack(false))}>
                 {closeMessage}
               </Link>
             </div>
@@ -88,7 +91,6 @@ export const DuelModal: FC<DuelModalProps> = ({
     }
   }, [
     browsedStack,
-    cards,
     isLoggedInPlayerActive,
     phase,
     player,
@@ -113,13 +115,13 @@ export const DuelModal: FC<DuelModalProps> = ({
   // Modal visibility based on browsed card stack
   useEffect(() => {
     if (
-      browsedStack ||
-      (previousBrowsedStack !== undefined &&
-        previousBrowsedStack !== browsedStack)
+      (previousIsBrowsingStack === undefined && isBrowsingStack) ||
+      (previousIsBrowsingStack !== undefined &&
+        previousIsBrowsingStack !== isBrowsingStack)
     ) {
-      setIsDuelModalOpen(!!browsedStack)
+      setIsDuelModalOpen(isBrowsingStack)
     }
-  }, [browsedStack, previousBrowsedStack])
+  }, [previousIsBrowsingStack, isBrowsingStack])
 
   return (
     <Modal isOpen={isDuelModalOpen} onClosingComplete={onDuelModalCloseEnd}>
