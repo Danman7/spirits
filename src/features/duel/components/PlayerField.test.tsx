@@ -1,7 +1,6 @@
 import { fireEvent, waitFor } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 import { RootState } from 'src/app/store'
-
 import PlayerField, {
   PlayerFieldProps,
 } from 'src/features/duel/components/PlayerField'
@@ -13,10 +12,18 @@ import {
   putCardAtBottomOfDeck,
   setBrowsedStack,
 } from 'src/features/duel/slice'
-import { stackedStateMock, stackedPlayerMock } from 'src/shared/__mocks__'
+import {
+  playerId,
+  stackedPlayerMock,
+  stackedStateMock,
+} from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import {
   CARD_TEST_ID,
+  OPPONENT_BOARD_ID,
+  OPPONENT_DECK_ID,
+  OPPONENT_DISCARD_ID,
+  OPPONENT_HAND_ID,
   PLAYER_BOARD_ID,
   PLAYER_DECK_ID,
   PLAYER_DISCARD_ID,
@@ -24,11 +31,8 @@ import {
 } from 'src/shared/testIds'
 import { deepClone } from 'src/shared/utils'
 
-const playerId = stackedPlayerMock.id
-
 const defaultProps: PlayerFieldProps = {
-  player: stackedPlayerMock,
-  isActive: true,
+  playerId,
   isOnTop: false,
 }
 
@@ -54,7 +58,7 @@ describe('Bottom (Player) Side', () => {
 
   it('should show player stacks', () => {
     const { getByText, queryByText, getByTestId } = renderWithProviders(
-      <PlayerField {...defaultProps} player={stackedPlayerMock} />,
+      <PlayerField {...defaultProps} />,
       {
         preloadedState,
       },
@@ -89,7 +93,7 @@ describe('Bottom (Player) Side', () => {
 
   it('should be able to browse deck and discard stacks', () => {
     const { getByTestId, dispatchSpy } = renderWithProviders(
-      <PlayerField {...defaultProps} player={stackedPlayerMock} />,
+      <PlayerField {...defaultProps} />,
       {
         preloadedState,
       },
@@ -111,7 +115,7 @@ describe('Bottom (Player) Side', () => {
     preloadedState.duel.phase = 'Redrawing'
 
     const { getByText, dispatchSpy } = renderWithProviders(
-      <PlayerField {...defaultProps} player={stackedPlayerMock} />,
+      <PlayerField {...defaultProps} />,
       {
         preloadedState,
       },
@@ -173,11 +177,24 @@ describe('Bottom (Player) Side', () => {
 
 describe('Top (Opponent) Side', () => {
   it('should show opponent stacks', () => {
-    const { getByText, queryByText } = renderWithProviders(
+    const { getByText, queryByText, getByTestId } = renderWithProviders(
       <PlayerField {...defaultProps} isOnTop />,
       {
         preloadedState,
       },
+    )
+
+    expect(getByTestId(OPPONENT_DECK_ID)?.children).toHaveLength(
+      stackedPlayerMock.deck.length,
+    )
+    expect(getByTestId(OPPONENT_HAND_ID)?.children).toHaveLength(
+      stackedPlayerMock.hand.length,
+    )
+    expect(getByTestId(OPPONENT_BOARD_ID)?.children).toHaveLength(
+      stackedPlayerMock.board.length,
+    )
+    expect(getByTestId(OPPONENT_DISCARD_ID)?.children).toHaveLength(
+      stackedPlayerMock.discard.length,
     )
 
     expect(

@@ -21,13 +21,14 @@ import components from 'src/shared/styles/components.module.css'
 
 export const Board: FC = () => {
   const dispatch = useAppDispatch()
-  const [isActionPanelOpen, setIsActionPanelOpen] = useState(false)
   const players = useAppSelector(getPlayers)
   const phase = useAppSelector(getPhase)
   const loggedInPlayerId = useAppSelector(getUserId)
   const activePlayerId = useAppSelector(getActivePlayerId)
   const attackingAgentId = useAppSelector(getAttackingAgentId)
   const victoriousPlayerId = useAppSelector(getVictoriousPlayerId)
+
+  const [isActionPanelOpen, setIsActionPanelOpen] = useState(false)
   const loggedInPlayer = players[loggedInPlayerId]
   const isLoggedInPlayerActive = loggedInPlayerId === activePlayerId
 
@@ -86,13 +87,8 @@ export const Board: FC = () => {
 
   return (
     <div className={components.board}>
-      {sortDuelPlayers(players, loggedInPlayerId).map((player, index) => (
-        <PlayerField
-          key={player.id}
-          player={player}
-          isOnTop={!index}
-          isActive={player.id === activePlayerId}
-        />
+      {sortDuelPlayers(players, loggedInPlayerId).map(({ id }, index) => (
+        <PlayerField key={id} playerId={id} isOnTop={!index} />
       ))}
 
       <DuelModal
