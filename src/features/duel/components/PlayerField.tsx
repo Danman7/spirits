@@ -1,10 +1,10 @@
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { BotController } from 'src/features/duel/components/BotController'
-import { PlayCard } from 'src/features/duel/components/PlayCard'
+import { CardStackList } from 'src/features/duel/components/CardStackList'
 import { CARD_STACKS } from 'src/features/duel/constants'
 import { getActivePlayerId, getPlayers } from 'src/features/duel/selectors'
 import { setBrowsedStack, setIsBrowsingStack } from 'src/features/duel/slice'
-import { CardStack } from 'src/features/duel/types'
+import { CardStack, StackConfiguration } from 'src/features/duel/types'
 import { AnimatedNumber } from 'src/shared/components/AnimatedNumber'
 import animations from 'src/shared/styles/animations.module.css'
 import components from 'src/shared/styles/components.module.css'
@@ -20,12 +20,6 @@ import {
   PLAYER_HAND_ID,
   PLAYER_INFO_ID,
 } from 'src/shared/testIds'
-
-interface StackConfiguration {
-  className: string
-  testId: string
-  onClickStack?: React.MouseEventHandler<HTMLDivElement>
-}
 
 const getStackConfiguration = (
   stack: CardStack,
@@ -75,7 +69,7 @@ const PlayerField: React.FC<PlayerFieldProps> = ({ playerId, isOnTop }) => {
   const activePlayerId = useAppSelector(getActivePlayerId)
 
   const player = players[playerId]
-  const { id, name, coins, income, cards, isBot } = player
+  const { id, name, coins, income, isBot } = player
   const isActive = playerId === activePlayerId
 
   const browseStack = (stack: CardStack) => {
@@ -84,7 +78,11 @@ const PlayerField: React.FC<PlayerFieldProps> = ({ playerId, isOnTop }) => {
   }
 
   return (
-    <>
+    <div
+      className={
+        isOnTop ? components.topPlayerField : components.bottomPlayerField
+      }
+    >
       <h2
         data-testid={isOnTop ? OPPONENT_INFO_ID : PLAYER_INFO_ID}
         className={`${isOnTop ? components.topPlayerInfo : components.bottomPlayerInfo}${isActive ? ` ${components.activePlayerInfo} ${animations.pop}` : ''}`}
@@ -93,37 +91,17 @@ const PlayerField: React.FC<PlayerFieldProps> = ({ playerId, isOnTop }) => {
         {income ? <span> (+{income})</span> : null}
       </h2>
 
-      <div
-        className={
-          isOnTop ? components.topPlayerField : components.bottomPlayerField
-        }
-      >
-        {CARD_STACKS.map((stack) => {
-          const config = getStackConfiguration(stack, isOnTop, browseStack)
-
-          return (
-            <div
-              key={stack}
-              data-testid={config.testId}
-              className={config.className}
-              onClick={config.onClickStack}
-            >
-              {player[stack].map((cardId) => (
-                <PlayCard
-                  key={cardId}
-                  stack={stack}
-                  player={player}
-                  card={cards[cardId]}
-                  isOnTop={isOnTop}
-                />
-              ))}
-            </div>
-          )
-        })}
-      </div>
+      {CARD_STACKS.map((stack) => (
+        <CardStackList
+          config={getStackConfiguration(stack, isOnTop, browseStack)}
+          stack={stack}
+          player={player}
+          isOnTop={isOnTop}
+        />
+      ))}
 
       {isBot ? <BotController playerId={id} /> : null}
-    </>
+    </div>
   )
 }
 

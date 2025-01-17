@@ -73,3 +73,9 @@ export interface DuelCard extends CardBase {
 export type DuelUser = User | Bot
 
 export type DuelStartUsers = [DuelUser, DuelUser]
+
+export interface StackConfiguration {
+  className: string
+  testId: string
+  onClickStack?: React.MouseEventHandler<HTMLDivElement>
+}

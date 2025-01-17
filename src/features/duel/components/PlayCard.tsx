@@ -1,6 +1,5 @@
 import { motion } from 'motion/react'
 import { FC, useEffect, useMemo, useState } from 'react'
-
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import {
   getActivePlayerId,
@@ -202,9 +201,9 @@ export const PlayCard: FC<PlayCardProps> = ({
             >
               <h3 className={components.cardTitle}>
                 {name}
-                {!!strength && (
+                {strength ? (
                   <ColoredNumber current={strength} base={base.strength} />
-                )}
+                ) : null}
               </h3>
 
               <small>{joinCardCategories(categories)}</small>
