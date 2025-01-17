@@ -115,9 +115,8 @@ export const DuelModal: FC<DuelModalProps> = ({
   // Modal visibility based on browsed card stack
   useEffect(() => {
     if (
-      (previousIsBrowsingStack === undefined && isBrowsingStack) ||
-      (previousIsBrowsingStack !== undefined &&
-        previousIsBrowsingStack !== isBrowsingStack)
+      !!previousIsBrowsingStack ||
+      previousIsBrowsingStack !== isBrowsingStack
     ) {
       setIsDuelModalOpen(isBrowsingStack)
     }

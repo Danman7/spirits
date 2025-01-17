@@ -93,6 +93,7 @@ const PlayerField: React.FC<PlayerFieldProps> = ({ playerId, isOnTop }) => {
 
       {CARD_STACKS.map((stack) => (
         <CardStackList
+          key={`${id}-${stack}`}
           config={getStackConfiguration(stack, isOnTop, browseStack)}
           stack={stack}
           player={player}

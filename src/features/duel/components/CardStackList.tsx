@@ -16,7 +16,6 @@ export const CardStackList: FC<CardStackListProps> = ({
   isOnTop,
 }) => (
   <div
-    key={stack}
     data-testid={config.testId}
     className={config.className}
     onClick={config.onClickStack}
