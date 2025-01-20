@@ -78,7 +78,7 @@ export const PlayCard: FC<PlayCardProps> = ({
     if (stack === 'hand' && !hasPerformedAction && !isOnTop) {
       if (phase === 'Player Turn' && isUserActive && cost <= coins) {
         return () => {
-          dispatch(playCard({ cardId: card.id, playerId }))
+          dispatch(playCard({ cardId: card.id, playerId, shouldPay: true }))
 
           triggerPostCardPlay({
             card,

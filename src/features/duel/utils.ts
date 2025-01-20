@@ -2,12 +2,7 @@ import { Action } from '@reduxjs/toolkit'
 import { ListenerApi } from 'src/app/listenerMiddleware'
 import { AppDispatch } from 'src/app/store'
 import { CARD_STACKS, DUEL_STARTING_COINS } from 'src/features/duel/constants'
-import {
-  discardCard,
-  moveCardToBoard,
-  playCard,
-  resolveTurn,
-} from 'src/features/duel/slice'
+import { discardCard, playCard, resolveTurn } from 'src/features/duel/slice'
 import {
   CardStack,
   DuelCard,
@@ -212,17 +207,24 @@ export const getPlayAllCopiesEffect = (
 ) => {
   if (playCard.match(action)) {
     const { players } = listenerApi.getState().duel
-    const { playerId, cardId: movedCardId } = action.payload
+    const { playerId, cardId: playedCardId } = action.payload
 
     const player = players[playerId]
-    const { cards, board } = player
+    const { cards, board, discard } = player
 
+    // Move each copy to board if it is not on board or in discard
     Object.values(cards).forEach(({ id, name }) => {
-      if (name === base.name && id !== movedCardId && !board.includes(id)) {
+      if (
+        name === base.name &&
+        id !== playedCardId &&
+        !board.includes(id) &&
+        !discard.includes(id)
+      ) {
         listenerApi.dispatch(
-          moveCardToBoard({
+          playCard({
             cardId: id,
             playerId,
+            shouldPay: false,
           }),
         )
       }

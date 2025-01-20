@@ -4,8 +4,7 @@ import {
   ListenerEffectAPI,
 } from '@reduxjs/toolkit'
 import { AppDispatch, RootState } from 'src/app/store'
-import { PlayAllHammeriteNoviceCopies } from 'src/features/duel/effects'
-import { HammeriteNoviceOnPlay } from 'src/features/duel/predicates'
+import { Effects, Predicates } from 'src/features/duel'
 
 export type Predicate = (
   action: Action,
@@ -25,6 +24,6 @@ const startAppListening = listenerMiddleware.startListening.withTypes<
 >()
 
 startAppListening({
-  predicate: HammeriteNoviceOnPlay,
-  effect: PlayAllHammeriteNoviceCopies,
+  predicate: Predicates.HammeriteNoviceOnPlay,
+  effect: Effects.PlayAllHammeriteNoviceCopies,
 })

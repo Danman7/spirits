@@ -1,4 +1,3 @@
-import { HammeriteNovice, TempleGuard } from 'src/shared/CardBases'
 import {
   DUEL_INCOME_PER_TURN,
   DUEL_INITIAL_CARDS_DRAWN,
@@ -12,7 +11,6 @@ import {
   drawCardFromDeck,
   duelReducer,
   initialState,
-  moveCardToBoard,
   moveToNextAttackingAgent,
   moveToNextTurn,
   playCard,
@@ -41,6 +39,7 @@ import {
   stackedPlayerMock,
   userMock,
 } from 'src/shared/__mocks__'
+import { HammeriteNovice, TempleGuard } from 'src/shared/CardBases'
 import { deepClone } from 'src/shared/utils'
 
 const users: DuelStartUsers = [userMock, opponentMock]
@@ -331,6 +330,7 @@ describe('Playing turns', () => {
         playCard({
           cardId,
           playerId,
+          shouldPay: true,
         }),
       )
       const playingPlayer = state.players[playerId]
@@ -363,9 +363,10 @@ describe('Playing turns', () => {
       const mockPlayingPlayer = mockDuelState.players[playerId]
       const state = duelReducer(
         mockDuelState,
-        moveCardToBoard({
+        playCard({
           cardId,
           playerId,
+          shouldPay: false,
         }),
       )
       const playingPlayer = state.players[playerId]

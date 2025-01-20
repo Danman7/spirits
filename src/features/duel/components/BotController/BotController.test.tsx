@@ -41,6 +41,7 @@ it('should play a card within budget on turn', () => {
     playCard({
       cardId,
       playerId,
+      shouldPay: true,
     }),
   )
   expect(dispatchSpy).toHaveBeenCalledWith(resolveTurn())

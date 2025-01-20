@@ -48,10 +48,18 @@ export interface DuelState {
   isBrowsingStack: boolean
 }
 
-export type PlayerCardAction = PayloadAction<{
+interface CardActionPayload {
   cardId: string
   playerId: string
-}>
+}
+
+export type PlayerCardAction = PayloadAction<CardActionPayload>
+
+export type PlayCardAction = PayloadAction<
+  CardActionPayload & {
+    shouldPay: boolean
+  }
+>
 
 export type AddNewCardsAction = PayloadAction<{
   playerId: string

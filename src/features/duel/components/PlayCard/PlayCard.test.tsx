@@ -132,7 +132,7 @@ it('should be able to be played if within budget', () => {
   fireEvent.click(getByText(mockCard.name))
 
   expect(dispatchSpy).toHaveBeenCalledWith(
-    playCard({ cardId: mockCard.id, playerId }),
+    playCard({ cardId: mockCard.id, playerId, shouldPay: true }),
   )
 })
 

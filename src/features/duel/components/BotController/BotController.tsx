@@ -45,6 +45,7 @@ export const BotController: FC<BotControllerProps> = ({ playerId }) => {
           playCard({
             cardId,
             playerId,
+            shouldPay: true,
           }),
         )
 

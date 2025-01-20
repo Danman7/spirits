@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/dom'
+import { fireEvent, within } from '@testing-library/dom'
 import { RootState } from 'src/app/store'
 import { Board } from 'src/features/duel/components'
 import { normalizePlayerCards } from 'src/features/duel/utils'
@@ -9,6 +9,7 @@ import {
 } from 'src/shared/__mocks__'
 import { HammeriteNovice, TempleGuard } from 'src/shared/CardBases'
 import { renderWithProviders } from 'src/shared/rtlRender'
+import { PLAYER_BOARD_ID } from 'src/shared/testIds'
 import { deepClone } from 'src/shared/utils'
 
 let preloadedState: RootState
@@ -28,15 +29,15 @@ describe(HammeriteNovice.name, () => {
       }),
     }
 
-    const { getByText, getAllByText } = renderWithProviders(<Board />, {
+    const { getByText, getByTestId } = renderWithProviders(<Board />, {
       preloadedState,
     })
 
-    expect(getAllByText(HammeriteNovice.name)).toHaveLength(1)
-
     fireEvent.click(getByText(HammeriteNovice.name))
 
-    expect(getAllByText(HammeriteNovice.name)).toHaveLength(2)
+    expect(
+      within(getByTestId(PLAYER_BOARD_ID)).getAllByText(HammeriteNovice.name),
+    ).toHaveLength(2)
   })
 
   it('should not play any copies if there is no Hammerite is in play', () => {
@@ -45,18 +46,37 @@ describe(HammeriteNovice.name, () => {
       ...normalizePlayerCards({
         deck: [HammeriteNovice],
         hand: [HammeriteNovice],
-        board: [],
       }),
     }
 
-    const { getByText, getAllByText } = renderWithProviders(<Board />, {
+    const { getByText, getByTestId } = renderWithProviders(<Board />, {
       preloadedState,
     })
 
-    expect(getAllByText(HammeriteNovice.name)).toHaveLength(1)
+    fireEvent.click(getByText(HammeriteNovice.name))
+
+    expect(
+      within(getByTestId(PLAYER_BOARD_ID)).getAllByText(HammeriteNovice.name),
+    ).toHaveLength(1)
+  })
+
+  it('should not play copies from discard or opponent', () => {
+    preloadedState.duel.players[playerId] = {
+      ...initialPlayerMock,
+      ...normalizePlayerCards({
+        discard: [HammeriteNovice],
+        hand: [HammeriteNovice],
+      }),
+    }
+
+    const { getByText, getByTestId } = renderWithProviders(<Board />, {
+      preloadedState,
+    })
 
     fireEvent.click(getByText(HammeriteNovice.name))
 
-    expect(getAllByText(HammeriteNovice.name)).toHaveLength(1)
+    expect(
+      within(getByTestId(PLAYER_BOARD_ID)).getAllByText(HammeriteNovice.name),
+    ).toHaveLength(1)
   })
 })

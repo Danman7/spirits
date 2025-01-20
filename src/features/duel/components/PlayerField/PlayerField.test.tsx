@@ -145,7 +145,7 @@ describe('Bottom (Player) Side', () => {
     fireEvent.click(getByText(playedCard.name))
 
     expect(dispatchSpy).toHaveBeenCalledWith(
-      playCard({ cardId: playedCard.id, playerId }),
+      playCard({ cardId: playedCard.id, playerId, shouldPay: true }),
     )
   })
 

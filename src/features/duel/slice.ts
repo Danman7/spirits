@@ -11,6 +11,7 @@ import {
   DuelCard,
   DuelStartUsers,
   DuelState,
+  PlayCardAction,
   PlayerCardAction,
 } from 'src/features/duel/types'
 import {
@@ -171,8 +172,8 @@ export const duelSlice = createSlice({
         activePlayer.board[currentAttackingAgentIndex + 1] ||
         initialState.attackingAgentId
     },
-    playCard: (state, action: PlayerCardAction) => {
-      const { cardId: playedCardId, playerId } = action.payload
+    playCard: (state, action: PlayCardAction) => {
+      const { cardId: playedCardId, playerId, shouldPay } = action.payload
       const { players } = state
       const playedCard = players[playerId].cards[playedCardId]
 
@@ -183,18 +184,11 @@ export const duelSlice = createSlice({
         to: 'board',
       })
 
-      players[playerId].coins = players[playerId].coins - playedCard.cost
       players[playerId].hasPerformedAction = true
-    },
-    moveCardToBoard: (state, action: PlayerCardAction) => {
-      const { cardId: playedCardId, playerId } = action.payload
 
-      moveCardBetweenStacks({
-        movedCardId: playedCardId,
-        playerId,
-        state,
-        to: 'board',
-      })
+      if (shouldPay) {
+        players[playerId].coins = players[playerId].coins - playedCard.cost
+      }
     },
     updateCard: (
       state,
@@ -263,7 +257,6 @@ export const {
   resolveTurn,
   playCard,
   putCardAtBottomOfDeck,
-  moveCardToBoard,
   updateCard,
   agentAttack,
   moveToNextAttackingAgent,
