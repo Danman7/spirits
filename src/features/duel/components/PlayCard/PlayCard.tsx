@@ -18,13 +18,12 @@ import {
 import { CardStack, DuelCard, Player } from 'src/features/duel/types'
 import { triggerPostCardPlay } from 'src/features/duel/utils'
 import { getUserId } from 'src/features/user/selectors'
-import { ColoredNumber } from 'src/shared/components'
+import { CardContent, CardFooter, CardHeader } from 'src/shared/components'
 import { TICK } from 'src/shared/constants'
 import { usePrevious } from 'src/shared/customHooks'
 import animations from 'src/shared/styles/animations.module.css'
 import components from 'src/shared/styles/components.module.css'
 import { CARD_TEST_ID } from 'src/shared/testIds'
-import { getFactionColor, joinCardCategories } from 'src/shared/utils'
 
 interface PlayCardProps {
   card: DuelCard
@@ -197,29 +196,17 @@ export const PlayCard: FC<PlayCardProps> = ({
           <div
             className={`${components.cardFront}${onClick ? ` ${animations.activeCard}` : ''}${rank === 'unique' ? ` ${components.uniqueCard}` : ''}${cardFaceAnimation}`}
           >
-            <div
-              className={components.cardHeader}
-              style={{ background: getFactionColor(factions) }}
-            >
-              <h3 className={components.cardTitle}>
-                {name}
-                {strength ? (
-                  <ColoredNumber current={strength} base={base.strength} />
-                ) : null}
-              </h3>
+            <CardHeader
+              factions={factions}
+              categories={categories}
+              name={name}
+              strength={strength}
+              baseStrength={base.strength}
+            />
 
-              <small>{joinCardCategories(categories)}</small>
-            </div>
-            <div className={components.cardContent}>
-              {description.map((paragraph, index) => (
-                <p key={`${id}-description-${index}`}>{paragraph}</p>
-              ))}
+            <CardContent description={description} flavor={flavor} />
 
-              <div className={components.cardFlavor}>
-                <small>{flavor}</small>
-              </div>
-            </div>
-            <div className={components.cardFooter}>Cost: {cost}</div>
+            <CardFooter cost={cost} />
           </div>
         ) : null}
 

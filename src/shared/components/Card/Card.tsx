@@ -1,11 +1,11 @@
 import { motion } from 'motion/react'
 import { FC } from 'react'
+import { CardContent, CardFooter, CardHeader } from 'src/shared/components'
 import components from 'src/shared/styles/components.module.css'
 import { CARD_TEST_ID } from 'src/shared/testIds'
 import { CardBase } from 'src/shared/types'
-import { getFactionColor, joinCardCategories } from 'src/shared/utils'
 
-export interface CardProps {
+interface CardProps {
   card: CardBase
 }
 
@@ -30,27 +30,16 @@ export const Card: FC<CardProps> = ({ card }) => {
         <div
           className={`${components.cardFront}${rank === 'unique' ? ` ${components.uniqueCard}` : ''}`}
         >
-          <div
-            className={components.cardHeader}
-            style={{ background: getFactionColor(factions) }}
-          >
-            <h3 className={components.cardTitle}>
-              {name}
-              <span>{strength}</span>
-            </h3>
+          <CardHeader
+            factions={factions}
+            categories={categories}
+            name={name}
+            strength={strength}
+          />
 
-            <small>{joinCardCategories(categories)}</small>
-          </div>
-          <div className={components.cardContent}>
-            {description.map((paragraph, index) => (
-              <p key={`description-${index}`}>{paragraph}</p>
-            ))}
+          <CardContent description={description} flavor={flavor} />
 
-            <div className={components.cardFlavor}>
-              <small>{flavor}</small>
-            </div>
-          </div>
-          <div className={components.cardFooter}>Cost: {cost}</div>
+          <CardFooter cost={cost} />
         </div>
       </div>
     </motion.div>
