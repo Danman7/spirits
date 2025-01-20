@@ -1,8 +1,10 @@
 import { FC, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
-import { ActionPanel } from 'src/features/duel/components/ActionPanel'
-import { DuelModal } from 'src/features/duel/components/DuelModal'
-import PlayerField from 'src/features/duel/components/PlayerField'
+import {
+  ActionPanel,
+  DuelModal,
+  PlayerField,
+} from 'src/features/duel/components'
 import {
   getAttackingAgentId,
   getPhase,

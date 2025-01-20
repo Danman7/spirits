@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
-import { Board } from 'src/features/duel/components/Board'
+import { Board } from 'src/features/duel/components'
 import { getActivePlayerId } from 'src/features/duel/selectors'
 import { startDuel } from 'src/features/duel/slice'
 import { getUserId } from 'src/features/user/selectors'

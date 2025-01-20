@@ -1,7 +1,7 @@
 import { FC, ReactNode, useEffect, useState } from 'react'
 
 import { useAppDispatch, useAppSelector } from 'src/app/store'
-import LoadingMessage from 'src/features/duel/components/LoadingMessage'
+import LoadingMessage from 'src/shared/components/LoadingMessage'
 import {
   opponentDecidingMessage,
   opponentTurnTitle,

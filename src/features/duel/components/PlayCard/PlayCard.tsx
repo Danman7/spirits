@@ -26,7 +26,7 @@ import components from 'src/shared/styles/components.module.css'
 import { CARD_TEST_ID } from 'src/shared/testIds'
 import { getFactionColor, joinCardCategories } from 'src/shared/utils'
 
-export interface PlayCardProps {
+interface PlayCardProps {
   card: DuelCard
   player: Player
   stack: CardStack

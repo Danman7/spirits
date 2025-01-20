@@ -1,5 +1,4 @@
 import { FC, useEffect } from 'react'
-
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import {
   getActivePlayerId,
@@ -13,7 +12,7 @@ import {
 } from 'src/features/duel/utils'
 import { getRandomArrayItem } from 'src/shared/utils'
 
-export interface BotControllerProps {
+interface BotControllerProps {
   playerId: string
 }
 

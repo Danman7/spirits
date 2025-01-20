@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Provider } from 'react-redux'
 import { RootState, setupStore } from 'src/app/store'
-import { PlayCard } from 'src/features/duel/components/PlayCard'
+import { PlayCard } from 'src/features/duel/components/'
 import { CARD_STACKS } from 'src/features/duel/constants'
 import { createDuelCard } from 'src/features/duel/utils'
 import {

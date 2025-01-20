@@ -1,9 +1,7 @@
 import { fireEvent, waitFor } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 import { RootState } from 'src/app/store'
-import PlayerField, {
-  PlayerFieldProps,
-} from 'src/features/duel/components/PlayerField'
+import { PlayerField } from 'src/features/duel/components'
 import {
   completeRedraw,
   drawCardFromDeck,
@@ -31,11 +29,6 @@ import {
 } from 'src/shared/testIds'
 import { deepClone } from 'src/shared/utils'
 
-const defaultProps: PlayerFieldProps = {
-  playerId,
-  isOnTop: false,
-}
-
 let preloadedState: RootState
 
 beforeEach(() => {
@@ -45,7 +38,7 @@ beforeEach(() => {
 describe('Bottom (Player) Side', () => {
   it('should show player info', () => {
     const { getByRole } = renderWithProviders(
-      <PlayerField {...defaultProps} />,
+      <PlayerField playerId={playerId} />,
       {
         preloadedState,
       },
@@ -58,7 +51,7 @@ describe('Bottom (Player) Side', () => {
 
   it('should show player stacks', () => {
     const { getByText, queryByText, getByTestId } = renderWithProviders(
-      <PlayerField {...defaultProps} />,
+      <PlayerField playerId={playerId} />,
       {
         preloadedState,
       },
@@ -93,7 +86,7 @@ describe('Bottom (Player) Side', () => {
 
   it('should be able to browse deck and discard stacks', () => {
     const { getByTestId, dispatchSpy } = renderWithProviders(
-      <PlayerField {...defaultProps} />,
+      <PlayerField playerId={playerId} />,
       {
         preloadedState,
       },
@@ -115,7 +108,7 @@ describe('Bottom (Player) Side', () => {
     preloadedState.duel.phase = 'Redrawing'
 
     const { getByText, dispatchSpy } = renderWithProviders(
-      <PlayerField {...defaultProps} />,
+      <PlayerField playerId={playerId} />,
       {
         preloadedState,
       },
@@ -141,7 +134,7 @@ describe('Bottom (Player) Side', () => {
 
   it('should be able to play a card', () => {
     const { getByText, dispatchSpy } = renderWithProviders(
-      <PlayerField {...defaultProps} />,
+      <PlayerField playerId={playerId} />,
       {
         preloadedState,
       },
@@ -161,7 +154,7 @@ describe('Bottom (Player) Side', () => {
     preloadedState.duel.attackingAgentId = attackingAgentId
 
     const { getByTestId, dispatchSpy } = renderWithProviders(
-      <PlayerField {...defaultProps} />,
+      <PlayerField playerId={playerId} />,
       {
         preloadedState,
       },
@@ -178,7 +171,7 @@ describe('Bottom (Player) Side', () => {
 describe('Top (Opponent) Side', () => {
   it('should show opponent stacks', () => {
     const { getByText, queryByText, getByTestId } = renderWithProviders(
-      <PlayerField {...defaultProps} isOnTop />,
+      <PlayerField playerId={playerId} isOnTop />,
       {
         preloadedState,
       },

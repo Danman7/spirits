@@ -1,6 +1,5 @@
 import { useAppDispatch, useAppSelector } from 'src/app/store'
-import { BotController } from 'src/features/duel/components/BotController'
-import { CardStackList } from 'src/features/duel/components/CardStackList'
+import { BotController, CardStackList } from 'src/features/duel/components'
 import { CARD_STACKS } from 'src/features/duel/constants'
 import { getActivePlayerId, getPlayers } from 'src/features/duel/selectors'
 import { setBrowsedStack, setIsBrowsingStack } from 'src/features/duel/slice'
@@ -58,12 +57,15 @@ const getStackConfiguration = (
   return stackConfigs[stack]
 }
 
-export interface PlayerFieldProps {
+interface PlayerFieldProps {
   playerId: string
-  isOnTop: boolean
+  isOnTop?: boolean
 }
 
-const PlayerField: React.FC<PlayerFieldProps> = ({ playerId, isOnTop }) => {
+export const PlayerField: React.FC<PlayerFieldProps> = ({
+  playerId,
+  isOnTop = false,
+}) => {
   const dispatch = useAppDispatch()
   const players = useAppSelector(getPlayers)
   const activePlayerId = useAppSelector(getActivePlayerId)
@@ -105,5 +107,3 @@ const PlayerField: React.FC<PlayerFieldProps> = ({ playerId, isOnTop }) => {
     </div>
   )
 }
-
-export default PlayerField

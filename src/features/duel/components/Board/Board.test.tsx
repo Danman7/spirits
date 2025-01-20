@@ -3,7 +3,7 @@ import '@testing-library/jest-dom'
 import { act } from 'react'
 
 import { RootState } from 'src/app/store'
-import { Board } from 'src/features/duel/components/Board'
+import { Board } from 'src/features/duel/components'
 import { victoryMessage, yourTurnMessage } from 'src/features/duel/messages'
 import {
   endDuel,

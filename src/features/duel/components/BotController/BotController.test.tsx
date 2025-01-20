@@ -1,18 +1,11 @@
 import { RootState } from 'src/app/store'
-import {
-  BotController,
-  BotControllerProps,
-} from 'src/features/duel/components/BotController'
+import { BotController } from 'src/features/duel/components'
 import { completeRedraw, playCard, resolveTurn } from 'src/features/duel/slice'
 import { opponentId as playerId, stackedStateMock } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { deepClone } from 'src/shared/utils'
 
 let preloadedState: RootState
-
-const defaultProps: BotControllerProps = {
-  playerId,
-}
 
 beforeEach(() => {
   preloadedState = deepClone(stackedStateMock)
@@ -22,7 +15,7 @@ it('should skip redrawing', () => {
   preloadedState.duel.phase = 'Redrawing'
 
   const { dispatchSpy } = renderWithProviders(
-    <BotController {...defaultProps} />,
+    <BotController playerId={playerId} />,
     {
       preloadedState,
     },
@@ -36,7 +29,7 @@ it('should play a card within budget on turn', () => {
   preloadedState.duel.players[playerId].coins = 3
 
   const { dispatchSpy } = renderWithProviders(
-    <BotController {...defaultProps} />,
+    <BotController playerId={playerId} />,
     {
       preloadedState,
     },
@@ -58,7 +51,7 @@ it('should play no card if there is no budget', () => {
   preloadedState.duel.players[playerId].coins = 0
 
   const { dispatchSpy } = renderWithProviders(
-    <BotController {...defaultProps} />,
+    <BotController playerId={playerId} />,
     {
       preloadedState,
     },

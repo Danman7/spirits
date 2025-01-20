@@ -2,8 +2,7 @@ import { fireEvent, waitFor } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 import { act } from 'react'
 import { RootState } from 'src/app/store'
-
-import { PlayCard } from 'src/features/duel/components/PlayCard'
+import { PlayCard } from 'src/features/duel/components'
 import {
   agentAttack,
   completeRedraw,

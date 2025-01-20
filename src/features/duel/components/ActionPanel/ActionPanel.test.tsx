@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 import { RootState } from 'src/app/store'
-import { ActionPanel } from 'src/features/duel/components/ActionPanel'
+import { ActionPanel } from 'src/features/duel/components'
 import {
   opponentDecidingMessage,
   passButtonMessage,

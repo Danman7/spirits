@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 import { RootState } from 'src/app/store'
-import { DuelModal } from 'src/features/duel/components/DuelModal'
+import { DuelModal } from 'src/features/duel/components'
 import {
   closeMessage,
   opponentFirst,
