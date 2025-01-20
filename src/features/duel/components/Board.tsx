@@ -1,20 +1,14 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { ActionPanel } from 'src/features/duel/components/ActionPanel'
 import { DuelModal } from 'src/features/duel/components/DuelModal'
 import PlayerField from 'src/features/duel/components/PlayerField'
 import {
-  getActivePlayerId,
   getAttackingAgentId,
   getPhase,
   getPlayers,
-  getVictoriousPlayerId,
 } from 'src/features/duel/selectors'
-import {
-  endDuel,
-  moveToNextTurn,
-  playersDrawInitialCards,
-} from 'src/features/duel/slice'
+import { endDuel, moveToNextTurn } from 'src/features/duel/slice'
 import { sortDuelPlayers } from 'src/features/duel/utils'
 import { getUserId } from 'src/features/user/selectors'
 import components from 'src/shared/styles/components.module.css'
@@ -24,20 +18,7 @@ export const Board: FC = () => {
   const players = useAppSelector(getPlayers)
   const phase = useAppSelector(getPhase)
   const loggedInPlayerId = useAppSelector(getUserId)
-  const activePlayerId = useAppSelector(getActivePlayerId)
   const attackingAgentId = useAppSelector(getAttackingAgentId)
-  const victoriousPlayerId = useAppSelector(getVictoriousPlayerId)
-
-  const [isActionPanelOpen, setIsActionPanelOpen] = useState(false)
-  const loggedInPlayer = players[loggedInPlayerId]
-  const isLoggedInPlayerActive = loggedInPlayerId === activePlayerId
-
-  const onDuelModalCloseEnd = () => {
-    if (phase === 'Initial Draw') {
-      dispatch(playersDrawInitialCards())
-      setIsActionPanelOpen(true)
-    }
-  }
 
   // Begin player turn if both players completed redraw
   useEffect(() => {
@@ -67,47 +48,15 @@ export const Board: FC = () => {
     }
   }, [players, dispatch])
 
-  // Hide action panel if the user has performed an action
-  // to prevent multiple passes
-  useEffect(() => {
-    if (players[activePlayerId].hasPerformedAction) {
-      setIsActionPanelOpen(false)
-    }
-  }, [activePlayerId, players])
-
-  // Show action panel on advacing turns
-  useEffect(() => {
-    if (
-      phase === 'Player Turn' &&
-      !players[activePlayerId].hasPerformedAction
-    ) {
-      setIsActionPanelOpen(true)
-    }
-  }, [phase, activePlayerId, players])
-
   return (
     <div className={components.board}>
       {sortDuelPlayers(players, loggedInPlayerId).map(({ id }, index) => (
         <PlayerField key={id} playerId={id} isOnTop={!index} />
       ))}
 
-      <DuelModal
-        playerNames={Object.values(players).map(({ name }) => name)}
-        isLoggedInPlayerActive={isLoggedInPlayerActive}
-        victoriousPlayerName={
-          victoriousPlayerId && players[victoriousPlayerId].name
-        }
-        phase={phase}
-        player={players[loggedInPlayerId]}
-        onDuelModalCloseEnd={onDuelModalCloseEnd}
-      />
+      <DuelModal />
 
-      <ActionPanel
-        isOpen={isActionPanelOpen}
-        loggedInPlayer={loggedInPlayer}
-        isLoggedInPlayerActive={isLoggedInPlayerActive}
-        phase={phase}
-      />
+      <ActionPanel />
     </div>
   )
 }

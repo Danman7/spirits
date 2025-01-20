@@ -9,11 +9,18 @@ import {
   victoryMessage,
 } from 'src/features/duel/messages'
 import {
+  getActivePlayerId,
   getBrowsedStack,
   getIsBrowsingStack,
+  getPhase,
+  getPlayers,
+  getVictoriousPlayerId,
 } from 'src/features/duel/selectors'
-import { setIsBrowsingStack } from 'src/features/duel/slice'
-import { DuelPhase, Player } from 'src/features/duel/types'
+import {
+  playersDrawInitialCards,
+  setIsBrowsingStack,
+} from 'src/features/duel/slice'
+import { getUserId } from 'src/features/user/selectors'
 import { Card } from 'src/shared/components/Card'
 import { Link } from 'src/shared/components/Link'
 import { Modal } from 'src/shared/components/Modal'
@@ -30,29 +37,27 @@ const flashModal = (setModalVisibility: (isOpen: boolean) => void) => {
   }, PHASE_MODAL_TIMEOUT)
 }
 
-export interface DuelModalProps {
-  isLoggedInPlayerActive: boolean
-  playerNames: string[]
-  phase: DuelPhase
-  victoriousPlayerName?: string
-  player: Player
-  onDuelModalCloseEnd: () => void
-}
-
-export const DuelModal: FC<DuelModalProps> = ({
-  isLoggedInPlayerActive,
-  playerNames,
-  phase,
-  player,
-  victoriousPlayerName,
-  onDuelModalCloseEnd,
-}) => {
+export const DuelModal: FC = () => {
   const [isDuelModalOpen, setIsDuelModalOpen] = useState(false)
 
   const dispatch = useAppDispatch()
   const isBrowsingStack = useAppSelector(getIsBrowsingStack)
   const browsedStack = useAppSelector(getBrowsedStack)
+  const players = useAppSelector(getPlayers)
+  const phase = useAppSelector(getPhase)
+  const activePlayerId = useAppSelector(getActivePlayerId)
+  const userId = useAppSelector(getUserId)
+  const victoriousPlayerId = useAppSelector(getVictoriousPlayerId)
   const previousIsBrowsingStack = usePrevious(isBrowsingStack)
+
+  const player = players[userId]
+  const victoriousPlayerName = victoriousPlayerId
+    ? players[victoriousPlayerId].name
+    : ''
+  const isActive = player.id === activePlayerId
+  const playerNames = Object.values(players).map(({ name }) => name)
+
+  const onDuelModalCloseEnd = () => dispatch(playersDrawInitialCards())
 
   const duelModalContent: ReactNode = useMemo(() => {
     switch (phase) {
@@ -61,7 +66,7 @@ export const DuelModal: FC<DuelModalProps> = ({
           <>
             <h1>{`${playerNames[0]} vs ${playerNames[1]}`}</h1>
             <p>{initialDrawMessage}</p>
-            <h3>{isLoggedInPlayerActive ? playerFirst : opponentFirst}</h3>
+            <h3>{isActive ? playerFirst : opponentFirst}</h3>
           </>
         )
 
@@ -91,7 +96,7 @@ export const DuelModal: FC<DuelModalProps> = ({
     }
   }, [
     browsedStack,
-    isLoggedInPlayerActive,
+    isActive,
     phase,
     player,
     playerNames,

@@ -1,10 +1,7 @@
 import { fireEvent } from '@testing-library/dom'
 import '@testing-library/jest-dom'
-
-import {
-  ActionPanel,
-  ActionPanelProps,
-} from 'src/features/duel/components/ActionPanel'
+import { RootState } from 'src/app/store'
+import { ActionPanel } from 'src/features/duel/components/ActionPanel'
 import {
   opponentDecidingMessage,
   passButtonMessage,
@@ -13,28 +10,22 @@ import {
   yourTurnMessage,
 } from 'src/features/duel/messages'
 import { completeRedraw, resolveTurn } from 'src/features/duel/slice'
-
-import {
-  playerId,
-  stackedStateMock as preloadedState,
-  stackedPlayerMock as loggedInPlayer,
-} from 'src/shared/__mocks__'
+import { opponentId, playerId, stackedStateMock } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
+import { deepClone } from 'src/shared/utils'
 
-const defaultProps: ActionPanelProps = {
-  isOpen: true,
-  loggedInPlayer,
-  isLoggedInPlayerActive: true,
-  phase: 'Initial Draw',
-}
+let preloadedState: RootState
+
+beforeEach(() => {
+  preloadedState = deepClone(stackedStateMock)
+})
 
 it('should show the redraw phase panel with skip redraw link', () => {
-  const { getByText, dispatchSpy } = renderWithProviders(
-    <ActionPanel {...defaultProps} phase="Redrawing" />,
-    {
-      preloadedState,
-    },
-  )
+  preloadedState.duel.phase = 'Redrawing'
+
+  const { getByText, dispatchSpy } = renderWithProviders(<ActionPanel />, {
+    preloadedState,
+  })
 
   expect(getByText(redrawMessage)).toBeInTheDocument()
 
@@ -44,27 +35,20 @@ it('should show the redraw phase panel with skip redraw link', () => {
 })
 
 it('should show the waiting for opponent message during redraw phase', () => {
-  const { getByText } = renderWithProviders(
-    <ActionPanel
-      {...defaultProps}
-      phase="Redrawing"
-      loggedInPlayer={{ ...loggedInPlayer, hasPerformedAction: true }}
-    />,
-    {
-      preloadedState,
-    },
-  )
+  preloadedState.duel.phase = 'Redrawing'
+  preloadedState.duel.players[playerId].hasPerformedAction = true
+
+  const { getByText } = renderWithProviders(<ActionPanel />, {
+    preloadedState,
+  })
 
   expect(getByText(opponentDecidingMessage)).toBeInTheDocument()
 })
 
 it('should show the your turn message with pass link', () => {
-  const { getByText, dispatchSpy } = renderWithProviders(
-    <ActionPanel {...defaultProps} phase="Player Turn" />,
-    {
-      preloadedState,
-    },
-  )
+  const { getByText, dispatchSpy } = renderWithProviders(<ActionPanel />, {
+    preloadedState,
+  })
 
   expect(getByText(yourTurnMessage)).toBeInTheDocument()
 
@@ -74,16 +58,11 @@ it('should show the your turn message with pass link', () => {
 })
 
 it("should show the waiting for opponent message during opponent's turn", () => {
-  const { getByText } = renderWithProviders(
-    <ActionPanel
-      {...defaultProps}
-      phase="Player Turn"
-      isLoggedInPlayerActive={false}
-    />,
-    {
-      preloadedState,
-    },
-  )
+  preloadedState.duel.activePlayerId = opponentId
+
+  const { getByText } = renderWithProviders(<ActionPanel />, {
+    preloadedState,
+  })
 
   expect(getByText(opponentDecidingMessage)).toBeInTheDocument()
 })
