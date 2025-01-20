@@ -121,7 +121,7 @@ it('should be able to redraw', () => {
   expect(dispatchSpy).toHaveBeenCalledWith(completeRedraw(playerId))
 })
 
-it('should be able to be played', () => {
+it('should be able to be played if within budget', () => {
   const { getByText, dispatchSpy } = renderWithProviders(
     <PlayCard card={mockCard} player={stackedPlayerMock} stack="hand" />,
     {
@@ -134,6 +134,23 @@ it('should be able to be played', () => {
   expect(dispatchSpy).toHaveBeenCalledWith(
     playCard({ cardId: mockCard.id, playerId }),
   )
+})
+
+it('should not be able to be played if outside budget', () => {
+  const { getByText, dispatchSpy } = renderWithProviders(
+    <PlayCard
+      card={mockCard}
+      player={{ ...stackedPlayerMock, coins: 1 }}
+      stack="hand"
+    />,
+    {
+      preloadedState,
+    },
+  )
+
+  fireEvent.click(getByText(mockCard.name))
+
+  expect(dispatchSpy).not.toHaveBeenCalled()
 })
 
 it('should trigger attacking from bottom animation', async () => {

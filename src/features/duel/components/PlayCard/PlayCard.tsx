@@ -53,7 +53,7 @@ export const PlayCard: FC<PlayCardProps> = ({
     type,
   } = card
 
-  const { id: playerId, hasPerformedAction } = player
+  const { id: playerId, hasPerformedAction, coins } = player
 
   const dispatch = useAppDispatch()
   const phase = useAppSelector(getPhase)
@@ -77,7 +77,7 @@ export const PlayCard: FC<PlayCardProps> = ({
 
   const onClick = useMemo(() => {
     if (stack === 'hand' && !hasPerformedAction && !isOnTop) {
-      if (phase === 'Player Turn' && isUserActive) {
+      if (phase === 'Player Turn' && isUserActive && cost <= coins) {
         return () => {
           dispatch(playCard({ cardId: card.id, playerId }))
 
@@ -112,6 +112,8 @@ export const PlayCard: FC<PlayCardProps> = ({
     isUserActive,
     phase,
     playerId,
+    cost,
+    coins,
     dispatch,
   ])
 
