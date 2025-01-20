@@ -44,7 +44,7 @@ export const HammeriteNovice: CardBase = {
   type: 'agent',
   name: 'Hammerite Novice',
   strength: 2,
-  cost: 2,
+  cost: 3,
   rank: 'common',
   factions: ['Order'],
   categories: ['Hammerite'],

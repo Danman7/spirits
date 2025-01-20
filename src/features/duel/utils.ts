@@ -1,6 +1,13 @@
+import { Action } from '@reduxjs/toolkit'
+import { ListenerApi } from 'src/app/listenerMiddleware'
 import { AppDispatch } from 'src/app/store'
 import { CARD_STACKS, DUEL_STARTING_COINS } from 'src/features/duel/constants'
-import { resolveTurn, discardCard } from 'src/features/duel/slice'
+import {
+  discardCard,
+  moveCardToBoard,
+  playCard,
+  resolveTurn,
+} from 'src/features/duel/slice'
 import {
   CardStack,
   DuelCard,
@@ -8,6 +15,7 @@ import {
   DuelState,
   DuelUser,
   Player,
+  PlayerCards,
   PlayerStacksAndCards,
 } from 'src/features/duel/types'
 import { CardBase } from 'src/shared/types'
@@ -190,3 +198,34 @@ export const getAttackingAgentIndex = (
   activePlayerId: string,
   attackingAgentId: string,
 ) => players[activePlayerId].board.indexOf(attackingAgentId)
+
+export const getOnPlayPredicateForCardBase = (
+  action: Action,
+  cards: PlayerCards,
+  base: CardBase,
+) => playCard.match(action) && cards[action.payload.cardId].name === base.name
+
+export const getPlayAllCopiesEffect = (
+  action: Action,
+  listenerApi: ListenerApi,
+  base: CardBase,
+) => {
+  if (playCard.match(action)) {
+    const { players } = listenerApi.getState().duel
+    const { playerId, cardId: movedCardId } = action.payload
+
+    const player = players[playerId]
+    const { cards, board } = player
+
+    Object.values(cards).forEach(({ id, name }) => {
+      if (name === base.name && id !== movedCardId && !board.includes(id)) {
+        listenerApi.dispatch(
+          moveCardToBoard({
+            cardId: id,
+            playerId,
+          }),
+        )
+      }
+    })
+  }
+}

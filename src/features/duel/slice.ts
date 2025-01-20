@@ -274,6 +274,4 @@ export const {
   setIsBrowsingStack,
 } = actions
 
-export type DuelActionTypes = `${typeof duelSlice.name}/${keyof typeof actions}`
-
 export const duelReducer = reducer
