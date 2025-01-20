@@ -1,13 +1,12 @@
 import { fireEvent, waitFor } from '@testing-library/dom'
 import '@testing-library/jest-dom'
-
-import { Modal, ModalProps } from 'src/shared/components/Modal'
+import { Modal } from 'src/shared/components'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { MODAL_TEST_ID, OVERLAY_TEST_ID } from 'src/shared/testIds'
 
 const content = 'Modal content'
 
-const defaultProps: ModalProps = {
+const defaultProps = {
   isOpen: true,
   children: content,
 }

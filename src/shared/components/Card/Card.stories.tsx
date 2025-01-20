@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react'
-
 import {
   AzaranTheCruel,
   BookOfAsh,
@@ -8,7 +7,7 @@ import {
   Haunt,
   ViktoriaThiefPawn,
 } from 'src/shared/CardBases'
-import { Card } from 'src/shared/components/Card'
+import { Card } from 'src/shared/components'
 
 const meta = {
   title: 'Card',

@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from 'react'
 import { TICK } from 'src/shared/constants'
-
 import { usePrevious } from 'src/shared/customHooks'
 import animations from 'src/shared/styles/animations.module.css'
 import components from 'src/shared/styles/components.module.css'

@@ -1,6 +1,5 @@
 import { FC } from 'react'
-
-import { AnimatedNumber } from 'src/shared/components/AnimatedNumber'
+import { AnimatedNumber } from 'src/shared/components'
 import styles from 'src/shared/styles/components.module.css'
 
 interface ColoredNumberProps {

@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-
-import { ColoredNumber } from 'src/shared/components/ColoredNumber'
+import { ColoredNumber } from 'src/shared/components'
 
 const meta = {
   title: 'ColoredNumber',

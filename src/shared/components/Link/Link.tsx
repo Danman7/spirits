@@ -1,5 +1,4 @@
 import { FC, ReactNode } from 'react'
-
 import styles from 'src/shared/styles/components.module.css'
 
 interface LinkProps {

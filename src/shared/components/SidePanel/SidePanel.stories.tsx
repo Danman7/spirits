@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-
-import { Link } from 'src/shared/components/Link'
-import { SidePanel } from 'src/shared/components/SidePanel'
+import { Link, SidePanel } from 'src/shared/components'
 
 const meta = {
   title: 'SidePanel',

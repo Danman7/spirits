@@ -21,9 +21,7 @@ import {
   setIsBrowsingStack,
 } from 'src/features/duel/slice'
 import { getUserId } from 'src/features/user/selectors'
-import { Card } from 'src/shared/components/Card'
-import { Link } from 'src/shared/components/Link'
-import { Modal } from 'src/shared/components/Modal'
+import { Card, Link, Modal } from 'src/shared/components'
 import { PHASE_MODAL_TIMEOUT } from 'src/shared/constants'
 import { usePrevious } from 'src/shared/customHooks'
 import components from 'src/shared/styles/components.module.css'

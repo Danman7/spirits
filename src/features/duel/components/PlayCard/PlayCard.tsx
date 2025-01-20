@@ -18,7 +18,7 @@ import {
 import { CardStack, DuelCard, Player } from 'src/features/duel/types'
 import { triggerPostCardPlay } from 'src/features/duel/utils'
 import { getUserId } from 'src/features/user/selectors'
-import { ColoredNumber } from 'src/shared/components/ColoredNumber'
+import { ColoredNumber } from 'src/shared/components'
 import { TICK } from 'src/shared/constants'
 import { usePrevious } from 'src/shared/customHooks'
 import animations from 'src/shared/styles/animations.module.css'

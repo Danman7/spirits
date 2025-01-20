@@ -1,7 +1,5 @@
 import { FC, ReactNode, useEffect, useState } from 'react'
-
 import { useAppDispatch, useAppSelector } from 'src/app/store'
-import LoadingMessage from 'src/shared/components/LoadingMessage'
 import {
   opponentDecidingMessage,
   opponentTurnTitle,
@@ -18,8 +16,7 @@ import {
 } from 'src/features/duel/selectors'
 import { completeRedraw, resolveTurn } from 'src/features/duel/slice'
 import { getUserId } from 'src/features/user/selectors'
-import { Link } from 'src/shared/components/Link'
-import { SidePanel } from 'src/shared/components/SidePanel'
+import { Link, LoadingMessage, SidePanel } from 'src/shared/components'
 
 const OppponentIsDeciding = () => (
   <LoadingMessage message={opponentDecidingMessage} />

@@ -1,10 +1,9 @@
 import { FC, ReactNode, useEffect, useState } from 'react'
-
 import animations from 'src/shared/styles/animations.module.css'
 import styles from 'src/shared/styles/components.module.css'
 import { PANEL_TEST_ID } from 'src/shared/testIds'
 
-export interface SidePanelProps {
+interface SidePanelProps {
   isOpen: boolean
   children: ReactNode
 }

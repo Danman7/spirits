@@ -1,6 +1,5 @@
 import { motion } from 'motion/react'
 import { FC } from 'react'
-
 import components from 'src/shared/styles/components.module.css'
 import { CARD_TEST_ID } from 'src/shared/testIds'
 import { CardBase } from 'src/shared/types'

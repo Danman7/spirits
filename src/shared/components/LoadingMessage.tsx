@@ -1,8 +1,7 @@
 import { FC } from 'react'
-
 import animations from 'src/shared/styles/animations.module.css'
 
-const LoadingMessage: FC<{ message: string }> = ({ message }) => (
+export const LoadingMessage: FC<{ message: string }> = ({ message }) => (
   <>
     {message}
     <span className={animations.loadingDots}>.</span>
@@ -10,5 +9,3 @@ const LoadingMessage: FC<{ message: string }> = ({ message }) => (
     <span className={animations.loadingDots}>.</span>
   </>
 )
-
-export default LoadingMessage

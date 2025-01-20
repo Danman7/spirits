@@ -4,7 +4,7 @@ import { CARD_STACKS } from 'src/features/duel/constants'
 import { getActivePlayerId, getPlayers } from 'src/features/duel/selectors'
 import { setBrowsedStack, setIsBrowsingStack } from 'src/features/duel/slice'
 import { CardStack, StackConfiguration } from 'src/features/duel/types'
-import { AnimatedNumber } from 'src/shared/components/AnimatedNumber'
+import { AnimatedNumber } from 'src/shared/components'
 import animations from 'src/shared/styles/animations.module.css'
 import components from 'src/shared/styles/components.module.css'
 import {
