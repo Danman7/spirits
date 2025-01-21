@@ -4,7 +4,12 @@ import {
   ListenerEffectAPI,
 } from '@reduxjs/toolkit'
 import { AppDispatch, RootState } from 'src/app/store'
-import { Effects, Predicates } from 'src/modules/duel'
+import {
+  Effects,
+  Predicates,
+  PredicatesMap,
+  PredicatesName,
+} from 'src/modules/duel'
 
 export type Predicate = (
   action: Action,
@@ -23,17 +28,9 @@ const startAppListening = listenerMiddleware.startListening.withTypes<
   AppDispatch
 >()
 
-startAppListening({
-  predicate: Predicates.HammeriteNoviceOnPlay,
-  effect: Effects.PlayAllHammeriteNoviceCopies,
-})
-
-startAppListening({
-  predicate: Predicates.ElevatedAcolyteOnPlay,
-  effect: Effects.DamageSelfIfNotNextToHigherPowerHammerite,
-})
-
-startAppListening({
-  predicate: Predicates.BrotherSachelmanOnPlay,
-  effect: Effects.BoostAlliedHammeritesWithLowerStrength,
+Object.keys(PredicatesMap).forEach((predicate: PredicatesName) => {
+  startAppListening({
+    predicate: Predicates[predicate],
+    effect: Effects[PredicatesMap[predicate]],
+  })
 })
