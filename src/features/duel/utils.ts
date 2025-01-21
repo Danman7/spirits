@@ -10,7 +10,6 @@ import {
   DuelState,
   DuelUser,
   Player,
-  PlayerCards,
   PlayerStacksAndCards,
 } from 'src/features/duel/types'
 import { CardBase } from 'src/shared/types'
@@ -196,9 +195,12 @@ export const getAttackingAgentIndex = (
 
 export const getOnPlayPredicateForCardBase = (
   action: Action,
-  cards: PlayerCards,
+  players: DuelPlayers,
   base: CardBase,
-) => playCard.match(action) && cards[action.payload.cardId].name === base.name
+) =>
+  playCard.match(action) &&
+  players[action.payload.playerId].cards[action.payload.cardId].name ===
+    base.name
 
 export const getPlayAllCopiesEffect = (
   action: Action,
@@ -236,7 +238,7 @@ export const getNeighboursIndexes = (
   index: number,
   array: string[],
 ): [] | [number] | [number, number] => {
-  if (array.length === 1) {
+  if (array.length <= 1) {
     return []
   }
 

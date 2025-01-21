@@ -9,10 +9,13 @@ import {
   stackedStateMock,
 } from 'src/shared/__mocks__'
 import {
+  BrotherSachelman,
   ElevatedAcolyte,
   HammeriteNovice,
+  HouseGuard,
   TempleGuard,
 } from 'src/shared/CardBases'
+import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/shared/constants'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { CARD_TEST_ID, PLAYER_BOARD_ID } from 'src/shared/testIds'
 import { deepClone } from 'src/shared/utils'
@@ -160,5 +163,65 @@ describe(ElevatedAcolyte.name, () => {
         level: 3,
       }),
     ).toHaveTextContent(`${ElevatedAcolyte.name}${ElevatedAcolyte.strength}`)
+  })
+})
+
+describe(BrotherSachelman.name, () => {
+  it('should boost all allied Hammerites on board that have lower strength', () => {
+    const normalizedCards = normalizePlayerCards({
+      hand: [BrotherSachelman],
+      board: [HammeriteNovice, HammeriteNovice],
+    })
+
+    preloadedState.duel.players[playerId] = {
+      ...initialPlayerMock,
+      ...normalizedCards,
+    }
+
+    const { getByText, getByTestId } = renderWithProviders(<Board />, {
+      preloadedState,
+    })
+
+    fireEvent.click(getByText(BrotherSachelman.name))
+
+    normalizedCards.board.forEach((cardId) => {
+      const { name, strength } = normalizedCards.cards[cardId]
+
+      expect(
+        within(getByTestId(`${CARD_TEST_ID}${cardId}`)).getByRole('heading', {
+          level: 3,
+        }),
+      ).toHaveTextContent(
+        `${name}${strength + HAMMERITES_WITH_LOWER_STRENGTH_BOOST}`,
+      )
+    })
+  })
+
+  it('should not boost non-Hammerite agents or Hammerites with highet strength', () => {
+    const normalizedCards = normalizePlayerCards({
+      hand: [BrotherSachelman],
+      board: [HouseGuard, TempleGuard],
+    })
+
+    preloadedState.duel.players[playerId] = {
+      ...initialPlayerMock,
+      ...normalizedCards,
+    }
+
+    const { getByText, getByTestId } = renderWithProviders(<Board />, {
+      preloadedState,
+    })
+
+    fireEvent.click(getByText(BrotherSachelman.name))
+
+    normalizedCards.board.forEach((cardId) => {
+      const { name, strength } = normalizedCards.cards[cardId]
+
+      expect(
+        within(getByTestId(`${CARD_TEST_ID}${cardId}`)).getByRole('heading', {
+          level: 3,
+        }),
+      ).toHaveTextContent(`${name}${strength}`)
+    })
   })
 })

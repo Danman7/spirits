@@ -32,3 +32,8 @@ startAppListening({
   predicate: Predicates.ElevatedAcolyteOnPlay,
   effect: Effects.DamageSelfIfNotNextToHigherPowerHammerite,
 })
+
+startAppListening({
+  predicate: Predicates.BrotherSachelmanOnPlay,
+  effect: Effects.BoostAlliedHammeritesWithLowerStrength,
+})

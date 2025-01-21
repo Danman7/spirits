@@ -1,27 +1,40 @@
 import { Predicate } from 'src/app/listenerMiddleware'
 import { playCard } from 'src/features/duel/slice'
 import { getOnPlayPredicateForCardBase } from 'src/features/duel/utils'
-import { ElevatedAcolyte, HammeriteNovice } from 'src/shared/CardBases'
+import {
+  BrotherSachelman,
+  ElevatedAcolyte,
+  HammeriteNovice,
+} from 'src/shared/CardBases'
 
-export const HammeriteNoviceOnPlay: Predicate = (action, _, previousState) => {
-  if (playCard.match(action)) {
-    const { playerId } = action.payload
-    const { players } = previousState.duel
-    const { cards, board } = players[playerId]
-
-    return (
-      getOnPlayPredicateForCardBase(action, cards, HammeriteNovice) &&
-      board.some((cardId) => cards[cardId].categories.includes('Hammerite'))
-    )
-  }
-
-  return false
-}
-
-export const ElevatedAcolyteOnPlay: Predicate = (action, currentState) =>
+export const HammeriteNoviceOnPlay: Predicate = (
+  action,
+  currentState,
+  previousState,
+) =>
   playCard.match(action) &&
   getOnPlayPredicateForCardBase(
     action,
-    currentState.duel.players[action.payload.playerId].cards,
+    currentState.duel.players,
+    HammeriteNovice,
+  ) &&
+  previousState.duel.players[action.payload.playerId].board.some((cardId) =>
+    previousState.duel.players[action.payload.playerId].cards[
+      cardId
+    ].categories.includes('Hammerite'),
+  )
+
+export const ElevatedAcolyteOnPlay: Predicate = (action, currentState) =>
+  getOnPlayPredicateForCardBase(
+    action,
+    currentState.duel.players,
     ElevatedAcolyte,
+  )
+
+export const BrotherSachelmanOnPlay: Predicate = (action, currentState) =>
+  playCard.match(action) &&
+  getOnPlayPredicateForCardBase(
+    action,
+    currentState.duel.players,
+    BrotherSachelman,
   )

@@ -15,6 +15,7 @@ import { DuelCard, DuelState, Player } from 'src/features/duel/types'
 import {
   copyDuelCard,
   createDuelCard,
+  getNeighboursIndexes,
   getPlayableCardIds,
   moveCardBetweenStacks,
   normalizePlayerCards,
@@ -170,4 +171,12 @@ it('should trigger post play instant actions', () => {
     }),
   )
   expect(mockDispatch).toHaveBeenCalledWith(resolveTurn())
+})
+
+it('should get the correct neighbour indexes from array', () => {
+  expect(getNeighboursIndexes(0, [])).toEqual([])
+  expect(getNeighboursIndexes(0, ['1'])).toEqual([])
+  expect(getNeighboursIndexes(0, ['1', '2'])).toEqual([1])
+  expect(getNeighboursIndexes(1, ['1', '2'])).toEqual([0])
+  expect(getNeighboursIndexes(1, ['1', '2', '3'])).toEqual([0, 2])
 })

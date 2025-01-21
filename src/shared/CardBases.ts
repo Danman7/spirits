@@ -49,7 +49,7 @@ export const HammeriteNovice: CardBase = {
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
-    'On play if you have another Hammerite in play also play all other copies of this card from hand or deck.',
+    'On play if you have another Hammerite in play also play all other copies of this card from your hand or deck.',
   ],
   flavor:
     'This novice has been instructed in the rules and strictures of the Order and has sworn his warrants to be silent in his vigils.',
@@ -64,7 +64,7 @@ export const ElevatedAcolyte: CardBase = {
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
-    `On play, damage self by ${ELEVATED_ACOLYTE_SELF_DAMAGE} if not next to a Hammerite with higher strength.`,
+    `On play, damage self by ${ELEVATED_ACOLYTE_SELF_DAMAGE} if is not played next to a Hammerite with higher strength.`,
   ],
   flavor:
     'He will endure a standard three-year contract of service, at the end of which he will be considered for indoctrination as an Elevated Acolyte.',
@@ -92,7 +92,7 @@ export const BrotherSachelman: CardBase = {
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
-    `On play boost any allied Hammerite on board with lower strength than this card's strength by ${HAMMERITES_WITH_LOWER_STRENGTH_BOOST}`,
+    `On play boost all allied Hammerites on board that have lower strength than this card's strength by ${HAMMERITES_WITH_LOWER_STRENGTH_BOOST}`,
   ],
   flavor:
     'May the Hammer fall on the unrighteous. Officially, Brother Sachelman',
@@ -204,4 +204,17 @@ export const YoraSkull: CardBase = {
     'Boost every Hammerite on the board by 1. If staring deck contains only Order cards boost all Hammerites in hand also.',
   ],
   flavor: 'Yora was a builder of vision and devout keeper of the faith.',
+}
+
+export const HouseGuard: CardBase = {
+  type: 'agent',
+  name: 'House Guard',
+  strength: 2,
+  cost: 2,
+  rank: 'common',
+  factions: ['Order'],
+  categories: ['Guard'],
+  description: ['On defeat, play a copy of this card from your hand or deck.'],
+  flavor:
+    'The Sir will be taking his dinner and evening out tonight. The house guard is not to find this an opportunity to shirk, and lapses will be brought up with the Sir.',
 }
