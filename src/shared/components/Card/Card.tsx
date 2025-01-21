@@ -10,16 +10,10 @@ interface CardProps {
 }
 
 export const Card: FC<CardProps> = ({ card }) => {
-  const {
-    name,
-    description,
-    flavor,
-    categories,
-    factions,
-    cost,
-    rank,
-    strength,
-  } = card
+  const { type, name, description, flavor, categories, factions, cost, rank } =
+    card
+
+  const strength = type === 'agent' ? card.strength : undefined
 
   return (
     <motion.div

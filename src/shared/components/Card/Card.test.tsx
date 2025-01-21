@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom'
-import { BookOfAsh, BrotherSachelman } from 'src/shared/CardBases'
+import { BookOfAsh, BrotherSachelman } from 'src/shared/data'
 import { Card } from 'src/shared/components'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { joinCardCategories } from 'src/shared/utils'

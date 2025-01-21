@@ -4,8 +4,10 @@ import {
   getNeighboursIndexes,
   getPlayAllCopiesEffect,
 } from 'src/modules/duel/utils'
-import { HammeriteNovice } from 'src/shared/CardBases'
-import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/shared/constants'
+import {
+  HammeriteNovice,
+  HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
+} from 'src/shared/data'
 
 export const PlayAllHammeriteNoviceCopies: Effect = (action, listenerApi) =>
   getPlayAllCopiesEffect(action, listenerApi, HammeriteNovice)

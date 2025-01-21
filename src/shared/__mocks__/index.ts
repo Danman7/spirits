@@ -18,7 +18,7 @@ import {
   ViktoriaThiefPawn,
   YoraSkull,
   Zombie,
-} from 'src/shared/CardBases'
+} from 'src/shared/data'
 import { Bot, User } from 'src/shared/types'
 
 export const playerId = 'player'

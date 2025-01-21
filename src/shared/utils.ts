@@ -1,5 +1,7 @@
+import { DuelCard } from 'src/modules/duel/types'
 import { FACTION_COLOR_MAP } from 'src/shared/constants'
 import { CardBase } from 'src/shared/types'
+import { CardBases } from 'src/shared/data'
 
 /**
  * Generates a unique id for cards, players, etc.
@@ -42,14 +44,6 @@ export const shuffleArray = <T>(array: T[]): T[] => {
 }
 
 /**
- * Determines if coin or coins should be returned
- * @example getCoinsMessage(1) // coin
- * @example getCoinsMessage(3) // coins
- */
-export const getCoinsMessage = (coins: number) =>
-  `${coins} ${coins > 1 ? 'coins' : 'coin'}`
-
-/**
  * Clone an object using the JSON method.
  */
 export const deepClone = <T>(object: T) => JSON.parse(JSON.stringify(object))
@@ -79,3 +73,6 @@ export const getFactionColor = (factions: CardBase['factions']): string => {
     FACTION_COLOR_MAP[factions[1]]
   })`
 }
+
+export const getDuelCardsBase = (card: DuelCard): CardBase | undefined =>
+  Object.values(CardBases).find(({ name }) => name === card.name)

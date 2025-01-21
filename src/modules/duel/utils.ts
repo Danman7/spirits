@@ -23,9 +23,9 @@ import { generateUUID, shuffleArray } from 'src/shared/utils'
 export const createDuelCard = (base: CardBase): DuelCard => ({
   ...base,
   id: generateUUID(),
-  strength: base.strength || 0,
+  strength: base.type === 'agent' ? base.strength : 0,
   base: {
-    strength: base.strength || 0,
+    strength: base.type === 'agent' ? base.strength : 0,
     cost: base.cost,
   },
 })

@@ -39,7 +39,7 @@ import {
   stackedPlayerMock,
   userMock,
 } from 'src/shared/__mocks__'
-import { HammeriteNovice, TempleGuard } from 'src/shared/CardBases'
+import { HammeriteNovice, TempleGuard } from 'src/shared/data'
 import { deepClone } from 'src/shared/utils'
 
 const users: DuelStartUsers = [userMock, opponentMock]

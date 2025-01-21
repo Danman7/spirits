@@ -1,7 +1,6 @@
-import { Haunt } from 'src/shared/CardBases'
+import { Haunt } from 'src/shared/data'
 import {
   generateUUID,
-  getCoinsMessage,
   getFactionColor,
   getRandomArrayItem,
   joinCardCategories,
@@ -28,11 +27,6 @@ it('should shuffle an array', () => {
   for (let index = 0; index < array.length; index++) {
     expect(shuffledArray).toContain(array[index])
   }
-})
-
-it('should show the proper coins message', () => {
-  expect(getCoinsMessage(1)).toBe('1 coin')
-  expect(getCoinsMessage(2)).toBe('2 coins')
 })
 
 it('should return a joined types string for a card', () => {

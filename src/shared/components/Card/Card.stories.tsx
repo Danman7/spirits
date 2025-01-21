@@ -6,7 +6,7 @@ import {
   HammeriteNovice,
   Haunt,
   ViktoriaThiefPawn,
-} from 'src/shared/CardBases'
+} from 'src/shared/data'
 import { Card } from 'src/shared/components'
 
 const meta = {

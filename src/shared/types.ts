@@ -6,7 +6,7 @@ type CardRank = 'common' | 'unique'
 /**
  * A card’s type decides how it is played and removed from the board.
  */
-type CardType = 'agent' | 'instant' | 'location'
+export type CardType = 'agent' | 'instant' | 'location'
 
 /**
  * A card may belong to one or multiple factions. This plays a role in deck building determining which cards can go together. A card may also belong to no faction, being neutral, and can be mixed with cards from any faction.
@@ -26,20 +26,29 @@ export type CardCategory =
   | 'Necromancer'
   | 'Artifact'
 
-/**
- * Represents a base card object which is used to create instances of this card.
- */
-export interface CardBase {
+export interface CardPrototype {
   readonly name: string
   cost: number
-  strength: number
   factions: CardFaction[]
   categories: CardCategory[]
-  type: CardType
   rank: CardRank
   description: string[]
   flavor?: string
 }
+
+export interface Instant extends CardPrototype {
+  type: 'instant'
+}
+
+export interface Agent extends CardPrototype {
+  type: 'agent'
+  strength: number
+}
+
+/**
+ * Represents a base card object which is used to create instances of this card.
+ */
+export type CardBase = Instant | Agent
 
 export interface User {
   id: string

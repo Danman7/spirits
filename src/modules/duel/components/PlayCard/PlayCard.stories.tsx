@@ -9,7 +9,7 @@ import {
   stackedPlayerMock,
   stackedStateMock,
 } from 'src/shared/__mocks__'
-import { ElevatedAcolyte, Haunt } from 'src/shared/CardBases'
+import { ElevatedAcolyte, Haunt } from 'src/shared/data'
 import { deepClone } from 'src/shared/utils'
 
 const mockCard = createDuelCard(Haunt)

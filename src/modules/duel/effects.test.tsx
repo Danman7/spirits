@@ -12,10 +12,10 @@ import {
   BrotherSachelman,
   ElevatedAcolyte,
   HammeriteNovice,
+  HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   HouseGuard,
   TempleGuard,
-} from 'src/shared/CardBases'
-import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/shared/constants'
+} from 'src/shared/data'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { CARD_TEST_ID, PLAYER_BOARD_ID } from 'src/shared/testIds'
 import { deepClone } from 'src/shared/utils'

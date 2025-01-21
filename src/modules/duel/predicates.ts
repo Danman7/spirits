@@ -5,7 +5,7 @@ import {
   BrotherSachelman,
   ElevatedAcolyte,
   HammeriteNovice,
-} from 'src/shared/CardBases'
+} from 'src/shared/data'
 
 export const HammeriteNoviceOnPlay: Predicate = (
   action,

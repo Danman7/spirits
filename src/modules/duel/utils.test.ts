@@ -4,7 +4,7 @@ import {
   Haunt,
   TempleGuard,
   Zombie,
-} from 'src/shared/CardBases'
+} from 'src/shared/data'
 import {
   CARD_STACKS,
   DUEL_STARTING_COINS,
