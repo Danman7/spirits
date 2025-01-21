@@ -1,11 +1,11 @@
 import { RootState } from 'src/app/store'
-import { initialState as initialDuelState } from 'src/features/duel/slice'
-import { DuelState, Player } from 'src/features/duel/types'
+import { initialState as initialDuelState } from 'src/modules/duel/slice'
+import { DuelState, Player } from 'src/modules/duel/types'
 import {
   normalizePlayerCards,
   setupInitialDuelPlayerFromUser,
-} from 'src/features/duel/utils'
-import { initialState as initialUserState } from 'src/features/user/slice'
+} from 'src/modules/duel/utils'
+import { initialState as initialUserState } from 'src/modules/user/slice'
 import {
   AzaranTheCruel,
   BookOfAsh,

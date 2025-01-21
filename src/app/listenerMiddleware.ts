@@ -4,7 +4,7 @@ import {
   ListenerEffectAPI,
 } from '@reduxjs/toolkit'
 import { AppDispatch, RootState } from 'src/app/store'
-import { Effects, Predicates } from 'src/features/duel'
+import { Effects, Predicates } from 'src/modules/duel'
 
 export type Predicate = (
   action: Action,
