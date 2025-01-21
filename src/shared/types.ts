@@ -32,7 +32,7 @@ export type CardCategory =
 export interface CardBase {
   readonly name: string
   cost: number
-  strength?: number
+  strength: number
   factions: CardFaction[]
   categories: CardCategory[]
   type: CardType

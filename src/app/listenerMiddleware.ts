@@ -27,3 +27,8 @@ startAppListening({
   predicate: Predicates.HammeriteNoviceOnPlay,
   effect: Effects.PlayAllHammeriteNoviceCopies,
 })
+
+startAppListening({
+  predicate: Predicates.ElevatedAcolyteOnPlay,
+  effect: Effects.DamageSelfIfNotNextToHigherPowerHammerite,
+})

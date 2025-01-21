@@ -49,7 +49,7 @@ export const HammeriteNovice: CardBase = {
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
-    'On play if you have another Hammerite card on the table also play all other copies of Hammerite Novice you have in your hand.',
+    'On play if you have another Hammerite in play also play all other copies of this card from hand or deck.',
   ],
   flavor:
     'This novice has been instructed in the rules and strictures of the Order and has sworn his warrants to be silent in his vigils.',
@@ -73,7 +73,7 @@ export const ElevatedAcolyte: CardBase = {
 export const TempleGuard: CardBase = {
   type: 'agent',
   name: 'Temple Guard',
-  strength: 4,
+  strength: 5,
   cost: 5,
   rank: 'common',
   factions: ['Order'],
@@ -180,6 +180,7 @@ export const AzaranTheCruel: CardBase = {
 export const BookOfAsh: CardBase = {
   type: 'instant',
   name: 'The Book of Ash',
+  strength: 0,
   cost: 5,
   rank: 'unique',
   factions: ['Chaos'],
@@ -194,6 +195,7 @@ export const BookOfAsh: CardBase = {
 export const YoraSkull: CardBase = {
   type: 'instant',
   name: "Saint Yora's Skull",
+  strength: 0,
   cost: 5,
   rank: 'unique',
   factions: ['Order'],

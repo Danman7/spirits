@@ -1,7 +1,7 @@
 import { Predicate } from 'src/app/listenerMiddleware'
 import { playCard } from 'src/features/duel/slice'
 import { getOnPlayPredicateForCardBase } from 'src/features/duel/utils'
-import { HammeriteNovice } from 'src/shared/CardBases'
+import { ElevatedAcolyte, HammeriteNovice } from 'src/shared/CardBases'
 
 export const HammeriteNoviceOnPlay: Predicate = (action, _, previousState) => {
   if (playCard.match(action)) {
@@ -17,3 +17,11 @@ export const HammeriteNoviceOnPlay: Predicate = (action, _, previousState) => {
 
   return false
 }
+
+export const ElevatedAcolyteOnPlay: Predicate = (action, currentState) =>
+  playCard.match(action) &&
+  getOnPlayPredicateForCardBase(
+    action,
+    currentState.duel.players[action.payload.playerId].cards,
+    ElevatedAcolyte,
+  )

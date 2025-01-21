@@ -231,3 +231,22 @@ export const getPlayAllCopiesEffect = (
     })
   }
 }
+
+export const getNeighboursIndexes = (
+  index: number,
+  array: string[],
+): [] | [number] | [number, number] => {
+  if (array.length === 1) {
+    return []
+  }
+
+  if (!index && array.length > 1) {
+    return [1]
+  }
+
+  if (index === array.length - 1 && array.length > 1) {
+    return [index - 1]
+  }
+
+  return [index - 1, index + 1]
+}
