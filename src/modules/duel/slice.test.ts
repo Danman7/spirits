@@ -256,32 +256,28 @@ describe('Playing turns', () => {
     mockDuelState.attackingAgentId = stackedPlayerMock.board[0]
     mockDuelState.players[opponentId].board = []
 
-    const state = duelReducer(mockDuelState, agentAttack())
+    const state = duelReducer(
+      mockDuelState,
+      agentAttack({
+        defendingAgentId: '',
+        defendingPlayerId: opponentId,
+      }),
+    )
     const { players } = state
 
     expect(players[opponentId].coins).toBe(stackedOpponentMock.coins - 1)
   })
 
-  test('agent attacking agent on opposite slot', () => {
+  test('agent attacking agent', () => {
     mockDuelState.attackingAgentId = stackedPlayerMock.board[0]
 
-    const state = duelReducer(mockDuelState, agentAttack())
-    const { players } = state
-    const damagedAgent = players[opponentId].cards[stackedOpponentMock.board[0]]
-
-    expect(damagedAgent.strength).toBe(damagedAgent.base.strength - 1)
-  })
-
-  test('agent attacking agent on previous slot', () => {
-    mockDuelState.players[playerId] = {
-      ...stackedPlayerMock,
-      ...normalizePlayerCards({
-        board: [TempleGuard, TempleGuard],
+    const state = duelReducer(
+      mockDuelState,
+      agentAttack({
+        defendingAgentId: stackedOpponentMock.board[0],
+        defendingPlayerId: opponentId,
       }),
-    }
-    mockDuelState.attackingAgentId = mockDuelState.players[playerId].board[1]
-
-    const state = duelReducer(mockDuelState, agentAttack())
+    )
     const { players } = state
     const damagedAgent = players[opponentId].cards[stackedOpponentMock.board[0]]
 

@@ -16,7 +16,6 @@ import {
 } from 'src/modules/duel/types'
 import {
   getAttackingAgentIndex,
-  getInactivePlayerId,
   moveCardBetweenStacks,
   setupInitialDuelPlayerFromUser,
 } from 'src/modules/duel/utils'
@@ -131,32 +130,21 @@ export const duelSlice = createSlice({
       state.phase = 'Resolving turn'
       state.attackingAgentId = players[activePlayerId].board[0] || ''
     },
-    agentAttack: (state) => {
-      const { players, activePlayerId, attackingAgentId } = state
-      const defendingPlayer =
-        players[getInactivePlayerId(players, activePlayerId)]
-      const attackingCardIndex = getAttackingAgentIndex(
-        players,
-        activePlayerId,
-        attackingAgentId,
-      )
-
-      // Prevent change if no attacker is set
-      if (attackingCardIndex < 0) return
-
-      // Set the defending agent to either the one opposite the attacker,
-      // or the last agent on the defending player's board
-      const defendingAgentId =
-        defendingPlayer.board[attackingCardIndex] ||
-        defendingPlayer.board[defendingPlayer.board.length - 1] ||
-        ''
+    agentAttack: (
+      state,
+      action: PayloadAction<{
+        defendingAgentId: string
+        defendingPlayerId: string
+      }>,
+    ) => {
+      const { defendingAgentId, defendingPlayerId } = action.payload
 
       // If there is a defending agent, damage it.
       // If not steal coins from the defending player.
       if (defendingAgentId) {
-        state.players[defendingPlayer.id].cards[defendingAgentId].strength -= 1
+        state.players[defendingPlayerId].cards[defendingAgentId].strength -= 1
       } else {
-        state.players[defendingPlayer.id].coins -= 1
+        state.players[defendingPlayerId].coins -= 1
       }
     },
     moveToNextAttackingAgent: (state) => {

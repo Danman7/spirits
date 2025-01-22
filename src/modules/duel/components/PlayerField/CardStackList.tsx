@@ -24,8 +24,8 @@ export const CardStackList: FC<CardStackListProps> = ({
       <PlayCard
         key={cardId}
         stack={stack}
-        player={player}
-        card={player.cards[cardId]}
+        playerId={player.id}
+        cardId={cardId}
         isOnTop={isOnTop}
       />
     ))}

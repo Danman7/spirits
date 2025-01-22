@@ -5,6 +5,7 @@ import {
   getActivePlayerId,
   getAttackingAgentId,
   getPhase,
+  getPlayers,
 } from 'src/modules/duel/selectors'
 import {
   agentAttack,
@@ -15,8 +16,12 @@ import {
   playCard,
   putCardAtBottomOfDeck,
 } from 'src/modules/duel/slice'
-import { CardStack, DuelCard, Player } from 'src/modules/duel/types'
-import { triggerPostCardPlay } from 'src/modules/duel/utils'
+import { CardStack } from 'src/modules/duel/types'
+import {
+  getAttackingAgentIndex,
+  getInactivePlayerId,
+  triggerPostCardPlay,
+} from 'src/modules/duel/utils'
 import { getUserId } from 'src/modules/user/selectors'
 import { CardContent, CardFooter, CardHeader } from 'src/shared/components'
 import { TICK } from 'src/shared/constants'
@@ -26,20 +31,27 @@ import components from 'src/shared/styles/components.module.css'
 import { CARD_TEST_ID } from 'src/shared/testIds'
 
 interface PlayCardProps {
-  card: DuelCard
-  player: Player
+  cardId: string
+  playerId: string
   stack: CardStack
   isOnTop?: boolean
 }
 
 export const PlayCard: FC<PlayCardProps> = ({
-  card,
-  player,
+  cardId,
+  playerId,
   stack,
   isOnTop = false,
 }) => {
+  const dispatch = useAppDispatch()
+  const phase = useAppSelector(getPhase)
+  const players = useAppSelector(getPlayers)
+  const activePlayerId = useAppSelector(getActivePlayerId)
+  const attackingAgentId = useAppSelector(getAttackingAgentId)
+  const userId = useAppSelector(getUserId)
+
+  const { hasPerformedAction, coins, cards } = players[playerId]
   const {
-    id,
     name,
     description,
     flavor,
@@ -50,22 +62,14 @@ export const PlayCard: FC<PlayCardProps> = ({
     rank,
     strength,
     type,
-  } = card
-
-  const { id: playerId, hasPerformedAction, coins } = player
-
-  const dispatch = useAppDispatch()
-  const phase = useAppSelector(getPhase)
-  const activePlayerId = useAppSelector(getActivePlayerId)
-  const attackingAgentId = useAppSelector(getAttackingAgentId)
-  const userId = useAppSelector(getUserId)
+  } = cards[cardId]
 
   const isFaceDown = isOnTop
     ? ['deck', 'discard', 'hand'].includes(stack)
     : ['deck', 'discard'].includes(stack)
   const isSmall = ['deck', 'discard', 'board'].includes(stack)
   const isUserActive = playerId === userId && playerId === activePlayerId
-  const isAttacking = id === attackingAgentId
+  const isAttacking = cardId === attackingAgentId
 
   const prevStrength = usePrevious(strength)
   const prevIsFaceDown = usePrevious(isFaceDown)
@@ -78,10 +82,10 @@ export const PlayCard: FC<PlayCardProps> = ({
     if (stack === 'hand' && !hasPerformedAction && !isOnTop) {
       if (phase === 'Player Turn' && isUserActive && cost <= coins) {
         return () => {
-          dispatch(playCard({ cardId: card.id, playerId, shouldPay: true }))
+          dispatch(playCard({ cardId, playerId, shouldPay: true }))
 
           triggerPostCardPlay({
-            card,
+            card: cards[cardId],
             playerId,
             dispatch,
           })
@@ -92,7 +96,7 @@ export const PlayCard: FC<PlayCardProps> = ({
         return () => {
           dispatch(
             putCardAtBottomOfDeck({
-              cardId: card.id,
+              cardId: cardId,
               playerId,
             }),
           )
@@ -104,22 +108,42 @@ export const PlayCard: FC<PlayCardProps> = ({
 
     return undefined
   }, [
-    card,
-    stack,
-    isOnTop,
+    cardId,
+    cards,
+    coins,
+    cost,
+    dispatch,
     hasPerformedAction,
+    isOnTop,
     isUserActive,
     phase,
     playerId,
-    cost,
-    coins,
-    dispatch,
+    stack,
   ])
 
   const onAnimationEnd = () => {
-    // Move to next agent on end of attacking animation.
     if (isAttacking) {
-      dispatch(agentAttack())
+      const defendingPlayer =
+        players[getInactivePlayerId(players, activePlayerId)]
+      const attackingCardIndex = getAttackingAgentIndex(
+        players,
+        activePlayerId,
+        attackingAgentId,
+      )
+
+      // Set the defending agent to either the one opposite the attacker,
+      // or the last agent on the defending player's board
+      const defendingAgentId =
+        defendingPlayer.board[attackingCardIndex] ||
+        defendingPlayer.board[defendingPlayer.board.length - 1] ||
+        ''
+
+      dispatch(
+        agentAttack({
+          defendingAgentId,
+          defendingPlayerId: defendingPlayer.id,
+        }),
+      )
       dispatch(moveToNextAttackingAgent())
     }
   }
@@ -176,15 +200,15 @@ export const PlayCard: FC<PlayCardProps> = ({
   // Discard on defeat
   useEffect(() => {
     if (type === 'agent' && strength <= 0) {
-      dispatch(discardCard({ cardId: id, playerId }))
+      dispatch(discardCard({ cardId, playerId }))
     }
-  }, [dispatch, id, type, playerId, strength])
+  }, [cardId, dispatch, playerId, strength, type])
 
   return (
     <motion.div
       layout
-      layoutId={id}
-      data-testid={`${CARD_TEST_ID}${id}`}
+      layoutId={cardId}
+      data-testid={`${CARD_TEST_ID}${cardId}`}
       onAnimationEnd={onAnimationEnd}
       onClick={onClick}
       initial={false}

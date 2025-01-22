@@ -13,6 +13,7 @@ import {
   putCardAtBottomOfDeck,
 } from 'src/modules/duel/slice'
 import {
+  opponentId,
   playerId,
   stackedPlayerMock,
   stackedStateMock,
@@ -34,8 +35,12 @@ beforeEach(() => {
 })
 
 it('should display all UI segments of a card when face up', () => {
-  const { rerender, getByRole, getByText } = renderWithProviders(
-    <PlayCard card={mockCard} player={stackedPlayerMock} stack="hand" />,
+  const { getByRole, getByText } = renderWithProviders(
+    <PlayCard
+      cardId={stackedPlayerMock.hand[0]}
+      playerId={playerId}
+      stack="hand"
+    />,
     {
       preloadedState,
     },
@@ -48,39 +53,15 @@ it('should display all UI segments of a card when face up', () => {
   expect(getByText(joinCardCategories(mockCard.categories))).toBeInTheDocument()
   expect(getByText(mockCard.description[0])).toBeInTheDocument()
   expect(getByText(mockCard.flavor as string)).toBeInTheDocument()
-
-  const boostedStrength = mockCard.strength + 2
-
-  rerender(
-    <PlayCard
-      card={{ ...mockCard, strength: boostedStrength }}
-      player={stackedPlayerMock}
-      stack="hand"
-    />,
-  )
-
-  expect(getByRole('heading', { level: 3 })).toHaveTextContent(
-    `${mockCard.name}${boostedStrength}`,
-  )
-
-  const damagedStrength = mockCard.strength - 2
-
-  rerender(
-    <PlayCard
-      card={{ ...mockCard, strength: damagedStrength }}
-      player={stackedPlayerMock}
-      stack="hand"
-    />,
-  )
-
-  expect(getByRole('heading', { level: 3 })).toHaveTextContent(
-    `${mockCard.name}${damagedStrength}`,
-  )
 })
 
 it('should flip card between faces', async () => {
   const { rerender, getByText, queryByText } = renderWithProviders(
-    <PlayCard card={mockCard} player={stackedPlayerMock} stack="hand" />,
+    <PlayCard
+      cardId={stackedPlayerMock.hand[0]}
+      playerId={playerId}
+      stack="hand"
+    />,
     {
       preloadedState,
     },
@@ -88,13 +69,25 @@ it('should flip card between faces', async () => {
 
   expect(getByText(mockCard.name)).toBeInTheDocument()
 
-  rerender(<PlayCard card={mockCard} stack="deck" player={stackedPlayerMock} />)
+  rerender(
+    <PlayCard
+      cardId={stackedPlayerMock.hand[0]}
+      stack="deck"
+      playerId={playerId}
+    />,
+  )
 
   await waitFor(() => {
     expect(queryByText(mockCard.name)).not.toBeInTheDocument()
   })
 
-  rerender(<PlayCard card={mockCard} player={stackedPlayerMock} stack="hand" />)
+  rerender(
+    <PlayCard
+      cardId={stackedPlayerMock.hand[0]}
+      playerId={playerId}
+      stack="hand"
+    />,
+  )
 
   expect(getByText(mockCard.name)).toBeInTheDocument()
 })
@@ -103,7 +96,11 @@ it('should be able to redraw', () => {
   preloadedState.duel.phase = 'Redrawing'
 
   const { getByText, dispatchSpy } = renderWithProviders(
-    <PlayCard card={mockCard} player={stackedPlayerMock} stack="hand" />,
+    <PlayCard
+      cardId={stackedPlayerMock.hand[0]}
+      playerId={playerId}
+      stack="hand"
+    />,
     {
       preloadedState,
     },
@@ -123,7 +120,11 @@ it('should be able to redraw', () => {
 
 it('should be able to be played if within budget', () => {
   const { getByText, dispatchSpy } = renderWithProviders(
-    <PlayCard card={mockCard} player={stackedPlayerMock} stack="hand" />,
+    <PlayCard
+      cardId={stackedPlayerMock.hand[0]}
+      playerId={playerId}
+      stack="hand"
+    />,
     {
       preloadedState,
     },
@@ -137,10 +138,12 @@ it('should be able to be played if within budget', () => {
 })
 
 it('should not be able to be played if outside budget', () => {
+  preloadedState.duel.players[playerId].coins = 1
+
   const { getByText, dispatchSpy } = renderWithProviders(
     <PlayCard
-      card={mockCard}
-      player={{ ...stackedPlayerMock, coins: 1 }}
+      cardId={stackedPlayerMock.hand[0]}
+      playerId={playerId}
       stack="hand"
     />,
     {
@@ -157,7 +160,11 @@ it('should trigger attacking from bottom animation', async () => {
   preloadedState.duel.attackingAgentId = mockCard.id
 
   const { getByTestId, dispatchSpy } = renderWithProviders(
-    <PlayCard card={mockCard} player={stackedPlayerMock} stack="board" />,
+    <PlayCard
+      cardId={stackedPlayerMock.hand[0]}
+      playerId={playerId}
+      stack="board"
+    />,
     {
       preloadedState,
     },
@@ -169,7 +176,12 @@ it('should trigger attacking from bottom animation', async () => {
     await new Promise((r) => setTimeout(r, TICK))
   })
 
-  expect(dispatchSpy).toHaveBeenCalledWith(agentAttack())
+  expect(dispatchSpy).toHaveBeenCalledWith(
+    agentAttack({
+      defendingAgentId: preloadedState.duel.players[opponentId].board[0],
+      defendingPlayerId: opponentId,
+    }),
+  )
   expect(dispatchSpy).toHaveBeenCalledWith(moveToNextAttackingAgent())
 })
 
@@ -178,9 +190,9 @@ it('should trigger attacking from top animation', async () => {
 
   const { getByTestId, dispatchSpy } = renderWithProviders(
     <PlayCard
-      card={mockCard}
+      cardId={stackedPlayerMock.hand[0]}
       isOnTop
-      player={stackedPlayerMock}
+      playerId={playerId}
       stack="board"
     />,
     {
@@ -194,15 +206,24 @@ it('should trigger attacking from top animation', async () => {
     await new Promise((r) => setTimeout(r, TICK))
   })
 
-  expect(dispatchSpy).toHaveBeenCalledWith(agentAttack())
+  expect(dispatchSpy).toHaveBeenCalledWith(
+    agentAttack({
+      defendingAgentId: preloadedState.duel.players[opponentId].board[0],
+      defendingPlayerId: opponentId,
+    }),
+  )
   expect(dispatchSpy).toHaveBeenCalledWith(moveToNextAttackingAgent())
 })
 
 it('should discard card if strength is 0 or below', () => {
+  preloadedState.duel.players[playerId].cards[
+    preloadedState.duel.players[playerId].board[0]
+  ].strength = 0
+
   const { dispatchSpy } = renderWithProviders(
     <PlayCard
-      card={{ ...mockCard, strength: 0 }}
-      player={stackedPlayerMock}
+      cardId={preloadedState.duel.players[playerId].board[0]}
+      playerId={playerId}
       stack="board"
     />,
     {
@@ -211,6 +232,9 @@ it('should discard card if strength is 0 or below', () => {
   )
 
   expect(dispatchSpy).toHaveBeenCalledWith(
-    discardCard({ cardId: mockCard.id, playerId }),
+    discardCard({
+      cardId: preloadedState.duel.players[playerId].board[0],
+      playerId,
+    }),
   )
 })
