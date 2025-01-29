@@ -32,7 +32,6 @@ export const ElevatedAcolyteOnPlay: Predicate = (action, currentState) =>
   )
 
 export const BrotherSachelmanOnPlay: Predicate = (action, currentState) =>
-  playCard.match(action) &&
   getOnPlayPredicateForCardBase(
     action,
     currentState.duel.players,

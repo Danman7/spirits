@@ -38,10 +38,16 @@ export type DuelPlayers = {
   [index: string]: Player
 }
 
+export interface AttackOrder {
+  attackerId: string
+  defenderId: string
+}
+
 export interface DuelState {
   phase: DuelPhase
   players: DuelPlayers
   activePlayerId: string
+  attackingQueue: AttackOrder[]
   attackingAgentId: string
   victoriousPlayerId: string
   browsedStack: CardStack
@@ -73,6 +79,7 @@ export interface DuelCard extends CardPrototype {
   id: string
   strength: number
   type: CardType
+  retaliates: boolean
   base: {
     cost: number
     strength: number

@@ -1,8 +1,7 @@
 import { Action } from '@reduxjs/toolkit'
 import { ListenerApi } from 'src/app/listenerMiddleware'
-import { AppDispatch } from 'src/app/store'
 import { CARD_STACKS, DUEL_STARTING_COINS } from 'src/modules/duel/constants'
-import { discardCard, playCard, resolveTurn } from 'src/modules/duel/slice'
+import { playCard } from 'src/modules/duel/slice'
 import {
   CardStack,
   DuelCard,
@@ -24,6 +23,7 @@ export const createDuelCard = (base: CardBase): DuelCard => ({
   ...base,
   id: generateUUID(),
   strength: base.type === 'agent' ? base.strength : 0,
+  retaliates: base.type === 'agent' ? !!base.retaliates : false,
   base: {
     strength: base.type === 'agent' ? base.strength : 0,
     cost: base.cost,
@@ -140,29 +140,6 @@ export const moveCardBetweenStacks = ({
     : [...players[playerId][to], movedCardId]
 }
 
-interface triggerPostCardPlayProps {
-  dispatch: AppDispatch
-  playerId: string
-  card: DuelCard
-}
-
-/**
- * A utility that triggers all actions that have to happen after a card is played.
- */
-export const triggerPostCardPlay = ({
-  dispatch,
-  playerId,
-  card,
-}: triggerPostCardPlayProps) => {
-  const { type, id } = card
-
-  if (type === 'instant') {
-    dispatch(discardCard({ cardId: id, playerId }))
-  }
-
-  dispatch(resolveTurn())
-}
-
 /**
  * Sorts players so the logged in player prespective is on the bottom of the board.
  */
@@ -182,16 +159,13 @@ export const sortDuelPlayers = (
 export const getInactivePlayerId = (
   players: DuelPlayers,
   activePlayerId: string,
-) => Object.keys(players).filter((id) => id !== activePlayerId)[0]
+) => Object.keys(players).find((id) => id !== activePlayerId) || activePlayerId
 
 /**
- * Get the index of the current attacker.
+ * Get the id of the opposite player.
  */
-export const getAttackingAgentIndex = (
-  players: DuelPlayers,
-  activePlayerId: string,
-  attackingAgentId: string,
-) => players[activePlayerId].board.indexOf(attackingAgentId)
+export const getOppositePlayerId = (players: DuelPlayers, playerId: string) =>
+  Object.keys(players).find((id) => id !== playerId) || playerId
 
 export const getOnPlayPredicateForCardBase = (
   action: Action,

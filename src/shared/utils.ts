@@ -1,7 +1,6 @@
 import { DuelCard } from 'src/modules/duel/types'
 import { FACTION_COLOR_MAP } from 'src/shared/constants'
 import { CardBase } from 'src/shared/types'
-import { CardBases } from 'src/shared/data'
 
 /**
  * Generates a unique id for cards, players, etc.
@@ -74,5 +73,8 @@ export const getFactionColor = (factions: CardBase['factions']): string => {
   })`
 }
 
-export const getDuelCardsBase = (card: DuelCard): CardBase | undefined =>
-  Object.values(CardBases).find(({ name }) => name === card.name)
+export const getDuelCardsBase = (card: DuelCard): CardBase => {
+  const { type, ...baseProperties } = card
+
+  return { ...baseProperties, type: type === 'agent' ? 'agent' : 'instant' }
+}

@@ -32,7 +32,7 @@ export interface CardPrototype {
   factions: CardFaction[]
   categories: CardCategory[]
   rank: CardRank
-  description: string[]
+  description?: string[]
   flavor?: string
 }
 
@@ -43,6 +43,7 @@ export interface Instant extends CardPrototype {
 export interface Agent extends CardPrototype {
   type: 'agent'
   strength: number
+  retaliates?: boolean
 }
 
 /**

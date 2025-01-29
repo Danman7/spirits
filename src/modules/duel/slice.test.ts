@@ -236,20 +236,47 @@ describe('Playing turns', () => {
 
   test('resolve end of turn', () => {
     const state = duelReducer(mockDuelState, resolveTurn())
-    const { phase, attackingAgentId } = state
+    const { phase, attackingAgentId, attackingQueue, players } = state
+    const player = players[playerId]
+    const opponent = players[opponentId]
 
     expect(phase).toBe('Resolving turn')
     expect(attackingAgentId).toBe(stackedPlayerMock.board?.[0])
+    expect(attackingQueue).toEqual([
+      { attackerId: player.board[0], defenderId: opponent.board[0] },
+    ])
   })
 
-  test('resolve end of turn if active player has no units on board', () => {
+  test('resolve end of turn if active player has more agents on board', () => {
+    mockDuelState.players[playerId] = {
+      ...stackedPlayerMock,
+      ...normalizePlayerCards({
+        board: [TempleGuard, TempleGuard],
+      }),
+    }
+
+    const state = duelReducer(mockDuelState, resolveTurn())
+    const { phase, attackingAgentId, attackingQueue, players } = state
+    const player = players[playerId]
+    const opponent = players[opponentId]
+
+    expect(phase).toBe('Resolving turn')
+    expect(attackingAgentId).toBe(player.board?.[0])
+    expect(attackingQueue).toEqual([
+      { attackerId: player.board[0], defenderId: opponent.board[0] },
+      { attackerId: player.board[1], defenderId: opponent.board[0] },
+    ])
+  })
+
+  test('resolve end of turn if active player has no agents on board', () => {
     mockDuelState.players[playerId].board = []
 
     const state = duelReducer(mockDuelState, resolveTurn())
-    const { phase, attackingAgentId } = state
+    const { phase, attackingAgentId, attackingQueue } = state
 
     expect(phase).toBe('Resolving turn')
     expect(attackingAgentId).toBe('')
+    expect(attackingQueue).toEqual([])
   })
 
   test('agent attacking player', () => {
@@ -292,6 +319,21 @@ describe('Playing turns', () => {
       }),
     }
     mockDuelState.attackingAgentId = mockDuelState.players[playerId].board[0]
+
+    const player = mockDuelState.players[playerId]
+    const opponent = mockDuelState.players[opponentId]
+
+    mockDuelState.attackingQueue = [
+      {
+        attackerId: mockDuelState.attackingAgentId,
+        defenderId: opponent.board[0],
+      },
+      {
+        attackerId: player.board[1],
+        defenderId: opponent.board[0],
+      },
+    ]
+
     const state = duelReducer(mockDuelState, moveToNextAttackingAgent())
     const { attackingAgentId } = state
 

@@ -14,7 +14,7 @@ it('should display all UI segments of a card when face up', () => {
   )
   expect(getByText(`Cost: ${mockCard.cost}`)).toBeInTheDocument()
   expect(getByText(joinCardCategories(mockCard.categories))).toBeInTheDocument()
-  expect(getByText(mockCard.description[0])).toBeInTheDocument()
+  expect(getByText((mockCard.description as string[])[0])).toBeInTheDocument()
   expect(getByText(mockCard.flavor as string)).toBeInTheDocument()
 })
 

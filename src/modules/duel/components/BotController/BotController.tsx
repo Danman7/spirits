@@ -6,7 +6,7 @@ import {
   getPlayers,
 } from 'src/modules/duel/selectors'
 import { completeRedraw, playCard, resolveTurn } from 'src/modules/duel/slice'
-import { getPlayableCardIds, triggerPostCardPlay } from 'src/modules/duel/utils'
+import { getPlayableCardIds } from 'src/modules/duel/utils'
 import { getRandomArrayItem } from 'src/shared/utils'
 
 interface BotControllerProps {
@@ -20,7 +20,6 @@ export const BotController: FC<BotControllerProps> = ({ playerId }) => {
   const activePlayerId = useAppSelector(getActivePlayerId)
 
   const player = players[playerId]
-  const { cards } = player
   const isActive = playerId === activePlayerId
 
   // Pass redrawing automatically (for now)
@@ -28,7 +27,7 @@ export const BotController: FC<BotControllerProps> = ({ playerId }) => {
     if (phase === 'Redrawing') {
       dispatch(completeRedraw(playerId))
     }
-  }, [playerId, phase, dispatch])
+  }, [phase])
 
   // Play a random card on turn (for now)
   useEffect(() => {
@@ -45,17 +44,11 @@ export const BotController: FC<BotControllerProps> = ({ playerId }) => {
             shouldPay: true,
           }),
         )
-
-        triggerPostCardPlay({
-          card: cards[cardId],
-          playerId,
-          dispatch,
-        })
       } else {
         dispatch(resolveTurn())
       }
     }
-  }, [cards, playerId, isActive, phase, player, dispatch])
+  }, [isActive, phase])
 
   return <></>
 }

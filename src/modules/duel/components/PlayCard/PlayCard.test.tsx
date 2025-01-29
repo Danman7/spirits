@@ -1,26 +1,20 @@
 import { fireEvent, waitFor } from '@testing-library/dom'
 import '@testing-library/jest-dom'
-import { act } from 'react'
 import { RootState } from 'src/app/store'
 import { PlayCard } from 'src/modules/duel/components'
 import {
-  agentAttack,
   completeRedraw,
   discardCard,
   drawCardFromDeck,
-  moveToNextAttackingAgent,
   playCard,
   putCardAtBottomOfDeck,
 } from 'src/modules/duel/slice'
 import {
-  opponentId,
   playerId,
   stackedPlayerMock,
   stackedStateMock,
 } from 'src/shared/__mocks__'
-import { TICK } from 'src/shared/constants'
 import { renderWithProviders } from 'src/shared/rtlRender'
-import { CARD_TEST_ID } from 'src/shared/testIds'
 import { deepClone, joinCardCategories } from 'src/shared/utils'
 
 const mockCard =
@@ -51,7 +45,7 @@ it('should display all UI segments of a card when face up', () => {
   )
   expect(getByText(`Cost: ${mockCard.cost}`)).toBeInTheDocument()
   expect(getByText(joinCardCategories(mockCard.categories))).toBeInTheDocument()
-  expect(getByText(mockCard.description[0])).toBeInTheDocument()
+  expect(getByText((mockCard.description as string[])[0])).toBeInTheDocument()
   expect(getByText(mockCard.flavor as string)).toBeInTheDocument()
 })
 
@@ -154,65 +148,6 @@ it('should not be able to be played if outside budget', () => {
   fireEvent.click(getByText(mockCard.name))
 
   expect(dispatchSpy).not.toHaveBeenCalled()
-})
-
-it('should trigger attacking from bottom animation', async () => {
-  preloadedState.duel.attackingAgentId = mockCard.id
-
-  const { getByTestId, dispatchSpy } = renderWithProviders(
-    <PlayCard
-      cardId={stackedPlayerMock.hand[0]}
-      playerId={playerId}
-      stack="board"
-    />,
-    {
-      preloadedState,
-    },
-  )
-
-  fireEvent.animationEnd(getByTestId(`${CARD_TEST_ID}${mockCard.id}`))
-
-  await act(async () => {
-    await new Promise((r) => setTimeout(r, TICK))
-  })
-
-  expect(dispatchSpy).toHaveBeenCalledWith(
-    agentAttack({
-      defendingAgentId: preloadedState.duel.players[opponentId].board[0],
-      defendingPlayerId: opponentId,
-    }),
-  )
-  expect(dispatchSpy).toHaveBeenCalledWith(moveToNextAttackingAgent())
-})
-
-it('should trigger attacking from top animation', async () => {
-  preloadedState.duel.attackingAgentId = mockCard.id
-
-  const { getByTestId, dispatchSpy } = renderWithProviders(
-    <PlayCard
-      cardId={stackedPlayerMock.hand[0]}
-      isOnTop
-      playerId={playerId}
-      stack="board"
-    />,
-    {
-      preloadedState,
-    },
-  )
-
-  fireEvent.animationEnd(getByTestId(`${CARD_TEST_ID}${mockCard.id}`))
-
-  await act(async () => {
-    await new Promise((r) => setTimeout(r, TICK))
-  })
-
-  expect(dispatchSpy).toHaveBeenCalledWith(
-    agentAttack({
-      defendingAgentId: preloadedState.duel.players[opponentId].board[0],
-      defendingPlayerId: opponentId,
-    }),
-  )
-  expect(dispatchSpy).toHaveBeenCalledWith(moveToNextAttackingAgent())
 })
 
 it('should discard card if strength is 0 or below', () => {

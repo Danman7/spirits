@@ -37,3 +37,8 @@ export const getIsBrowsingStack = createSelector(
   getDuelState,
   (duelState) => duelState.isBrowsingStack,
 )
+
+export const getattackingQueue = createSelector(
+  getDuelState,
+  (duelState) => duelState.attackingQueue,
+)

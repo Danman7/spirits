@@ -39,7 +39,7 @@ export const HammeriteNovice: Agent = {
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
-    'On play if you have another Hammerite in play also play all other copies of this card from your hand or deck.',
+    'On play if you have another Hammerite in play also play all other copies of this card from your hand or deck for free.',
   ],
   flavor:
     'This novice has been instructed in the rules and strictures of the Order and has sworn his warrants to be silent in his vigils.',
@@ -68,7 +68,7 @@ export const TempleGuard: Agent = {
   rank: 'common',
   factions: ['Order'],
   categories: ['Hammerite', 'Guard'],
-  description: ['When this card is attacked, it retaliates.'],
+  retaliates: true,
   flavor:
     'Thy hammer pounds the nail, holds the roof-beam. Thy hammer strikes the iron, shapes the cauldron.',
 }

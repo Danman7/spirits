@@ -2,7 +2,6 @@ import globals from 'globals'
 import pluginJs from '@eslint/js'
 import tseslint from 'typescript-eslint'
 import pluginReact from 'eslint-plugin-react'
-import hooksPlugin from 'eslint-plugin-react-hooks'
 
 export default [
   { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
@@ -14,11 +13,5 @@ export default [
     rules: {
       'react/react-in-jsx-scope': 0,
     },
-  },
-  {
-    plugins: {
-      'react-hooks': hooksPlugin,
-    },
-    rules: hooksPlugin.configs.recommended.rules,
   },
 ]

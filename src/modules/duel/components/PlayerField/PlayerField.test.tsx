@@ -1,11 +1,10 @@
-import { fireEvent, waitFor } from '@testing-library/dom'
+import { fireEvent } from '@testing-library/dom'
 import '@testing-library/jest-dom'
 import { RootState } from 'src/app/store'
 import { PlayerField } from 'src/modules/duel/components'
 import {
   completeRedraw,
   drawCardFromDeck,
-  moveToNextAttackingAgent,
   playCard,
   putCardAtBottomOfDeck,
   setBrowsedStack,
@@ -153,7 +152,7 @@ describe('Bottom (Player) Side', () => {
     const attackingAgentId = stackedPlayerMock.board[0]
     preloadedState.duel.attackingAgentId = attackingAgentId
 
-    const { getByTestId, dispatchSpy } = renderWithProviders(
+    const { getByTestId } = renderWithProviders(
       <PlayerField playerId={playerId} />,
       {
         preloadedState,
@@ -161,10 +160,6 @@ describe('Bottom (Player) Side', () => {
     )
 
     fireEvent.animationEnd(getByTestId(`${CARD_TEST_ID}${attackingAgentId}`))
-
-    await waitFor(() =>
-      expect(dispatchSpy).toHaveBeenCalledWith(moveToNextAttackingAgent()),
-    )
   })
 })
 

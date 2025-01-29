@@ -1,4 +1,3 @@
-import { motion } from 'motion/react'
 import { FC } from 'react'
 import { CardContent, CardFooter, CardHeader } from 'src/shared/components'
 import components from 'src/shared/styles/components.module.css'
@@ -10,13 +9,12 @@ interface CardProps {
 }
 
 export const Card: FC<CardProps> = ({ card }) => {
-  const { type, name, description, flavor, categories, factions, cost, rank } =
-    card
+  const { type, name, categories, factions, cost, rank } = card
 
   const strength = type === 'agent' ? card.strength : undefined
 
   return (
-    <motion.div
+    <div
       data-testid={`${CARD_TEST_ID}${name}`}
       className={components.cardOutline}
     >
@@ -31,11 +29,11 @@ export const Card: FC<CardProps> = ({ card }) => {
             strength={strength}
           />
 
-          <CardContent description={description} flavor={flavor} />
+          <CardContent card={card} />
 
           <CardFooter cost={cost} />
         </div>
       </div>
-    </motion.div>
+    </div>
   )
 }

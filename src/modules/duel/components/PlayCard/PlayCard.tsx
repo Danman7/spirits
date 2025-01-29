@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from 'src/app/store'
 import {
   getActivePlayerId,
   getAttackingAgentId,
+  getattackingQueue,
   getPhase,
   getPlayers,
 } from 'src/modules/duel/selectors'
@@ -17,18 +18,15 @@ import {
   putCardAtBottomOfDeck,
 } from 'src/modules/duel/slice'
 import { CardStack } from 'src/modules/duel/types'
-import {
-  getAttackingAgentIndex,
-  getInactivePlayerId,
-  triggerPostCardPlay,
-} from 'src/modules/duel/utils'
+import { getOppositePlayerId } from 'src/modules/duel/utils'
 import { getUserId } from 'src/modules/user/selectors'
 import { CardContent, CardFooter, CardHeader } from 'src/shared/components'
-import { TICK } from 'src/shared/constants'
+import { ACTION_WAIT_TIMEOUT, TICK } from 'src/shared/constants'
 import { usePrevious } from 'src/shared/customHooks'
 import animations from 'src/shared/styles/animations.module.css'
 import components from 'src/shared/styles/components.module.css'
 import { CARD_TEST_ID } from 'src/shared/testIds'
+import { getDuelCardsBase } from 'src/shared/utils'
 
 interface PlayCardProps {
   cardId: string
@@ -48,21 +46,12 @@ export const PlayCard: FC<PlayCardProps> = ({
   const players = useAppSelector(getPlayers)
   const activePlayerId = useAppSelector(getActivePlayerId)
   const attackingAgentId = useAppSelector(getAttackingAgentId)
+  const attackingQueue = useAppSelector(getattackingQueue)
   const userId = useAppSelector(getUserId)
 
   const { hasPerformedAction, coins, cards } = players[playerId]
-  const {
-    name,
-    description,
-    flavor,
-    categories,
-    factions,
-    cost,
-    base,
-    rank,
-    strength,
-    type,
-  } = cards[cardId]
+  const card = cards[cardId]
+  const { name, categories, factions, cost, base, rank, strength, type } = card
 
   const isFaceDown = isOnTop
     ? ['deck', 'discard', 'hand'].includes(stack)
@@ -83,12 +72,6 @@ export const PlayCard: FC<PlayCardProps> = ({
       if (phase === 'Player Turn' && isUserActive && cost <= coins) {
         return () => {
           dispatch(playCard({ cardId, playerId, shouldPay: true }))
-
-          triggerPostCardPlay({
-            card: cards[cardId],
-            playerId,
-            dispatch,
-          })
         }
       }
 
@@ -107,48 +90,9 @@ export const PlayCard: FC<PlayCardProps> = ({
     }
 
     return undefined
-  }, [
-    cardId,
-    cards,
-    coins,
-    cost,
-    dispatch,
-    hasPerformedAction,
-    isOnTop,
-    isUserActive,
-    phase,
-    playerId,
-    stack,
-  ])
+  }, [hasPerformedAction, phase, stack])
 
-  const onAnimationEnd = () => {
-    if (isAttacking) {
-      const defendingPlayer =
-        players[getInactivePlayerId(players, activePlayerId)]
-      const attackingCardIndex = getAttackingAgentIndex(
-        players,
-        activePlayerId,
-        attackingAgentId,
-      )
-
-      // Set the defending agent to either the one opposite the attacker,
-      // or the last agent on the defending player's board
-      const defendingAgentId =
-        defendingPlayer.board[attackingCardIndex] ||
-        defendingPlayer.board[defendingPlayer.board.length - 1] ||
-        ''
-
-      dispatch(
-        agentAttack({
-          defendingAgentId,
-          defendingPlayerId: defendingPlayer.id,
-        }),
-      )
-      dispatch(moveToNextAttackingAgent())
-    }
-  }
-
-  // Attack animations
+  // Attack
   useEffect(() => {
     if (isAttacking) {
       setCardOutlineAnimation('')
@@ -166,6 +110,19 @@ export const PlayCard: FC<PlayCardProps> = ({
             : ` ${animations.attackFromBottomFace}`,
         )
       }, TICK)
+
+      dispatch(
+        agentAttack({
+          defendingAgentId: attackingQueue.find(
+            ({ attackerId }) => attackerId === cardId,
+          )?.defenderId,
+          defendingPlayerId: getOppositePlayerId(players, playerId),
+        }),
+      )
+
+      setTimeout(() => {
+        dispatch(moveToNextAttackingAgent())
+      }, ACTION_WAIT_TIMEOUT)
     }
   }, [isAttacking, isOnTop])
 
@@ -209,7 +166,6 @@ export const PlayCard: FC<PlayCardProps> = ({
       layout
       layoutId={cardId}
       data-testid={`${CARD_TEST_ID}${cardId}`}
-      onAnimationEnd={onAnimationEnd}
       onClick={onClick}
       initial={false}
       className={`${components.cardOutline}${isSmall ? ` ${components.smallCard}` : ''}${isFaceDown ? ` ${components.cardFlipped}` : ''}${cardOutlineAnimation}`}
@@ -228,7 +184,7 @@ export const PlayCard: FC<PlayCardProps> = ({
               baseStrength={base.strength}
             />
 
-            <CardContent description={description} flavor={flavor} />
+            <CardContent card={getDuelCardsBase(card)} />
 
             <CardFooter cost={cost} />
           </div>

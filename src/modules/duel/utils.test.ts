@@ -1,16 +1,8 @@
 import {
-  BookOfAsh,
-  HammeriteNovice,
-  Haunt,
-  TempleGuard,
-  Zombie,
-} from 'src/shared/data'
-import {
   CARD_STACKS,
   DUEL_STARTING_COINS,
   EMPTY_PLAYER,
 } from 'src/modules/duel/constants'
-import { resolveTurn, discardCard } from 'src/modules/duel/slice'
 import { DuelCard, DuelState, Player } from 'src/modules/duel/types'
 import {
   copyDuelCard,
@@ -19,9 +11,15 @@ import {
   getPlayableCardIds,
   moveCardBetweenStacks,
   normalizePlayerCards,
-  triggerPostCardPlay,
 } from 'src/modules/duel/utils'
 import { playerId, stackedDuelStateMock } from 'src/shared/__mocks__'
+import {
+  BookOfAsh,
+  HammeriteNovice,
+  Haunt,
+  TempleGuard,
+  Zombie,
+} from 'src/shared/data'
 
 test('createPlayCardFromPrototype should create a new play ready card from a card prototype', () => {
   const newCard = createDuelCard(Haunt)
@@ -145,32 +143,6 @@ it('should move a card to the front of a stack', () => {
 
   expect(updatedPlayer.deck).toContain(movedCardId)
   expect(updatedPlayer.deck.indexOf(movedCardId)).toBe(0)
-})
-
-it('should trigger post play agent actions', () => {
-  const mockDispatch = jest.fn()
-
-  const card = createDuelCard(Haunt)
-
-  triggerPostCardPlay({ dispatch: mockDispatch, playerId, card })
-
-  expect(mockDispatch).toHaveBeenCalledWith(resolveTurn())
-})
-
-it('should trigger post play instant actions', () => {
-  const mockDispatch = jest.fn()
-
-  const card = createDuelCard(BookOfAsh)
-
-  triggerPostCardPlay({ dispatch: mockDispatch, playerId, card })
-
-  expect(mockDispatch).toHaveBeenCalledWith(
-    discardCard({
-      cardId: card.id,
-      playerId,
-    }),
-  )
-  expect(mockDispatch).toHaveBeenCalledWith(resolveTurn())
 })
 
 it('should get the correct neighbour indexes from array', () => {

@@ -1,10 +1,13 @@
 import { fireEvent, within } from '@testing-library/dom'
 import '@testing-library/jest-dom'
+import { act } from 'react'
 import { RootState } from 'src/app/store'
 import { Board } from 'src/modules/duel/components'
 import { normalizePlayerCards } from 'src/modules/duel/utils'
 import {
+  initialOpponentMock,
   initialPlayerMock,
+  opponentId,
   playerId,
   stackedStateMock,
 } from 'src/shared/__mocks__'
@@ -13,12 +16,16 @@ import {
   ElevatedAcolyte,
   HammeriteNovice,
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
+  Haunt,
   HouseGuard,
   TempleGuard,
+  Zombie,
 } from 'src/shared/data'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { CARD_TEST_ID, PLAYER_BOARD_ID } from 'src/shared/testIds'
 import { deepClone } from 'src/shared/utils'
+
+jest.useFakeTimers()
 
 let preloadedState: RootState
 
@@ -223,5 +230,188 @@ describe(BrotherSachelman.name, () => {
         }),
       ).toHaveTextContent(`${name}${strength}`)
     })
+  })
+})
+
+describe(TempleGuard.name, () => {
+  it('should not retaliate when not attacked', () => {
+    preloadedState.duel.players[playerId] = {
+      ...initialPlayerMock,
+      ...normalizePlayerCards({
+        hand: [],
+        board: [ElevatedAcolyte, TempleGuard],
+      }),
+    }
+    preloadedState.duel.activePlayerId = opponentId
+
+    const player = preloadedState.duel.players[playerId]
+    const opponent = preloadedState.duel.players[opponentId]
+    const firstAttackerId = opponent.board[0]
+    const firstAttacker = opponent.cards[firstAttackerId]
+    const templeGuardId = player.board[1]
+    const templeGuard = player.cards[templeGuardId]
+
+    const { getByTestId } = renderWithProviders(<Board />, {
+      preloadedState,
+    })
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    expect(
+      within(getByTestId(`${CARD_TEST_ID}${templeGuardId}`)).getByRole(
+        'heading',
+        {
+          level: 3,
+        },
+      ),
+    ).toHaveTextContent(`${templeGuard.name}${templeGuard.strength}`)
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    expect(
+      within(getByTestId(`${CARD_TEST_ID}${firstAttackerId}`)).getByRole(
+        'heading',
+        {
+          level: 3,
+        },
+      ),
+    ).toHaveTextContent(`${firstAttacker.name}${firstAttacker.strength}`)
+  })
+
+  it('should retaliate when attacked', () => {
+    preloadedState.duel.players[playerId] = {
+      ...initialPlayerMock,
+      ...normalizePlayerCards({
+        hand: [],
+        board: [TempleGuard],
+      }),
+    }
+    preloadedState.duel.activePlayerId = opponentId
+
+    const player = preloadedState.duel.players[playerId]
+    const opponent = preloadedState.duel.players[opponentId]
+    const firstAttackerId = opponent.board[0]
+    const firstAttacker = opponent.cards[firstAttackerId]
+    const templeGuardId = player.board[0]
+    const templeGuard = player.cards[templeGuardId]
+
+    const { getByTestId } = renderWithProviders(<Board />, {
+      preloadedState,
+    })
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    expect(
+      within(getByTestId(`${CARD_TEST_ID}${templeGuardId}`)).getByRole(
+        'heading',
+        {
+          level: 3,
+        },
+      ),
+    ).toHaveTextContent(`${templeGuard.name}${templeGuard.strength - 1}`)
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    expect(
+      within(getByTestId(`${CARD_TEST_ID}${firstAttackerId}`)).getByRole(
+        'heading',
+        {
+          level: 3,
+        },
+      ),
+    ).toHaveTextContent(`${firstAttacker.name}${firstAttacker.strength - 1}`)
+  })
+
+  it('should retaliate twice if attacked twice', () => {
+    preloadedState.duel.players[playerId] = {
+      ...initialPlayerMock,
+      ...normalizePlayerCards({
+        hand: [],
+        board: [TempleGuard],
+      }),
+    }
+    preloadedState.duel.players[opponentId] = {
+      ...initialOpponentMock,
+      ...normalizePlayerCards({
+        hand: [],
+        board: [Haunt, Zombie],
+      }),
+    }
+    preloadedState.duel.activePlayerId = opponentId
+
+    const player = preloadedState.duel.players[playerId]
+    const opponent = preloadedState.duel.players[opponentId]
+    const firstAttackerId = opponent.board[0]
+    const secondAttackerId = opponent.board[1]
+    const firstAttacker = opponent.cards[firstAttackerId]
+    const secondAttacker = opponent.cards[secondAttackerId]
+    const templeGuardId = player.board[0]
+    const templeGuard = player.cards[templeGuardId]
+
+    const { getByTestId } = renderWithProviders(<Board />, {
+      preloadedState,
+    })
+
+    // First round of attacks
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    expect(
+      within(getByTestId(`${CARD_TEST_ID}${templeGuardId}`)).getByRole(
+        'heading',
+        {
+          level: 3,
+        },
+      ),
+    ).toHaveTextContent(`${templeGuard.name}${templeGuard.strength - 1}`)
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    expect(
+      within(getByTestId(`${CARD_TEST_ID}${firstAttackerId}`)).getByRole(
+        'heading',
+        {
+          level: 3,
+        },
+      ),
+    ).toHaveTextContent(`${firstAttacker.name}${firstAttacker.strength - 1}`)
+
+    // Second round of attacks
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    expect(
+      within(getByTestId(`${CARD_TEST_ID}${templeGuardId}`)).getByRole(
+        'heading',
+        {
+          level: 3,
+        },
+      ),
+    ).toHaveTextContent(`${templeGuard.name}${templeGuard.strength - 2}`)
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    expect(
+      within(getByTestId(`${CARD_TEST_ID}${secondAttackerId}`)).getByRole(
+        'heading',
+        {
+          level: 3,
+        },
+      ),
+    ).toHaveTextContent(`${secondAttacker.name}${secondAttacker.strength - 1}`)
   })
 })
