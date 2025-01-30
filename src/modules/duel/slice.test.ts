@@ -139,10 +139,10 @@ describe('Sequence before play', () => {
     const state = duelReducer(mockDuelState, playersDrawInitialCards())
     const { players } = state
 
-    Object.values(players).forEach(({ hand, deck }) => {
+    Object.values(players).forEach(({ hand, deck, id }) => {
       expect(hand).toHaveLength(DUEL_INITIAL_CARDS_DRAWN)
       expect(deck).toHaveLength(
-        initialPlayerMock.deck.length - DUEL_INITIAL_CARDS_DRAWN,
+        mockDuelState.players[id].deck.length - DUEL_INITIAL_CARDS_DRAWN,
       )
     })
     expect(state.phase).toBe('Redrawing')

@@ -40,6 +40,8 @@ export const ActionPanel: FC = () => {
     (phase === 'Player Turn' && !isActive) ||
     (phase === 'Player Turn' && isActive && !hasPerformedAction)
 
+  const onPassTurn = () => dispatch(resolveTurn())
+
   useEffect(() => {
     switch (phase) {
       case 'Redrawing':
@@ -68,9 +70,7 @@ export const ActionPanel: FC = () => {
               <>
                 <h3>{yourTurnTitle}</h3>
                 {yourTurnMessage}
-                <Link onClick={() => dispatch(resolveTurn())}>
-                  {passButtonMessage}
-                </Link>
+                <Link onClick={onPassTurn}>{passButtonMessage}</Link>
               </>
             ) : (
               <>

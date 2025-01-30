@@ -103,7 +103,9 @@ export const PlayCard: FC<PlayCardProps> = ({
   // Discard on defeat
   useEffect(() => {
     if (stack === 'board' && strength <= 0) {
-      dispatch(discardCard({ cardId, playerId }))
+      setTimeout(() => {
+        dispatch(discardCard({ cardId, playerId }))
+      }, ACTION_WAIT_TIMEOUT)
     }
   }, [stack, strength])
 

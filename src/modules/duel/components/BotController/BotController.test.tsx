@@ -1,9 +1,12 @@
+import { act } from 'react'
 import { RootState } from 'src/app/store'
 import { BotController } from 'src/modules/duel/components'
 import { completeRedraw, playCard, resolveTurn } from 'src/modules/duel/slice'
 import { opponentId as playerId, stackedStateMock } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { deepClone } from 'src/shared/utils'
+
+jest.useFakeTimers()
 
 let preloadedState: RootState
 
@@ -37,6 +40,10 @@ it('should play a card within budget on turn', () => {
 
   const cardId = preloadedState.duel.players[playerId].hand[0]
 
+  act(() => {
+    jest.runAllTimers()
+  })
+
   expect(dispatchSpy).toHaveBeenCalledWith(
     playCard({
       cardId,
@@ -56,6 +63,10 @@ it('should play no card if there is no budget', () => {
       preloadedState,
     },
   )
+
+  act(() => {
+    jest.runAllTimers()
+  })
 
   expect(dispatchSpy).toHaveBeenCalledTimes(1)
   expect(dispatchSpy).toHaveBeenCalledWith(resolveTurn())

@@ -1,4 +1,5 @@
 import { fireEvent, waitFor } from '@testing-library/dom'
+import { act } from 'react'
 import { RootState } from 'src/app/store'
 import { PlayCard } from 'src/modules/duel/components'
 import {
@@ -15,6 +16,8 @@ import {
 } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { deepClone, joinCardCategories } from 'src/shared/utils'
+
+jest.useFakeTimers()
 
 const mockCard =
   stackedStateMock.duel.players[playerId].cards[
@@ -164,6 +167,10 @@ it('should discard card if strength is 0 or below', () => {
       preloadedState,
     },
   )
+
+  act(() => {
+    jest.runAllTimers()
+  })
 
   expect(dispatchSpy).toHaveBeenCalledWith(
     discardCard({

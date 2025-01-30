@@ -7,6 +7,7 @@ import {
 } from 'src/modules/duel/selectors'
 import { completeRedraw, playCard, resolveTurn } from 'src/modules/duel/slice'
 import { getPlayableCardIds } from 'src/modules/duel/utils'
+import { ACTION_WAIT_TIMEOUT } from 'src/shared/constants'
 import { getRandomArrayItem } from 'src/shared/utils'
 
 interface BotControllerProps {
@@ -32,21 +33,23 @@ export const BotController: FC<BotControllerProps> = ({ playerId }) => {
   // Play a random card on turn (for now)
   useEffect(() => {
     if (phase === 'Player Turn' && isActive) {
-      const playableCardIds = getPlayableCardIds(player)
+      setTimeout(() => {
+        const playableCardIds = getPlayableCardIds(player)
 
-      if (playableCardIds.length) {
-        const cardId = getRandomArrayItem(playableCardIds)
+        if (playableCardIds.length) {
+          const cardId = getRandomArrayItem(playableCardIds)
 
-        dispatch(
-          playCard({
-            cardId,
-            playerId,
-            shouldPay: true,
-          }),
-        )
-      } else {
-        dispatch(resolveTurn())
-      }
+          dispatch(
+            playCard({
+              cardId,
+              playerId,
+              shouldPay: true,
+            }),
+          )
+        } else {
+          dispatch(resolveTurn())
+        }
+      }, ACTION_WAIT_TIMEOUT)
     }
   }, [isActive, phase])
 
