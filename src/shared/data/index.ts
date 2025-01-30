@@ -17,3 +17,4 @@ export const CardBases = {
 }
 
 export type CardBaseName = keyof typeof CardBases
+export const baseNames = Object.keys(CardBases)

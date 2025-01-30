@@ -16,7 +16,7 @@ interface CardProps {
   isFaceDown?: boolean
   isSmall?: boolean
   isAttacking?: boolean
-  attacksFromAbove?: boolean
+  isAttackingFromAbove?: boolean
   onClick?: () => void
 }
 
@@ -27,7 +27,7 @@ export const Card: FC<CardProps> = ({
   isFaceDown = false,
   isSmall = false,
   isAttacking = false,
-  attacksFromAbove: isOnTop = false,
+  isAttackingFromAbove: isOnTop = false,
   onClick,
 }) => {
   const base = CardBases[baseName]

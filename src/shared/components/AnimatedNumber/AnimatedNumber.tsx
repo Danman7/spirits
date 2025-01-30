@@ -32,7 +32,7 @@ export const AnimatedNumber: FC<AnimatedNumberProps> = ({
         ...updates,
         {
           id: updateId,
-          text: `${value > previousValue ? '+ ' : '- '}${value - previousValue}`,
+          text: `${value > previousValue ? '+' : ''}${value - previousValue}`,
         },
       ])
 

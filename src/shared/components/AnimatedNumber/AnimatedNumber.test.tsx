@@ -12,12 +12,12 @@ it('should show changes in value', () => {
 
   rerender(<AnimatedNumber value={update} />)
 
-  const differenceElement = getByText(`+ ${update - value}`)
+  const differenceElement = getByText(`+${update - value}`)
 
   expect(getByText(update)).toBeInTheDocument()
   expect(differenceElement).toBeInTheDocument()
 
   fireEvent.animationEnd(differenceElement)
 
-  expect(queryByText(`+ ${update - value}`)).not.toBeInTheDocument()
+  expect(queryByText(`+${update - value}`)).not.toBeInTheDocument()
 })

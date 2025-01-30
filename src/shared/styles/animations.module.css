@@ -139,9 +139,8 @@
 }
 
 .slideUpOpacity {
-  composes: animation difference;
-  position: absolute;
-  animation-duration: 3s;
+  composes: animation;
+  animation-duration: 4s;
   animation-name: slideUpOpacity;
 }
 
