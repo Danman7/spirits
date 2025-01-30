@@ -7,12 +7,13 @@ import { stackedStateMock } from 'src/shared/__mocks__'
 const meta = {
   title: 'Board',
   component: Board,
+  tags: ['Duel', 'Stateful'],
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         component:
-          'This is the main component for dueling (single and multi-player) that displays both player’s card stacks and gameplay UI. It takes no properties as it gets all information from the app store and distributes it to the nested children.',
+          'This is a stateful component that wraps the whole dueling UI. It integrates the two players’ fields with their respective card stacks and the panels that communicate the game’s progress. If a duel is initiated, the Board will handle display and coordination between its children and the store. It is a base component that doesn’t take props, but gets everything from the store.',
       },
     },
   },

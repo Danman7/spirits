@@ -1,5 +1,4 @@
 import { fireEvent, waitFor } from '@testing-library/dom'
-import '@testing-library/jest-dom'
 import { RootState } from 'src/app/store'
 import { PlayCard } from 'src/modules/duel/components'
 import {

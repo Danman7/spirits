@@ -4,13 +4,10 @@ import {
   getNeighboursIndexes,
   getPlayAllCopiesEffect,
 } from 'src/modules/duel/utils'
-import {
-  HammeriteNovice,
-  HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
-} from 'src/shared/data'
+import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/shared/data'
 
 export const PlayAllHammeriteNoviceCopies: Effect = (action, listenerApi) =>
-  getPlayAllCopiesEffect(action, listenerApi, HammeriteNovice)
+  getPlayAllCopiesEffect(action, listenerApi, 'HammeriteNovice')
 
 export const DamageSelfIfNotNextToHigherPowerHammerite: Effect = (
   action,
@@ -21,6 +18,7 @@ export const DamageSelfIfNotNextToHigherPowerHammerite: Effect = (
     const { cardId, playerId } = action.payload
     const { players } = getState().duel
     const { board, cards } = players[playerId]
+    const matchedCard = cards[cardId]
 
     const playerdCardIndex = board.indexOf(cardId)
     const neighbourIndexed = getNeighboursIndexes(playerdCardIndex, board)
@@ -28,11 +26,12 @@ export const DamageSelfIfNotNextToHigherPowerHammerite: Effect = (
     if (
       !neighbourIndexed.some((neighbourIndex) => {
         const card = cards[board[neighbourIndex]]
+        const { categories, strength } = card
 
         return (
           card &&
-          card.categories.includes('Hammerite') &&
-          card.strength > cards[cardId].strength
+          categories.includes('Hammerite') &&
+          strength > matchedCard.strength
         )
       })
     ) {
@@ -41,7 +40,7 @@ export const DamageSelfIfNotNextToHigherPowerHammerite: Effect = (
           cardId,
           playerId,
           update: {
-            strength: cards[cardId].strength - 1,
+            strength: matchedCard.strength - 1,
           },
         }),
       )
@@ -60,7 +59,7 @@ export const BoostAlliedHammeritesWithLowerStrength: Effect = (
     const { board, cards } = players[playerId]
 
     board.forEach((boardCardId) => {
-      const { categories, strength } = cards[boardCardId]
+      const { strength, categories } = cards[boardCardId]
 
       if (
         categories.includes('Hammerite') &&

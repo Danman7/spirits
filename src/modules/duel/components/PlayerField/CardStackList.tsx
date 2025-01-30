@@ -22,7 +22,7 @@ export const CardStackList: FC<CardStackListProps> = ({
   >
     {player[stack].map((cardId) => (
       <PlayCard
-        key={cardId}
+        key={`${stack}-${cardId}`}
         stack={stack}
         playerId={player.id}
         cardId={cardId}

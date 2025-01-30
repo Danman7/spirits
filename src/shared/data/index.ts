@@ -15,3 +15,5 @@ export const CardBases = {
   ...ShadowBases,
   ...MixedBases,
 }
+
+export type CardBaseName = keyof typeof CardBases

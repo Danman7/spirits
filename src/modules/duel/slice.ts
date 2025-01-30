@@ -131,37 +131,45 @@ export const duelSlice = createSlice({
       const { players, activePlayerId } = state
 
       state.phase = 'Resolving turn'
-      state.attackingQueue = players[activePlayerId].board.reduce(
-        (attackingQueue, attackerId, attackerIndex) => {
-          const defendingPlayer =
-            players[getInactivePlayerId(players, activePlayerId)]
 
-          // Set the defending agent to either the one opposite the attacker,
-          // or the last agent on the defending player's board
-          const defenderId =
-            defendingPlayer.board[attackerIndex] ||
-            defendingPlayer.board[defendingPlayer.board.length - 1] ||
-            ''
+      const inactivePlayer = getInactivePlayerId(players, activePlayerId)
 
-          const nextattackingQueue: AttackOrder[] = [
-            ...attackingQueue,
-            {
-              attackerId,
-              defenderId,
-            },
-          ]
+      if (inactivePlayer) {
+        state.attackingQueue = players[activePlayerId].board.reduce(
+          (attackingQueue, attackerId, attackerIndex) => {
+            const defendingPlayer = players[inactivePlayer]
 
-          if (defenderId && defendingPlayer.cards[defenderId].retaliates) {
-            nextattackingQueue.push({
-              attackerId: defenderId,
-              defenderId: attackerId,
-            })
-          }
+            // Set the defending agent to either the one opposite the attacker,
+            // or the last agent on the defending player's board
+            const defenderId =
+              defendingPlayer.board[attackerIndex] ||
+              defendingPlayer.board[defendingPlayer.board.length - 1] ||
+              ''
 
-          return nextattackingQueue
-        },
-        [] as AttackOrder[],
-      )
+            const nextattackingQueue: AttackOrder[] = [
+              ...attackingQueue,
+              {
+                attackerId,
+                defenderId,
+              },
+            ]
+
+            if (
+              defenderId &&
+              defendingPlayer.cards[defenderId].traits?.retaliates
+            ) {
+              nextattackingQueue.push({
+                attackerId: defenderId,
+                defenderId: attackerId,
+              })
+            }
+
+            return nextattackingQueue
+          },
+          [] as AttackOrder[],
+        )
+      }
+
       state.attackingAgentId = state.attackingQueue[0]?.attackerId || ''
     },
     agentAttack: (
@@ -238,11 +246,7 @@ export const duelSlice = createSlice({
 
       const discardedCard = players[playerId].cards[movedCardId]
 
-      if (discardedCard.base.strength) {
-        players[playerId].cards[movedCardId].strength =
-          discardedCard.base.strength
-      }
-
+      players[playerId].cards[movedCardId].strength = discardedCard.strength
       players[playerId].income += discardedCard.cost
     },
     addNewCards: (state, action: AddNewCardsAction) => {

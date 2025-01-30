@@ -3,9 +3,8 @@ import {
   DUEL_STARTING_COINS,
   EMPTY_PLAYER,
 } from 'src/modules/duel/constants'
-import { DuelCard, DuelState, Player } from 'src/modules/duel/types'
+import { DuelState, Player } from 'src/modules/duel/types'
 import {
-  copyDuelCard,
   createDuelCard,
   getNeighboursIndexes,
   getPlayableCardIds,
@@ -13,37 +12,23 @@ import {
   normalizePlayerCards,
 } from 'src/modules/duel/utils'
 import { playerId, stackedDuelStateMock } from 'src/shared/__mocks__'
-import {
-  BookOfAsh,
-  HammeriteNovice,
-  Haunt,
-  TempleGuard,
-  Zombie,
-} from 'src/shared/data'
+import { CardBaseName, CardBases } from 'src/shared/data'
 
 test('createPlayCardFromPrototype should create a new play ready card from a card prototype', () => {
-  const newCard = createDuelCard(Haunt)
+  const baseName: CardBaseName = 'TempleGuard'
+  const base = CardBases[baseName]
 
-  expect(newCard).toEqual(expect.objectContaining(Haunt))
-  expect(newCard.base).toEqual({
-    cost: Haunt.cost,
-    strength: Haunt.strength,
-  })
+  const newCard = createDuelCard('TempleGuard')
+
+  expect(newCard).toEqual(
+    expect.objectContaining({
+      cost: base.cost,
+      strength: base.strength,
+      traits: base.traits,
+    }),
+  )
+  expect(newCard.baseName).toEqual('TempleGuard')
   expect(newCard.id).toBeDefined()
-})
-
-test('copyDuelCard', () => {
-  const newAgent = createDuelCard(Haunt)
-  const updatedCard: DuelCard = { ...newAgent, strength: newAgent.strength - 1 }
-  const copiedCard = copyDuelCard(updatedCard)
-
-  expect(copiedCard.id).not.toBe(updatedCard.id)
-  expect(copiedCard.strength).toBe(newAgent.strength)
-
-  const newInstant = createDuelCard(BookOfAsh)
-  const copiedInstant = copyDuelCard(newInstant)
-
-  expect(copiedInstant.strength).toBe(0)
 })
 
 it('should get all playable card ids for a given player with getPlayableCardIds', () => {
@@ -53,7 +38,7 @@ it('should get all playable card ids for a given player with getPlayableCardIds'
     name: 'Hume',
     coins: DUEL_STARTING_COINS,
     ...normalizePlayerCards({
-      hand: [TempleGuard, HammeriteNovice],
+      hand: ['TempleGuard', 'HammeriteNovice'],
     }),
   }
 
@@ -67,10 +52,10 @@ it('should get all playable card ids for a given player with getPlayableCardIds'
 
 it("should normalize a player's cards into all possible stacks with normalizePlayerCards", () => {
   const normalizedCards = normalizePlayerCards({
-    board: [TempleGuard],
-    hand: [HammeriteNovice],
-    deck: [Haunt],
-    discard: [Zombie],
+    board: ['TempleGuard'],
+    hand: ['HammeriteNovice'],
+    deck: ['Haunt'],
+    discard: ['Zombie'],
   })
 
   Object.values(normalizedCards.cards).forEach((card) => {
@@ -84,7 +69,7 @@ it("should normalize a player's cards into all possible stacks with normalizePla
 
 it("should normalize a player's cards into some stacks with normalizePlayerCards", () => {
   const normalizedEmptyCards = normalizePlayerCards({
-    board: [TempleGuard],
+    board: ['TempleGuard'],
   })
 
   expect(normalizedEmptyCards.deck).toHaveLength(0)

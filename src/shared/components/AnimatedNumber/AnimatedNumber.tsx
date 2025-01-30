@@ -1,42 +1,58 @@
 import { FC, useEffect, useState } from 'react'
-import { TICK } from 'src/shared/constants'
 import { usePrevious } from 'src/shared/customHooks'
 import animations from 'src/shared/styles/animations.module.css'
 import components from 'src/shared/styles/components.module.css'
 
 interface AnimatedNumberProps {
   value: number
+  uniqueId?: string
 }
 
-export const AnimatedNumber: FC<AnimatedNumberProps> = ({ value }) => {
+let updateId = 0
+
+export const AnimatedNumber: FC<AnimatedNumberProps> = ({
+  value,
+  uniqueId,
+}) => {
   const previousValue = usePrevious(value)
 
-  const [valueAnimation, setValueAnimation] = useState('')
-  const [differenceAnimation, setDifferenceAnimation] = useState('')
-  const [difference, setDifference] = useState('')
+  const [updates, setUpdates] = useState<
+    {
+      id: number
+      text: string
+    }[]
+  >([])
+
+  const removeUpdate = (updateId: number) =>
+    setUpdates(updates.filter(({ id }) => id !== updateId))
 
   useEffect(() => {
-    if (previousValue !== undefined && value !== previousValue) {
-      setValueAnimation('')
-      setDifferenceAnimation('')
-      setDifference(
-        `${value > previousValue ? '+' : ''}${value - previousValue}`,
-      )
+    if (previousValue !== value) {
+      setUpdates([
+        ...updates,
+        {
+          id: updateId,
+          text: `${value > previousValue ? '+ ' : '- '}${value - previousValue}`,
+        },
+      ])
 
-      setTimeout(() => {
-        setValueAnimation(animations.pop)
-        setDifferenceAnimation(` ${animations.slideUpOpacity}`)
-      }, TICK)
+      updateId += 1
     }
-  }, [previousValue, value])
+  }, [value])
 
   return (
     <div className={components.inlineBlock}>
-      <span className={valueAnimation}>{value}</span>
+      <span>{value}</span>
 
-      <div className={`${animations.difference}${differenceAnimation}`}>
-        {difference}
-      </div>
+      {updates.map(({ id, text }) => (
+        <div
+          key={uniqueId ? `${uniqueId}-update-${id}` : id}
+          onAnimationEnd={() => removeUpdate(id)}
+          className={`${animations.difference} ${animations.slideUpOpacity}`}
+        >
+          {text}
+        </div>
+      ))}
     </div>
   )
 }

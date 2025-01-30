@@ -1,5 +1,4 @@
-import { motion } from 'motion/react'
-import { FC, useEffect, useMemo, useState } from 'react'
+import { FC, useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import {
   getActivePlayerId,
@@ -20,13 +19,8 @@ import {
 import { CardStack } from 'src/modules/duel/types'
 import { getOppositePlayerId } from 'src/modules/duel/utils'
 import { getUserId } from 'src/modules/user/selectors'
-import { CardContent, CardFooter, CardHeader } from 'src/shared/components'
-import { ACTION_WAIT_TIMEOUT, TICK } from 'src/shared/constants'
-import { usePrevious } from 'src/shared/customHooks'
-import animations from 'src/shared/styles/animations.module.css'
-import components from 'src/shared/styles/components.module.css'
-import { CARD_TEST_ID } from 'src/shared/testIds'
-import { getDuelCardsBase } from 'src/shared/utils'
+import { Card } from 'src/shared/components'
+import { ACTION_WAIT_TIMEOUT } from 'src/shared/constants'
 
 interface PlayCardProps {
   cardId: string
@@ -50,8 +44,9 @@ export const PlayCard: FC<PlayCardProps> = ({
   const userId = useAppSelector(getUserId)
 
   const { hasPerformedAction, coins, cards } = players[playerId]
-  const card = cards[cardId]
-  const { name, categories, factions, cost, base, rank, strength, type } = card
+  const duelCard = cards[cardId]
+  const { id, baseName, ...baseCard } = duelCard
+  const { strength } = baseCard
 
   const isFaceDown = isOnTop
     ? ['deck', 'discard', 'hand'].includes(stack)
@@ -60,16 +55,9 @@ export const PlayCard: FC<PlayCardProps> = ({
   const isUserActive = playerId === userId && playerId === activePlayerId
   const isAttacking = cardId === attackingAgentId
 
-  const prevStrength = usePrevious(strength)
-  const prevIsFaceDown = usePrevious(isFaceDown)
-
-  const [cardFaceAnimation, setCardFaceAnimation] = useState('')
-  const [cardOutlineAnimation, setCardOutlineAnimation] = useState('')
-  const [shouldShowFront, setShouldShowFront] = useState(!isFaceDown)
-
   const onClick = useMemo(() => {
     if (stack === 'hand' && !hasPerformedAction && !isOnTop) {
-      if (phase === 'Player Turn' && isUserActive && cost <= coins) {
+      if (phase === 'Player Turn' && isUserActive && duelCard.cost <= coins) {
         return () => {
           dispatch(playCard({ cardId, playerId, shouldPay: true }))
         }
@@ -94,29 +82,15 @@ export const PlayCard: FC<PlayCardProps> = ({
 
   // Attack
   useEffect(() => {
-    if (isAttacking) {
-      setCardOutlineAnimation('')
-      setCardFaceAnimation('')
+    const defendingPlayerId = getOppositePlayerId(players, playerId)
 
-      setTimeout(() => {
-        setCardOutlineAnimation(
-          isOnTop
-            ? ` ${animations.attackFromTop}`
-            : ` ${animations.attackFromBottom}`,
-        )
-        setCardFaceAnimation(
-          isOnTop
-            ? ` ${animations.attackFromTopFace}`
-            : ` ${animations.attackFromBottomFace}`,
-        )
-      }, TICK)
-
+    if (isAttacking && defendingPlayerId) {
       dispatch(
         agentAttack({
           defendingAgentId: attackingQueue.find(
             ({ attackerId }) => attackerId === cardId,
           )?.defenderId,
-          defendingPlayerId: getOppositePlayerId(players, playerId),
+          defendingPlayerId,
         }),
       )
 
@@ -124,75 +98,25 @@ export const PlayCard: FC<PlayCardProps> = ({
         dispatch(moveToNextAttackingAgent())
       }, ACTION_WAIT_TIMEOUT)
     }
-  }, [isAttacking, isOnTop])
-
-  // Show or hide card faces.
-  useEffect(() => {
-    if (prevIsFaceDown !== undefined && prevIsFaceDown !== isFaceDown) {
-      if (isFaceDown) {
-        setTimeout(() => {
-          setShouldShowFront(false)
-        }, 500)
-      } else {
-        setShouldShowFront(true)
-      }
-    }
-  }, [isFaceDown, prevIsFaceDown])
-
-  // Strength animations
-  useEffect(() => {
-    if (prevStrength !== undefined && prevStrength !== strength) {
-      setCardFaceAnimation('')
-
-      setTimeout(() => {
-        setCardFaceAnimation(
-          prevStrength < strength
-            ? ` ${animations.boost}`
-            : ` ${animations.damage}`,
-        )
-      }, TICK)
-    }
-  }, [strength, prevStrength])
+  }, [isAttacking])
 
   // Discard on defeat
   useEffect(() => {
-    if (type === 'agent' && strength <= 0) {
+    if (stack === 'board' && strength <= 0) {
       dispatch(discardCard({ cardId, playerId }))
     }
-  }, [cardId, dispatch, playerId, strength, type])
+  }, [stack, strength])
 
   return (
-    <motion.div
-      layout
-      layoutId={cardId}
-      data-testid={`${CARD_TEST_ID}${cardId}`}
+    <Card
+      baseName={baseName}
+      currentCard={baseCard}
+      id={id}
+      attacksFromAbove={isOnTop}
+      isAttacking={isAttacking}
+      isFaceDown={isFaceDown}
+      isSmall={isSmall}
       onClick={onClick}
-      initial={false}
-      className={`${components.cardOutline}${isSmall ? ` ${components.smallCard}` : ''}${isFaceDown ? ` ${components.cardFlipped}` : ''}${cardOutlineAnimation}`}
-    >
-      <div className={components.cardPaper}>
-        {/* Card Front */}
-        {shouldShowFront ? (
-          <div
-            className={`${components.cardFront}${onClick ? ` ${animations.activeCard}` : ''}${rank === 'unique' ? ` ${components.uniqueCard}` : ''}${cardFaceAnimation}`}
-          >
-            <CardHeader
-              factions={factions}
-              categories={categories}
-              name={name}
-              strength={strength}
-              baseStrength={base.strength}
-            />
-
-            <CardContent card={getDuelCardsBase(card)} />
-
-            <CardFooter cost={cost} />
-          </div>
-        ) : null}
-
-        {/* Card Back */}
-        <div className={components.cardBack} />
-      </div>
-    </motion.div>
+    />
   )
 }

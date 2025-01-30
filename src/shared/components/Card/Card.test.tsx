@@ -1,27 +1,30 @@
-import '@testing-library/jest-dom'
-import { BookOfAsh, BrotherSachelman } from 'src/shared/data'
 import { Card } from 'src/shared/components'
+import { CardBaseName, CardBases } from 'src/shared/data'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { joinCardCategories } from 'src/shared/utils'
 
-const mockCard = BrotherSachelman
-
 it('should display all UI segments of a card when face up', () => {
-  const { getByRole, getByText } = renderWithProviders(<Card card={mockCard} />)
+  const baseName: CardBaseName = 'BrotherSachelman'
+  const base = CardBases[baseName]
+
+  const { getByRole, getByText } = renderWithProviders(
+    <Card baseName={baseName} id="1" />,
+  )
 
   expect(getByRole('heading', { level: 3 })).toHaveTextContent(
-    `${mockCard.name}${mockCard.strength}`,
+    `${base.name}${base.strength}`,
   )
-  expect(getByText(`Cost: ${mockCard.cost}`)).toBeInTheDocument()
-  expect(getByText(joinCardCategories(mockCard.categories))).toBeInTheDocument()
-  expect(getByText((mockCard.description as string[])[0])).toBeInTheDocument()
-  expect(getByText(mockCard.flavor as string)).toBeInTheDocument()
+  expect(getByText(`Cost: ${base.cost}`)).toBeInTheDocument()
+  expect(getByText(joinCardCategories(base.categories))).toBeInTheDocument()
+  expect(getByText((base.description as string[])[0])).toBeInTheDocument()
+  expect(getByText(base.flavor as string)).toBeInTheDocument()
 })
 
 it('should display no strength for an instant', () => {
-  const { getByRole } = renderWithProviders(<Card card={BookOfAsh} />)
+  const baseName: CardBaseName = 'BookOfAsh'
 
-  expect(getByRole('heading', { level: 3 })).toHaveTextContent(
-    `${BookOfAsh.name}`,
-  )
+  const base = CardBases[baseName]
+  const { getByRole } = renderWithProviders(<Card baseName={baseName} id="1" />)
+
+  expect(getByRole('heading', { level: 3 })).toHaveTextContent(`${base.name}`)
 })

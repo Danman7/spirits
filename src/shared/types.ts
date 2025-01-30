@@ -1,3 +1,5 @@
+import { CardBaseName } from 'src/shared/data'
+
 /**
  * A card’s rank controls how many copies of a card one can have in a deck. Sometimes it also directs card effects.
  */
@@ -26,37 +28,31 @@ export type CardCategory =
   | 'Necromancer'
   | 'Artifact'
 
-export interface CardPrototype {
+export interface Traits {
+  retaliates?: boolean
+}
+
+export interface CardBase {
   readonly name: string
   cost: number
   factions: CardFaction[]
   categories: CardCategory[]
   rank: CardRank
+  strength: number
+  type: CardType
   description?: string[]
   flavor?: string
+  traits?: Traits
 }
-
-export interface Instant extends CardPrototype {
-  type: 'instant'
-}
-
-export interface Agent extends CardPrototype {
-  type: 'agent'
-  strength: number
-  retaliates?: boolean
-}
-
-/**
- * Represents a base card object which is used to create instances of this card.
- */
-export type CardBase = Instant | Agent
 
 export interface User {
   id: string
   name: string
-  deck: CardBase[]
+  deck: CardBaseName[]
 }
 
 export interface Bot extends User {
   isBot: true
 }
+
+export type TraitName = keyof Traits

@@ -1,31 +1,32 @@
 import { FC } from 'react'
-import { retaliatesDescription, retaliatesTitle } from 'src/shared/messages'
+import { traitDescriptions } from 'src/shared/messages'
 import components from 'src/shared/styles/components.module.css'
-import { CardBase } from 'src/shared/types'
-import { generateUUID } from 'src/shared/utils'
+import { CardBase, TraitName } from 'src/shared/types'
 
 interface CardContentProps {
   card: CardBase
+  id: string
 }
 
-export const CardContent: FC<CardContentProps> = ({ card }) => {
-  const { description, flavor, type } = card
-
-  const retaliates = type === 'agent' ? card.retaliates : ''
+export const CardContent: FC<CardContentProps> = ({ card, id }) => {
+  const { description, flavor, traits } = card
 
   return (
     <div className={components.cardContent}>
       {description
         ? description.map((paragraph, index) => (
-            <p key={`${generateUUID()}-description-${index}`}>{paragraph}</p>
+            <p key={`${id}-description-${index}`}>{paragraph}</p>
           ))
         : null}
 
-      {retaliates ? (
-        <p>
-          <strong>{retaliatesTitle}</strong> {retaliatesDescription}
-        </p>
-      ) : null}
+      {traits
+        ? Object.keys(traits).map((trait: TraitName) => (
+            <p key={`${id}-${trait}`}>
+              <strong>{traitDescriptions[trait].title}</strong>{' '}
+              {traitDescriptions[trait].description}
+            </p>
+          ))
+        : null}
 
       <div className={components.cardFlavor}>
         <small>{flavor}</small>

@@ -1,5 +1,4 @@
 import { fireEvent, waitFor } from '@testing-library/dom'
-import '@testing-library/jest-dom'
 import { SidePanel } from 'src/shared/components'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { PANEL_TEST_ID } from 'src/shared/testIds'

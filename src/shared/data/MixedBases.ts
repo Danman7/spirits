@@ -1,7 +1,7 @@
 import { VIKTORIA_COIN_GAIN } from 'src/shared/data'
-import { Agent } from 'src/shared/types'
+import { CardBase } from 'src/shared/types'
 
-export const ViktoriaThiefPawn: Agent = {
+export const ViktoriaThiefPawn: CardBase = {
   type: 'agent',
   name: 'Viktoria: Thiefs-pawn',
   strength: 4,

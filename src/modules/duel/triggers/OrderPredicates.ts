@@ -1,11 +1,6 @@
 import { Predicate } from 'src/app/listenerMiddleware'
 import { playCard } from 'src/modules/duel/slice'
 import { getOnPlayPredicateForCardBase } from 'src/modules/duel/utils'
-import {
-  BrotherSachelman,
-  ElevatedAcolyte,
-  HammeriteNovice,
-} from 'src/shared/data'
 
 export const HammeriteNoviceOnPlay: Predicate = (
   action,
@@ -16,7 +11,7 @@ export const HammeriteNoviceOnPlay: Predicate = (
   getOnPlayPredicateForCardBase(
     action,
     currentState.duel.players,
-    HammeriteNovice,
+    'HammeriteNovice',
   ) &&
   previousState.duel.players[action.payload.playerId].board.some((cardId) =>
     previousState.duel.players[action.payload.playerId].cards[
@@ -28,12 +23,12 @@ export const ElevatedAcolyteOnPlay: Predicate = (action, currentState) =>
   getOnPlayPredicateForCardBase(
     action,
     currentState.duel.players,
-    ElevatedAcolyte,
+    'ElevatedAcolyte',
   )
 
 export const BrotherSachelmanOnPlay: Predicate = (action, currentState) =>
   getOnPlayPredicateForCardBase(
     action,
     currentState.duel.players,
-    BrotherSachelman,
+    'BrotherSachelman',
   )

@@ -1,5 +1,4 @@
 import { fireEvent } from '@testing-library/dom'
-import '@testing-library/jest-dom'
 import { RootState } from 'src/app/store'
 import { PlayerField } from 'src/modules/duel/components'
 import {
@@ -16,7 +15,6 @@ import {
 } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import {
-  CARD_TEST_ID,
   OPPONENT_BOARD_ID,
   OPPONENT_DECK_ID,
   OPPONENT_DISCARD_ID,
@@ -146,20 +144,6 @@ describe('Bottom (Player) Side', () => {
     expect(dispatchSpy).toHaveBeenCalledWith(
       playCard({ cardId: playedCard.id, playerId, shouldPay: true }),
     )
-  })
-
-  it('should show agent attacking', async () => {
-    const attackingAgentId = stackedPlayerMock.board[0]
-    preloadedState.duel.attackingAgentId = attackingAgentId
-
-    const { getByTestId } = renderWithProviders(
-      <PlayerField playerId={playerId} />,
-      {
-        preloadedState,
-      },
-    )
-
-    fireEvent.animationEnd(getByTestId(`${CARD_TEST_ID}${attackingAgentId}`))
   })
 })
 

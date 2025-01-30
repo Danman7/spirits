@@ -1,5 +1,4 @@
 import { fireEvent } from '@testing-library/dom'
-import '@testing-library/jest-dom'
 import { RootState } from 'src/app/store'
 import { DuelModal } from 'src/modules/duel/components'
 import {

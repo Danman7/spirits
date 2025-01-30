@@ -1,4 +1,3 @@
-import { DuelCard } from 'src/modules/duel/types'
 import { FACTION_COLOR_MAP } from 'src/shared/constants'
 import { CardBase } from 'src/shared/types'
 
@@ -71,10 +70,4 @@ export const getFactionColor = (factions: CardBase['factions']): string => {
   return `linear-gradient(300deg, ${firstColor}, ${
     FACTION_COLOR_MAP[factions[1]]
   })`
-}
-
-export const getDuelCardsBase = (card: DuelCard): CardBase => {
-  const { type, ...baseProperties } = card
-
-  return { ...baseProperties, type: type === 'agent' ? 'agent' : 'instant' }
 }

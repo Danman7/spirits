@@ -25,7 +25,7 @@ import { Card, Link, Modal } from 'src/shared/components'
 import { PHASE_MODAL_TIMEOUT } from 'src/shared/constants'
 import { usePrevious } from 'src/shared/customHooks'
 import components from 'src/shared/styles/components.module.css'
-import { getDuelCardsBase, shuffleArray } from 'src/shared/utils'
+import { shuffleArray } from 'src/shared/utils'
 
 const flashModal = (setModalVisibility: (isOpen: boolean) => void) => {
   setModalVisibility(true)
@@ -78,13 +78,13 @@ export const DuelModal: FC = () => {
           <div className={components.cardBrowserModal}>
             <h1>{`${browsingStackModalTitle} ${browsedStack}`} </h1>
             <div className={components.cardList}>
-              {shuffleArray(player[browsedStack]).map((cardId) => {
-                const base = getDuelCardsBase(player.cards[cardId])
-
-                return base ? (
-                  <Card key={`${cardId}-browse`} card={base} />
-                ) : null
-              })}
+              {shuffleArray(player[browsedStack]).map((cardId) => (
+                <Card
+                  key={`${cardId}-browse`}
+                  id={`${cardId}-browse`}
+                  baseName={player.cards[cardId].baseName}
+                />
+              ))}
             </div>
 
             <div className={components.cardBrowseModalFooter}>

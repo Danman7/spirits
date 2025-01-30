@@ -1,5 +1,4 @@
 import { fireEvent } from '@testing-library/dom'
-import '@testing-library/jest-dom'
 import { act } from 'react'
 
 import { RootState } from 'src/app/store'

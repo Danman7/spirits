@@ -4,12 +4,13 @@ import { AnimatedNumber } from 'src/shared/components'
 const meta = {
   title: 'AnimatedNumber',
   component: AnimatedNumber,
+  tags: ['Common', 'Stateless'],
   parameters: {
     layout: 'centered',
     docs: {
       description: {
         component:
-          'A simple component that keeps track of how a number has changed and animates the amount it is changed by floating above it.',
+          'This is a stateless component for displaying dynamic numbers. It keeps track of how a given number has changed and shows the difference with a timed animation.',
       },
     },
   },
@@ -19,7 +20,7 @@ const meta = {
   argTypes: {
     value: {
       description:
-        'Just pass a dynamic number and let the component watch its previous value.',
+        'A plain number, which the component monitors for changes. Try updating it.',
     },
   },
 } satisfies Meta<typeof AnimatedNumber>
@@ -28,7 +29,3 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
-
-export const DifferentFontSize: Story = {
-  decorators: [(story) => <div style={{ fontSize: '2rem' }}>{story()}</div>],
-}

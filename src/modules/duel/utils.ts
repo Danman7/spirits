@@ -11,34 +11,13 @@ import {
   Player,
   PlayerStacksAndCards,
 } from 'src/modules/duel/types'
-import { CardBase } from 'src/shared/types'
+import { CardBaseName, CardBases } from 'src/shared/data'
 import { generateUUID, shuffleArray } from 'src/shared/utils'
 
-/**
- * @param base A card base object (e.g. HammeriteNovice or Zombie)
- * @returns A ready for duel card object with unique id and base properties for reference
- * @example createDuelCard({...Haunt}) // {...Haunt, id: 'e4g34', base: {...Haunt}}
- */
-export const createDuelCard = (base: CardBase): DuelCard => ({
-  ...base,
+export const createDuelCard = (baseName: CardBaseName): DuelCard => ({
+  ...CardBases[baseName],
   id: generateUUID(),
-  strength: base.type === 'agent' ? base.strength : 0,
-  retaliates: base.type === 'agent' ? !!base.retaliates : false,
-  base: {
-    strength: base.type === 'agent' ? base.strength : 0,
-    cost: base.cost,
-  },
-})
-
-/**
- * @param card A ready for duel card object
- * @returns The same card object with a new unique id and reset base properties
- */
-export const copyDuelCard = (card: DuelCard): DuelCard => ({
-  ...card,
-  strength: card.base.strength || 0,
-  cost: card.base.cost,
-  id: generateUUID(),
+  baseName,
 })
 
 /**
@@ -57,7 +36,7 @@ export const getPlayableCardIds = (player: Player) =>
   })
 */
 export const normalizePlayerCards = (
-  stacks: Partial<Record<CardStack, CardBase[]>>,
+  stacks: Partial<Record<CardStack, CardBaseName[]>>,
 ): PlayerStacksAndCards => {
   const partialPlayer: PlayerStacksAndCards = {
     deck: [],
@@ -69,8 +48,8 @@ export const normalizePlayerCards = (
 
   CARD_STACKS.forEach((stack) => {
     if (stacks[stack]) {
-      stacks[stack].forEach((cardBase) => {
-        const card = createDuelCard(cardBase)
+      stacks[stack].forEach((cardBaseName) => {
+        const card = createDuelCard(cardBaseName)
 
         partialPlayer.cards = {
           ...partialPlayer.cards,
@@ -159,27 +138,26 @@ export const sortDuelPlayers = (
 export const getInactivePlayerId = (
   players: DuelPlayers,
   activePlayerId: string,
-) => Object.keys(players).find((id) => id !== activePlayerId) || activePlayerId
-
+) => Object.keys(players).find((id) => id !== activePlayerId)
 /**
  * Get the id of the opposite player.
  */
 export const getOppositePlayerId = (players: DuelPlayers, playerId: string) =>
-  Object.keys(players).find((id) => id !== playerId) || playerId
+  Object.keys(players).find((id) => id !== playerId)
 
 export const getOnPlayPredicateForCardBase = (
   action: Action,
   players: DuelPlayers,
-  base: CardBase,
+  baseName: CardBaseName,
 ) =>
   playCard.match(action) &&
-  players[action.payload.playerId].cards[action.payload.cardId].name ===
-    base.name
+  players[action.payload.playerId].cards[action.payload.cardId].baseName ===
+    baseName
 
 export const getPlayAllCopiesEffect = (
   action: Action,
   listenerApi: ListenerApi,
-  base: CardBase,
+  comparingBase: CardBaseName,
 ) => {
   if (playCard.match(action)) {
     const { players } = listenerApi.getState().duel
@@ -189,9 +167,9 @@ export const getPlayAllCopiesEffect = (
     const { cards, board, discard } = player
 
     // Move each copy to board if it is not on board or in discard
-    Object.values(cards).forEach(({ id, name }) => {
+    Object.values(cards).forEach(({ id, baseName }) => {
       if (
-        name === base.name &&
+        baseName === comparingBase &&
         id !== playedCardId &&
         !board.includes(id) &&
         !discard.includes(id)

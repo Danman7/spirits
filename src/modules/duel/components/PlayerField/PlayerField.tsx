@@ -89,7 +89,8 @@ export const PlayerField: React.FC<PlayerFieldProps> = ({
         data-testid={isOnTop ? OPPONENT_INFO_ID : PLAYER_INFO_ID}
         className={`${isOnTop ? components.topPlayerInfo : components.bottomPlayerInfo}${isActive ? ` ${components.activePlayerInfo} ${animations.pop}` : ''}`}
       >
-        <span>{name}</span> / <AnimatedNumber value={coins} />
+        <span>{name}</span> /{' '}
+        <AnimatedNumber value={coins} uniqueId={playerId} />
         {income ? <span> (+{income})</span> : null}
       </h2>
 

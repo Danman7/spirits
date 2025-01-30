@@ -1,7 +1,7 @@
 import { AZARAN_BOOST, HAUNT_DAMAGE } from 'src/shared/data/constants'
-import { Agent, Instant } from 'src/shared/types'
+import { CardBase } from 'src/shared/types'
 
-export const Zombie: Agent = {
+export const Zombie: CardBase = {
   type: 'agent',
   name: 'Zombie',
   strength: 3,
@@ -16,7 +16,7 @@ export const Zombie: Agent = {
     "The zombie's antipathy for all living creatures is both its strength and weakness.",
 }
 
-export const Haunt: Agent = {
+export const Haunt: CardBase = {
   type: 'agent',
   name: 'Haunt',
   strength: 7,
@@ -31,7 +31,7 @@ export const Haunt: Agent = {
     'These haunts who inhabit the bodies of my brethren... they must all be killed. -- The apparition of Brother Murus',
 }
 
-export const AzaranTheCruel: Agent = {
+export const AzaranTheCruel: CardBase = {
   type: 'agent',
   name: 'Azaran the Cruel',
   strength: 5,
@@ -46,9 +46,10 @@ export const AzaranTheCruel: Agent = {
     "Be warned! The truth is hidden from the unworthy. Blacken thy heart, or face the prisoners of flesh. -- Azaran's last mortal written words",
 }
 
-export const BookOfAsh: Instant = {
+export const BookOfAsh: CardBase = {
   type: 'instant',
   name: 'The Book of Ash',
+  strength: 0,
   cost: 5,
   rank: 'unique',
   factions: ['Chaos'],

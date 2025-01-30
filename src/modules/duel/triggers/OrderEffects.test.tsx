@@ -1,5 +1,4 @@
 import { fireEvent, within } from '@testing-library/dom'
-import '@testing-library/jest-dom'
 import { act } from 'react'
 import { RootState } from 'src/app/store'
 import { Board } from 'src/modules/duel/components'
@@ -12,35 +11,38 @@ import {
   stackedStateMock,
 } from 'src/shared/__mocks__'
 import {
-  BrotherSachelman,
-  ElevatedAcolyte,
-  HammeriteNovice,
+  CardBaseName,
+  CardBases,
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
-  Haunt,
-  HouseGuard,
-  TempleGuard,
-  Zombie,
 } from 'src/shared/data'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { CARD_TEST_ID, PLAYER_BOARD_ID } from 'src/shared/testIds'
+import { CardBase } from 'src/shared/types'
 import { deepClone } from 'src/shared/utils'
 
 jest.useFakeTimers()
 
 let preloadedState: RootState
+let baseName: CardBaseName
+let base: CardBase
 
 beforeEach(() => {
   preloadedState = deepClone(stackedStateMock)
 })
 
-describe(HammeriteNovice.name, () => {
+describe('Hammerite Novice', () => {
+  beforeEach(() => {
+    baseName = 'HammeriteNovice'
+    base = CardBases[baseName]
+  })
+
   it('should play all copies if another Hammerite is in play', () => {
     preloadedState.duel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizePlayerCards({
-        deck: [HammeriteNovice],
-        hand: [HammeriteNovice],
-        board: [TempleGuard],
+        deck: [baseName],
+        hand: [baseName],
+        board: ['TempleGuard'],
       }),
     }
 
@@ -48,10 +50,10 @@ describe(HammeriteNovice.name, () => {
       preloadedState,
     })
 
-    fireEvent.click(getByText(HammeriteNovice.name))
+    fireEvent.click(getByText(base.name))
 
     expect(
-      within(getByTestId(PLAYER_BOARD_ID)).getAllByText(HammeriteNovice.name),
+      within(getByTestId(PLAYER_BOARD_ID)).getAllByText(base.name),
     ).toHaveLength(2)
   })
 
@@ -59,8 +61,8 @@ describe(HammeriteNovice.name, () => {
     preloadedState.duel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizePlayerCards({
-        deck: [HammeriteNovice],
-        hand: [HammeriteNovice],
+        deck: [baseName],
+        hand: [baseName],
       }),
     }
 
@@ -68,10 +70,10 @@ describe(HammeriteNovice.name, () => {
       preloadedState,
     })
 
-    fireEvent.click(getByText(HammeriteNovice.name))
+    fireEvent.click(getByText(base.name))
 
     expect(
-      within(getByTestId(PLAYER_BOARD_ID)).getAllByText(HammeriteNovice.name),
+      within(getByTestId(PLAYER_BOARD_ID)).getAllByText(base.name),
     ).toHaveLength(1)
   })
 
@@ -79,8 +81,8 @@ describe(HammeriteNovice.name, () => {
     preloadedState.duel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizePlayerCards({
-        discard: [HammeriteNovice],
-        hand: [HammeriteNovice],
+        discard: [baseName],
+        hand: [baseName],
       }),
     }
 
@@ -88,20 +90,25 @@ describe(HammeriteNovice.name, () => {
       preloadedState,
     })
 
-    fireEvent.click(getByText(HammeriteNovice.name))
+    fireEvent.click(getByText(base.name))
 
     expect(
-      within(getByTestId(PLAYER_BOARD_ID)).getAllByText(HammeriteNovice.name),
+      within(getByTestId(PLAYER_BOARD_ID)).getAllByText(base.name),
     ).toHaveLength(1)
   })
 })
 
-describe(ElevatedAcolyte.name, () => {
+describe('Elevated Acolyte', () => {
+  beforeEach(() => {
+    baseName = 'ElevatedAcolyte'
+    base = CardBases[baseName]
+  })
+
   it('should damage self if played alone', () => {
     preloadedState.duel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizePlayerCards({
-        hand: [ElevatedAcolyte],
+        hand: [baseName],
       }),
     }
 
@@ -109,19 +116,17 @@ describe(ElevatedAcolyte.name, () => {
       preloadedState,
     })
 
-    fireEvent.click(getByText(ElevatedAcolyte.name))
+    fireEvent.click(getByText(base.name))
 
     expect(
       within(getByTestId(PLAYER_BOARD_ID)).getByRole('heading', { level: 3 }),
-    ).toHaveTextContent(
-      `${ElevatedAcolyte.name}${ElevatedAcolyte.strength - 1}`,
-    )
+    ).toHaveTextContent(`${base.name}${base.strength - 1}`)
   })
 
   it('should damage self if not played next to a Hammerite with higher strength', () => {
     const normalizedCards = normalizePlayerCards({
-      hand: [ElevatedAcolyte],
-      board: [HammeriteNovice],
+      hand: [baseName],
+      board: ['HammeriteNovice'],
     })
 
     preloadedState.duel.players[playerId] = {
@@ -133,7 +138,7 @@ describe(ElevatedAcolyte.name, () => {
       preloadedState,
     })
 
-    fireEvent.click(getByText(ElevatedAcolyte.name))
+    fireEvent.click(getByText(base.name))
 
     expect(
       within(
@@ -141,15 +146,13 @@ describe(ElevatedAcolyte.name, () => {
       ).getByRole('heading', {
         level: 3,
       }),
-    ).toHaveTextContent(
-      `${ElevatedAcolyte.name}${ElevatedAcolyte.strength - 1}`,
-    )
+    ).toHaveTextContent(`${base.name}${base.strength - 1}`)
   })
 
   it('should not damage self if played next to a Hammerite with higher strength', () => {
     const normalizedCards = normalizePlayerCards({
-      hand: [ElevatedAcolyte],
-      board: [TempleGuard],
+      hand: [baseName],
+      board: ['TempleGuard'],
     })
 
     preloadedState.duel.players[playerId] = {
@@ -161,7 +164,7 @@ describe(ElevatedAcolyte.name, () => {
       preloadedState,
     })
 
-    fireEvent.click(getByText(ElevatedAcolyte.name))
+    fireEvent.click(getByText(base.name))
 
     expect(
       within(
@@ -169,15 +172,20 @@ describe(ElevatedAcolyte.name, () => {
       ).getByRole('heading', {
         level: 3,
       }),
-    ).toHaveTextContent(`${ElevatedAcolyte.name}${ElevatedAcolyte.strength}`)
+    ).toHaveTextContent(`${base.name}${base.strength}`)
   })
 })
 
-describe(BrotherSachelman.name, () => {
+describe('Brother Sachelman', () => {
+  beforeEach(() => {
+    baseName = 'BrotherSachelman'
+    base = CardBases[baseName]
+  })
+
   it('should boost all allied Hammerites on board that have lower strength', () => {
     const normalizedCards = normalizePlayerCards({
-      hand: [BrotherSachelman],
-      board: [HammeriteNovice, HammeriteNovice],
+      hand: [baseName],
+      board: ['HammeriteNovice', 'HammeriteNovice'],
     })
 
     preloadedState.duel.players[playerId] = {
@@ -189,10 +197,10 @@ describe(BrotherSachelman.name, () => {
       preloadedState,
     })
 
-    fireEvent.click(getByText(BrotherSachelman.name))
+    fireEvent.click(getByText(base.name))
 
     normalizedCards.board.forEach((cardId) => {
-      const { name, strength } = normalizedCards.cards[cardId]
+      const { strength, name } = normalizedCards.cards[cardId]
 
       expect(
         within(getByTestId(`${CARD_TEST_ID}${cardId}`)).getByRole('heading', {
@@ -206,8 +214,8 @@ describe(BrotherSachelman.name, () => {
 
   it('should not boost non-Hammerite agents or Hammerites with highet strength', () => {
     const normalizedCards = normalizePlayerCards({
-      hand: [BrotherSachelman],
-      board: [HouseGuard, TempleGuard],
+      hand: [baseName],
+      board: ['HouseGuard', 'TempleGuard'],
     })
 
     preloadedState.duel.players[playerId] = {
@@ -219,10 +227,10 @@ describe(BrotherSachelman.name, () => {
       preloadedState,
     })
 
-    fireEvent.click(getByText(BrotherSachelman.name))
+    fireEvent.click(getByText(base.name))
 
     normalizedCards.board.forEach((cardId) => {
-      const { name, strength } = normalizedCards.cards[cardId]
+      const { strength, name } = normalizedCards.cards[cardId]
 
       expect(
         within(getByTestId(`${CARD_TEST_ID}${cardId}`)).getByRole('heading', {
@@ -233,13 +241,18 @@ describe(BrotherSachelman.name, () => {
   })
 })
 
-describe(TempleGuard.name, () => {
+describe('Temple Guard', () => {
+  beforeEach(() => {
+    baseName = 'TempleGuard'
+    base = CardBases[baseName]
+  })
+
   it('should not retaliate when not attacked', () => {
     preloadedState.duel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizePlayerCards({
         hand: [],
-        board: [ElevatedAcolyte, TempleGuard],
+        board: ['ElevatedAcolyte', baseName],
       }),
     }
     preloadedState.duel.activePlayerId = opponentId
@@ -287,7 +300,7 @@ describe(TempleGuard.name, () => {
       ...initialPlayerMock,
       ...normalizePlayerCards({
         hand: [],
-        board: [TempleGuard],
+        board: [baseName],
       }),
     }
     preloadedState.duel.activePlayerId = opponentId
@@ -335,14 +348,14 @@ describe(TempleGuard.name, () => {
       ...initialPlayerMock,
       ...normalizePlayerCards({
         hand: [],
-        board: [TempleGuard],
+        board: [baseName],
       }),
     }
     preloadedState.duel.players[opponentId] = {
       ...initialOpponentMock,
       ...normalizePlayerCards({
         hand: [],
-        board: [Haunt, Zombie],
+        board: ['Haunt', 'Zombie'],
       }),
     }
     preloadedState.duel.activePlayerId = opponentId

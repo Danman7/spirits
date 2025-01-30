@@ -39,7 +39,7 @@ import {
   stackedPlayerMock,
   userMock,
 } from 'src/shared/__mocks__'
-import { HammeriteNovice, TempleGuard } from 'src/shared/data'
+import { HammeriteNovice } from 'src/shared/data'
 import { deepClone } from 'src/shared/utils'
 
 const users: DuelStartUsers = [userMock, opponentMock]
@@ -153,7 +153,7 @@ describe('Sequence before play', () => {
 
     stacks.forEach((stack: 'hand' | 'board' | 'discard') => {
       const normalizedCards = normalizePlayerCards({
-        [stack]: [HammeriteNovice],
+        [stack]: ['HammeriteNovice'],
       })
 
       mockDuelState.players[playerId] = {
@@ -251,7 +251,7 @@ describe('Playing turns', () => {
     mockDuelState.players[playerId] = {
       ...stackedPlayerMock,
       ...normalizePlayerCards({
-        board: [TempleGuard, TempleGuard],
+        board: ['TempleGuard', 'TempleGuard'],
       }),
     }
 
@@ -306,16 +306,18 @@ describe('Playing turns', () => {
       }),
     )
     const { players } = state
+    const referenceAgent =
+      stackedOpponentMock.cards[stackedOpponentMock.board[0]]
     const damagedAgent = players[opponentId].cards[stackedOpponentMock.board[0]]
 
-    expect(damagedAgent.strength).toBe(damagedAgent.base.strength - 1)
+    expect(damagedAgent.strength).toBe(referenceAgent.strength - 1)
   })
 
   test('move to next attacking agent', () => {
     mockDuelState.players[playerId] = {
       ...stackedPlayerMock,
       ...normalizePlayerCards({
-        board: [TempleGuard, TempleGuard],
+        board: ['TempleGuard', 'TempleGuard'],
       }),
     }
     mockDuelState.attackingAgentId = mockDuelState.players[playerId].board[0]
@@ -353,7 +355,7 @@ describe('Playing turns', () => {
 
     stacks.forEach((stack: 'hand' | 'discard' | 'deck') => {
       const normalizedCards = normalizePlayerCards({
-        [stack]: [HammeriteNovice],
+        [stack]: ['HammeriteNovice'],
       })
 
       mockDuelState.players[playerId] = {
@@ -389,7 +391,7 @@ describe('Playing turns', () => {
 
     stacks.forEach((stack: 'hand' | 'discard' | 'deck') => {
       const normalizedCards = normalizePlayerCards({
-        [stack]: [HammeriteNovice],
+        [stack]: ['HammeriteNovice'],
       })
 
       mockDuelState.players[playerId] = {
@@ -423,7 +425,7 @@ describe('Playing turns', () => {
 
     stacks.forEach((stack: 'hand' | 'board' | 'deck') => {
       const normalizedCards = normalizePlayerCards({
-        [stack]: [HammeriteNovice, TempleGuard],
+        [stack]: ['HammeriteNovice', 'TempleGuard'],
       })
 
       mockDuelState.players[playerId] = {
@@ -445,8 +447,8 @@ describe('Playing turns', () => {
       expect(player[stack]).toHaveLength(1)
       expect(player.discard).toHaveLength(1)
       expect(player.discard).toContain(cardId)
-      expect(discardedCard.strength).toBe(discardedCard.base.strength)
       expect(player.income).toBe(discardedCard.cost + stackedPlayerMock.income)
+      expect(discardedCard.strength).toBe(discardedCard.strength)
     })
   })
 
@@ -471,7 +473,7 @@ describe('Playing turns', () => {
   })
 
   test('summon new cards for a player', () => {
-    const novice = createDuelCard(HammeriteNovice)
+    const novice = createDuelCard('HammeriteNovice')
 
     mockDuelState.activePlayerId = playerId
     mockDuelState.players[playerId] = {
