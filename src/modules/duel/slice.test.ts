@@ -215,7 +215,7 @@ describe('Playing turns', () => {
     expect(activePlayerId).toBe(playerId)
   })
 
-  test('advance turn, reset attackingAgentId and resolve income', () => {
+  test('advance turn, reset attackingAgentId, draw card and resolve income', () => {
     const coins = 20
     const income = 2
 
@@ -232,6 +232,8 @@ describe('Playing turns', () => {
     expect(activePlayerId).toBe(opponentId)
     expect(opponent.coins).toBe(coins + DUEL_INCOME_PER_TURN)
     expect(opponent.income).toBe(income - DUEL_INCOME_PER_TURN)
+    expect(opponent.hand).toHaveLength(stackedOpponentMock.hand.length + 1)
+    expect(opponent.deck).toHaveLength(stackedOpponentMock.deck.length - 1)
   })
 
   test('resolve end of turn', () => {

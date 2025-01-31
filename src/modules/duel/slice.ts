@@ -121,8 +121,8 @@ export const duelSlice = createSlice({
       state.attackingQueue = initialState.attackingQueue
 
       moveCardBetweenStacks({
-        movedCardId: players[activePlayerId].deck[0],
-        playerId: activePlayerId,
+        movedCardId: players[state.activePlayerId].deck[0],
+        playerId: state.activePlayerId,
         state,
         to: 'hand',
       })
