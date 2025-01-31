@@ -54,12 +54,6 @@ export const deepClone = <T>(object: T) => JSON.parse(JSON.stringify(object))
 export const joinCardCategories = (categories: CardBase['categories']) =>
   categories.join(', ')
 
-/**
- * @param factions An array of card factions (Order, Chaos, Shadow)
- * @returns A color string variable or a diagonal gradient if multiple factions are passed
- * @example getFactionColor(['Chaos']) // var(--chaos-faction-color)
- * @example getFactionColor(['Order', 'Shadow']) // `linear-gradient(300deg, var(--order-faction-color), var(--shadow-faction-color))`
- */
 export const getFactionColor = (factions: CardBase['factions']): string => {
   const firstColor = FACTION_COLOR_MAP[factions[0]]
 

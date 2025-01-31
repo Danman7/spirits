@@ -1,10 +1,9 @@
-import { FC } from 'react'
-import components from 'src/shared/styles/components.module.css'
+import { StyledCardFooter } from 'src/shared/components/Card/styles'
 
 interface CardFooterProps {
   cost: number
 }
 
-export const CardFooter: FC<CardFooterProps> = ({ cost }) => (
-  <div className={components.cardFooter}>Cost: {cost}</div>
+export const CardFooter: React.FC<CardFooterProps> = ({ cost }) => (
+  <StyledCardFooter>Cost: {cost}</StyledCardFooter>
 )

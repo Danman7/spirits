@@ -15,3 +15,7 @@ export {
   PlayerField,
   CardStackList,
 }
+
+export * from 'src/modules/duel/components/Board/styles'
+export * from 'src/modules/duel/components/PlayerField/styles'
+export * from 'src/modules/duel/components/DuelModal/styles'

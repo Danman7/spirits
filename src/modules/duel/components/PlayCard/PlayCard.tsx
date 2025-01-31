@@ -111,13 +111,13 @@ export const PlayCard: FC<PlayCardProps> = ({
 
   return (
     <Card
+      id={id}
       baseName={baseName}
       currentCard={baseCard}
-      id={id}
-      isAttackingFromAbove={isOnTop}
       isAttacking={isAttacking}
       isFaceDown={isFaceDown}
       isSmall={isSmall}
+      isAttackingFromAbove={isOnTop}
       onClick={onClick}
     />
   )

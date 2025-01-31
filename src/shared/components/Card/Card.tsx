@@ -1,13 +1,18 @@
-import { motion } from 'motion/react'
 import { FC, useEffect, useState } from 'react'
-import { CardContent, CardFooter, CardHeader } from 'src/shared/components'
-import { TICK } from 'src/shared/constants'
+import {
+  CardBack,
+  CardContent,
+  CardFooter,
+  CardFront,
+  CardHeader,
+  CardOutline,
+  CardPaper,
+} from 'src/shared/components'
+import { ACTION_WAIT_TIMEOUT } from 'src/shared/constants'
 import { usePrevious } from 'src/shared/customHooks'
 import { CardBaseName, CardBases } from 'src/shared/data'
-import animations from 'src/shared/styles/animations.module.css'
-import components from 'src/shared/styles/components.module.css'
 import { CARD_TEST_ID } from 'src/shared/testIds'
-import { CardBase } from 'src/shared/types'
+import { CardBase, CardStrengthAnimateState } from 'src/shared/types'
 
 interface CardProps {
   baseName: CardBaseName
@@ -27,7 +32,7 @@ export const Card: FC<CardProps> = ({
   isFaceDown = false,
   isSmall = false,
   isAttacking = false,
-  isAttackingFromAbove: isOnTop = false,
+  isAttackingFromAbove = false,
   onClick,
 }) => {
   const base = CardBases[baseName]
@@ -37,30 +42,9 @@ export const Card: FC<CardProps> = ({
   const prevStrength = usePrevious(strength)
   const prevIsFaceDown = usePrevious(isFaceDown)
 
-  const [cardFaceAnimation, setCardFaceAnimation] = useState('')
-  const [cardOutlineAnimation, setCardOutlineAnimation] = useState('')
+  const [cardStrengthAnimateState, setCardStrengthAnimateState] =
+    useState<CardStrengthAnimateState>('')
   const [shouldShowFront, setShouldShowFront] = useState(!isFaceDown)
-
-  // Attacking animation
-  useEffect(() => {
-    if (isAttacking) {
-      setCardOutlineAnimation('')
-      setCardFaceAnimation('')
-
-      setTimeout(() => {
-        setCardOutlineAnimation(
-          isOnTop
-            ? ` ${animations.attackFromTop}`
-            : ` ${animations.attackFromBottom}`,
-        )
-        setCardFaceAnimation(
-          isOnTop
-            ? ` ${animations.attackFromTopFace}`
-            : ` ${animations.attackFromBottomFace}`,
-        )
-      }, TICK)
-    }
-  }, [isAttacking, isOnTop])
 
   // Show or hide card faces
   useEffect(() => {
@@ -78,43 +62,48 @@ export const Card: FC<CardProps> = ({
   // Strength animations
   useEffect(() => {
     if (prevStrength !== strength) {
-      setCardFaceAnimation('')
+      setCardStrengthAnimateState(
+        prevStrength < strength ? 'boosted' : 'damaged',
+      )
 
       setTimeout(() => {
-        setCardFaceAnimation(
-          prevStrength < strength
-            ? ` ${animations.boost}`
-            : ` ${animations.damage}`,
-        )
-      }, TICK)
+        setCardStrengthAnimateState('')
+      }, ACTION_WAIT_TIMEOUT)
     }
   }, [strength])
 
   return (
-    <motion.div
+    <CardOutline
       layoutId={id}
-      onClick={onClick}
+      isSmall={isSmall}
       initial={false}
       data-testid={`${CARD_TEST_ID}${id}`}
-      className={`${components.cardOutline}${isSmall ? ` ${components.smallCard}` : ''}${isFaceDown ? ` ${components.cardFlipped}` : ''}${cardOutlineAnimation}`}
+      isAttacking={isAttacking}
+      isAttackingFromAbove={isAttackingFromAbove}
+      onClick={onClick}
     >
-      <div className={components.cardPaper}>
+      <CardPaper isFaceDown={isFaceDown} isSmall={isSmall}>
         {/* Card Front */}
         {shouldShowFront ? (
-          <div
-            className={`${components.cardFront}${onClick ? ` ${animations.activeCard}` : ''}${rank === 'unique' ? ` ${components.uniqueCard}` : ''}${cardFaceAnimation}`}
+          <CardFront
+            isSmall={isSmall}
+            isAttacking={isAttacking}
+            isAttackingFromAbove={isAttackingFromAbove}
+            isActive={!!onClick}
+            rank={rank}
+            cardStrengthAnimateState={cardStrengthAnimateState}
           >
             <CardHeader card={card} id={id} baseStrength={base.strength} />
 
             <CardContent card={card} id={id} />
 
             <CardFooter cost={cost} />
-          </div>
+          </CardFront>
         ) : null}
 
         {/* Card Back */}
-        <div className={components.cardBack} />
-      </div>
-    </motion.div>
+        <CardBack isSmall={isSmall} />
+      </CardPaper>
+    </CardOutline>
   )
 }

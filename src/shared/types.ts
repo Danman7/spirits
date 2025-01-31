@@ -3,7 +3,7 @@ import { CardBaseName } from 'src/shared/data'
 /**
  * A card’s rank controls how many copies of a card one can have in a deck. Sometimes it also directs card effects.
  */
-type CardRank = 'common' | 'unique'
+export type CardRank = 'common' | 'unique'
 
 /**
  * A card’s type decides how it is played and removed from the board.
@@ -56,3 +56,11 @@ export interface Bot extends User {
 }
 
 export type TraitName = keyof Traits
+
+export type AnimateState = 'in' | 'out' | ''
+
+export interface AnimateStateProps {
+  animateState: AnimateState
+}
+
+export type CardStrengthAnimateState = 'boosted' | 'damaged' | ''

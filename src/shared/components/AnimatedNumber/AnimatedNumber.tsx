@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react'
+import { Difference, StyledAnimatedNumber } from 'src/shared/components'
 import { usePrevious } from 'src/shared/customHooks'
-import animations from 'src/shared/styles/animations.module.css'
-import components from 'src/shared/styles/components.module.css'
 
 interface AnimatedNumberProps {
   value: number
@@ -41,18 +40,17 @@ export const AnimatedNumber: FC<AnimatedNumberProps> = ({
   }, [value])
 
   return (
-    <div className={components.inlineBlock}>
+    <StyledAnimatedNumber>
       <span>{value}</span>
 
       {updates.map(({ id, text }) => (
-        <div
+        <Difference
           key={uniqueId ? `${uniqueId}-update-${id}` : id}
           onAnimationEnd={() => removeUpdate(id)}
-          className={`${animations.difference} ${animations.slideUpOpacity}`}
         >
           {text}
-        </div>
+        </Difference>
       ))}
-    </div>
+    </StyledAnimatedNumber>
   )
 }

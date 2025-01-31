@@ -1,6 +1,9 @@
 import { FC } from 'react'
+import {
+  CardFlavor,
+  StyledCardContent,
+} from 'src/shared/components/Card/styles'
 import { traitDescriptions } from 'src/shared/messages'
-import components from 'src/shared/styles/components.module.css'
 import { CardBase, TraitName } from 'src/shared/types'
 
 interface CardContentProps {
@@ -12,7 +15,7 @@ export const CardContent: FC<CardContentProps> = ({ card, id }) => {
   const { description, flavor, traits } = card
 
   return (
-    <div className={components.cardContent}>
+    <StyledCardContent>
       {description
         ? description.map((paragraph, index) => (
             <p key={`${id}-description-${index}`}>{paragraph}</p>
@@ -28,9 +31,7 @@ export const CardContent: FC<CardContentProps> = ({ card, id }) => {
           ))
         : null}
 
-      <div className={components.cardFlavor}>
-        <small>{flavor}</small>
-      </div>
-    </div>
+      <CardFlavor>{flavor}</CardFlavor>
+    </StyledCardContent>
   )
 }

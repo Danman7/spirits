@@ -1,7 +1,7 @@
 import { FC, ReactNode, useEffect, useState } from 'react'
-import animations from 'src/shared/styles/animations.module.css'
-import styles from 'src/shared/styles/components.module.css'
+import { ModalWrapper, Overlay, StyledModal } from 'src/shared/components'
 import { MODAL_TEST_ID, OVERLAY_TEST_ID } from 'src/shared/testIds'
+import { AnimateState } from 'src/shared/types'
 
 interface ModalProps {
   isOpen: boolean
@@ -15,12 +15,12 @@ export const Modal: FC<ModalProps> = ({
   onClosingComplete,
 }) => {
   const [shouldShowModal, setShouldShowModal] = useState(isOpen)
-  const [overlayAnimation, setOverlayAnimation] = useState('')
-  const [modalAnimation, setModalAnimation] = useState('')
+  const [overlayAnimation, setOverlayAnimation] = useState<AnimateState>('')
+  const [modalAnimation, setModalAnimation] = useState<AnimateState>('')
 
   const onOverlayAnimationEnd = () => {
     if (isOpen) {
-      setModalAnimation(` ${animations.slideInOpacity}`)
+      setModalAnimation('in')
     } else {
       if (onClosingComplete) {
         onClosingComplete()
@@ -32,37 +32,37 @@ export const Modal: FC<ModalProps> = ({
 
   const onModalAnimationEnd = () => {
     if (!isOpen) {
-      setOverlayAnimation(` ${animations.fadeOut}`)
+      setOverlayAnimation('out')
     }
   }
 
   useEffect(() => {
     if (isOpen) {
       setShouldShowModal(true)
-      setModalAnimation(` ${animations.paused}`)
-      setOverlayAnimation(` ${animations.fadeIn}`)
+      setModalAnimation('')
+      setOverlayAnimation('in')
     }
 
     if (!isOpen) {
-      setModalAnimation(` ${animations.slideOutOpacity}`)
+      setModalAnimation('out')
     }
   }, [isOpen])
 
   return shouldShowModal ? (
-    <div className={styles.modalWrapper}>
-      <div
-        className={`${styles.overlay}${overlayAnimation}`}
-        onAnimationEnd={onOverlayAnimationEnd}
+    <ModalWrapper>
+      <Overlay
+        animateState={overlayAnimation}
         data-testid={OVERLAY_TEST_ID}
+        onAnimationEnd={onOverlayAnimationEnd}
       />
 
-      <div
-        className={`${styles.modal} ${modalAnimation}`}
-        onAnimationEnd={onModalAnimationEnd}
+      <StyledModal
+        animateState={modalAnimation}
         data-testid={MODAL_TEST_ID}
+        onAnimationEnd={onModalAnimationEnd}
       >
         {children}
-      </div>
-    </div>
+      </StyledModal>
+    </ModalWrapper>
   ) : null
 }

@@ -15,9 +15,9 @@ export const CardStackList: FC<CardStackListProps> = ({
   player,
   isOnTop,
 }) => (
-  <div
+  <config.component
     data-testid={config.testId}
-    className={config.className}
+    isOnTop={isOnTop}
     onClick={config.onClickStack}
   >
     {player[stack].map((cardId) => (
@@ -29,5 +29,5 @@ export const CardStackList: FC<CardStackListProps> = ({
         isOnTop={isOnTop}
       />
     ))}
-  </div>
+  </config.component>
 )

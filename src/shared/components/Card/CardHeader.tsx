@@ -1,8 +1,11 @@
 import { FC } from 'react'
-import { ColoredNumber } from 'src/shared/components'
-import components from 'src/shared/styles/components.module.css'
+import {
+  CardTitle,
+  ColoredNumber,
+  StyledCardHeader,
+} from 'src/shared/components'
 import { CardBase } from 'src/shared/types'
-import { getFactionColor, joinCardCategories } from 'src/shared/utils'
+import { joinCardCategories } from 'src/shared/utils'
 
 interface CardHeaderProps {
   card: CardBase
@@ -14,19 +17,16 @@ export const CardHeader: FC<CardHeaderProps> = ({ card, baseStrength, id }) => {
   const { categories, factions, name, strength } = card
 
   return (
-    <div
-      className={components.cardHeader}
-      style={{ background: getFactionColor(factions) }}
-    >
-      <h3 className={components.cardTitle}>
+    <StyledCardHeader factions={factions}>
+      <CardTitle>
         {name}
 
         {strength && baseStrength ? (
           <ColoredNumber current={strength} base={baseStrength} uniqueId={id} />
         ) : null}
-      </h3>
+      </CardTitle>
 
       <small>{joinCardCategories(categories)}</small>
-    </div>
+    </StyledCardHeader>
   )
 }

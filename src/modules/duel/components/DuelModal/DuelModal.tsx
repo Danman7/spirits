@@ -1,6 +1,11 @@
 import { FC, ReactNode, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import {
+  CardBrowserModal,
+  CardBrowserModalFooter,
+  CardList,
+} from 'src/modules/duel/components'
+import {
   browsingStackModalTitle,
   closeMessage,
   initialDrawMessage,
@@ -24,7 +29,6 @@ import { getUserId } from 'src/modules/user/selectors'
 import { Card, Link, Modal } from 'src/shared/components'
 import { PHASE_MODAL_TIMEOUT } from 'src/shared/constants'
 import { usePrevious } from 'src/shared/customHooks'
-import components from 'src/shared/styles/components.module.css'
 import { shuffleArray } from 'src/shared/utils'
 
 const flashModal = (setModalVisibility: (isOpen: boolean) => void) => {
@@ -75,9 +79,9 @@ export const DuelModal: FC = () => {
     if (browsedStack) {
       return (
         <>
-          <div className={components.cardBrowserModal}>
+          <CardBrowserModal>
             <h1>{`${browsingStackModalTitle} ${browsedStack}`} </h1>
-            <div className={components.cardList}>
+            <CardList>
               {shuffleArray(player[browsedStack]).map((cardId) => (
                 <Card
                   key={`${cardId}-browse`}
@@ -85,14 +89,14 @@ export const DuelModal: FC = () => {
                   baseName={player.cards[cardId].baseName}
                 />
               ))}
-            </div>
+            </CardList>
 
-            <div className={components.cardBrowseModalFooter}>
+            <CardBrowserModalFooter>
               <Link onClick={() => dispatch(setIsBrowsingStack(false))}>
                 {closeMessage}
               </Link>
-            </div>
-          </div>
+            </CardBrowserModalFooter>
+          </CardBrowserModal>
         </>
       )
     }

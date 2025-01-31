@@ -51,8 +51,6 @@ const meta = {
         'If a card is on the top player’s board, its attack animation is different.',
     },
     onClick: {
-      control: { type: 'radio' },
-      options: [undefined, () => {}],
       description:
         'An optional onClick function that determines if the isActive styles apply.',
     },

@@ -1,12 +1,19 @@
 import { useAppDispatch, useAppSelector } from 'src/app/store'
-import { BotController, CardStackList } from 'src/modules/duel/components'
+import {
+  BotController,
+  CardStackList,
+  PlayerBoard,
+  PlayerDeck,
+  PlayerDiscard,
+  PlayerHand,
+  PlayerInfo,
+  StyledPlayerField,
+} from 'src/modules/duel/components'
 import { CARD_STACKS } from 'src/modules/duel/constants'
 import { getActivePlayerId, getPlayers } from 'src/modules/duel/selectors'
 import { setBrowsedStack, setIsBrowsingStack } from 'src/modules/duel/slice'
 import { CardStack, StackConfiguration } from 'src/modules/duel/types'
 import { AnimatedNumber } from 'src/shared/components'
-import animations from 'src/shared/styles/animations.module.css'
-import components from 'src/shared/styles/components.module.css'
 import {
   OPPONENT_BOARD_ID,
   OPPONENT_DECK_ID,
@@ -28,29 +35,21 @@ const getStackConfiguration = (
   const stackConfigs: Record<CardStack, StackConfiguration> = {
     board: {
       testId: isOnTop ? OPPONENT_BOARD_ID : PLAYER_BOARD_ID,
-      className: isOnTop
-        ? components.topPlayerBoard
-        : components.bottomPlayerBoard,
+      component: PlayerBoard,
     },
     deck: {
       testId: isOnTop ? OPPONENT_DECK_ID : PLAYER_DECK_ID,
-      className: isOnTop
-        ? components.topPlayerDeck
-        : components.bottomPlayerDeck,
+      component: PlayerDeck,
       onClickStack: !isOnTop ? () => browseStack(stack) : undefined,
     },
     discard: {
       testId: isOnTop ? OPPONENT_DISCARD_ID : PLAYER_DISCARD_ID,
-      className: isOnTop
-        ? components.topPlayerDiscard
-        : components.bottomPlayerDiscard,
+      component: PlayerDiscard,
       onClickStack: !isOnTop ? () => browseStack(stack) : undefined,
     },
     hand: {
       testId: isOnTop ? OPPONENT_HAND_ID : PLAYER_HAND_ID,
-      className: isOnTop
-        ? components.topPlayerHand
-        : components.bottomPlayerHand,
+      component: PlayerHand,
     },
   }
 
@@ -80,19 +79,16 @@ export const PlayerField: React.FC<PlayerFieldProps> = ({
   }
 
   return (
-    <div
-      className={
-        isOnTop ? components.topPlayerField : components.bottomPlayerField
-      }
-    >
-      <h2
+    <StyledPlayerField isOnTop={isOnTop}>
+      <PlayerInfo
+        isActive={isActive}
+        isOnTop={isOnTop}
         data-testid={isOnTop ? OPPONENT_INFO_ID : PLAYER_INFO_ID}
-        className={`${isOnTop ? components.topPlayerInfo : components.bottomPlayerInfo}${isActive ? ` ${components.activePlayerInfo} ${animations.pop}` : ''}`}
       >
         <span>{name}</span> /{' '}
         <AnimatedNumber value={coins} uniqueId={playerId} />
         {income ? <span> (+{income})</span> : null}
-      </h2>
+      </PlayerInfo>
 
       {CARD_STACKS.map((stack) => (
         <CardStackList
@@ -105,6 +101,6 @@ export const PlayerField: React.FC<PlayerFieldProps> = ({
       ))}
 
       {isBot ? <BotController playerId={id} /> : null}
-    </div>
+    </StyledPlayerField>
   )
 }

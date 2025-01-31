@@ -4,6 +4,7 @@ import {
   ActionPanel,
   DuelModal,
   PlayerField,
+  StyledBoard,
 } from 'src/modules/duel/components'
 import {
   getAttackingAgentId,
@@ -13,7 +14,6 @@ import {
 import { endDuel, moveToNextTurn } from 'src/modules/duel/slice'
 import { sortDuelPlayers } from 'src/modules/duel/utils'
 import { getUserId } from 'src/modules/user/selectors'
-import components from 'src/shared/styles/components.module.css'
 
 export const Board: FC = () => {
   const dispatch = useAppDispatch()
@@ -51,7 +51,7 @@ export const Board: FC = () => {
   }, [players, dispatch])
 
   return (
-    <div className={components.board}>
+    <StyledBoard>
       {sortDuelPlayers(players, loggedInPlayerId).map(({ id }, index) => (
         <PlayerField key={id} playerId={id} isOnTop={!index} />
       ))}
@@ -59,6 +59,6 @@ export const Board: FC = () => {
       <DuelModal />
 
       <ActionPanel />
-    </div>
+    </StyledBoard>
   )
 }

@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react'
-import styles from 'src/shared/styles/components.module.css'
+import { StyledLink } from 'src/shared/components'
 
 interface LinkProps {
   children: ReactNode
@@ -7,7 +7,5 @@ interface LinkProps {
 }
 
 export const Link: FC<LinkProps> = ({ children, onClick }) => (
-  <button className={styles.link} onClick={onClick}>
-    {children}
-  </button>
+  <StyledLink onClick={onClick}>{children}</StyledLink>
 )

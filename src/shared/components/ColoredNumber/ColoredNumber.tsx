@@ -1,6 +1,5 @@
 import { FC } from 'react'
-import { AnimatedNumber } from 'src/shared/components'
-import styles from 'src/shared/styles/components.module.css'
+import { AnimatedNumber, StyledColoredNumber } from 'src/shared/components'
 
 interface ColoredNumberProps {
   base: number
@@ -12,17 +11,8 @@ export const ColoredNumber: FC<ColoredNumberProps> = ({
   base,
   current,
   uniqueId,
-}) => {
-  const className =
-    current > base
-      ? styles.positiveText
-      : current < base
-        ? styles.negativeText
-        : ''
-
-  return (
-    <span className={className}>
-      <AnimatedNumber value={current} uniqueId={uniqueId} />
-    </span>
-  )
-}
+}) => (
+  <StyledColoredNumber base={base} current={current}>
+    <AnimatedNumber value={current} uniqueId={uniqueId} />
+  </StyledColoredNumber>
+)

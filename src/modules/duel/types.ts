@@ -85,8 +85,15 @@ export type DuelUser = User | Bot
 
 export type DuelStartUsers = [DuelUser, DuelUser]
 
+interface StackComponentProps {
+  'data-testid': string
+  children: React.ReactNode
+  isOnTop?: boolean
+  onClick?: React.MouseEventHandler<HTMLDivElement>
+}
+
 export interface StackConfiguration {
-  className: string
+  component: React.ComponentType<StackComponentProps>
   testId: string
   onClickStack?: React.MouseEventHandler<HTMLDivElement>
 }
