@@ -1,15 +1,14 @@
 import { fireEvent } from '@testing-library/dom'
 import { act } from 'react'
-
-import { RootState } from 'src/app/store'
-import { Board } from 'src/modules/duel/components'
-import { victoryMessage, yourTurnMessage } from 'src/modules/duel/messages'
+import { RootState } from 'src/app'
 import {
   endDuel,
   moveToNextTurn,
   playersDrawInitialCards,
-} from 'src/modules/duel/slice'
-
+  victoryMessage,
+  yourTurnMessage,
+} from 'src/modules/duel'
+import { Board } from 'src/modules/duel/components'
 import { opponentId, playerId, stackedStateMock } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { OVERLAY_TEST_ID } from 'src/shared/testIds'

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Provider } from 'react-redux'
-import { setupStore } from 'src/app/store'
+import { setupStore } from 'src/app'
 import { Board } from 'src/modules/duel/components'
 import { stackedStateMock } from 'src/shared/__mocks__'
 

@@ -1,6 +1,6 @@
 import { fireEvent, waitFor } from '@testing-library/dom'
 import { act } from 'react'
-import { RootState } from 'src/app/store'
+import { RootState } from 'src/app'
 import { PlayCard } from 'src/modules/duel/components'
 import {
   completeRedraw,
@@ -8,7 +8,7 @@ import {
   drawCardFromDeck,
   playCard,
   putCardAtBottomOfDeck,
-} from 'src/modules/duel/slice'
+} from 'src/modules/duel'
 import {
   playerId,
   stackedPlayerMock,

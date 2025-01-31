@@ -1,14 +1,15 @@
 import { fireEvent } from '@testing-library/dom'
-import { RootState } from 'src/app/store'
-import { ActionPanel } from 'src/modules/duel/components'
+import { RootState } from 'src/app'
 import {
+  completeRedraw,
   opponentDecidingMessage,
   passButtonMessage,
   redrawMessage,
+  resolveTurn,
   skipRedrawLinkMessage,
   yourTurnMessage,
-} from 'src/modules/duel/messages'
-import { completeRedraw, resolveTurn } from 'src/modules/duel/slice'
+} from 'src/modules/duel'
+import { ActionPanel } from 'src/modules/duel/components'
 import { opponentId, playerId, stackedStateMock } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { deepClone } from 'src/shared/utils'

@@ -1,21 +1,20 @@
 import { FC, ReactNode, useEffect, useState } from 'react'
-import { useAppDispatch, useAppSelector } from 'src/app/store'
+import { useAppDispatch, useAppSelector } from 'src/app'
 import {
+  completeRedraw,
+  getActivePlayerId,
+  getPhase,
+  getPlayers,
   opponentDecidingMessage,
   opponentTurnTitle,
   passButtonMessage,
   redrawMessage,
+  resolveTurn,
   skipRedrawLinkMessage,
   yourTurnMessage,
   yourTurnTitle,
-} from 'src/modules/duel/messages'
-import {
-  getActivePlayerId,
-  getPhase,
-  getPlayers,
-} from 'src/modules/duel/selectors'
-import { completeRedraw, resolveTurn } from 'src/modules/duel/slice'
-import { getUserId } from 'src/modules/user/selectors'
+} from 'src/modules/duel'
+import { getUserId } from 'src/modules/user'
 import { Link, LoadingMessage, SidePanel } from 'src/shared/components'
 
 const OppponentIsDeciding = () => (

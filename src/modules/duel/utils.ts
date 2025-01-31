@@ -1,16 +1,17 @@
 import { Action } from '@reduxjs/toolkit'
-import { ListenerApi } from 'src/app/listenerMiddleware'
-import { CARD_STACKS, DUEL_STARTING_COINS } from 'src/modules/duel/constants'
-import { playCard } from 'src/modules/duel/slice'
+import { ListenerApi } from 'src/app'
 import {
+  CARD_STACKS,
   CardStack,
+  DUEL_STARTING_COINS,
   DuelCard,
   DuelPlayers,
   DuelState,
   DuelUser,
+  playCard,
   Player,
   PlayerStacksAndCards,
-} from 'src/modules/duel/types'
+} from 'src/modules/duel'
 import { CardBaseName, CardBases } from 'src/shared/data'
 import { generateUUID, shuffleArray } from 'src/shared/utils'
 

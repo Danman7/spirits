@@ -1,5 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { CARD_STACKS } from 'src/modules/duel/constants'
+import { CARD_STACKS } from 'src/modules/duel'
 import { CardBaseName } from 'src/shared/data'
 import { Bot, CardBase, User } from 'src/shared/types'
 

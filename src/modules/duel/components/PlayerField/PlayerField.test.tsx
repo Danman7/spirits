@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/dom'
-import { RootState } from 'src/app/store'
+import { RootState } from 'src/app'
 import { PlayerField } from 'src/modules/duel/components'
 import {
   completeRedraw,
@@ -7,7 +7,7 @@ import {
   playCard,
   putCardAtBottomOfDeck,
   setBrowsedStack,
-} from 'src/modules/duel/slice'
+} from 'src/modules/duel'
 import {
   playerId,
   stackedPlayerMock,

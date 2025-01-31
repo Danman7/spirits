@@ -1,25 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
-import {
-  DUEL_INCOME_PER_TURN,
-  DUEL_INITIAL_CARDS_DRAWN,
-} from 'src/modules/duel/constants'
-import { invalidFirstPlayerIdError } from 'src/modules/duel/messages'
 import {
   AddNewCardsAction,
   AttackOrder,
   CardStack,
+  DUEL_INCOME_PER_TURN,
+  DUEL_INITIAL_CARDS_DRAWN,
   DuelCard,
   DuelStartUsers,
   DuelState,
+  getInactivePlayerId,
+  invalidFirstPlayerIdError,
+  moveCardBetweenStacks,
   PlayCardAction,
   PlayerCardAction,
-} from 'src/modules/duel/types'
-import {
-  getInactivePlayerId,
-  moveCardBetweenStacks,
   setupInitialDuelPlayerFromUser,
-} from 'src/modules/duel/utils'
+} from 'src/modules/duel'
 import { getRandomArrayItem } from 'src/shared/utils'
 
 export const initialState: DuelState = {

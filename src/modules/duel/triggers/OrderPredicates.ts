@@ -1,6 +1,5 @@
-import { Predicate } from 'src/app/listenerMiddleware'
-import { playCard } from 'src/modules/duel/slice'
-import { getOnPlayPredicateForCardBase } from 'src/modules/duel/utils'
+import { Predicate } from 'src/app'
+import { playCard, getOnPlayPredicateForCardBase } from 'src/modules/duel'
 
 export const HammeriteNoviceOnPlay: Predicate = (
   action,

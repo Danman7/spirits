@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { RootState } from 'src/app/store'
+import { RootState } from 'src/app'
 
 const getDuelState = (state: RootState) => state.duel
 

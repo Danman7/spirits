@@ -1,4 +1,13 @@
-import { useAppDispatch, useAppSelector } from 'src/app/store'
+import { useAppDispatch, useAppSelector } from 'src/app'
+import {
+  CARD_STACKS,
+  CardStack,
+  getActivePlayerId,
+  getPlayers,
+  setBrowsedStack,
+  setIsBrowsingStack,
+  StackConfiguration,
+} from 'src/modules/duel'
 import {
   BotController,
   CardStackList,
@@ -9,10 +18,6 @@ import {
   PlayerInfo,
   StyledPlayerField,
 } from 'src/modules/duel/components'
-import { CARD_STACKS } from 'src/modules/duel/constants'
-import { getActivePlayerId, getPlayers } from 'src/modules/duel/selectors'
-import { setBrowsedStack, setIsBrowsingStack } from 'src/modules/duel/slice'
-import { CardStack, StackConfiguration } from 'src/modules/duel/types'
 import { AnimatedNumber } from 'src/shared/components'
 import {
   OPPONENT_BOARD_ID,

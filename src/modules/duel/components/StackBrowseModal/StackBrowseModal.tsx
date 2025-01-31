@@ -1,21 +1,19 @@
 import { FC, ReactNode, useMemo } from 'react'
-import { useAppDispatch, useAppSelector } from 'src/app/store'
+import { useAppDispatch, useAppSelector } from 'src/app'
 import {
   CardBrowserModal,
   CardBrowserModalFooter,
   CardList,
 } from 'src/modules/duel/components'
 import {
-  browsingStackModalTitle,
-  closeMessage,
-} from 'src/modules/duel/messages'
-import {
   getBrowsedStack,
   getIsBrowsingStack,
   getPlayers,
-} from 'src/modules/duel/selectors'
-import { setIsBrowsingStack } from 'src/modules/duel/slice'
-import { getUserId } from 'src/modules/user/selectors'
+  setIsBrowsingStack,
+  browsingStackModalTitle,
+  closeMessage,
+} from 'src/modules/duel'
+import { getUserId } from 'src/modules/user'
 import { Card, Link, Modal } from 'src/shared/components'
 import { shuffleArray } from 'src/shared/utils'
 

@@ -1,11 +1,12 @@
-import { RootState } from 'src/app/store'
-import { initialState as initialDuelState } from 'src/modules/duel/slice'
-import { DuelState, Player } from 'src/modules/duel/types'
+import { RootState } from 'src/app'
 import {
+  initialState as initialDuelState,
   normalizePlayerCards,
   setupInitialDuelPlayerFromUser,
-} from 'src/modules/duel/utils'
-import { initialState as initialUserState } from 'src/modules/user/slice'
+  DuelState,
+  Player,
+} from 'src/modules/duel'
+import { initialState as initialUserState } from 'src/modules/user'
 import { Bot, User } from 'src/shared/types'
 
 export const playerId = 'player'

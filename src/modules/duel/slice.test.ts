@@ -1,33 +1,30 @@
 import {
-  DUEL_INCOME_PER_TURN,
-  DUEL_INITIAL_CARDS_DRAWN,
-} from 'src/modules/duel/constants'
-import { invalidFirstPlayerIdError } from 'src/modules/duel/messages'
-import {
   addNewCards,
   agentAttack,
+  CardStack,
   completeRedraw,
+  createDuelCard,
   discardCard,
   drawCardFromDeck,
+  DUEL_INCOME_PER_TURN,
+  DUEL_INITIAL_CARDS_DRAWN,
+  DuelCard,
   duelReducer,
+  DuelStartUsers,
+  DuelState,
   initialState,
+  invalidFirstPlayerIdError,
   moveToNextAttackingAgent,
   moveToNextTurn,
+  normalizePlayerCards,
   playCard,
+  PlayerCards,
   playersDrawInitialCards,
   putCardAtBottomOfDeck,
   resolveTurn,
   startDuel,
   updateCard,
-} from 'src/modules/duel/slice'
-import {
-  CardStack,
-  DuelCard,
-  DuelStartUsers,
-  DuelState,
-  PlayerCards,
-} from 'src/modules/duel/types'
-import { createDuelCard, normalizePlayerCards } from 'src/modules/duel/utils'
+} from 'src/modules/duel'
 import {
   initialDuelStateMock,
   initialPlayerMock,

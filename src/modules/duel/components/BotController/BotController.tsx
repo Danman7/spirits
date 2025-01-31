@@ -1,12 +1,14 @@
 import { FC, useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from 'src/app/store'
+import { useAppDispatch, useAppSelector } from 'src/app'
 import {
+  completeRedraw,
   getActivePlayerId,
   getPhase,
+  getPlayableCardIds,
   getPlayers,
-} from 'src/modules/duel/selectors'
-import { completeRedraw, playCard, resolveTurn } from 'src/modules/duel/slice'
-import { getPlayableCardIds } from 'src/modules/duel/utils'
+  playCard,
+  resolveTurn,
+} from 'src/modules/duel'
 import { ACTION_WAIT_TIMEOUT } from 'src/shared/constants'
 import { getRandomArrayItem } from 'src/shared/utils'
 

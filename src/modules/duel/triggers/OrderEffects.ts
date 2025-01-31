@@ -1,9 +1,10 @@
-import { Effect } from 'src/app/listenerMiddleware'
-import { playCard, updateCard } from 'src/modules/duel/slice'
+import { Effect } from 'src/app'
 import {
   getNeighboursIndexes,
   getPlayAllCopiesEffect,
-} from 'src/modules/duel/utils'
+  playCard,
+  updateCard,
+} from 'src/modules/duel'
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/shared/data'
 
 export const PlayAllHammeriteNoviceCopies: Effect = (action, listenerApi) =>

@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 
-import { RootState } from 'src/app/store'
+import { RootState } from 'src/app'
 
 const getUserState = (state: RootState) => state.user
 

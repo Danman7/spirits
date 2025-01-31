@@ -1,3 +1,10 @@
+export * from 'src/modules/duel/slice'
+export * from 'src/modules/duel/selectors'
+export * from 'src/modules/duel/types'
+export * from 'src/modules/duel/utils'
+export * from 'src/modules/duel/constants'
+export * from 'src/modules/duel/messages'
+
 import * as OrderEffects from 'src/modules/duel/triggers/OrderEffects'
 import * as CommonEffects from 'src/modules/duel/triggers/CommonEffects'
 import * as OrderPredicates from 'src/modules/duel/triggers/OrderPredicates'

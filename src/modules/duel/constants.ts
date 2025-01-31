@@ -1,4 +1,4 @@
-import { Player } from 'src/modules/duel/types'
+import { Player } from 'src/modules/duel'
 
 export const EMPTY_PLAYER: Player = {
   id: '',

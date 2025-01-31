@@ -1,4 +1,4 @@
-import { DUEL_INITIAL_CARDS_DRAWN } from 'src/modules/duel/constants'
+import { DUEL_INITIAL_CARDS_DRAWN } from 'src/modules/duel'
 
 export const yourTurnTitle = 'Your turn'
 export const opponentTurnTitle = "Opponent's turn"

@@ -3,7 +3,7 @@ import {
   createListenerMiddleware,
   ListenerEffectAPI,
 } from '@reduxjs/toolkit'
-import { AppDispatch, RootState } from 'src/app/store'
+import { AppDispatch, RootState } from 'src/app'
 import {
   Effects,
   Predicates,

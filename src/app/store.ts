@@ -1,8 +1,8 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { useDispatch, useSelector } from 'react-redux'
-import { listenerMiddleware } from 'src/app/listenerMiddleware'
-import { duelReducer } from 'src/modules/duel/slice'
-import { userReducer } from 'src/modules/user/slice'
+import { listenerMiddleware } from 'src/app'
+import { duelReducer } from 'src/modules/duel'
+import { userReducer } from 'src/modules/user'
 
 const rootReducer = combineReducers({
   duel: duelReducer,

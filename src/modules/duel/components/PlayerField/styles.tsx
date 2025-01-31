@@ -49,7 +49,8 @@ export const PlayerHand = styled.div<StyledPlayerFieldProps>`
     ${({ isOnTop, theme }) =>
       !isOnTop &&
       css`
-        transition: bottom 0.2s;
+        bottom: 0;
+        transition: bottom ${theme.transitionTime};
 
         &:hover {
           bottom: calc(350px - 64px);

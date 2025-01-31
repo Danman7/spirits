@@ -1,8 +1,8 @@
 import { fireEvent, within } from '@testing-library/dom'
 import { act } from 'react'
-import { RootState } from 'src/app/store'
+import { RootState } from 'src/app'
 import { Board } from 'src/modules/duel/components'
-import { normalizePlayerCards } from 'src/modules/duel/utils'
+import { normalizePlayerCards } from 'src/modules/duel'
 import {
   initialOpponentMock,
   initialPlayerMock,

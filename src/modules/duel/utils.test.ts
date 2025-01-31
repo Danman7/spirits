@@ -1,16 +1,15 @@
 import {
   CARD_STACKS,
   DUEL_STARTING_COINS,
+  DuelState,
   EMPTY_PLAYER,
-} from 'src/modules/duel/constants'
-import { DuelState, Player } from 'src/modules/duel/types'
-import {
+  Player,
   createDuelCard,
   getNeighboursIndexes,
   getPlayableCardIds,
   moveCardBetweenStacks,
   normalizePlayerCards,
-} from 'src/modules/duel/utils'
+} from 'src/modules/duel'
 import { playerId, stackedDuelStateMock } from 'src/shared/__mocks__'
 import { CardBaseName, CardBases } from 'src/shared/data'
 

@@ -1,24 +1,22 @@
 import { FC, useEffect, useMemo } from 'react'
-import { useAppDispatch, useAppSelector } from 'src/app/store'
-import {
-  getActivePlayerId,
-  getAttackingAgentId,
-  getattackingQueue,
-  getPhase,
-  getPlayers,
-} from 'src/modules/duel/selectors'
+import { useAppDispatch, useAppSelector } from 'src/app'
 import {
   agentAttack,
+  CardStack,
   completeRedraw,
   discardCard,
   drawCardFromDeck,
+  getActivePlayerId,
+  getAttackingAgentId,
+  getattackingQueue,
+  getOppositePlayerId,
+  getPhase,
+  getPlayers,
   moveToNextAttackingAgent,
   playCard,
   putCardAtBottomOfDeck,
-} from 'src/modules/duel/slice'
-import { CardStack } from 'src/modules/duel/types'
-import { getOppositePlayerId } from 'src/modules/duel/utils'
-import { getUserId } from 'src/modules/user/selectors'
+} from 'src/modules/duel'
+import { getUserId } from 'src/modules/user'
 import { Card } from 'src/shared/components'
 import { ACTION_WAIT_TIMEOUT } from 'src/shared/constants'
 

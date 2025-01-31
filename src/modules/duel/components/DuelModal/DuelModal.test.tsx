@@ -1,10 +1,6 @@
-import { RootState } from 'src/app/store'
+import { RootState } from 'src/app'
 import { DuelModal } from 'src/modules/duel/components'
-import {
-  opponentFirst,
-  playerFirst,
-  victoryMessage,
-} from 'src/modules/duel/messages'
+import { opponentFirst, playerFirst, victoryMessage } from 'src/modules/duel'
 import { opponentId, playerId, stackedStateMock } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { deepClone } from 'src/shared/utils'

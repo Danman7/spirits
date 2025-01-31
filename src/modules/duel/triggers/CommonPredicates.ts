@@ -1,4 +1,4 @@
-import { Predicate } from 'src/app/listenerMiddleware'
-import { playCard } from 'src/modules/duel/slice'
+import { Predicate } from 'src/app'
+import { playCard } from 'src/modules/duel'
 
 export const OnPlay: Predicate = (action) => playCard.match(action)

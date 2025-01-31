@@ -1,8 +1,7 @@
 import { render, RenderOptions } from '@testing-library/react'
 import { PropsWithChildren, ReactElement } from 'react'
 import { Provider } from 'react-redux'
-
-import { AppStore, setupStore, RootState } from 'src/app/store'
+import { AppStore, RootState, setupStore } from 'src/app'
 import { defaultTheme, GlobalStyles } from 'src/shared/styles'
 import { ThemeProvider } from 'styled-components'
 

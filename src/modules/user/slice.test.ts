@@ -1,4 +1,4 @@
-import { initialState, loadUser, userReducer } from 'src/modules/user/slice'
+import { initialState, loadUser, userReducer } from 'src/modules/user'
 import { playerId } from 'src/shared/__mocks__'
 import { User } from 'src/shared/types'
 

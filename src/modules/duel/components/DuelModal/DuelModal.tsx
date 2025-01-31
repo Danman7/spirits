@@ -1,19 +1,17 @@
 import { FC, ReactNode, useEffect, useMemo, useState } from 'react'
-import { useAppDispatch, useAppSelector } from 'src/app/store'
-import {
-  initialDrawMessage,
-  opponentFirst,
-  playerFirst,
-  victoryMessage,
-} from 'src/modules/duel/messages'
+import { useAppDispatch, useAppSelector } from 'src/app'
 import {
   getActivePlayerId,
   getPhase,
   getPlayers,
   getVictoriousPlayerId,
-} from 'src/modules/duel/selectors'
-import { playersDrawInitialCards } from 'src/modules/duel/slice'
-import { getUserId } from 'src/modules/user/selectors'
+  initialDrawMessage,
+  opponentFirst,
+  playerFirst,
+  playersDrawInitialCards,
+  victoryMessage,
+} from 'src/modules/duel'
+import { getUserId } from 'src/modules/user'
 import { Modal } from 'src/shared/components'
 import { PHASE_MODAL_TIMEOUT } from 'src/shared/constants'
 

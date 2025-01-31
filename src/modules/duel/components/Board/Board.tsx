@@ -1,5 +1,13 @@
 import { FC, useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from 'src/app/store'
+import { useAppDispatch, useAppSelector } from 'src/app'
+import {
+  endDuel,
+  getAttackingAgentId,
+  getPhase,
+  getPlayers,
+  moveToNextTurn,
+  sortDuelPlayers,
+} from 'src/modules/duel'
 import {
   ActionPanel,
   DuelModal,
@@ -7,14 +15,7 @@ import {
   StackBrowseModal,
   StyledBoard,
 } from 'src/modules/duel/components'
-import {
-  getAttackingAgentId,
-  getPhase,
-  getPlayers,
-} from 'src/modules/duel/selectors'
-import { endDuel, moveToNextTurn } from 'src/modules/duel/slice'
-import { sortDuelPlayers } from 'src/modules/duel/utils'
-import { getUserId } from 'src/modules/user/selectors'
+import { getUserId } from 'src/modules/user'
 
 export const Board: FC = () => {
   const dispatch = useAppDispatch()

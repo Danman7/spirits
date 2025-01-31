@@ -1,15 +1,13 @@
 import { useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from 'src/app/store'
+import { useAppDispatch, useAppSelector } from 'src/app'
 import { Board } from 'src/modules/duel/components'
-import { getActivePlayerId } from 'src/modules/duel/selectors'
-import { startDuel } from 'src/modules/duel/slice'
-import { getUserId } from 'src/modules/user/selectors'
-import { loadUser } from 'src/modules/user/slice'
+import { getActivePlayerId, startDuel } from 'src/modules/duel'
+import { getUserId, loadUser } from 'src/modules/user'
 import { opponentMock, playerId, userMock } from 'src/shared/__mocks__'
 
 let hasLoadedUser = false
 
-const App = () => {
+export const App = () => {
   const dispatch = useAppDispatch()
   const activePlayerId = useAppSelector(getActivePlayerId)
   const userId = useAppSelector(getUserId)
@@ -39,5 +37,3 @@ const App = () => {
 
   return activePlayerId ? <Board /> : null
 }
-
-export default App
