@@ -4,6 +4,7 @@ import {
   ActionPanel,
   DuelModal,
   PlayerField,
+  StackBrowseModal,
   StyledBoard,
 } from 'src/modules/duel/components'
 import {
@@ -57,6 +58,8 @@ export const Board: FC = () => {
       ))}
 
       <DuelModal />
+
+      <StackBrowseModal />
 
       <ActionPanel />
     </StyledBoard>

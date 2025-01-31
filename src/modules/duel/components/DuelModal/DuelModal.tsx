@@ -1,13 +1,6 @@
 import { FC, ReactNode, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import {
-  CardBrowserModal,
-  CardBrowserModalFooter,
-  CardList,
-} from 'src/modules/duel/components'
-import {
-  browsingStackModalTitle,
-  closeMessage,
   initialDrawMessage,
   opponentFirst,
   playerFirst,
@@ -15,21 +8,14 @@ import {
 } from 'src/modules/duel/messages'
 import {
   getActivePlayerId,
-  getBrowsedStack,
-  getIsBrowsingStack,
   getPhase,
   getPlayers,
   getVictoriousPlayerId,
 } from 'src/modules/duel/selectors'
-import {
-  playersDrawInitialCards,
-  setIsBrowsingStack,
-} from 'src/modules/duel/slice'
+import { playersDrawInitialCards } from 'src/modules/duel/slice'
 import { getUserId } from 'src/modules/user/selectors'
-import { Card, Link, Modal } from 'src/shared/components'
+import { Modal } from 'src/shared/components'
 import { PHASE_MODAL_TIMEOUT } from 'src/shared/constants'
-import { usePrevious } from 'src/shared/customHooks'
-import { shuffleArray } from 'src/shared/utils'
 
 const flashModal = (setModalVisibility: (isOpen: boolean) => void) => {
   setModalVisibility(true)
@@ -43,14 +29,11 @@ export const DuelModal: FC = () => {
   const [isDuelModalOpen, setIsDuelModalOpen] = useState(false)
 
   const dispatch = useAppDispatch()
-  const isBrowsingStack = useAppSelector(getIsBrowsingStack)
-  const browsedStack = useAppSelector(getBrowsedStack)
   const players = useAppSelector(getPlayers)
   const phase = useAppSelector(getPhase)
   const activePlayerId = useAppSelector(getActivePlayerId)
   const userId = useAppSelector(getUserId)
   const victoriousPlayerId = useAppSelector(getVictoriousPlayerId)
-  const previousIsBrowsingStack = usePrevious(isBrowsingStack)
 
   const player = players[userId]
   const victoriousPlayerName = victoriousPlayerId
@@ -75,40 +58,7 @@ export const DuelModal: FC = () => {
       case 'Duel End':
         return <h1>{`${victoriousPlayerName} ${victoryMessage}`}</h1>
     }
-
-    if (browsedStack) {
-      return (
-        <>
-          <CardBrowserModal>
-            <h1>{`${browsingStackModalTitle} ${browsedStack}`} </h1>
-            <CardList>
-              {shuffleArray(player[browsedStack]).map((cardId) => (
-                <Card
-                  key={`${cardId}-browse`}
-                  id={`${cardId}-browse`}
-                  baseName={player.cards[cardId].baseName}
-                />
-              ))}
-            </CardList>
-
-            <CardBrowserModalFooter>
-              <Link onClick={() => dispatch(setIsBrowsingStack(false))}>
-                {closeMessage}
-              </Link>
-            </CardBrowserModalFooter>
-          </CardBrowserModal>
-        </>
-      )
-    }
-  }, [
-    browsedStack,
-    isActive,
-    phase,
-    player,
-    playerNames,
-    victoriousPlayerName,
-    dispatch,
-  ])
+  }, [phase])
 
   // Modal visibility based on duel phase
   useEffect(() => {
@@ -122,16 +72,6 @@ export const DuelModal: FC = () => {
         break
     }
   }, [phase])
-
-  // Modal visibility based on browsed card stack
-  useEffect(() => {
-    if (
-      !!previousIsBrowsingStack ||
-      previousIsBrowsingStack !== isBrowsingStack
-    ) {
-      setIsDuelModalOpen(isBrowsingStack)
-    }
-  }, [previousIsBrowsingStack, isBrowsingStack])
 
   return (
     <Modal isOpen={isDuelModalOpen} onClosingComplete={onDuelModalCloseEnd}>

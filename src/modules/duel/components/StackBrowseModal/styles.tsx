@@ -4,6 +4,7 @@ export const CardBrowserModal = styled.div`
   position: relative;
   overflow: auto;
   height: 100%;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
   width: 820px;
