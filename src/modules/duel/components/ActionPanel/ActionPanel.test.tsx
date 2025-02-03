@@ -31,7 +31,7 @@ it('should show the redraw phase panel with skip redraw link', () => {
 
   fireEvent.click(getByText(skipRedrawLinkMessage))
 
-  expect(dispatchSpy).toHaveBeenCalledWith(completeRedraw(playerId))
+  expect(dispatchSpy).toHaveBeenCalledWith(completeRedraw({ playerId }))
 })
 
 it('should show the waiting for opponent message during redraw phase', () => {

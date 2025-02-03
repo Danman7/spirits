@@ -29,7 +29,7 @@ export const ActionPanel: FC = () => {
   const userId = useAppSelector(getUserId)
 
   const player = players[userId]
-  const { id, hasPerformedAction } = player
+  const { id: playerId, hasPerformedAction } = player
   const isActive = player.id === activePlayerId
 
   const [sidePanelContent, setSidePanelContent] = useState<ReactNode>(null)
@@ -52,7 +52,7 @@ export const ActionPanel: FC = () => {
             ) : (
               <>
                 {redrawMessage}
-                <Link onClick={() => dispatch(completeRedraw(id))}>
+                <Link onClick={() => dispatch(completeRedraw({ playerId }))}>
                   {skipRedrawLinkMessage}
                 </Link>
               </>
@@ -80,7 +80,7 @@ export const ActionPanel: FC = () => {
           </>,
         )
     }
-  }, [dispatch, hasPerformedAction, id, isActive, phase])
+  }, [hasPerformedAction, isActive, phase])
 
   return <SidePanel isOpen={isOpen}>{sidePanelContent}</SidePanel>
 }

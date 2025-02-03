@@ -5,9 +5,9 @@ import { PlayCard } from 'src/modules/duel/components'
 import {
   completeRedraw,
   discardCard,
-  drawCardFromDeck,
+  drawACardFromDeck,
   playCard,
-  putCardAtBottomOfDeck,
+  putACardAtBottomOfDeck,
 } from 'src/modules/duel'
 import {
   playerId,
@@ -105,13 +105,13 @@ it('should be able to redraw', () => {
   fireEvent.click(getByText(mockCard.name))
 
   expect(dispatchSpy).toHaveBeenCalledWith(
-    putCardAtBottomOfDeck({
+    putACardAtBottomOfDeck({
       cardId: mockCard.id,
       playerId,
     }),
   )
-  expect(dispatchSpy).toHaveBeenCalledWith(drawCardFromDeck(playerId))
-  expect(dispatchSpy).toHaveBeenCalledWith(completeRedraw(playerId))
+  expect(dispatchSpy).toHaveBeenCalledWith(drawACardFromDeck({ playerId }))
+  expect(dispatchSpy).toHaveBeenCalledWith(completeRedraw({ playerId }))
 })
 
 it('should be able to be played if within budget', () => {

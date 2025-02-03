@@ -87,14 +87,7 @@ interface MoveCardBetweenStacksArgs {
 }
 
 /**
- * A state utility method for moving cards between stacks. It removes the given card id from whichever stack it is and appends or prepends it to the target. Manipulates the state directly.
- * @example 
- * moveCardBetweenStacks({
-    movedCardId: deck[0],
-    playerId: id,
-    state,
-    to: 'hand',
-})
+ * This utility handles moving cards between stacks during a duel. It filters a card’s id from all a player’s stacks and adds it to the target stack. It manipulates the state directly, thus requiring it as a prop.
  */
 export const moveCardBetweenStacks = ({
   state,
@@ -133,13 +126,6 @@ export const sortDuelPlayers = (
       Number(playerB.id === loggedInPlayerId),
   )
 
-/**
- * Get the id of the duel player not set as active.
- */
-export const getInactivePlayerId = (
-  players: DuelPlayers,
-  activePlayerId: string,
-) => Object.keys(players).find((id) => id !== activePlayerId)
 /**
  * Get the id of the opposite player.
  */

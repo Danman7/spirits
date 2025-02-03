@@ -18,9 +18,6 @@ export interface PlayerStacksAndCards extends PlayerStacks {
   cards: PlayerCards
 }
 
-/**
- * A user object which has all necessary properties for a duel.
- */
 export interface Player extends Omit<User, 'deck'>, PlayerStacksAndCards {
   coins: number
   income: number
@@ -46,24 +43,27 @@ export interface AttackOrder {
 
 export interface DuelState {
   phase: DuelPhase
-  players: DuelPlayers
   activePlayerId: string
-  attackingQueue: AttackOrder[]
+  inactivePlayerId: string
   attackingAgentId: string
   victoriousPlayerId: string
   browsedStack: CardStack
   isBrowsingStack: boolean
+  attackingQueue: AttackOrder[]
+  players: DuelPlayers
 }
 
-interface CardActionPayload {
+export type PlayerAction = PayloadAction<{ playerId: string }>
+
+interface PlayerCardActionPayload {
   cardId: string
   playerId: string
 }
 
-export type PlayerCardAction = PayloadAction<CardActionPayload>
+export type PlayerCardAction = PayloadAction<PlayerCardActionPayload>
 
 export type PlayCardAction = PayloadAction<
-  CardActionPayload & {
+  PlayerCardActionPayload & {
     shouldPay: boolean
   }
 >

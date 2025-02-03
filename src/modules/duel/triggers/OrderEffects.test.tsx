@@ -256,6 +256,7 @@ describe('Temple Guard', () => {
       }),
     }
     preloadedState.duel.activePlayerId = opponentId
+    preloadedState.duel.inactivePlayerId = playerId
 
     const player = preloadedState.duel.players[playerId]
     const opponent = preloadedState.duel.players[opponentId]
@@ -304,6 +305,7 @@ describe('Temple Guard', () => {
       }),
     }
     preloadedState.duel.activePlayerId = opponentId
+    preloadedState.duel.inactivePlayerId = playerId
 
     const player = preloadedState.duel.players[playerId]
     const opponent = preloadedState.duel.players[opponentId]
@@ -359,6 +361,7 @@ describe('Temple Guard', () => {
       }),
     }
     preloadedState.duel.activePlayerId = opponentId
+    preloadedState.duel.inactivePlayerId = playerId
 
     const player = preloadedState.duel.players[playerId]
     const opponent = preloadedState.duel.players[opponentId]

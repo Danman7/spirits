@@ -5,7 +5,7 @@ import {
   CardStack,
   completeRedraw,
   discardCard,
-  drawCardFromDeck,
+  drawACardFromDeck,
   getActivePlayerId,
   getAttackingAgentId,
   getattackingQueue,
@@ -14,7 +14,7 @@ import {
   getPlayers,
   moveToNextAttackingAgent,
   playCard,
-  putCardAtBottomOfDeck,
+  putACardAtBottomOfDeck,
 } from 'src/modules/duel'
 import { getUserId } from 'src/modules/user'
 import { Card } from 'src/shared/components'
@@ -64,13 +64,13 @@ export const PlayCard: FC<PlayCardProps> = ({
       if (phase === 'Redrawing') {
         return () => {
           dispatch(
-            putCardAtBottomOfDeck({
+            putACardAtBottomOfDeck({
               cardId: cardId,
               playerId,
             }),
           )
-          dispatch(drawCardFromDeck(playerId))
-          dispatch(completeRedraw(playerId))
+          dispatch(drawACardFromDeck({ playerId }))
+          dispatch(completeRedraw({ playerId }))
         }
       }
     }

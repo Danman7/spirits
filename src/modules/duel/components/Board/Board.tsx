@@ -7,6 +7,7 @@ import {
   getPlayers,
   moveToNextTurn,
   sortDuelPlayers,
+  startFirstPlayerTurn,
 } from 'src/modules/duel'
 import {
   ActionPanel,
@@ -32,7 +33,7 @@ export const Board: FC = () => {
         ({ hasPerformedAction }) => !!hasPerformedAction,
       )
     ) {
-      dispatch(moveToNextTurn())
+      dispatch(startFirstPlayerTurn())
     }
   }, [players, phase, dispatch])
 

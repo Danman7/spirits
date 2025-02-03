@@ -3,9 +3,9 @@ import { RootState } from 'src/app'
 import { PlayerField } from 'src/modules/duel/components'
 import {
   completeRedraw,
-  drawCardFromDeck,
+  drawACardFromDeck,
   playCard,
-  putCardAtBottomOfDeck,
+  putACardAtBottomOfDeck,
   setBrowsedStack,
 } from 'src/modules/duel'
 import {
@@ -116,17 +116,13 @@ describe('Bottom (Player) Side', () => {
     fireEvent.click(getByText(redrawnCard.name))
 
     expect(dispatchSpy).toHaveBeenCalledWith(
-      putCardAtBottomOfDeck({
+      putACardAtBottomOfDeck({
         cardId: redrawnCard.id,
         playerId,
       }),
     )
-    expect(dispatchSpy).toHaveBeenCalledWith(
-      drawCardFromDeck(stackedPlayerMock.id),
-    )
-    expect(dispatchSpy).toHaveBeenCalledWith(
-      completeRedraw(stackedPlayerMock.id),
-    )
+    expect(dispatchSpy).toHaveBeenCalledWith(drawACardFromDeck({ playerId }))
+    expect(dispatchSpy).toHaveBeenCalledWith(completeRedraw({ playerId }))
   })
 
   it('should be able to play a card', () => {

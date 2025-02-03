@@ -24,7 +24,7 @@ it('should skip redrawing', () => {
     },
   )
 
-  expect(dispatchSpy).toHaveBeenCalledWith(completeRedraw(playerId))
+  expect(dispatchSpy).toHaveBeenCalledWith(completeRedraw({ playerId }))
 })
 
 it('should play a card within budget on turn', () => {

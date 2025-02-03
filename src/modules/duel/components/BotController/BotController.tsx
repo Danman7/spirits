@@ -28,7 +28,7 @@ export const BotController: FC<BotControllerProps> = ({ playerId }) => {
   // Pass redrawing automatically (for now)
   useEffect(() => {
     if (phase === 'Redrawing') {
-      dispatch(completeRedraw(playerId))
+      dispatch(completeRedraw({ playerId }))
     }
   }, [phase])
 

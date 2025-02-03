@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import {
-  AddNewCardsAction,
   AttackOrder,
   CardStack,
   DUEL_INCOME_PER_TURN,
@@ -8,10 +7,10 @@ import {
   DuelCard,
   DuelStartUsers,
   DuelState,
-  getInactivePlayerId,
   invalidFirstPlayerIdError,
   moveCardBetweenStacks,
   PlayCardAction,
+  PlayerAction,
   PlayerCardAction,
   setupInitialDuelPlayerFromUser,
 } from 'src/modules/duel'
@@ -19,13 +18,14 @@ import { getRandomArrayItem } from 'src/shared/utils'
 
 export const initialState: DuelState = {
   phase: 'Initial Draw',
-  players: {},
+  browsedStack: 'deck',
   attackingAgentId: '',
   activePlayerId: '',
-  attackingQueue: [],
+  inactivePlayerId: '',
   victoriousPlayerId: '',
-  browsedStack: 'deck',
   isBrowsingStack: false,
+  players: {},
+  attackingQueue: [],
 }
 
 export const duelSlice = createSlice({
@@ -41,24 +41,32 @@ export const duelSlice = createSlice({
     ) => {
       const { users, firstPlayerId } = action.payload
 
+      if (firstPlayerId && !users.find(({ id }) => id === firstPlayerId))
+        throw new Error(invalidFirstPlayerIdError)
+
+      state.activePlayerId = firstPlayerId || getRandomArrayItem(users).id
+      state.phase = 'Initial Draw'
+
+      const { activePlayerId } = state
+
       state.players = users.reduce(
         (statePlayers: DuelState['players'], user) => {
-          statePlayers[user.id] = setupInitialDuelPlayerFromUser(user)
+          const { id } = user
+
+          if (id !== activePlayerId) state.inactivePlayerId = id
+
+          statePlayers[id] = setupInitialDuelPlayerFromUser(user)
 
           return statePlayers
         },
         {},
       )
-
-      if (firstPlayerId && !state.players[firstPlayerId]) {
-        throw new Error(invalidFirstPlayerIdError)
-      }
-
-      state.activePlayerId = firstPlayerId || getRandomArrayItem(users).id
-      state.phase = 'Initial Draw'
     },
+
     playersDrawInitialCards: (state) => {
-      Object.values(state.players).forEach(({ id, deck }) => {
+      const { players } = state
+
+      Object.values(players).forEach(({ id, deck }) => {
         for (let index = 0; index < DUEL_INITIAL_CARDS_DRAWN; index++) {
           moveCardBetweenStacks({
             movedCardId: deck[index],
@@ -71,17 +79,20 @@ export const duelSlice = createSlice({
 
       state.phase = 'Redrawing'
     },
-    drawCardFromDeck: (state, action: PayloadAction<string>) => {
-      const { id, deck } = state.players[action.payload]
+
+    drawACardFromDeck: (state, action: PlayerAction) => {
+      const { playerId } = action.payload
+      const { deck } = state.players[playerId]
 
       moveCardBetweenStacks({
         movedCardId: deck[0],
-        playerId: id,
+        playerId,
         state,
         to: 'hand',
       })
     },
-    putCardAtBottomOfDeck: (state, action: PlayerCardAction) => {
+
+    putACardAtBottomOfDeck: (state, action: PlayerCardAction) => {
       const { cardId: movedCardId, playerId } = action.payload
 
       moveCardBetweenStacks({
@@ -91,30 +102,53 @@ export const duelSlice = createSlice({
         to: 'deck',
       })
     },
-    completeRedraw: (state, action: PayloadAction<string>) => {
-      state.players[action.payload].hasPerformedAction = true
+
+    completeRedraw: (state, action: PlayerAction) => {
+      const { playerId } = action.payload
+
+      state.players[playerId].hasPerformedAction = true
+    },
+
+    startFirstPlayerTurn: (state) => {
+      const { activePlayerId, inactivePlayerId, players } = state
+      const { deck } = players[activePlayerId]
+
+      state.phase = 'Player Turn'
+      state.players[activePlayerId].hasPerformedAction = false
+      state.players[inactivePlayerId].hasPerformedAction = false
+
+      // Draw card on turn start
+      moveCardBetweenStacks({
+        movedCardId: deck[0],
+        playerId: activePlayerId,
+        state,
+        to: 'hand',
+      })
     },
 
     moveToNextTurn: (state) => {
-      const { players, activePlayerId, phase } = state
+      const { players, activePlayerId, inactivePlayerId } = state
+      const { attackingAgentId, attackingQueue } = initialState
+
+      state.phase = 'Player Turn'
+      state.attackingAgentId = attackingAgentId
+      state.attackingQueue = attackingQueue
+      state.activePlayerId = inactivePlayerId
+      state.inactivePlayerId = activePlayerId
 
       Object.keys(players).forEach((playerId) => {
+        const { income } = state.players[playerId]
+
         state.players[playerId].hasPerformedAction = false
 
-        if (phase === 'Resolving turn' && playerId !== activePlayerId) {
-          state.activePlayerId = playerId
-        }
-
-        if (state.players[playerId].income) {
+        // Handle income if any
+        if (income) {
           state.players[playerId].coins += DUEL_INCOME_PER_TURN
           state.players[playerId].income -= DUEL_INCOME_PER_TURN
         }
       })
 
-      state.phase = 'Player Turn'
-      state.attackingAgentId = initialState.attackingAgentId
-      state.attackingQueue = initialState.attackingQueue
-
+      // Draw card on turn start
       moveCardBetweenStacks({
         movedCardId: players[state.activePlayerId].deck[0],
         playerId: state.activePlayerId,
@@ -123,49 +157,45 @@ export const duelSlice = createSlice({
       })
     },
     resolveTurn: (state) => {
-      const { players, activePlayerId } = state
+      const { players, activePlayerId, inactivePlayerId } = state
+      const { board: activePlayerBoard } = players[activePlayerId]
 
       state.phase = 'Resolving turn'
 
-      const inactivePlayer = getInactivePlayerId(players, activePlayerId)
+      state.attackingQueue = activePlayerBoard.reduce(
+        (attackingQueue, attackerId, attackerIndex) => {
+          const { board: defendingPlayerBoard, cards: defendingPlayerCards } =
+            players[inactivePlayerId]
 
-      if (inactivePlayer) {
-        state.attackingQueue = players[activePlayerId].board.reduce(
-          (attackingQueue, attackerId, attackerIndex) => {
-            const defendingPlayer = players[inactivePlayer]
+          // Set the defending agent to either the one opposite the attacker,
+          // or the last agent on the defending player's board
+          const defenderId =
+            defendingPlayerBoard[attackerIndex] ||
+            defendingPlayerBoard[defendingPlayerBoard.length - 1] ||
+            ''
 
-            // Set the defending agent to either the one opposite the attacker,
-            // or the last agent on the defending player's board
-            const defenderId =
-              defendingPlayer.board[attackerIndex] ||
-              defendingPlayer.board[defendingPlayer.board.length - 1] ||
-              ''
+          const nextattackingQueue: AttackOrder[] = [
+            ...attackingQueue,
+            {
+              attackerId,
+              defenderId,
+            },
+          ]
 
-            const nextattackingQueue: AttackOrder[] = [
-              ...attackingQueue,
-              {
-                attackerId,
-                defenderId,
-              },
-            ]
+          // Handle retaliations
+          if (defenderId && defendingPlayerCards[defenderId].traits?.retaliates)
+            nextattackingQueue.push({
+              attackerId: defenderId,
+              defenderId: attackerId,
+            })
 
-            if (
-              defenderId &&
-              defendingPlayer.cards[defenderId].traits?.retaliates
-            ) {
-              nextattackingQueue.push({
-                attackerId: defenderId,
-                defenderId: attackerId,
-              })
-            }
+          return nextattackingQueue
+        },
+        [] as AttackOrder[],
+      )
 
-            return nextattackingQueue
-          },
-          [] as AttackOrder[],
-        )
-      }
-
-      state.attackingAgentId = state.attackingQueue[0]?.attackerId || ''
+      const { attackingQueue } = state
+      state.attackingAgentId = attackingQueue[0]?.attackerId || ''
     },
     agentAttack: (
       state,
@@ -185,23 +215,20 @@ export const duelSlice = createSlice({
       }
     },
     moveToNextAttackingAgent: (state) => {
-      const { attackingQueue } = state
-
-      const [, ...newQueue] = attackingQueue
+      const { attackingQueue: oldQueue } = state
+      const [, ...newQueue] = oldQueue
 
       state.attackingQueue = newQueue
-
-      state.attackingAgentId = state.attackingQueue.length
-        ? state.attackingQueue[0].attackerId
-        : ''
+      state.attackingAgentId = newQueue.length ? newQueue[0].attackerId : ''
     },
     playCard: (state, action: PlayCardAction) => {
       const { cardId: playedCardId, playerId, shouldPay } = action.payload
       const { players } = state
       const playedCard = players[playerId].cards[playedCardId]
+      const { id: movedCardId, cost } = playedCard
 
       moveCardBetweenStacks({
-        movedCardId: playedCardId,
+        movedCardId,
         playerId,
         state,
         to: 'board',
@@ -210,7 +237,8 @@ export const duelSlice = createSlice({
       players[playerId].hasPerformedAction = true
 
       if (shouldPay) {
-        players[playerId].coins = players[playerId].coins - playedCard.cost
+        const { coins } = players[playerId]
+        players[playerId].coins = coins - cost
       }
     },
     updateCard: (
@@ -239,18 +267,10 @@ export const duelSlice = createSlice({
         to: 'discard',
       })
 
-      const discardedCard = players[playerId].cards[movedCardId]
+      const { strength, cost } = players[playerId].cards[movedCardId]
 
-      players[playerId].cards[movedCardId].strength = discardedCard.strength
-      players[playerId].income += discardedCard.cost
-    },
-    addNewCards: (state, action: AddNewCardsAction) => {
-      const { playerId, cards } = action.payload
-
-      state.players[playerId].cards = {
-        ...state.players[playerId].cards,
-        ...cards,
-      }
+      players[playerId].cards[movedCardId].strength = strength
+      players[playerId].income += cost
     },
     endDuel: (state, action: PayloadAction<string>) => {
       state.phase = 'Duel End'
@@ -271,16 +291,16 @@ export const {
   startDuel,
   playersDrawInitialCards,
   completeRedraw,
-  drawCardFromDeck,
+  drawACardFromDeck,
+  startFirstPlayerTurn,
   moveToNextTurn,
   resolveTurn,
   playCard,
-  putCardAtBottomOfDeck,
+  putACardAtBottomOfDeck,
   updateCard,
   agentAttack,
   moveToNextAttackingAgent,
   discardCard,
-  addNewCards,
   endDuel,
   setBrowsedStack,
   setIsBrowsingStack,

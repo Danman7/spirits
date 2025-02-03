@@ -1,11 +1,9 @@
 import {
-  addNewCards,
   agentAttack,
   CardStack,
   completeRedraw,
-  createDuelCard,
   discardCard,
-  drawCardFromDeck,
+  drawACardFromDeck,
   DUEL_INCOME_PER_TURN,
   DUEL_INITIAL_CARDS_DRAWN,
   DuelCard,
@@ -18,11 +16,11 @@ import {
   moveToNextTurn,
   normalizePlayerCards,
   playCard,
-  PlayerCards,
   playersDrawInitialCards,
-  putCardAtBottomOfDeck,
+  putACardAtBottomOfDeck,
   resolveTurn,
   startDuel,
+  startFirstPlayerTurn,
   updateCard,
 } from 'src/modules/duel'
 import {
@@ -45,7 +43,7 @@ let mockDuelState: DuelState
 
 describe('Starting a duel', () => {
   beforeEach(() => {
-    mockDuelState = { ...initialState }
+    mockDuelState = deepClone(initialState)
   })
 
   test('start a new duel with a random first player', () => {
@@ -57,26 +55,19 @@ describe('Starting a duel', () => {
     )
 
     const { activePlayerId, phase, players } = state
+    const player = players[playerId]
+    const opponent = players[opponentId]
 
     expect(activePlayerId).toBeTruthy()
     expect(phase).toBe('Initial Draw')
-    expect(players[playerId]).toEqual(
-      expect.objectContaining({
-        name: userMock.name,
-      }),
-    )
-    expect(players[playerId].deck).toHaveLength(userMock.deck.length)
-    expect(players[opponentId]).toEqual(
-      expect.objectContaining({
-        name: opponentMock.name,
-      }),
-    )
-    expect(players[opponentId].deck).toHaveLength(opponentMock.deck.length)
+    expect(player.name).toEqual(userMock.name)
+    expect(player.deck).toHaveLength(userMock.deck.length)
+    expect(opponent.name).toEqual(opponentMock.name)
+    expect(opponent.deck).toHaveLength(opponentMock.deck.length)
   })
 
   test('start a new duel with a preset first player', () => {
     const firstPlayerId = opponentId
-
     const state = duelReducer(
       mockDuelState,
       startDuel({
@@ -84,7 +75,6 @@ describe('Starting a duel', () => {
         firstPlayerId,
       }),
     )
-
     const { activePlayerId, phase } = state
 
     expect(activePlayerId).toBe(firstPlayerId)
@@ -110,7 +100,7 @@ describe('Sequence before play', () => {
   })
 
   test("draw a card from a player's deck if it has cards", () => {
-    const state = duelReducer(mockDuelState, drawCardFromDeck(playerId))
+    const state = duelReducer(mockDuelState, drawACardFromDeck({ playerId }))
     const drawingPlayer = state.players[playerId]
 
     expect(drawingPlayer.deck).toHaveLength(initialPlayerMock.deck.length - 1)
@@ -125,7 +115,7 @@ describe('Sequence before play', () => {
       deck: [],
     }
 
-    const state = duelReducer(mockDuelState, drawCardFromDeck(playerId))
+    const state = duelReducer(mockDuelState, drawACardFromDeck({ playerId }))
     const drawingPlayer = state.players[playerId]
 
     expect(drawingPlayer.deck).toHaveLength(0)
@@ -161,7 +151,7 @@ describe('Sequence before play', () => {
       const cardId = normalizedCards[stack]?.[0] as string
       const state = duelReducer(
         mockDuelState,
-        putCardAtBottomOfDeck({
+        putACardAtBottomOfDeck({
           playerId,
           cardId,
         }),
@@ -175,7 +165,7 @@ describe('Sequence before play', () => {
   })
 
   test('mark that a player has completed redraw', () => {
-    const state = duelReducer(mockDuelState, completeRedraw(playerId))
+    const state = duelReducer(mockDuelState, completeRedraw({ playerId }))
     const { players } = state
 
     expect(players[playerId].hasPerformedAction).toBeTruthy()
@@ -197,7 +187,7 @@ describe('Playing turns', () => {
       }
     })
 
-    const state = duelReducer(mockDuelState, moveToNextTurn())
+    const state = duelReducer(mockDuelState, startFirstPlayerTurn())
     const { phase, players, activePlayerId } = state
 
     expect(phase).toBe('Player Turn')
@@ -469,30 +459,5 @@ describe('Playing turns', () => {
 
     expect(updatedCard.strength).toBe(update.strength)
     expect(updatedCard.cost).toBe(update.cost)
-  })
-
-  test('summon new cards for a player', () => {
-    const novice = createDuelCard('HammeriteNovice')
-
-    mockDuelState.activePlayerId = playerId
-    mockDuelState.players[playerId] = {
-      ...stackedPlayerMock,
-      deck: [],
-      cards: {},
-    }
-
-    const addedCards: PlayerCards = {
-      [novice.id]: novice,
-    }
-    const state = duelReducer(
-      mockDuelState,
-      addNewCards({
-        playerId,
-        cards: addedCards,
-      }),
-    )
-    const player = state.players[playerId]
-
-    expect(player.cards).toEqual(addedCards)
   })
 })

@@ -5,6 +5,7 @@ import {
   endDuel,
   moveToNextTurn,
   playersDrawInitialCards,
+  startFirstPlayerTurn,
   victoryMessage,
   yourTurnMessage,
 } from 'src/modules/duel'
@@ -45,7 +46,7 @@ it('should begin the player turn if both players have completed redraw', () => {
     preloadedState,
   })
 
-  expect(dispatchSpy).toHaveBeenCalledWith(moveToNextTurn())
+  expect(dispatchSpy).toHaveBeenCalledWith(startFirstPlayerTurn())
 })
 
 it('should move to next round if there is no agent on board for the active player', () => {
