@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   CardBack,
   CardContent,
@@ -25,7 +25,7 @@ interface CardProps {
   onClick?: () => void
 }
 
-export const Card: FC<CardProps> = ({
+export const Card: React.FC<CardProps> = ({
   baseName,
   id,
   currentCard,
@@ -37,7 +37,7 @@ export const Card: FC<CardProps> = ({
 }) => {
   const base = CardBases[baseName]
   const card = currentCard || base
-  const { strength, cost, rank } = card
+  const { strength, rank } = card
 
   const prevStrength = usePrevious(strength)
   const prevIsFaceDown = usePrevious(isFaceDown)
@@ -75,34 +75,34 @@ export const Card: FC<CardProps> = ({
   return (
     <CardOutline
       layoutId={id}
-      isSmall={isSmall}
+      $isSmall={isSmall}
       initial={false}
       data-testid={`${CARD_TEST_ID}${id}`}
-      isAttacking={isAttacking}
-      isAttackingFromAbove={isAttackingFromAbove}
+      $isAttacking={isAttacking}
+      $isAttackingFromAbove={isAttackingFromAbove}
       onClick={onClick}
     >
-      <CardPaper isFaceDown={isFaceDown} isSmall={isSmall}>
+      <CardPaper $isFaceDown={isFaceDown} $isSmall={isSmall}>
         {/* Card Front */}
         {shouldShowFront ? (
           <CardFront
-            isSmall={isSmall}
-            isAttacking={isAttacking}
-            isAttackingFromAbove={isAttackingFromAbove}
-            isActive={!!onClick}
-            rank={rank}
-            cardStrengthAnimateState={cardStrengthAnimateState}
+            $isSmall={isSmall}
+            $isAttacking={isAttacking}
+            $isAttackingFromAbove={isAttackingFromAbove}
+            $isActive={!!onClick}
+            $rank={rank}
+            $cardStrengthAnimateState={cardStrengthAnimateState}
           >
             <CardHeader card={card} id={id} baseStrength={base.strength} />
 
             <CardContent card={card} id={id} />
 
-            <CardFooter cost={cost} />
+            <CardFooter card={card} />
           </CardFront>
         ) : null}
 
         {/* Card Back */}
-        <CardBack isSmall={isSmall} />
+        <CardBack $isSmall={isSmall} />
       </CardPaper>
     </CardOutline>
   )

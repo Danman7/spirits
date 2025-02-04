@@ -30,4 +30,5 @@ export const PredicatesMap: {
   BrotherSachelmanOnPlay: 'BoostAlliedHammeritesWithLowerStrength',
   HammeriteNoviceOnPlay: 'PlayAllHammeriteNoviceCopies',
   ElevatedAcolyteOnPlay: 'DamageSelfIfNotNextToHigherPowerHammerite',
+  HighPriestMarkanderOnUpdate: 'PlaySelfIfCounterIsZero',
 }

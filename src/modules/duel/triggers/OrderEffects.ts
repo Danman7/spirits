@@ -80,3 +80,16 @@ export const BoostAlliedHammeritesWithLowerStrength: Effect = (
     })
   }
 }
+
+export const PlaySelfIfCounterIsZero: Effect = (action, listenerApi) => {
+  if (updateCard.match(action)) {
+    const { getState, dispatch } = listenerApi
+    const { players } = getState().duel
+    const { cardId, playerId } = action.payload
+    const { cards, board } = players[playerId]
+    const { counter } = cards[cardId]
+
+    if ((counter as number) <= 0 && !board.includes(cardId))
+      dispatch(playCard({ cardId, playerId, shouldPay: false }))
+  }
+}

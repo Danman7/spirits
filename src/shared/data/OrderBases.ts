@@ -1,6 +1,7 @@
 import {
   ELEVATED_ACOLYTE_SELF_DAMAGE,
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
+  HIGH_PRIEST_MAKANDER_COUNTER,
 } from 'src/shared/data/constants'
 import { CardBase } from 'src/shared/types'
 
@@ -95,12 +96,13 @@ export const HighPriestMarkander: CardBase = {
   type: 'agent',
   name: 'High Priest Markander',
   strength: 4,
-  cost: 8,
+  cost: 5,
+  counter: HIGH_PRIEST_MAKANDER_COUNTER,
   rank: 'unique',
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
-    `Once 10 Hammerite cards have been played, play High Priest Markander from your hand or deck.`,
+    `This card starts with a counter of ${HIGH_PRIEST_MAKANDER_COUNTER}. Every time a Hammerite is played, the counter is reduced by 1. Once the counter reaches 0 play this card from deck or hand for free.`,
   ],
   flavor:
     "He is old, and the Master Forgers do jostle each other for precedence. But I spy not on my betters. 'Tis in The Builder's Hands.",

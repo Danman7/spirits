@@ -39,6 +39,7 @@ export const StackBrowseModal: FC = () => {
                 key={`${cardId}-browse`}
                 id={`${cardId}-browse`}
                 baseName={player.cards[cardId].baseName}
+                currentCard={player.cards[cardId]}
               />
             ))}
           </CardList>

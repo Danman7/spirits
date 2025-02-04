@@ -1,7 +1,7 @@
 import { Card } from 'src/shared/components'
 import { CardBaseName, CardBases } from 'src/shared/data'
 import { renderWithProviders } from 'src/shared/rtlRender'
-import { joinCardCategories } from 'src/shared/utils'
+import { joinStringArrayWithComma } from 'src/shared/utils'
 
 it('should display all UI segments of a card when face up', () => {
   const baseName: CardBaseName = 'BrotherSachelman'
@@ -15,7 +15,9 @@ it('should display all UI segments of a card when face up', () => {
     `${base.name}${base.strength}`,
   )
   expect(getByText(`Cost: ${base.cost}`)).toBeInTheDocument()
-  expect(getByText(joinCardCategories(base.categories))).toBeInTheDocument()
+  expect(
+    getByText(joinStringArrayWithComma(base.categories)),
+  ).toBeInTheDocument()
   expect(getByText((base.description as string[])[0])).toBeInTheDocument()
   expect(getByText(base.flavor as string)).toBeInTheDocument()
 })

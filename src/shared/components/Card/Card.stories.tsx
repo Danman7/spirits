@@ -87,7 +87,7 @@ export const FaceDown: Story = {
   },
 }
 
-export const SmallVariang: Story = {
+export const SmallVariant: Story = {
   args: {
     isSmall: true,
   },
@@ -144,7 +144,7 @@ export const Instant: Story = {
 
 export const OrderCard: Story = {
   args: {
-    baseName: 'HammeriteNovice',
+    baseName: 'HighPriestMarkander',
   },
   parameters: {
     docs: {

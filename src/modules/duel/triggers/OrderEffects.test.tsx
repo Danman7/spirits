@@ -1,8 +1,8 @@
 import { fireEvent, within } from '@testing-library/dom'
 import { act } from 'react'
 import { RootState } from 'src/app'
-import { Board } from 'src/modules/duel/components'
 import { normalizePlayerCards } from 'src/modules/duel'
+import { Board } from 'src/modules/duel/components'
 import {
   initialOpponentMock,
   initialPlayerMock,
@@ -13,6 +13,7 @@ import {
 import {
   CardBaseName,
   CardBases,
+  ElevatedAcolyte,
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
 } from 'src/shared/data'
 import { renderWithProviders } from 'src/shared/rtlRender'
@@ -429,5 +430,72 @@ describe('Temple Guard', () => {
         },
       ),
     ).toHaveTextContent(`${secondAttacker.name}${secondAttacker.strength - 1}`)
+  })
+})
+
+describe('High Priest Markander', () => {
+  beforeEach(() => {
+    baseName = 'HighPriestMarkander'
+    base = CardBases[baseName]
+  })
+
+  it('should reduce the counter if a Hammerite is played', () => {
+    preloadedState.duel.players[playerId] = {
+      ...initialPlayerMock,
+      ...normalizePlayerCards({
+        deck: [],
+        hand: [baseName, 'ElevatedAcolyte'],
+        board: [],
+      }),
+    }
+
+    const { getByText } = renderWithProviders(<Board />, {
+      preloadedState,
+    })
+
+    expect(getByText(`Counter: ${base.counter}`)).toBeInTheDocument()
+
+    fireEvent.click(getByText(ElevatedAcolyte.name))
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    expect(
+      getByText(`Counter: ${(base.counter as number) - 1}`),
+    ).toBeInTheDocument()
+  })
+
+  it('should play High Priest Markander if counter reaches 0', () => {
+    preloadedState.duel.players[playerId] = {
+      ...initialPlayerMock,
+      ...normalizePlayerCards({
+        deck: [baseName],
+        hand: ['ElevatedAcolyte'],
+        board: [],
+      }),
+    }
+
+    const { deck } = preloadedState.duel.players[playerId]
+    preloadedState.duel.players[playerId].cards[deck[0]].counter = 1
+
+    const { getByText, queryByText, getByTestId } = renderWithProviders(
+      <Board />,
+      {
+        preloadedState,
+      },
+    )
+
+    expect(queryByText(base.name)).not.toBeInTheDocument()
+
+    fireEvent.click(getByText(ElevatedAcolyte.name))
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    expect(
+      within(getByTestId(PLAYER_BOARD_ID)).getAllByText(base.name),
+    ).toHaveLength(1)
   })
 })

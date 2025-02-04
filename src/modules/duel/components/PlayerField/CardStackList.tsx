@@ -17,7 +17,7 @@ export const CardStackList: FC<CardStackListProps> = ({
 }) => (
   <config.component
     data-testid={config.testId}
-    isOnTop={isOnTop}
+    $isOnTop={isOnTop}
     onClick={config.onClickStack}
   >
     {player[stack].map((cardId) => (

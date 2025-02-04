@@ -5,7 +5,7 @@ import {
   CardRank,
   CardStrengthAnimateState,
 } from 'src/shared/types'
-import { getFactionColor } from 'src/shared/utils'
+import { getCardFactionColor } from 'src/shared/utils'
 import styled, { keyframes } from 'styled-components'
 
 const AttackFromTopOutline = keyframes`
@@ -28,56 +28,54 @@ const AttackFromBottomOutline = keyframes`
   }
 `
 
-interface CardOutlineProps {
-  isSmall: boolean
-  isAttacking: boolean
-  isAttackingFromAbove: boolean
+interface CardOutlineProps extends CardFaceProps {
+  $isAttacking: boolean
+  $isAttackingFromAbove: boolean
 }
 
 export const CardOutline = styled(motion.div)<CardOutlineProps>`
-  width: ${({ isSmall }) => (isSmall ? '150px' : '250px')};
-  height: ${({ isSmall }) => (isSmall ? '210px' : '350px')};
-  border-radius: ${({ theme, isSmall }) =>
-    isSmall ? '3px' : theme.borderRadius};
-  font-size: ${({ isSmall }) => (isSmall ? '0.594rem' : '1rem')};
+  width: ${({ $isSmall }) => ($isSmall ? '150px' : '250px')};
+  height: ${({ $isSmall }) => ($isSmall ? '210px' : '350px')};
+  border-radius: ${({ theme, $isSmall }) =>
+    $isSmall ? '3px' : theme.borderRadius};
+  font-size: ${({ $isSmall }) => ($isSmall ? '0.594rem' : '1rem')};
   perspective: 1000px;
   animation-iteration-count: 2;
   animation-direction: alternate;
   animation-duration: ${({ theme }) => theme.transitionTime};
   animation-timing-function: ease-in-out;
   animation-fill-mode: both;
-  animation-name: ${({ isAttacking, isAttackingFromAbove }) => {
-    if (isAttacking && isAttackingFromAbove) return AttackFromTopOutline
-    if (isAttacking && !isAttackingFromAbove) return AttackFromBottomOutline
+  animation-name: ${({ $isAttacking, $isAttackingFromAbove }) => {
+    if ($isAttacking && $isAttackingFromAbove) return AttackFromTopOutline
+    if ($isAttacking && !$isAttackingFromAbove) return AttackFromBottomOutline
     return ''
   }};
 `
 
-interface CardPaperProps {
-  isSmall: boolean
-  isFaceDown: boolean
+interface CardPaperProps extends CardFaceProps {
+  $isFaceDown: boolean
 }
 
 export const CardPaper = styled(motion.div)<CardPaperProps>`
   height: 100%;
   transform-style: preserve-3d;
   transition: ${({ theme }) => `transform ${theme.pulsationTime}`};
-  box-shadow: ${({ isSmall, theme }) =>
-    isSmall ? theme.boxShadow.level1 : theme.boxShadow.level2};
+  box-shadow: ${({ $isSmall, theme }) =>
+    $isSmall ? theme.boxShadow.level1 : theme.boxShadow.level2};
   border-radius: ${({ theme }) => theme.borderRadius};
-  transform: ${({ isFaceDown }) =>
-    isFaceDown ? 'rotateY(180deg)' : 'rotateY(0)'};
+  transform: ${({ $isFaceDown }) =>
+    $isFaceDown ? 'rotateY(180deg)' : 'rotateY(0)'};
 `
 
 interface CardFaceProps {
-  isSmall: boolean
+  $isSmall: boolean
 }
 
 const CardFace = styled.div<CardFaceProps>`
   backface-visibility: hidden;
   width: 100%;
   height: 100%;
-  border-width: ${({ isSmall }) => (isSmall ? '1px' : '3px')};
+  border-width: ${({ $isSmall }) => ($isSmall ? '1px' : '3px')};
   border-style: solid;
   border-color: ${({ theme }) => theme.colors.accent};
   border-radius: ${({ theme }) => theme.borderRadius};
@@ -149,36 +147,36 @@ const Damage = keyframes`
 `
 
 interface CardFrontProps extends CardOutlineProps {
-  rank: CardRank
-  cardStrengthAnimateState: CardStrengthAnimateState
-  isActive: boolean
+  $rank: CardRank
+  $cardStrengthAnimateState: CardStrengthAnimateState
+  $isActive: boolean
 }
 
 export const CardFront = styled(CardFace)<CardFrontProps>`
   display: flex;
   flex-direction: column;
   background: ${({ theme }) => theme.colors.background};
-  border-color: ${({ theme, rank }) =>
-    rank === 'unique' ? theme.colors.hilight : theme.colors.accent};
-  cursor: ${({ isActive }) => (isActive ? 'pointer' : 'inherit')};
+  border-color: ${({ theme, $rank }) =>
+    $rank === 'unique' ? theme.colors.hilight : theme.colors.accent};
+  cursor: ${({ $isActive }) => ($isActive ? 'pointer' : 'inherit')};
 
-  animation-iteration-count: ${({ isActive }) => (isActive ? 'infinite' : 2)};
+  animation-iteration-count: ${({ $isActive }) => ($isActive ? 'infinite' : 2)};
   animation-direction: alternate;
-  animation-duration: ${({ theme, isActive }) =>
-    isActive ? theme.pulsationTime : theme.transitionTime};
+  animation-duration: ${({ theme, $isActive }) =>
+    $isActive ? theme.pulsationTime : theme.transitionTime};
   animation-timing-function: ease-in-out;
   animation-fill-mode: both;
   animation-name: ${({
-    isAttacking,
-    isActive,
-    isAttackingFromAbove,
-    cardStrengthAnimateState,
+    $isAttacking,
+    $isActive,
+    $isAttackingFromAbove,
+    $cardStrengthAnimateState,
   }) => {
-    if (cardStrengthAnimateState === 'boosted') return Boost
-    if (cardStrengthAnimateState === 'damaged') return Damage
-    if (isActive) return ActiveGlow
-    if (isAttacking && isAttackingFromAbove) return AttackFromTopFace
-    if (isAttacking && !isAttackingFromAbove) return AttackFromBottomFace
+    if ($cardStrengthAnimateState === 'boosted') return Boost
+    if ($cardStrengthAnimateState === 'damaged') return Damage
+    if ($isActive) return ActiveGlow
+    if ($isAttacking && $isAttackingFromAbove) return AttackFromTopFace
+    if ($isAttacking && !$isAttackingFromAbove) return AttackFromBottomFace
     return ''
   }};
 `
@@ -187,14 +185,14 @@ export const CardBack = styled(CardFace)`
   position: absolute;
   top: 0;
   transform: rotateY(180deg);
-  background: ${({ isSmall, theme }) =>
-    isSmall
+  background: ${({ $isSmall, theme }) =>
+    $isSmall
       ? `repeating-linear-gradient(45deg, ${theme.colors.background}, ${theme.colors.background} 5px, ${theme.colors.accent} 5px, ${theme.colors.accent} 10px)`
       : `repeating-linear-gradient(45deg, ${theme.colors.background}, ${theme.colors.background} 10px, ${theme.colors.accent} 10px, ${theme.colors.accent} 20px)`};
 `
 
 interface StyledCardHeaderProps {
-  factions: CardFaction[]
+  $factions: CardFaction[]
 }
 
 export const StyledCardHeader = styled.div<StyledCardHeaderProps>`
@@ -202,13 +200,18 @@ export const StyledCardHeader = styled.div<StyledCardHeaderProps>`
   border-bottom: ${({ theme }) => `1px solid ${theme.colors.accent}`};
   color: ${({ theme }) => theme.colors.background};
   border-radius: 3px 3px 0 0;
-  background: ${({ factions }) => getFactionColor(factions)};
+  background: ${({ $factions }) => getCardFactionColor($factions)};
 `
 
-export const CardTitle = styled.h3`
+interface CardTitleProps {
+  $text: string
+}
+
+export const CardTitle = styled.h3<CardTitleProps>`
   top: 0;
   display: flex;
   justify-content: space-between;
+  font-size: ${({ $text }) => ($text.length > 20 ? '1.05em' : '1.17em')};
 `
 
 export const StyledCardContent = styled.div`
@@ -225,6 +228,8 @@ export const StyledCardContent = styled.div`
 
 export const StyledCardFooter = styled.div`
   text-align: left;
+  display: flex;
+  justify-content: space-between;
   bottom: 0;
   color: ${({ theme }) => theme.colors.text};
   padding: ${({ theme }) => theme.padding};

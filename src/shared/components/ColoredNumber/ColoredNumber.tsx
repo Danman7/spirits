@@ -12,7 +12,7 @@ export const ColoredNumber: FC<ColoredNumberProps> = ({
   current,
   uniqueId,
 }) => (
-  <StyledColoredNumber base={base} current={current}>
+  <StyledColoredNumber $base={base} $current={current}>
     <AnimatedNumber value={current} uniqueId={uniqueId} />
   </StyledColoredNumber>
 )

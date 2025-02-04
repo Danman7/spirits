@@ -3,7 +3,7 @@ import { Pop } from 'src/shared/styles'
 import styled, { css } from 'styled-components'
 
 interface StyledPlayerFieldProps {
-  isOnTop: boolean
+  $isOnTop: boolean
 }
 
 export const StyledPlayerField = styled.div<StyledPlayerFieldProps>`
@@ -13,8 +13,8 @@ export const StyledPlayerField = styled.div<StyledPlayerFieldProps>`
   grid-template-rows: auto;
   justify-items: center;
   gap: ${({ theme }) => theme.padding};
-  grid-template-areas: ${({ isOnTop }) =>
-    isOnTop
+  grid-template-areas: ${({ $isOnTop }) =>
+    $isOnTop
       ? `'discard hand deck'
     'board board board'`
       : `'board board board'
@@ -28,7 +28,7 @@ export const PlayerBoard = styled.div<StyledPlayerFieldProps>`
   justify-content: center;
   gap: 0.5rem;
   padding: ${({ theme }) => theme.padding};
-  align-items: ${({ isOnTop }) => (isOnTop ? 'flex-end' : 'flex-start')};
+  align-items: ${({ $isOnTop }) => ($isOnTop ? 'flex-end' : 'flex-start')};
 `
 
 export const PlayerHand = styled.div<StyledPlayerFieldProps>`
@@ -39,15 +39,15 @@ export const PlayerHand = styled.div<StyledPlayerFieldProps>`
   flex-grow: 2;
   z-index: 2;
   height: 64px;
-  align-items: ${({ isOnTop }) => (isOnTop ? 'flex-end' : 'inherit')};
-  align-self: ${({ isOnTop }) => (isOnTop ? 'inherit' : 'end')};
+  align-items: ${({ $isOnTop }) => ($isOnTop ? 'flex-end' : 'inherit')};
+  align-self: ${({ $isOnTop }) => ($isOnTop ? 'inherit' : 'end')};
 
   ${CardOutline} {
     position: relative;
     margin: 0 -80px;
 
-    ${({ isOnTop, theme }) =>
-      !isOnTop &&
+    ${({ $isOnTop, theme }) =>
+      !$isOnTop &&
       css`
         bottom: 0;
         transition: bottom ${theme.transitionTime};
@@ -65,10 +65,10 @@ const FaceDownStack = styled.div<StyledPlayerFieldProps>`
   height: 25px;
   width: 150px;
   display: flex;
-  align-items: ${({ isOnTop }) => (isOnTop ? 'flex-end' : 'inherit')};
+  align-items: ${({ $isOnTop }) => ($isOnTop ? 'flex-end' : 'inherit')};
 
-  ${({ isOnTop }) =>
-    !isOnTop &&
+  ${({ $isOnTop }) =>
+    !$isOnTop &&
     `align-self: end;
   cursor: pointer;
   position: relative;`}
@@ -87,19 +87,19 @@ export const PlayerDiscard = styled(FaceDownStack)`
 `
 
 interface PlayerInfoProps extends StyledPlayerFieldProps {
-  isActive: boolean
+  $isActive: boolean
 }
 
 export const PlayerInfo = styled.h2<PlayerInfoProps>`
   position: fixed;
   right: 1rem;
   z-index: 4;
-  font-weight: ${({ isActive }) => (isActive ? 800 : 400)};
-  top: ${({ isOnTop }) => (isOnTop ? '2em' : 'inherit')};
-  bottom: ${({ isOnTop }) => (isOnTop ? 'inherit' : '2em')};
+  font-weight: ${({ $isActive }) => ($isActive ? 800 : 400)};
+  top: ${({ $isOnTop }) => ($isOnTop ? '2em' : 'inherit')};
+  bottom: ${({ $isOnTop }) => ($isOnTop ? 'inherit' : '2em')};
 
-  ${({ isActive, theme }) =>
-    isActive &&
+  ${({ $isActive, theme }) =>
+    $isActive &&
     css`
       animation-name: ${Pop};
       display: inline-block;

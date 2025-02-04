@@ -32,7 +32,7 @@ export const SidePanel: FC<SidePanelProps> = ({ isOpen, children }) => {
   return shouldShowPanel ? (
     <Panel
       data-testid={PANEL_TEST_ID}
-      animateState={animation}
+      $animateState={animation}
       onAnimationEnd={onAnimationEnd}
     >
       {children}

@@ -88,7 +88,7 @@ export type DuelStartUsers = [DuelUser, DuelUser]
 interface StackComponentProps {
   'data-testid': string
   children: React.ReactNode
-  isOnTop?: boolean
+  $isOnTop?: boolean
   onClick?: React.MouseEventHandler<HTMLDivElement>
 }
 

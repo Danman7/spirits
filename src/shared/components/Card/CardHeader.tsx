@@ -1,11 +1,10 @@
-import { FC } from 'react'
 import {
   CardTitle,
   ColoredNumber,
   StyledCardHeader,
 } from 'src/shared/components'
 import { CardBase } from 'src/shared/types'
-import { joinCardCategories } from 'src/shared/utils'
+import { joinStringArrayWithComma } from 'src/shared/utils'
 
 interface CardHeaderProps {
   card: CardBase
@@ -13,20 +12,20 @@ interface CardHeaderProps {
   id?: string
 }
 
-export const CardHeader: FC<CardHeaderProps> = ({ card, baseStrength, id }) => {
-  const { categories, factions, name, strength } = card
+export const CardHeader: React.FC<CardHeaderProps> = ({
+  card: { categories, factions, name, strength },
+  baseStrength,
+  id,
+}) => (
+  <StyledCardHeader $factions={factions}>
+    <CardTitle $text={name}>
+      {name}
 
-  return (
-    <StyledCardHeader factions={factions}>
-      <CardTitle>
-        {name}
+      {strength && baseStrength ? (
+        <ColoredNumber current={strength} base={baseStrength} uniqueId={id} />
+      ) : null}
+    </CardTitle>
 
-        {strength && baseStrength ? (
-          <ColoredNumber current={strength} base={baseStrength} uniqueId={id} />
-        ) : null}
-      </CardTitle>
-
-      <small>{joinCardCategories(categories)}</small>
-    </StyledCardHeader>
-  )
-}
+    <small>{joinStringArrayWithComma(categories)}</small>
+  </StyledCardHeader>
+)

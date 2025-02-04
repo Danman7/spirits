@@ -34,9 +34,9 @@ export const Panel = styled(Box)<AnimateStateProps>`
   animation-duration: ${({ theme }) => theme.transitionTime};
   animation-timing-function: ease-in-out;
   animation-fill-mode: both;
-  animation-name: ${({ animateState }) => {
-    if (animateState === 'in') return SlideInFromLeft
-    if (animateState === 'out') return SlideOutToLeft
+  animation-name: ${({ $animateState }) => {
+    if ($animateState === 'in') return SlideInFromLeft
+    if ($animateState === 'out') return SlideOutToLeft
     return ''
   }};
 `

@@ -84,10 +84,10 @@ export const PlayerField: React.FC<PlayerFieldProps> = ({
   }
 
   return (
-    <StyledPlayerField isOnTop={isOnTop}>
+    <StyledPlayerField $isOnTop={isOnTop}>
       <PlayerInfo
-        isActive={isActive}
-        isOnTop={isOnTop}
+        $isActive={isActive}
+        $isOnTop={isOnTop}
         data-testid={isOnTop ? OPPONENT_INFO_ID : PLAYER_INFO_ID}
       >
         <span>{name}</span> /{' '}

@@ -51,13 +51,13 @@ export const Modal: FC<ModalProps> = ({
   return shouldShowModal ? (
     <ModalWrapper>
       <Overlay
-        animateState={overlayAnimation}
+        $animateState={overlayAnimation}
         data-testid={OVERLAY_TEST_ID}
         onAnimationEnd={onOverlayAnimationEnd}
       />
 
       <StyledModal
-        animateState={modalAnimation}
+        $animateState={modalAnimation}
         data-testid={MODAL_TEST_ID}
         onAnimationEnd={onModalAnimationEnd}
       >

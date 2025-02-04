@@ -14,12 +14,12 @@ export const StyledModal = styled(Box)<AnimateStateProps>`
   animation-duration: ${({ theme }) => theme.transitionTime};
   animation-timing-function: ease-in-out;
   animation-fill-mode: both;
-  animation-name: ${({ animateState }) => {
-    if (animateState === 'in') return SlideIn
-    if (animateState === 'out') return SlideOut
+  animation-name: ${({ $animateState }) => {
+    if ($animateState === 'in') return SlideIn
+    if ($animateState === 'out') return SlideOut
     return ''
   }};
-  opacity: ${({ animateState }) => (animateState ? 1 : 0)};
+  opacity: ${({ $animateState }) => ($animateState ? 1 : 0)};
 `
 
 export const ModalWrapper = styled.div`
@@ -40,9 +40,9 @@ export const Overlay = styled(Animated)<AnimateStateProps>`
   height: 100%;
   z-index: 5;
   animation-name: fadeIn;
-  animation-name: ${({ animateState }) => {
-    if (animateState === 'in') return FadeIn
-    if (animateState === 'out') return FadeOut
+  animation-name: ${({ $animateState }) => {
+    if ($animateState === 'in') return FadeIn
+    if ($animateState === 'out') return FadeOut
     return ''
   }};
 `

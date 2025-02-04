@@ -2,9 +2,9 @@ import { Haunt } from 'src/shared/data'
 import { defaultTheme } from 'src/shared/styles'
 import {
   generateUUID,
-  getFactionColor,
+  getCardFactionColor,
   getRandomArrayItem,
-  joinCardCategories,
+  joinStringArrayWithComma,
   shuffleArray,
 } from 'src/shared/utils'
 
@@ -31,16 +31,16 @@ it('should shuffle an array', () => {
 })
 
 it('should return a joined types string for a card', () => {
-  expect(joinCardCategories(Haunt.categories)).toBe('Undead, Hammerite')
+  expect(joinStringArrayWithComma(Haunt.categories)).toBe('Undead, Hammerite')
 })
 
 const { orderFaction, chaosFaction, shadowFaction } = defaultTheme.colors
 
 it('should get the proper faction color', () => {
-  expect(getFactionColor(['Chaos'])).toBe(chaosFaction)
-  expect(getFactionColor(['Order'])).toBe(orderFaction)
-  expect(getFactionColor(['Shadow'])).toBe(shadowFaction)
-  expect(getFactionColor(['Chaos', 'Shadow'])).toBe(
+  expect(getCardFactionColor(['Chaos'])).toBe(chaosFaction)
+  expect(getCardFactionColor(['Order'])).toBe(orderFaction)
+  expect(getCardFactionColor(['Shadow'])).toBe(shadowFaction)
+  expect(getCardFactionColor(['Chaos', 'Shadow'])).toBe(
     `linear-gradient(300deg, ${chaosFaction}, ${shadowFaction})`,
   )
 })

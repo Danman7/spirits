@@ -15,7 +15,7 @@ import {
   stackedStateMock,
 } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
-import { deepClone, joinCardCategories } from 'src/shared/utils'
+import { deepClone, joinStringArrayWithComma } from 'src/shared/utils'
 
 jest.useFakeTimers()
 
@@ -46,7 +46,9 @@ it('should display all UI segments of a card when face up', () => {
     `${mockCard.name}${mockCard.strength}`,
   )
   expect(getByText(`Cost: ${mockCard.cost}`)).toBeInTheDocument()
-  expect(getByText(joinCardCategories(mockCard.categories))).toBeInTheDocument()
+  expect(
+    getByText(joinStringArrayWithComma(mockCard.categories)),
+  ).toBeInTheDocument()
   expect(getByText((mockCard.description as string[])[0])).toBeInTheDocument()
   expect(getByText(mockCard.flavor as string)).toBeInTheDocument()
 })
