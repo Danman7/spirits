@@ -183,7 +183,7 @@ export const duelSlice = createSlice({
           const defendingAgent = defendingPlayerCards[defenderId] as Agent
 
           // Handle retaliations
-          if (defendingAgent.traits?.retaliates)
+          if (defendingAgent && defendingAgent.traits?.retaliates)
             nextattackingQueue.push({
               attackerId: defenderId,
               defenderId: attackerId,

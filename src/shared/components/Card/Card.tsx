@@ -58,7 +58,6 @@ export const CardComponent: React.FC<CardProps> = ({
   // Strength animations
   useEffect(() => {
     if (type === 'agent' && prevStrength !== strength) {
-      setCardStrengthAnimateState('')
       setCardStrengthAnimateState(
         prevStrength < strength ? 'boosted' : 'damaged',
       )

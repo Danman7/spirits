@@ -1,17 +1,17 @@
 import { defaultTheme } from 'src/shared/styles'
 import styled, { keyframes } from 'styled-components'
 
-const { hilight } = defaultTheme.colors
+const { primary } = defaultTheme.colors
 
 const Wave = keyframes`
   from {
-    scale: 1;
-    box-shadow: inherit;
+    transform: translateY(0);
+    color: inherit;
   }
 
   to {
-    scale: 1.1;
-    box-shadow: 0 0 5px 5px ${hilight};
+    transform: translateY(-0.5em);
+    color: ${primary};
   }
 `
 
