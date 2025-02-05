@@ -27,7 +27,7 @@ it('should show player names and if player is first on initializing a duel and t
 
 it('should show that opponent is first if they win coin toss', () => {
   preloadedState.duel.phase = 'Initial Draw'
-  preloadedState.duel.activePlayerId = opponentId
+  preloadedState.duel.playerOrder = [opponentId, playerId]
 
   const { getByText } = renderWithProviders(<DuelModal />, {
     preloadedState,

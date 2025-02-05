@@ -42,14 +42,13 @@ export interface AttackOrder {
 
 export interface DuelState {
   phase: DuelPhase
-  activePlayerId: string
-  inactivePlayerId: string
   attackingAgentId: string
   victoriousPlayerId: string
   browsedStack: CardStack
   isBrowsingStack: boolean
   attackingQueue: AttackOrder[]
   players: DuelPlayers
+  playerOrder: [string, string]
 }
 
 export type PlayerAction = PayloadAction<{ playerId: string }>

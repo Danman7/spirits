@@ -15,7 +15,7 @@ export const getPlayers = createSelector(
 
 export const getActivePlayerId = createSelector(
   getDuelState,
-  (duelState) => duelState.activePlayerId,
+  (duelState) => duelState.playerOrder[0],
 )
 
 export const getAttackingAgentId = createSelector(

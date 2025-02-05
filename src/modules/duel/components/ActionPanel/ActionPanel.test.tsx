@@ -58,7 +58,7 @@ it('should show the your turn message with pass link', () => {
 })
 
 it("should show the waiting for opponent message during opponent's turn", () => {
-  preloadedState.duel.activePlayerId = opponentId
+  preloadedState.duel.playerOrder = [opponentId, playerId]
 
   const { getByText } = renderWithProviders(<ActionPanel />, {
     preloadedState,

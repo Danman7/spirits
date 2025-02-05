@@ -76,7 +76,7 @@ it('should show the end duel modal if one of the players has no coins', () => {
 
 it('should hide the action panel if the user performs an action', () => {
   preloadedState.duel.players[
-    preloadedState.duel.activePlayerId
+    preloadedState.duel.playerOrder[0]
   ].hasPerformedAction = true
 
   const { queryByText } = renderWithProviders(<Board />, {

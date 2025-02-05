@@ -19,8 +19,8 @@ it("should be able to browse the player's deck", () => {
     preloadedState,
   })
 
-  const { players, activePlayerId } = preloadedState.duel
-  const player = players[activePlayerId]
+  const { players, playerOrder } = preloadedState.duel
+  const player = players[playerOrder[0]]
 
   expect(getByText(player.cards[player.deck[0]].name)).toBeInTheDocument()
 
@@ -37,8 +37,8 @@ it("should be able to browse the player's discard", async () => {
     preloadedState,
   })
 
-  const { players, activePlayerId } = preloadedState.duel
-  const player = players[activePlayerId]
+  const { players, playerOrder } = preloadedState.duel
+  const player = players[playerOrder[0]]
 
   expect(getByText(player.cards[player.discard[0]].name)).toBeInTheDocument()
 })

@@ -261,8 +261,7 @@ describe('Temple Guard', () => {
         board: ['ElevatedAcolyte', baseName],
       }),
     }
-    preloadedState.duel.activePlayerId = opponentId
-    preloadedState.duel.inactivePlayerId = playerId
+    preloadedState.duel.playerOrder = [opponentId, playerId]
 
     const player = preloadedState.duel.players[playerId]
     const opponent = preloadedState.duel.players[opponentId]
@@ -310,8 +309,7 @@ describe('Temple Guard', () => {
         board: [baseName],
       }),
     }
-    preloadedState.duel.activePlayerId = opponentId
-    preloadedState.duel.inactivePlayerId = playerId
+    preloadedState.duel.playerOrder = [opponentId, playerId]
 
     const player = preloadedState.duel.players[playerId]
     const opponent = preloadedState.duel.players[opponentId]
@@ -366,8 +364,7 @@ describe('Temple Guard', () => {
         board: ['Haunt', 'Zombie'],
       }),
     }
-    preloadedState.duel.activePlayerId = opponentId
-    preloadedState.duel.inactivePlayerId = playerId
+    preloadedState.duel.playerOrder = [opponentId, playerId]
 
     const player = preloadedState.duel.players[playerId]
     const opponent = preloadedState.duel.players[opponentId]

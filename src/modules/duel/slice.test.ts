@@ -54,11 +54,10 @@ describe('Starting a duel', () => {
       }),
     )
 
-    const { activePlayerId, phase, players } = state
+    const { phase, players } = state
     const player = players[playerId]
     const opponent = players[opponentId]
 
-    expect(activePlayerId).toBeTruthy()
     expect(phase).toBe('Initial Draw')
     expect(player.name).toEqual(userMock.name)
     expect(player.deck).toHaveLength(userMock.deck.length)
@@ -75,9 +74,9 @@ describe('Starting a duel', () => {
         firstPlayerId,
       }),
     )
-    const { activePlayerId, phase } = state
+    const { playerOrder, phase } = state
 
-    expect(activePlayerId).toBe(firstPlayerId)
+    expect(playerOrder[0]).toEqual(firstPlayerId)
     expect(phase).toBe('Initial Draw')
   })
 
@@ -188,10 +187,10 @@ describe('Playing turns', () => {
     })
 
     const state = duelReducer(mockDuelState, startFirstPlayerTurn())
-    const { phase, players, activePlayerId } = state
+    const { phase, players, playerOrder } = state
 
     expect(phase).toBe('Player Turn')
-    expect(players[activePlayerId].hand).toHaveLength(
+    expect(players[playerOrder[0]].hand).toHaveLength(
       stackedPlayerMock.hand.length + 1,
     )
     expect(
@@ -199,7 +198,7 @@ describe('Playing turns', () => {
         ({ hasPerformedAction }) => !hasPerformedAction,
       ),
     ).toBeTruthy()
-    expect(activePlayerId).toBe(playerId)
+    expect(playerOrder[0]).toBe(playerId)
   })
 
   test('advance turn, reset attackingAgentId, draw card and resolve income', () => {
@@ -212,11 +211,11 @@ describe('Playing turns', () => {
     mockDuelState.phase = 'Resolving turn'
 
     const state = duelReducer(mockDuelState, moveToNextTurn())
-    const { players, attackingAgentId, activePlayerId } = state
+    const { players, attackingAgentId, playerOrder } = state
     const opponent = players[opponentId]
 
     expect(attackingAgentId).toBe(initialState.attackingAgentId)
-    expect(activePlayerId).toBe(opponentId)
+    expect(playerOrder[0]).toBe(opponentId)
     expect(opponent.coins).toBe(coins + DUEL_INCOME_PER_TURN)
     expect(opponent.income).toBe(income - DUEL_INCOME_PER_TURN)
     expect(opponent.hand).toHaveLength(stackedOpponentMock.hand.length + 1)

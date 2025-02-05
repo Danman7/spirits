@@ -2,7 +2,11 @@ import { act } from 'react'
 import { RootState } from 'src/app'
 import { BotController } from 'src/modules/duel/components'
 import { completeRedraw, playCard, resolveTurn } from 'src/modules/duel'
-import { opponentId as playerId, stackedStateMock } from 'src/shared/__mocks__'
+import {
+  opponentId,
+  opponentId as playerId,
+  stackedStateMock,
+} from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { deepClone } from 'src/shared/utils'
 
@@ -28,7 +32,7 @@ it('should skip redrawing', () => {
 })
 
 it('should play a card within budget on turn', () => {
-  preloadedState.duel.activePlayerId = playerId
+  preloadedState.duel.playerOrder = [playerId, opponentId]
   preloadedState.duel.players[playerId].coins = 3
 
   const { dispatchSpy } = renderWithProviders(
@@ -54,7 +58,7 @@ it('should play a card within budget on turn', () => {
 })
 
 it('should play no card if there is no budget', () => {
-  preloadedState.duel.activePlayerId = playerId
+  preloadedState.duel.playerOrder = [playerId, opponentId]
   preloadedState.duel.players[playerId].coins = 0
 
   const { dispatchSpy } = renderWithProviders(
