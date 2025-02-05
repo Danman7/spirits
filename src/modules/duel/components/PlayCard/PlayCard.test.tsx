@@ -1,7 +1,6 @@
 import { fireEvent, waitFor } from '@testing-library/dom'
 import { act } from 'react'
 import { RootState } from 'src/app'
-import { PlayCard } from 'src/modules/duel/components'
 import {
   completeRedraw,
   discardCard,
@@ -9,20 +8,21 @@ import {
   playCard,
   putACardAtBottomOfDeck,
 } from 'src/modules/duel'
+import { PlayCard } from 'src/modules/duel/components'
 import {
   playerId,
   stackedPlayerMock,
   stackedStateMock,
 } from 'src/shared/__mocks__'
 import { renderWithProviders } from 'src/shared/rtlRender'
+import { Agent } from 'src/shared/types'
 import { deepClone, joinStringArrayWithComma } from 'src/shared/utils'
 
 jest.useFakeTimers()
 
-const mockCard =
-  stackedStateMock.duel.players[playerId].cards[
-    stackedStateMock.duel.players[playerId].hand[0]
-  ]
+const mockCard = stackedStateMock.duel.players[playerId].cards[
+  stackedStateMock.duel.players[playerId].hand[0]
+] as Agent
 
 let preloadedState: RootState
 
@@ -108,7 +108,7 @@ it('should be able to redraw', () => {
 
   expect(dispatchSpy).toHaveBeenCalledWith(
     putACardAtBottomOfDeck({
-      cardId: mockCard.id,
+      cardId: stackedPlayerMock.hand[0],
       playerId,
     }),
   )
@@ -131,7 +131,7 @@ it('should be able to be played if within budget', () => {
   fireEvent.click(getByText(mockCard.name))
 
   expect(dispatchSpy).toHaveBeenCalledWith(
-    playCard({ cardId: mockCard.id, playerId, shouldPay: true }),
+    playCard({ cardId: stackedPlayerMock.hand[0], playerId, shouldPay: true }),
   )
 })
 
@@ -155,9 +155,11 @@ it('should not be able to be played if outside budget', () => {
 })
 
 it('should discard card if strength is 0 or below', () => {
-  preloadedState.duel.players[playerId].cards[
-    preloadedState.duel.players[playerId].board[0]
-  ].strength = 0
+  ;(
+    preloadedState.duel.players[playerId].cards[
+      preloadedState.duel.players[playerId].board[0]
+    ] as Agent
+  ).strength = 0
 
   const { dispatchSpy } = renderWithProviders(
     <PlayCard

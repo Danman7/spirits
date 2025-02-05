@@ -1,32 +1,28 @@
 import { Card } from 'src/shared/components'
-import { CardBaseName, CardBases } from 'src/shared/data'
+import { BookOfAsh, BrotherSachelman } from 'src/shared/data'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { joinStringArrayWithComma } from 'src/shared/utils'
 
 it('should display all UI segments of a card when face up', () => {
-  const baseName: CardBaseName = 'BrotherSachelman'
-  const base = CardBases[baseName]
+  const { name, strength, cost, description, flavor, categories } =
+    BrotherSachelman
 
   const { getByRole, getByText } = renderWithProviders(
-    <Card baseName={baseName} id="1" />,
+    <Card id="1" card={BrotherSachelman} />,
   )
 
   expect(getByRole('heading', { level: 3 })).toHaveTextContent(
-    `${base.name}${base.strength}`,
+    `${name}${strength}`,
   )
-  expect(getByText(`Cost: ${base.cost}`)).toBeInTheDocument()
-  expect(
-    getByText(joinStringArrayWithComma(base.categories)),
-  ).toBeInTheDocument()
-  expect(getByText((base.description as string[])[0])).toBeInTheDocument()
-  expect(getByText(base.flavor as string)).toBeInTheDocument()
+  expect(getByText(`Cost: ${cost}`)).toBeInTheDocument()
+  expect(getByText(joinStringArrayWithComma(categories))).toBeInTheDocument()
+  expect(getByText(description[0])).toBeInTheDocument()
+  expect(getByText(flavor)).toBeInTheDocument()
 })
 
 it('should display no strength for an instant', () => {
-  const baseName: CardBaseName = 'BookOfAsh'
+  const { name } = BookOfAsh
+  const { getByRole } = renderWithProviders(<Card id="1" card={BookOfAsh} />)
 
-  const base = CardBases[baseName]
-  const { getByRole } = renderWithProviders(<Card baseName={baseName} id="1" />)
-
-  expect(getByRole('heading', { level: 3 })).toHaveTextContent(`${base.name}`)
+  expect(getByRole('heading', { level: 3 })).toHaveTextContent(name)
 })

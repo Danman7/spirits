@@ -42,9 +42,9 @@ export const PlayCard: FC<PlayCardProps> = ({
   const userId = useAppSelector(getUserId)
 
   const { hasPerformedAction, coins, cards } = players[playerId]
-  const duelCard = cards[cardId]
-  const { id, baseName, ...baseCard } = duelCard
-  const { strength } = baseCard
+  const card = cards[cardId]
+  const { type, cost } = card
+  const strength = type === 'agent' ? card.strength : 0
 
   const isFaceDown = isOnTop
     ? ['deck', 'discard', 'hand'].includes(stack)
@@ -55,7 +55,7 @@ export const PlayCard: FC<PlayCardProps> = ({
 
   const onClick = useMemo(() => {
     if (stack === 'hand' && !hasPerformedAction && !isOnTop) {
-      if (phase === 'Player Turn' && isUserActive && duelCard.cost <= coins) {
+      if (phase === 'Player Turn' && isUserActive && cost <= coins) {
         return () => {
           dispatch(playCard({ cardId, playerId, shouldPay: true }))
         }
@@ -109,9 +109,8 @@ export const PlayCard: FC<PlayCardProps> = ({
 
   return (
     <Card
-      id={id}
-      baseName={baseName}
-      currentCard={baseCard}
+      id={cardId}
+      card={card}
       isAttacking={isAttacking}
       isFaceDown={isFaceDown}
       isSmall={isSmall}

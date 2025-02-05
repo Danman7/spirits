@@ -3,9 +3,10 @@ import {
   getNeighboursIndexes,
   getPlayAllCopiesEffect,
   playCard,
-  updateCard,
+  updateAgent,
 } from 'src/modules/duel'
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/shared/data'
+import { Agent } from 'src/shared/types'
 
 export const PlayAllHammeriteNoviceCopies: Effect = (action, listenerApi) =>
   getPlayAllCopiesEffect(action, listenerApi, 'HammeriteNovice')
@@ -19,14 +20,14 @@ export const DamageSelfIfNotNextToHigherPowerHammerite: Effect = (
     const { cardId, playerId } = action.payload
     const { players } = getState().duel
     const { board, cards } = players[playerId]
-    const matchedCard = cards[cardId]
+    const matchedCard = cards[cardId] as Agent
 
     const playerdCardIndex = board.indexOf(cardId)
     const neighbourIndexed = getNeighboursIndexes(playerdCardIndex, board)
 
     if (
       !neighbourIndexed.some((neighbourIndex) => {
-        const card = cards[board[neighbourIndex]]
+        const card = cards[board[neighbourIndex]] as Agent
         const { categories, strength } = card
 
         return (
@@ -37,7 +38,7 @@ export const DamageSelfIfNotNextToHigherPowerHammerite: Effect = (
       })
     ) {
       dispatch(
-        updateCard({
+        updateAgent({
           cardId,
           playerId,
           update: {
@@ -60,15 +61,15 @@ export const BoostAlliedHammeritesWithLowerStrength: Effect = (
     const { board, cards } = players[playerId]
 
     board.forEach((boardCardId) => {
-      const { strength, categories } = cards[boardCardId]
+      const { strength, categories } = cards[boardCardId] as Agent
 
       if (
         categories.includes('Hammerite') &&
         boardCardId !== playedCardId &&
-        strength < cards[playedCardId].strength
+        strength < (cards[playedCardId] as Agent).strength
       ) {
         dispatch(
-          updateCard({
+          updateAgent({
             cardId: boardCardId,
             playerId,
             update: {
@@ -82,12 +83,12 @@ export const BoostAlliedHammeritesWithLowerStrength: Effect = (
 }
 
 export const PlaySelfIfCounterIsZero: Effect = (action, listenerApi) => {
-  if (updateCard.match(action)) {
+  if (updateAgent.match(action)) {
     const { getState, dispatch } = listenerApi
     const { players } = getState().duel
     const { cardId, playerId } = action.payload
     const { cards, board } = players[playerId]
-    const { counter } = cards[cardId]
+    const { counter } = cards[cardId] as Agent
 
     if ((counter as number) <= 0 && !board.includes(cardId))
       dispatch(playCard({ cardId, playerId, shouldPay: false }))

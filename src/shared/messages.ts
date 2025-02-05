@@ -1,7 +1,7 @@
-import { TraitName } from 'src/shared/types'
+import { AgentTraitName } from 'src/shared/types'
 
 export const traitDescriptions: Record<
-  TraitName,
+  AgentTraitName,
   { title: string; description: string }
 > = {
   retaliates: {

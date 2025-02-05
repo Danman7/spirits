@@ -15,23 +15,25 @@ import {
   CardBases,
   ElevatedAcolyte,
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
+  HighPriestMarkander,
 } from 'src/shared/data'
 import { renderWithProviders } from 'src/shared/rtlRender'
 import { CARD_TEST_ID, PLAYER_BOARD_ID } from 'src/shared/testIds'
-import { CardBase } from 'src/shared/types'
+import { Agent } from 'src/shared/types'
 import { deepClone } from 'src/shared/utils'
 
 jest.useFakeTimers()
 
 let preloadedState: RootState
 let baseName: CardBaseName
-let base: CardBase
 
 beforeEach(() => {
   preloadedState = deepClone(stackedStateMock)
 })
 
 describe('Hammerite Novice', () => {
+  let base: Agent
+
   beforeEach(() => {
     baseName = 'HammeriteNovice'
     base = CardBases[baseName]
@@ -100,6 +102,8 @@ describe('Hammerite Novice', () => {
 })
 
 describe('Elevated Acolyte', () => {
+  let base: Agent
+
   beforeEach(() => {
     baseName = 'ElevatedAcolyte'
     base = CardBases[baseName]
@@ -178,6 +182,8 @@ describe('Elevated Acolyte', () => {
 })
 
 describe('Brother Sachelman', () => {
+  let base: Agent
+
   beforeEach(() => {
     baseName = 'BrotherSachelman'
     base = CardBases[baseName]
@@ -201,7 +207,7 @@ describe('Brother Sachelman', () => {
     fireEvent.click(getByText(base.name))
 
     normalizedCards.board.forEach((cardId) => {
-      const { strength, name } = normalizedCards.cards[cardId]
+      const { strength, name } = normalizedCards.cards[cardId] as Agent
 
       expect(
         within(getByTestId(`${CARD_TEST_ID}${cardId}`)).getByRole('heading', {
@@ -231,7 +237,7 @@ describe('Brother Sachelman', () => {
     fireEvent.click(getByText(base.name))
 
     normalizedCards.board.forEach((cardId) => {
-      const { strength, name } = normalizedCards.cards[cardId]
+      const { strength, name } = normalizedCards.cards[cardId] as Agent
 
       expect(
         within(getByTestId(`${CARD_TEST_ID}${cardId}`)).getByRole('heading', {
@@ -245,7 +251,6 @@ describe('Brother Sachelman', () => {
 describe('Temple Guard', () => {
   beforeEach(() => {
     baseName = 'TempleGuard'
-    base = CardBases[baseName]
   })
 
   it('should not retaliate when not attacked', () => {
@@ -262,9 +267,9 @@ describe('Temple Guard', () => {
     const player = preloadedState.duel.players[playerId]
     const opponent = preloadedState.duel.players[opponentId]
     const firstAttackerId = opponent.board[0]
-    const firstAttacker = opponent.cards[firstAttackerId]
+    const firstAttacker = opponent.cards[firstAttackerId] as Agent
     const templeGuardId = player.board[1]
-    const templeGuard = player.cards[templeGuardId]
+    const templeGuard = player.cards[templeGuardId] as Agent
 
     const { getByTestId } = renderWithProviders(<Board />, {
       preloadedState,
@@ -311,9 +316,9 @@ describe('Temple Guard', () => {
     const player = preloadedState.duel.players[playerId]
     const opponent = preloadedState.duel.players[opponentId]
     const firstAttackerId = opponent.board[0]
-    const firstAttacker = opponent.cards[firstAttackerId]
+    const firstAttacker = opponent.cards[firstAttackerId] as Agent
     const templeGuardId = player.board[0]
-    const templeGuard = player.cards[templeGuardId]
+    const templeGuard = player.cards[templeGuardId] as Agent
 
     const { getByTestId } = renderWithProviders(<Board />, {
       preloadedState,
@@ -368,10 +373,10 @@ describe('Temple Guard', () => {
     const opponent = preloadedState.duel.players[opponentId]
     const firstAttackerId = opponent.board[0]
     const secondAttackerId = opponent.board[1]
-    const firstAttacker = opponent.cards[firstAttackerId]
-    const secondAttacker = opponent.cards[secondAttackerId]
+    const firstAttacker = opponent.cards[firstAttackerId] as Agent
+    const secondAttacker = opponent.cards[secondAttackerId] as Agent
     const templeGuardId = player.board[0]
-    const templeGuard = player.cards[templeGuardId]
+    const templeGuard = player.cards[templeGuardId] as Agent
 
     const { getByTestId } = renderWithProviders(<Board />, {
       preloadedState,
@@ -434,6 +439,8 @@ describe('Temple Guard', () => {
 })
 
 describe('High Priest Markander', () => {
+  let base: Agent
+
   beforeEach(() => {
     baseName = 'HighPriestMarkander'
     base = CardBases[baseName]
@@ -469,15 +476,14 @@ describe('High Priest Markander', () => {
   it('should play High Priest Markander if counter reaches 0', () => {
     preloadedState.duel.players[playerId] = {
       ...initialPlayerMock,
-      ...normalizePlayerCards({
-        deck: [baseName],
-        hand: ['ElevatedAcolyte'],
-        board: [],
-      }),
+      board: [],
+      hand: ['1'],
+      deck: ['2'],
+      cards: {
+        '1': ElevatedAcolyte,
+        '2': { ...HighPriestMarkander, counter: 1 },
+      },
     }
-
-    const { deck } = preloadedState.duel.players[playerId]
-    preloadedState.duel.players[playerId].cards[deck[0]].counter = 1
 
     const { getByText, queryByText, getByTestId } = renderWithProviders(
       <Board />,

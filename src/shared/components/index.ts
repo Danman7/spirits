@@ -1,5 +1,5 @@
 import { AnimatedNumber } from 'src/shared/components/AnimatedNumber/AnimatedNumber'
-import { Card } from 'src/shared/components/Card/Card'
+import { CardComponent } from 'src/shared/components/Card/Card'
 import { CardContent } from 'src/shared/components/Card/CardContent'
 import { CardFooter } from 'src/shared/components/Card/CardFooter'
 import { CardHeader } from 'src/shared/components/Card/CardHeader'
@@ -19,7 +19,7 @@ export * from 'src/shared/components/LoadingMessage/styles'
 
 export {
   AnimatedNumber,
-  Card,
+  CardComponent as Card,
   CardContent,
   CardFooter,
   CardHeader,

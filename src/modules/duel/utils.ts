@@ -4,7 +4,6 @@ import {
   CARD_STACKS,
   CardStack,
   DUEL_STARTING_COINS,
-  DuelCard,
   DuelPlayers,
   DuelState,
   DuelUser,
@@ -14,12 +13,6 @@ import {
 } from 'src/modules/duel'
 import { CardBaseName, CardBases } from 'src/shared/data'
 import { generateUUID, shuffleArray } from 'src/shared/utils'
-
-export const createDuelCard = (baseName: CardBaseName): DuelCard => ({
-  ...CardBases[baseName],
-  id: generateUUID(),
-  baseName,
-})
 
 /**
  * Returns an array of ids of all cards in a player's hand that cost within the player's coins reserve.
@@ -50,13 +43,13 @@ export const normalizePlayerCards = (
   CARD_STACKS.forEach((stack) => {
     if (stacks[stack]) {
       stacks[stack].forEach((cardBaseName) => {
-        const card = createDuelCard(cardBaseName)
+        const cardId = generateUUID()
 
         partialPlayer.cards = {
           ...partialPlayer.cards,
-          [card.id]: card,
+          [cardId]: CardBases[cardBaseName],
         }
-        partialPlayer[stack] = [...partialPlayer[stack], card.id]
+        partialPlayer[stack] = [...partialPlayer[stack], cardId]
       })
     }
   })
@@ -138,8 +131,8 @@ export const getOnPlayPredicateForCardBase = (
   baseName: CardBaseName,
 ) =>
   playCard.match(action) &&
-  players[action.payload.playerId].cards[action.payload.cardId].baseName ===
-    baseName
+  players[action.payload.playerId].cards[action.payload.cardId].name ===
+    CardBases[baseName].name
 
 export const getPlayAllCopiesEffect = (
   action: Action,
@@ -152,23 +145,27 @@ export const getPlayAllCopiesEffect = (
 
     const player = players[playerId]
     const { cards, board, discard } = player
+    const base = CardBases[comparingBase]
 
     // Move each copy to board if it is not on board or in discard
-    Object.values(cards).forEach(({ id, baseName }) => {
+    Object.keys(cards).forEach((cardId) => {
+      const { name } = cards[cardId]
+
       if (
-        baseName === comparingBase &&
-        id !== playedCardId &&
-        !board.includes(id) &&
-        !discard.includes(id)
-      ) {
-        listenerApi.dispatch(
-          playCard({
-            cardId: id,
-            playerId,
-            shouldPay: false,
-          }),
-        )
-      }
+        name !== base.name ||
+        cardId === playedCardId ||
+        board.includes(cardId) ||
+        discard.includes(cardId)
+      )
+        return
+
+      listenerApi.dispatch(
+        playCard({
+          cardId,
+          playerId,
+          shouldPay: false,
+        }),
+      )
     })
   }
 }

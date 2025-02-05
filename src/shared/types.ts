@@ -2,7 +2,7 @@ import { CardBaseName } from 'src/shared/data'
 
 export type CardRank = 'common' | 'unique'
 
-export type CardType = 'agent' | 'instant' | 'location'
+export type CardType = 'agent' | 'instant'
 
 export type CardFaction = 'Order' | 'Chaos' | 'Shadow'
 
@@ -16,25 +16,39 @@ export type CardCategory =
   | 'Necromancer'
   | 'Artifact'
 
-export interface Traits {
+export interface AgentTraits {
   retaliates?: boolean
 }
 
-export type TraitName = keyof Traits
+export type AgentTraitName = keyof AgentTraits
 
-export interface CardBase {
+interface CardBase {
   readonly name: string
   cost: number
   factions: CardFaction[]
   categories: CardCategory[]
   rank: CardRank
-  strength: number
   type: CardType
-  description?: string[]
-  flavor?: string
-  traits?: Traits
+  description: string[]
+  flavor: string
+}
+
+export interface Instant extends CardBase {
+  type: 'instant'
+}
+
+export interface Agent extends CardBase {
+  type: 'agent'
+  strength: number
+  traits?: AgentTraits
   counter?: number
 }
+
+export interface AgentWithCounter extends Agent {
+  counter: number
+}
+
+export type Card = Instant | Agent | AgentWithCounter
 
 export type AnimateState = 'in' | 'out' | ''
 

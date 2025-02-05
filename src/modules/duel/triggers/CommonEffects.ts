@@ -1,6 +1,8 @@
 import { Effect } from 'src/app'
-import { playCard, resolveTurn, updateCard } from 'src/modules/duel'
+import { playCard, resolveTurn, updateAgent } from 'src/modules/duel'
 import { ACTION_WAIT_TIMEOUT } from 'src/shared/constants'
+import { HighPriestMarkander } from 'src/shared/data'
+import { AgentWithCounter } from 'src/shared/types'
 
 export const HandlePostPlay: Effect = (action, listenerApi) => {
   if (playCard.match(action)) {
@@ -13,21 +15,24 @@ export const HandlePostPlay: Effect = (action, listenerApi) => {
 
       const { cards } = players[playerId]
       const { categories } = cards[cardId]
-      const HighPriest = Object.values(cards).find(
-        ({ baseName }) => baseName === 'HighPriestMarkander',
+
+      const HighPriest = Object.entries(cards).find(
+        ([, card]) => card.name === HighPriestMarkander.name,
       )
 
-      if (
-        categories.includes('Hammerite') &&
-        HighPriest &&
-        (HighPriest.counter as number) > 0
-      ) {
+      if (!HighPriest) return
+
+      const [priestId, card] = HighPriest
+
+      const priest = card as AgentWithCounter
+
+      if (categories.includes('Hammerite') && priest.counter > 0) {
         dispatch(
-          updateCard({
+          updateAgent({
             playerId,
-            cardId: HighPriest.id,
+            cardId: priestId,
             update: {
-              counter: (HighPriest.counter as number) - 1,
+              counter: priest.counter - 1,
             },
           }),
         )

@@ -1,7 +1,7 @@
 import { DOWNWINDER_BOOST, GARRETT_COIN_GAIN } from 'src/shared/data/constants'
-import { CardBase } from 'src/shared/types'
+import { Agent } from 'src/shared/types'
 
-export const GarrettMasterThief: CardBase = {
+export const GarrettMasterThief: Agent = {
   type: 'agent',
   name: 'Garrett: Master Thief',
   strength: 4,
@@ -16,7 +16,7 @@ export const GarrettMasterThief: CardBase = {
     'His heart was clouded, and his balance was lost, but his abilities were unmatched. -- Keeper Annals',
 }
 
-export const DownwinderThief: CardBase = {
+export const DownwinderThief: Agent = {
   type: 'agent',
   name: 'Downwinder Thief',
   strength: 2,

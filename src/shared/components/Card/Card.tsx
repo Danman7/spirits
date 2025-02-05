@@ -10,14 +10,12 @@ import {
 } from 'src/shared/components'
 import { ACTION_WAIT_TIMEOUT } from 'src/shared/constants'
 import { usePrevious } from 'src/shared/customHooks'
-import { CardBaseName, CardBases } from 'src/shared/data'
 import { CARD_TEST_ID } from 'src/shared/testIds'
-import { CardBase, CardStrengthAnimateState } from 'src/shared/types'
+import { Card, CardStrengthAnimateState } from 'src/shared/types'
 
 interface CardProps {
-  baseName: CardBaseName
   id: string
-  currentCard?: CardBase
+  card: Card
   isFaceDown?: boolean
   isSmall?: boolean
   isAttacking?: boolean
@@ -25,20 +23,18 @@ interface CardProps {
   onClick?: () => void
 }
 
-export const Card: React.FC<CardProps> = ({
-  baseName,
+export const CardComponent: React.FC<CardProps> = ({
   id,
-  currentCard,
+  card,
   isFaceDown = false,
   isSmall = false,
   isAttacking = false,
   isAttackingFromAbove = false,
   onClick,
 }) => {
-  const base = CardBases[baseName]
-  const card = currentCard || base
-  const { strength, rank } = card
+  const { type, rank } = card
 
+  const strength = type === 'agent' ? card.strength : 0
   const prevStrength = usePrevious(strength)
   const prevIsFaceDown = usePrevious(isFaceDown)
 
@@ -61,7 +57,8 @@ export const Card: React.FC<CardProps> = ({
 
   // Strength animations
   useEffect(() => {
-    if (prevStrength !== strength) {
+    if (type === 'agent' && prevStrength !== strength) {
+      setCardStrengthAnimateState('')
       setCardStrengthAnimateState(
         prevStrength < strength ? 'boosted' : 'damaged',
       )
@@ -93,7 +90,7 @@ export const Card: React.FC<CardProps> = ({
             $rank={rank}
             $cardStrengthAnimateState={cardStrengthAnimateState}
           >
-            <CardHeader card={card} id={id} baseStrength={base.strength} />
+            <CardHeader card={card} id={id} />
 
             <CardContent card={card} id={id} />
 

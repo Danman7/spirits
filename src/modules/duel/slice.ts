@@ -4,7 +4,6 @@ import {
   CardStack,
   DUEL_INCOME_PER_TURN,
   DUEL_INITIAL_CARDS_DRAWN,
-  DuelCard,
   DuelStartUsers,
   DuelState,
   invalidFirstPlayerIdError,
@@ -14,7 +13,8 @@ import {
   PlayerCardAction,
   setupInitialDuelPlayerFromUser,
 } from 'src/modules/duel'
-import { getRandomArrayItem } from 'src/shared/utils'
+import { Agent } from 'src/shared/types'
+import { findCardBaseFromName, getRandomArrayItem } from 'src/shared/utils'
 
 export const initialState: DuelState = {
   phase: 'Initial Draw',
@@ -182,8 +182,10 @@ export const duelSlice = createSlice({
             },
           ]
 
+          const defendingAgent = defendingPlayerCards[defenderId] as Agent
+
           // Handle retaliations
-          if (defenderId && defendingPlayerCards[defenderId].traits?.retaliates)
+          if (defendingAgent.traits?.retaliates)
             nextattackingQueue.push({
               attackerId: defenderId,
               defenderId: attackerId,
@@ -209,7 +211,9 @@ export const duelSlice = createSlice({
       // If there is a defending agent, damage it.
       // If not steal coins from the defending player.
       if (defendingAgentId) {
-        state.players[defendingPlayerId].cards[defendingAgentId].strength -= 1
+        ;(
+          state.players[defendingPlayerId].cards[defendingAgentId] as Agent
+        ).strength -= 1
       } else {
         state.players[defendingPlayerId].coins -= 1
       }
@@ -222,10 +226,10 @@ export const duelSlice = createSlice({
       state.attackingAgentId = newQueue.length ? newQueue[0].attackerId : ''
     },
     playCard: (state, action: PlayCardAction) => {
-      const { cardId: playedCardId, playerId, shouldPay } = action.payload
+      const { cardId: movedCardId, playerId, shouldPay } = action.payload
       const { players } = state
-      const playedCard = players[playerId].cards[playedCardId]
-      const { id: movedCardId, cost } = playedCard
+      const playedCard = players[playerId].cards[movedCardId]
+      const { cost } = playedCard
 
       moveCardBetweenStacks({
         movedCardId,
@@ -241,15 +245,17 @@ export const duelSlice = createSlice({
         players[playerId].coins = coins - cost
       }
     },
-    updateCard: (
+    updateAgent: (
       state,
       action: PayloadAction<{
         playerId: string
         cardId: string
-        update: Partial<DuelCard>
+        update: Partial<Agent>
       }>,
     ) => {
       const { playerId, cardId, update } = action.payload
+
+      if (state.players[playerId].cards[cardId].type !== 'agent') return
 
       state.players[playerId].cards[cardId] = {
         ...state.players[playerId].cards[cardId],
@@ -267,10 +273,17 @@ export const duelSlice = createSlice({
         to: 'discard',
       })
 
-      const { strength, cost } = players[playerId].cards[movedCardId]
+      const { cost } = players[playerId].cards[movedCardId]
 
-      players[playerId].cards[movedCardId].strength = strength
       players[playerId].income += cost
+
+      // Reset an agent's strength
+      if (players[playerId].cards[movedCardId].type !== 'agent') return
+
+      const { name } = players[playerId].cards[movedCardId]
+      const base = findCardBaseFromName(name) as Agent
+
+      players[playerId].cards[movedCardId].strength = base?.strength
     },
     endDuel: (state, action: PayloadAction<string>) => {
       state.phase = 'Duel End'
@@ -297,7 +310,7 @@ export const {
   resolveTurn,
   playCard,
   putACardAtBottomOfDeck,
-  updateCard,
+  updateAgent,
   agentAttack,
   moveToNextAttackingAgent,
   discardCard,

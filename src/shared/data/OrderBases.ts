@@ -3,13 +3,12 @@ import {
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   HIGH_PRIEST_MAKANDER_COUNTER,
 } from 'src/shared/data/constants'
-import { CardBase } from 'src/shared/types'
+import { Agent, AgentWithCounter, Instant } from 'src/shared/types'
 
-export const YoraSkull: CardBase = {
+export const YoraSkull: Instant = {
   type: 'instant',
   name: "Saint Yora's Skull",
   cost: 5,
-  strength: 0,
   rank: 'unique',
   factions: ['Order'],
   categories: ['Artifact'],
@@ -19,7 +18,7 @@ export const YoraSkull: CardBase = {
   flavor: 'Yora was a builder of vision and devout keeper of the faith.',
 }
 
-export const HouseGuard: CardBase = {
+export const HouseGuard: Agent = {
   type: 'agent',
   name: 'House Guard',
   strength: 2,
@@ -32,7 +31,7 @@ export const HouseGuard: CardBase = {
     'The Sir will be taking his dinner and evening out tonight. The house guard is not to find this an opportunity to shirk, and lapses will be brought up with the Sir.',
 }
 
-export const HammeriteNovice: CardBase = {
+export const HammeriteNovice: Agent = {
   type: 'agent',
   name: 'Hammerite Novice',
   strength: 2,
@@ -47,7 +46,7 @@ export const HammeriteNovice: CardBase = {
     'This novice has been instructed in the rules and strictures of the Order and has sworn his warrants to be silent in his vigils.',
 }
 
-export const ElevatedAcolyte: CardBase = {
+export const ElevatedAcolyte: Agent = {
   type: 'agent',
   name: 'Elevated Acolyte',
   strength: 3,
@@ -62,7 +61,7 @@ export const ElevatedAcolyte: CardBase = {
     'He will endure a standard three-year contract of service, at the end of which he will be considered for indoctrination as an Elevated Acolyte.',
 }
 
-export const TempleGuard: CardBase = {
+export const TempleGuard: Agent = {
   type: 'agent',
   name: 'Temple Guard',
   strength: 5,
@@ -70,6 +69,7 @@ export const TempleGuard: CardBase = {
   rank: 'common',
   factions: ['Order'],
   categories: ['Hammerite', 'Guard'],
+  description: [''],
   traits: {
     retaliates: true,
   },
@@ -77,7 +77,7 @@ export const TempleGuard: CardBase = {
     'Thy hammer pounds the nail, holds the roof-beam. Thy hammer strikes the iron, shapes the cauldron.',
 }
 
-export const BrotherSachelman: CardBase = {
+export const BrotherSachelman: Agent = {
   type: 'agent',
   name: 'Brother Sachelman',
   strength: 4,
@@ -92,7 +92,7 @@ export const BrotherSachelman: CardBase = {
     'May the Hammer fall on the unrighteous. Officially, Brother Sachelman',
 }
 
-export const HighPriestMarkander: CardBase = {
+export const HighPriestMarkander: AgentWithCounter = {
   type: 'agent',
   name: 'High Priest Markander',
   strength: 4,

@@ -1,6 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Card } from 'src/shared/components'
-import { baseNames, HammeriteNovice, Haunt } from 'src/shared/data'
+import {
+  AzaranTheCruel,
+  BookOfAsh,
+  CardBases,
+  GarrettMasterThief,
+  HammeriteNovice,
+  Haunt,
+  HighPriestMarkander,
+  ViktoriaThiefPawn,
+} from 'src/shared/data'
 
 const meta = {
   title: 'Card',
@@ -16,20 +25,19 @@ const meta = {
     },
   },
   args: {
-    baseName: 'Haunt',
+    card: Haunt,
     id: 'unique-id',
     isFaceDown: false,
     isSmall: false,
     isAttacking: false,
     isAttackingFromAbove: false,
     onClick: undefined,
-    currentCard: undefined,
   },
   argTypes: {
-    baseName: {
-      options: baseNames,
+    card: {
+      options: Object.values(CardBases),
       description:
-        'This is the name of the base object this card was created from.',
+        'If this component is to display a dynamic instance of a Card, it must know the difference between its base and current stats.',
     },
     id: {
       description:
@@ -53,10 +61,6 @@ const meta = {
     onClick: {
       description:
         'An optional onClick function that determines if the isActive styles apply.',
-    },
-    currentCard: {
-      description:
-        'If this component is to display a dynamic instance of a Card, it must know the difference between its base and current stats.',
     },
   },
 } satisfies Meta<typeof Card>
@@ -116,7 +120,7 @@ export const Active: Story = {
 
 export const UniqueAgent: Story = {
   args: {
-    baseName: 'AzaranTheCruel',
+    card: AzaranTheCruel,
   },
   parameters: {
     docs: {
@@ -130,7 +134,7 @@ export const UniqueAgent: Story = {
 
 export const Instant: Story = {
   args: {
-    baseName: 'BookOfAsh',
+    card: BookOfAsh,
   },
   parameters: {
     docs: {
@@ -144,7 +148,7 @@ export const Instant: Story = {
 
 export const OrderCard: Story = {
   args: {
-    baseName: 'HighPriestMarkander',
+    card: HighPriestMarkander,
   },
   parameters: {
     docs: {
@@ -157,7 +161,7 @@ export const OrderCard: Story = {
 
 export const ShadowCard: Story = {
   args: {
-    baseName: 'GarrettMasterThief',
+    card: GarrettMasterThief,
   },
   parameters: {
     docs: {
@@ -170,7 +174,7 @@ export const ShadowCard: Story = {
 
 export const MultipleFactions: Story = {
   args: {
-    baseName: 'ViktoriaThiefPawn',
+    card: ViktoriaThiefPawn,
   },
   parameters: {
     docs: {
@@ -183,8 +187,7 @@ export const MultipleFactions: Story = {
 
 export const BoostedAgent: Story = {
   args: {
-    baseName: 'Haunt',
-    currentCard: { ...Haunt, strength: Haunt.strength + 1 },
+    card: { ...Haunt, strength: Haunt.strength + 1 },
   },
   parameters: {
     docs: {
@@ -197,8 +200,7 @@ export const BoostedAgent: Story = {
 
 export const DamagedAgent: Story = {
   args: {
-    baseName: 'HammeriteNovice',
-    currentCard: { ...HammeriteNovice, strength: HammeriteNovice.strength - 1 },
+    card: { ...HammeriteNovice, strength: HammeriteNovice.strength - 1 },
   },
   parameters: {
     docs: {

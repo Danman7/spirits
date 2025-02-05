@@ -117,7 +117,7 @@ describe('Bottom (Player) Side', () => {
 
     expect(dispatchSpy).toHaveBeenCalledWith(
       putACardAtBottomOfDeck({
-        cardId: redrawnCard.id,
+        cardId: stackedPlayerMock.hand[0],
         playerId,
       }),
     )
@@ -138,7 +138,11 @@ describe('Bottom (Player) Side', () => {
     fireEvent.click(getByText(playedCard.name))
 
     expect(dispatchSpy).toHaveBeenCalledWith(
-      playCard({ cardId: playedCard.id, playerId, shouldPay: true }),
+      playCard({
+        cardId: stackedPlayerMock.hand[0],
+        playerId,
+        shouldPay: true,
+      }),
     )
   })
 })

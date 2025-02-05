@@ -1,18 +1,18 @@
 import { FC, ReactNode, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app'
 import {
-  CardBrowserModal,
-  CardBrowserModalFooter,
-  CardList,
-} from 'src/modules/duel/components'
-import {
+  browsingStackModalTitle,
+  closeMessage,
   getBrowsedStack,
   getIsBrowsingStack,
   getPlayers,
   setIsBrowsingStack,
-  browsingStackModalTitle,
-  closeMessage,
 } from 'src/modules/duel'
+import {
+  CardBrowserModal,
+  CardBrowserModalFooter,
+  CardList,
+} from 'src/modules/duel/components'
 import { getUserId } from 'src/modules/user'
 import { Card, Link, Modal } from 'src/shared/components'
 import { shuffleArray } from 'src/shared/utils'
@@ -38,8 +38,7 @@ export const StackBrowseModal: FC = () => {
               <Card
                 key={`${cardId}-browse`}
                 id={`${cardId}-browse`}
-                baseName={player.cards[cardId].baseName}
-                currentCard={player.cards[cardId]}
+                card={player.cards[cardId]}
               />
             ))}
           </CardList>

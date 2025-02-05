@@ -4,31 +4,12 @@ import {
   DuelState,
   EMPTY_PLAYER,
   Player,
-  createDuelCard,
   getNeighboursIndexes,
   getPlayableCardIds,
   moveCardBetweenStacks,
   normalizePlayerCards,
 } from 'src/modules/duel'
 import { playerId, stackedDuelStateMock } from 'src/shared/__mocks__'
-import { CardBaseName, CardBases } from 'src/shared/data'
-
-test('createPlayCardFromPrototype should create a new play ready card from a card prototype', () => {
-  const baseName: CardBaseName = 'TempleGuard'
-  const base = CardBases[baseName]
-
-  const newCard = createDuelCard('TempleGuard')
-
-  expect(newCard).toEqual(
-    expect.objectContaining({
-      cost: base.cost,
-      strength: base.strength,
-      traits: base.traits,
-    }),
-  )
-  expect(newCard.baseName).toEqual('TempleGuard')
-  expect(newCard.id).toBeDefined()
-})
 
 it('should get all playable card ids for a given player with getPlayableCardIds', () => {
   const mockBudgetPlayer: Player = {
@@ -57,13 +38,11 @@ it("should normalize a player's cards into all possible stacks with normalizePla
     discard: ['Zombie'],
   })
 
-  Object.values(normalizedCards.cards).forEach((card) => {
-    expect(normalizedCards.cards?.[card.id]).toBe(card)
-  })
-
   CARD_STACKS.forEach((stack) => {
     expect(normalizedCards[stack]).toHaveLength(1)
   })
+
+  expect(Object.keys(normalizedCards.cards)).toHaveLength(4)
 })
 
 it("should normalize a player's cards into some stacks with normalizePlayerCards", () => {

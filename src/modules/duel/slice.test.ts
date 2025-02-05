@@ -6,7 +6,6 @@ import {
   drawACardFromDeck,
   DUEL_INCOME_PER_TURN,
   DUEL_INITIAL_CARDS_DRAWN,
-  DuelCard,
   duelReducer,
   DuelStartUsers,
   DuelState,
@@ -21,7 +20,7 @@ import {
   resolveTurn,
   startDuel,
   startFirstPlayerTurn,
-  updateCard,
+  updateAgent,
 } from 'src/modules/duel'
 import {
   initialDuelStateMock,
@@ -35,6 +34,7 @@ import {
   userMock,
 } from 'src/shared/__mocks__'
 import { HammeriteNovice } from 'src/shared/data'
+import { Agent, Card } from 'src/shared/types'
 import { deepClone } from 'src/shared/utils'
 
 const users: DuelStartUsers = [userMock, opponentMock]
@@ -295,9 +295,12 @@ describe('Playing turns', () => {
       }),
     )
     const { players } = state
-    const referenceAgent =
-      stackedOpponentMock.cards[stackedOpponentMock.board[0]]
-    const damagedAgent = players[opponentId].cards[stackedOpponentMock.board[0]]
+    const referenceAgent = stackedOpponentMock.cards[
+      stackedOpponentMock.board[0]
+    ] as Agent
+    const damagedAgent = players[opponentId].cards[
+      stackedOpponentMock.board[0]
+    ] as Agent
 
     expect(damagedAgent.strength).toBe(referenceAgent.strength - 1)
   })
@@ -431,7 +434,7 @@ describe('Playing turns', () => {
         }),
       )
       const player = state.players[playerId]
-      const discardedCard = player.cards[cardId]
+      const discardedCard = player.cards[cardId] as Agent
 
       expect(player[stack]).toHaveLength(1)
       expect(player.discard).toHaveLength(1)
@@ -443,19 +446,19 @@ describe('Playing turns', () => {
 
   test('update a card', () => {
     const cardId = mockDuelState.players[playerId].board[0]
-    const update: Partial<DuelCard> = {
+    const update: Partial<Card> = {
       cost: 1,
       strength: 5,
     }
     const state = duelReducer(
       mockDuelState,
-      updateCard({
+      updateAgent({
         playerId,
         cardId,
         update,
       }),
     )
-    const updatedCard = state.players[playerId].cards[cardId]
+    const updatedCard = state.players[playerId].cards[cardId] as Agent
 
     expect(updatedCard.strength).toBe(update.strength)
     expect(updatedCard.cost).toBe(update.cost)

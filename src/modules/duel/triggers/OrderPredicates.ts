@@ -1,9 +1,10 @@
 import { Predicate } from 'src/app'
 import {
-  playCard,
   getOnPlayPredicateForCardBase,
-  updateCard,
+  playCard,
+  updateAgent,
 } from 'src/modules/duel'
+import { HighPriestMarkander } from 'src/shared/data'
 
 export const HammeriteNoviceOnPlay: Predicate = (
   action,
@@ -40,12 +41,12 @@ export const HighPriestMarkanderOnUpdate: Predicate = (
   action,
   currentState,
 ) => {
-  if (updateCard.match(action)) {
+  if (updateAgent.match(action)) {
     const { cardId, playerId } = action.payload
     const { players } = currentState.duel
-    const { baseName } = players[playerId].cards[cardId]
+    const { name } = players[playerId].cards[cardId]
 
-    return baseName === 'HighPriestMarkander'
+    return name === HighPriestMarkander.name
   }
 
   return false
