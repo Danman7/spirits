@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Difference, StyledAnimatedNumber } from 'src/shared/components'
 import { usePrevious } from 'src/shared/customHooks'
 
@@ -7,37 +7,35 @@ interface AnimatedNumberProps {
   uniqueId?: string
 }
 
-let updateId = 0
+interface ValueUpdate {
+  id: number
+  text: string
+}
 
 export const AnimatedNumber: FC<AnimatedNumberProps> = ({
   value,
   uniqueId,
 }) => {
+  const updateIdRef = useRef(0)
   const previousValue = usePrevious(value)
+  const [updates, setUpdates] = useState<ValueUpdate[]>([])
 
-  const [updates, setUpdates] = useState<
-    {
-      id: number
-      text: string
-    }[]
-  >([])
-
-  const removeUpdate = (updateId: number) =>
-    setUpdates(updates.filter(({ id }) => id !== updateId))
+  const removeUpdate = (id: number) => {
+    setUpdates((prev) => prev.filter((update) => update.id !== id))
+  }
 
   useEffect(() => {
-    if (previousValue !== value) {
-      setUpdates([
-        ...updates,
+    if (previousValue !== undefined && previousValue !== value) {
+      setUpdates((prev) => [
+        ...prev,
         {
-          id: updateId,
+          id: updateIdRef.current,
           text: `${value > previousValue ? '+' : ''}${value - previousValue}`,
         },
       ])
-
-      updateId += 1
+      updateIdRef.current += 1
     }
-  }, [value])
+  }, [value, previousValue])
 
   return (
     <StyledAnimatedNumber>
@@ -45,7 +43,7 @@ export const AnimatedNumber: FC<AnimatedNumberProps> = ({
 
       {updates.map(({ id, text }) => (
         <Difference
-          key={uniqueId ? `${uniqueId}-update-${id}` : id}
+          key={`${uniqueId || 'update'}-${id}`}
           onAnimationEnd={() => removeUpdate(id)}
         >
           {text}

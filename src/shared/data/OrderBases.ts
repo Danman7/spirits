@@ -9,7 +9,7 @@ export const YoraSkull: Instant = {
   type: 'instant',
   name: "Saint Yora's Skull",
   cost: 5,
-  rank: 'unique',
+  isUnique: true,
   factions: ['Order'],
   categories: ['Artifact'],
   description: [
@@ -23,7 +23,6 @@ export const HouseGuard: Agent = {
   name: 'House Guard',
   strength: 2,
   cost: 2,
-  rank: 'common',
   factions: ['Order'],
   categories: ['Guard'],
   description: ['On defeat, play a copy of this card from your hand or deck.'],
@@ -36,7 +35,6 @@ export const HammeriteNovice: Agent = {
   name: 'Hammerite Novice',
   strength: 2,
   cost: 3,
-  rank: 'common',
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
@@ -51,7 +49,6 @@ export const ElevatedAcolyte: Agent = {
   name: 'Elevated Acolyte',
   strength: 3,
   cost: 2,
-  rank: 'common',
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
@@ -66,7 +63,6 @@ export const TempleGuard: Agent = {
   name: 'Temple Guard',
   strength: 5,
   cost: 5,
-  rank: 'common',
   factions: ['Order'],
   categories: ['Hammerite', 'Guard'],
   description: [''],
@@ -82,7 +78,7 @@ export const BrotherSachelman: Agent = {
   name: 'Brother Sachelman',
   strength: 4,
   cost: 6,
-  rank: 'unique',
+  isUnique: true,
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
@@ -98,7 +94,7 @@ export const HighPriestMarkander: AgentWithCounter = {
   strength: 4,
   cost: 5,
   counter: HIGH_PRIEST_MAKANDER_COUNTER,
-  rank: 'unique',
+  isUnique: true,
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [

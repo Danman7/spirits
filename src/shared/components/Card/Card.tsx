@@ -32,7 +32,7 @@ export const CardComponent: React.FC<CardProps> = ({
   isAttackingFromAbove = false,
   onClick,
 }) => {
-  const { type, rank } = card
+  const { type, isUnique } = card
 
   const strength = type === 'agent' ? card.strength : 0
   const prevStrength = usePrevious(strength)
@@ -86,7 +86,7 @@ export const CardComponent: React.FC<CardProps> = ({
             $isAttacking={isAttacking}
             $isAttackingFromAbove={isAttackingFromAbove}
             $isActive={!!onClick}
-            $rank={rank}
+            $isUnique={isUnique}
             $cardStrengthAnimateState={cardStrengthAnimateState}
           >
             <CardHeader card={card} id={id} />

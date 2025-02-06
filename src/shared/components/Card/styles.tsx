@@ -1,10 +1,6 @@
 import { motion } from 'motion/react'
 import { defaultTheme } from 'src/shared/styles'
-import {
-  CardFaction,
-  CardRank,
-  CardStrengthAnimateState,
-} from 'src/shared/types'
+import { CardFaction, CardStrengthAnimateState } from 'src/shared/types'
 import { getCardFactionColor } from 'src/shared/utils'
 import styled, { keyframes } from 'styled-components'
 
@@ -147,17 +143,17 @@ const Damage = keyframes`
 `
 
 interface CardFrontProps extends CardOutlineProps {
-  $rank: CardRank
   $cardStrengthAnimateState: CardStrengthAnimateState
   $isActive: boolean
+  $isUnique?: boolean
 }
 
 export const CardFront = styled(CardFace)<CardFrontProps>`
   display: flex;
   flex-direction: column;
   background: ${({ theme }) => theme.colors.background};
-  border-color: ${({ theme, $rank }) =>
-    $rank === 'unique' ? theme.colors.hilight : theme.colors.accent};
+  border-color: ${({ theme, $isUnique }) =>
+    $isUnique ? theme.colors.hilight : theme.colors.accent};
   cursor: ${({ $isActive }) => ($isActive ? 'pointer' : 'inherit')};
 
   animation-iteration-count: ${({ $isActive }) => ($isActive ? 'infinite' : 2)};

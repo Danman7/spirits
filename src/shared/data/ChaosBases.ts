@@ -6,7 +6,6 @@ export const Zombie: Agent = {
   name: 'Zombie',
   strength: 3,
   cost: 1,
-  rank: 'common',
   factions: ['Chaos'],
   categories: ['Undead'],
   description: [
@@ -21,7 +20,6 @@ export const Haunt: Agent = {
   name: 'Haunt',
   strength: 7,
   cost: 3,
-  rank: 'common',
   factions: ['Chaos'],
   categories: ['Undead', 'Hammerite'],
   description: [
@@ -36,7 +34,7 @@ export const AzaranTheCruel: Agent = {
   name: 'Azaran the Cruel',
   strength: 5,
   cost: 5,
-  rank: 'unique',
+  isUnique: true,
   factions: ['Chaos'],
   categories: ['Necromancer'],
   description: [
@@ -50,7 +48,7 @@ export const BookOfAsh: Instant = {
   type: 'instant',
   name: 'The Book of Ash',
   cost: 5,
-  rank: 'unique',
+  isUnique: true,
   factions: ['Chaos'],
   categories: ['Artifact'],
   description: [

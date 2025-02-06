@@ -3,36 +3,31 @@ import { useAppDispatch, useAppSelector } from 'src/app'
 import { getActivePlayerId, startDuel } from 'src/modules/duel'
 import { Board } from 'src/modules/duel/components'
 import { getUserId, loadUser } from 'src/modules/user'
-import { opponentMock, playerId, userMock } from 'src/shared/__mocks__'
+import { opponentMock, userMock } from 'src/shared/__mocks__'
 
 export const App = () => {
   const dispatch = useAppDispatch()
   const activePlayerId = useAppSelector(getActivePlayerId)
   const userId = useAppSelector(getUserId)
-  const hasLoadedUser = useRef(false)
+  let { current: hasLoadedUser } = useRef(false)
 
   useEffect(() => {
-    if (!hasLoadedUser.current) {
-      hasLoadedUser.current = true
+    if (hasLoadedUser) return
+    hasLoadedUser = true
 
-      dispatch(
-        loadUser({
-          id: playerId,
-        }),
-      )
-    }
-  }, [dispatch])
+    dispatch(loadUser(userMock))
+  }, [])
 
   useEffect(() => {
-    if (userId) {
-      dispatch(
-        startDuel({
-          users: [userMock, opponentMock],
-          firstPlayerId: userId,
-        }),
-      )
-    }
-  }, [userId, dispatch])
+    if (!userId) return
+
+    dispatch(
+      startDuel({
+        users: [userMock, opponentMock],
+        firstPlayerId: userId,
+      }),
+    )
+  }, [userId])
 
   return activePlayerId ? <Board /> : null
 }

@@ -6,7 +6,7 @@ export const GarrettMasterThief: Agent = {
   name: 'Garrett: Master Thief',
   strength: 4,
   cost: 5,
-  rank: 'unique',
+  isUnique: true,
   factions: ['Shadow'],
   categories: ['Thief'],
   description: [
@@ -21,7 +21,6 @@ export const DownwinderThief: Agent = {
   name: 'Downwinder Thief',
   strength: 2,
   cost: 1,
-  rank: 'common',
   factions: ['Shadow'],
   categories: ['Thief'],
   description: [

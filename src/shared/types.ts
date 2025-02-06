@@ -1,6 +1,14 @@
 import { CardBaseName } from 'src/shared/data'
 
-export type CardRank = 'common' | 'unique'
+export interface User {
+  id: string
+  name: string
+  deck: CardBaseName[]
+}
+
+export interface Bot extends User {
+  isBot: true
+}
 
 export type CardType = 'agent' | 'instant'
 
@@ -27,10 +35,10 @@ interface CardBase {
   cost: number
   factions: CardFaction[]
   categories: CardCategory[]
-  rank: CardRank
   type: CardType
   description: string[]
   flavor: string
+  isUnique?: boolean
 }
 
 export interface Instant extends CardBase {
@@ -57,13 +65,3 @@ export interface AnimateStateProps {
 }
 
 export type CardStrengthAnimateState = 'boosted' | 'damaged' | ''
-
-export interface User {
-  id: string
-  name: string
-  deck: CardBaseName[]
-}
-
-export interface Bot extends User {
-  isBot: true
-}

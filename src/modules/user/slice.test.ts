@@ -1,24 +1,18 @@
 import { initialState, loadUser, userReducer } from 'src/modules/user'
-import { playerId } from 'src/shared/__mocks__'
+import { userMock } from 'src/shared/__mocks__'
 import { User } from 'src/shared/types'
+import { deepClone } from 'src/shared/utils'
 
 let userState: User
 
 describe('Load the user', () => {
   beforeEach(() => {
-    userState = { ...initialState }
+    userState = deepClone(initialState)
   })
 
-  test('initialize a new game with a random first player', () => {
-    const state = userReducer(
-      userState,
-      loadUser({
-        id: playerId,
-      }),
-    )
+  it('should load the user', () => {
+    const state = userReducer(userState, loadUser(userMock))
 
-    const { id } = state
-
-    expect(id).toBe(playerId)
+    expect(state).toEqual(userMock)
   })
 })
