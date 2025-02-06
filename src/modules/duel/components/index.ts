@@ -3,7 +3,7 @@ import { Board } from 'src/modules/duel/components/Board/Board'
 import { BotController } from 'src/modules/duel/components/BotController/BotController'
 import { DuelModal } from 'src/modules/duel/components/DuelModal/DuelModal'
 import { StackBrowseModal } from 'src/modules/duel/components/StackBrowseModal/StackBrowseModal'
-import { PlayCard } from 'src/modules/duel/components/PlayCard/PlayCard'
+import { DuelCard } from 'src/modules/duel/components/DuelCard/DuelCard'
 import { PlayerField } from 'src/modules/duel/components/PlayerField/PlayerField'
 import { CardStackList } from 'src/modules/duel/components/PlayerField/CardStackList'
 
@@ -12,7 +12,7 @@ export {
   Board,
   BotController,
   DuelModal,
-  PlayCard,
+  DuelCard,
   PlayerField,
   CardStackList,
   StackBrowseModal,

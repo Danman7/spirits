@@ -8,7 +8,7 @@ import {
   playCard,
   putACardAtBottomOfDeck,
 } from 'src/modules/duel'
-import { PlayCard } from 'src/modules/duel/components'
+import { DuelCard } from 'src/modules/duel/components'
 import {
   playerId,
   stackedPlayerMock,
@@ -32,7 +32,7 @@ beforeEach(() => {
 
 it('should display all UI segments of a card when face up', () => {
   const { getByRole, getByText } = renderWithProviders(
-    <PlayCard
+    <DuelCard
       cardId={stackedPlayerMock.hand[0]}
       playerId={playerId}
       stack="hand"
@@ -55,7 +55,7 @@ it('should display all UI segments of a card when face up', () => {
 
 it('should flip card between faces', async () => {
   const { rerender, getByText, queryByText } = renderWithProviders(
-    <PlayCard
+    <DuelCard
       cardId={stackedPlayerMock.hand[0]}
       playerId={playerId}
       stack="hand"
@@ -68,7 +68,7 @@ it('should flip card between faces', async () => {
   expect(getByText(mockCard.name)).toBeInTheDocument()
 
   rerender(
-    <PlayCard
+    <DuelCard
       cardId={stackedPlayerMock.hand[0]}
       stack="deck"
       playerId={playerId}
@@ -80,7 +80,7 @@ it('should flip card between faces', async () => {
   })
 
   rerender(
-    <PlayCard
+    <DuelCard
       cardId={stackedPlayerMock.hand[0]}
       playerId={playerId}
       stack="hand"
@@ -94,7 +94,7 @@ it('should be able to redraw', () => {
   preloadedState.duel.phase = 'Redrawing'
 
   const { getByText, dispatchSpy } = renderWithProviders(
-    <PlayCard
+    <DuelCard
       cardId={stackedPlayerMock.hand[0]}
       playerId={playerId}
       stack="hand"
@@ -118,7 +118,7 @@ it('should be able to redraw', () => {
 
 it('should be able to be played if within budget', () => {
   const { getByText, dispatchSpy } = renderWithProviders(
-    <PlayCard
+    <DuelCard
       cardId={stackedPlayerMock.hand[0]}
       playerId={playerId}
       stack="hand"
@@ -139,7 +139,7 @@ it('should not be able to be played if outside budget', () => {
   preloadedState.duel.players[playerId].coins = 1
 
   const { getByText, dispatchSpy } = renderWithProviders(
-    <PlayCard
+    <DuelCard
       cardId={stackedPlayerMock.hand[0]}
       playerId={playerId}
       stack="hand"
@@ -162,7 +162,7 @@ it('should discard card if strength is 0 or below', () => {
   ).strength = 0
 
   const { dispatchSpy } = renderWithProviders(
-    <PlayCard
+    <DuelCard
       cardId={preloadedState.duel.players[playerId].board[0]}
       playerId={playerId}
       stack="board"
