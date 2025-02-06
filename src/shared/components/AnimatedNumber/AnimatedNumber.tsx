@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react'
 import { Difference, StyledAnimatedNumber } from 'src/shared/components'
-import { usePrevious } from 'src/shared/customHooks'
+import { usePrevious } from 'src/shared/hooks'
 
 interface AnimatedNumberProps {
   value: number
@@ -16,7 +16,7 @@ export const AnimatedNumber: FC<AnimatedNumberProps> = ({
   value,
   uniqueId,
 }) => {
-  const updateIdRef = useRef(0)
+  let { current: updateIdRef } = useRef(0)
   const previousValue = usePrevious(value)
   const [updates, setUpdates] = useState<ValueUpdate[]>([])
 
@@ -29,11 +29,11 @@ export const AnimatedNumber: FC<AnimatedNumberProps> = ({
       setUpdates((prev) => [
         ...prev,
         {
-          id: updateIdRef.current,
+          id: updateIdRef,
           text: `${value > previousValue ? '+' : ''}${value - previousValue}`,
         },
       ])
-      updateIdRef.current += 1
+      updateIdRef += 1
     }
   }, [value, previousValue])
 
