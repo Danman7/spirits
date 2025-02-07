@@ -1,14 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import {
-  AttackOrder,
   CardStack,
-  DUEL_INCOME_PER_TURN,
   DUEL_INITIAL_CARDS_DRAWN,
   DuelStartUsers,
   DuelState,
+  handleIncome,
   invalidFirstPlayerIdError,
   moveCardBetweenStacks,
-  PlayCardAction,
   PlayerAction,
   PlayerCardAction,
   setupInitialDuelPlayerFromUser,
@@ -31,53 +29,139 @@ export const duelSlice = createSlice({
   name: 'duel',
   initialState,
   reducers: {
+    /*** Setup Sequence ***/
+
     startDuel: (
       state,
-      action: PayloadAction<{
-        users: DuelStartUsers
-        firstPlayerId?: string
-      }>,
+      action: PayloadAction<{ users: DuelStartUsers; firstPlayerId?: string }>,
     ) => {
       const { users, firstPlayerId } = action.payload
-
-      if (firstPlayerId && !users.find(({ id }) => id === firstPlayerId))
+      if (firstPlayerId && !users.some(({ id }) => id === firstPlayerId))
         throw new Error(invalidFirstPlayerIdError)
 
       const activePlayerId = firstPlayerId || getRandomArrayItem(users).id
-      let inactivePlayerId = ''
+      const inactivePlayerId =
+        users.find(({ id }) => id !== activePlayerId)?.id || ''
 
-      state.players = users.reduce(
-        (statePlayers: DuelState['players'], user) => {
-          const { id } = user
-
-          if (id !== activePlayerId) inactivePlayerId = id
-
-          statePlayers[id] = setupInitialDuelPlayerFromUser(user)
-
-          return statePlayers
-        },
-        {},
+      state.players = Object.fromEntries(
+        users.map((user) => [user.id, setupInitialDuelPlayerFromUser(user)]),
       )
       state.playerOrder = [activePlayerId, inactivePlayerId]
       state.phase = 'Initial Draw'
     },
 
     playersDrawInitialCards: (state) => {
-      const { players } = state
-
-      Object.values(players).forEach(({ id, deck }) => {
-        for (let index = 0; index < DUEL_INITIAL_CARDS_DRAWN; index++) {
+      Object.values(state.players).forEach(({ id: playerId, deck }) => {
+        deck.slice(0, DUEL_INITIAL_CARDS_DRAWN).forEach((movedCardId) =>
           moveCardBetweenStacks({
-            movedCardId: deck[index],
-            playerId: id,
+            movedCardId,
+            playerId,
             state,
             to: 'hand',
-          })
-        }
+          }),
+        )
       })
-
       state.phase = 'Redrawing'
     },
+
+    completeRedraw: (state, action: PlayerAction) => {
+      state.players[action.payload.playerId].hasPerformedAction = true
+    },
+
+    startFirstPlayerTurn: (state) => {
+      const { deck, id: playerId } = state.players[state.playerOrder[0]]
+      state.phase = 'Player Turn'
+      state.playerOrder.forEach(
+        (id) => (state.players[id].hasPerformedAction = false),
+      )
+
+      moveCardBetweenStacks({
+        movedCardId: deck[0],
+        playerId,
+        state,
+        to: 'hand',
+      })
+    },
+
+    /*** Turn Managemen ***/
+
+    moveToNextTurn: (state) => {
+      state.phase = 'Player Turn'
+      state.attackingAgentId = ''
+      state.attackingQueue = []
+      state.playerOrder.reverse()
+
+      state.playerOrder.forEach((id) => {
+        state.players[id].hasPerformedAction = false
+        handleIncome(state, id)
+      })
+
+      moveCardBetweenStacks({
+        movedCardId: state.players[state.playerOrder[0]].deck[0],
+        playerId: state.playerOrder[0],
+        state,
+        to: 'hand',
+      })
+    },
+
+    resolveTurn: (state) => {
+      state.phase = 'Resolving turn'
+      const { players, playerOrder } = state
+      const activePlayerBoard = players[playerOrder[0]].board
+
+      state.attackingQueue = activePlayerBoard.flatMap((attackerId, index) => {
+        const defenderId =
+          players[playerOrder[1]].board[index] ||
+          players[playerOrder[1]].board.at(-1) ||
+          ''
+        const queue = [{ attackerId, defenderId }]
+
+        const defendingAgent = players[playerOrder[1]].cards[
+          defenderId
+        ] as Agent
+
+        if (defendingAgent?.traits?.retaliates)
+          queue.push({ attackerId: defenderId, defenderId: attackerId })
+
+        return queue
+      })
+
+      state.attackingAgentId = state.attackingQueue[0]?.attackerId || ''
+    },
+
+    endDuel: (state, action: PayloadAction<string>) => {
+      state.phase = 'Duel End'
+      state.victoriousPlayerId = action.payload
+    },
+
+    /*** Attack Handling ***/
+
+    agentAttack: (
+      state,
+      action: PayloadAction<{
+        defendingPlayerId: string
+        defendingAgentId?: string
+      }>,
+    ) => {
+      const { defendingAgentId, defendingPlayerId } = action.payload
+
+      // If there is a defending agent, damage it.
+      // If not steal coins from the defending player.
+      if (defendingAgentId) {
+        ;(
+          state.players[defendingPlayerId].cards[defendingAgentId] as Agent
+        ).strength -= 1
+      } else {
+        state.players[defendingPlayerId].coins -= 1
+      }
+    },
+
+    moveToNextAttackingAgent: (state) => {
+      state.attackingQueue.shift()
+      state.attackingAgentId = state.attackingQueue[0]?.attackerId || ''
+    },
+
+    /*** Card Actions ***/
 
     drawACardFromDeck: (state, action: PlayerAction) => {
       const { playerId } = action.payload
@@ -102,132 +186,16 @@ export const duelSlice = createSlice({
       })
     },
 
-    completeRedraw: (state, action: PlayerAction) => {
-      const { playerId } = action.payload
-
-      state.players[playerId].hasPerformedAction = true
-    },
-
-    startFirstPlayerTurn: (state) => {
-      const { playerOrder, players } = state
-      const { deck } = players[playerOrder[0]]
-
-      state.phase = 'Player Turn'
-      state.players[playerOrder[0]].hasPerformedAction = false
-      state.players[playerOrder[1]].hasPerformedAction = false
-
-      // Draw card on turn start
-      moveCardBetweenStacks({
-        movedCardId: deck[0],
-        playerId: playerOrder[0],
-        state,
-        to: 'hand',
-      })
-    },
-
-    moveToNextTurn: (state) => {
-      const { players, playerOrder } = state
-      const { attackingAgentId, attackingQueue } = initialState
-
-      state.phase = 'Player Turn'
-      state.attackingAgentId = attackingAgentId
-      state.attackingQueue = attackingQueue
-      state.playerOrder = [playerOrder[1], playerOrder[0]]
-
-      Object.keys(players).forEach((playerId) => {
-        const { income } = state.players[playerId]
-
-        state.players[playerId].hasPerformedAction = false
-
-        // Handle income if any
-        if (income) {
-          state.players[playerId].coins += DUEL_INCOME_PER_TURN
-          state.players[playerId].income -= DUEL_INCOME_PER_TURN
-        }
-      })
-
-      // Draw card on turn start
-      moveCardBetweenStacks({
-        movedCardId: players[state.playerOrder[0]].deck[0],
-        playerId: state.playerOrder[0],
-        state,
-        to: 'hand',
-      })
-    },
-    resolveTurn: (state) => {
-      const { players, playerOrder } = state
-      const { board: activePlayerBoard } = players[playerOrder[0]]
-
-      state.phase = 'Resolving turn'
-
-      state.attackingQueue = activePlayerBoard.reduce(
-        (attackingQueue, attackerId, attackerIndex) => {
-          const { board: defendingPlayerBoard, cards: defendingPlayerCards } =
-            players[playerOrder[1]]
-
-          // Set the defending agent to either the one opposite the attacker,
-          // or the last agent on the defending player's board
-          const defenderId =
-            defendingPlayerBoard[attackerIndex] ||
-            defendingPlayerBoard[defendingPlayerBoard.length - 1] ||
-            ''
-
-          const nextattackingQueue: AttackOrder[] = [
-            ...attackingQueue,
-            {
-              attackerId,
-              defenderId,
-            },
-          ]
-
-          const defendingAgent = defendingPlayerCards[defenderId] as Agent
-
-          // Handle retaliations
-          if (defendingAgent && defendingAgent.traits?.retaliates)
-            nextattackingQueue.push({
-              attackerId: defenderId,
-              defenderId: attackerId,
-            })
-
-          return nextattackingQueue
-        },
-        [] as AttackOrder[],
-      )
-
-      const { attackingQueue } = state
-      state.attackingAgentId = attackingQueue[0]?.attackerId || ''
-    },
-    agentAttack: (
+    playCard: (
       state,
       action: PayloadAction<{
-        defendingPlayerId: string
-        defendingAgentId?: string
+        cardId: string
+        playerId: string
+        shouldPay: boolean
       }>,
     ) => {
-      const { defendingAgentId, defendingPlayerId } = action.payload
-
-      // If there is a defending agent, damage it.
-      // If not steal coins from the defending player.
-      if (defendingAgentId) {
-        ;(
-          state.players[defendingPlayerId].cards[defendingAgentId] as Agent
-        ).strength -= 1
-      } else {
-        state.players[defendingPlayerId].coins -= 1
-      }
-    },
-    moveToNextAttackingAgent: (state) => {
-      const { attackingQueue: oldQueue } = state
-      const [, ...newQueue] = oldQueue
-
-      state.attackingQueue = newQueue
-      state.attackingAgentId = newQueue.length ? newQueue[0].attackerId : ''
-    },
-    playCard: (state, action: PlayCardAction) => {
       const { cardId: movedCardId, playerId, shouldPay } = action.payload
-      const { players } = state
-      const playedCard = players[playerId].cards[movedCardId]
-      const { cost } = playedCard
+      const { cost } = state.players[playerId].cards[movedCardId]
 
       moveCardBetweenStacks({
         movedCardId,
@@ -236,13 +204,10 @@ export const duelSlice = createSlice({
         to: 'board',
       })
 
-      players[playerId].hasPerformedAction = true
-
-      if (shouldPay) {
-        const { coins } = players[playerId]
-        players[playerId].coins = coins - cost
-      }
+      state.players[playerId].hasPerformedAction = true
+      if (shouldPay) state.players[playerId].coins -= cost
     },
+
     updateAgent: (
       state,
       action: PayloadAction<{
@@ -252,14 +217,11 @@ export const duelSlice = createSlice({
       }>,
     ) => {
       const { playerId, cardId, update } = action.payload
-
-      if (state.players[playerId].cards[cardId].type !== 'agent') return
-
-      state.players[playerId].cards[cardId] = {
-        ...state.players[playerId].cards[cardId],
-        ...update,
+      if (state.players[playerId].cards[cardId]?.type === 'agent') {
+        Object.assign(state.players[playerId].cards[cardId], update)
       }
     },
+
     discardCard: (state, action: PlayerCardAction) => {
       const { players } = state
       const { playerId, cardId: movedCardId } = action.payload
@@ -283,13 +245,13 @@ export const duelSlice = createSlice({
 
       players[playerId].cards[movedCardId].strength = base?.strength
     },
-    endDuel: (state, action: PayloadAction<string>) => {
-      state.phase = 'Duel End'
-      state.victoriousPlayerId = action.payload
-    },
+
+    /*** UI Management ***/
+
     setBrowsedStack: (state, action: PayloadAction<CardStack>) => {
       state.browsedStack = action.payload
     },
+
     setIsBrowsingStack: (state, action: PayloadAction<boolean>) => {
       state.isBrowsingStack = action.payload
     },

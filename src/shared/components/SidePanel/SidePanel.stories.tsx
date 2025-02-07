@@ -4,6 +4,7 @@ import { Link, SidePanel } from 'src/shared/components'
 const meta = {
   title: 'SidePanel',
   component: SidePanel,
+  tags: ['Common', 'Stateless'],
   parameters: {
     layout: 'fullscreen',
     docs: {

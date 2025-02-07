@@ -4,6 +4,7 @@ import { ColoredNumber } from 'src/shared/components'
 const meta = {
   title: 'ColoredNumber',
   component: ColoredNumber,
+  tags: ['Common', 'Stateless'],
   parameters: {
     layout: 'centered',
     docs: {

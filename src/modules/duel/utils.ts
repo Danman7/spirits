@@ -3,6 +3,7 @@ import { ListenerApi } from 'src/app'
 import {
   CARD_STACKS,
   CardStack,
+  DUEL_INCOME_PER_TURN,
   DUEL_STARTING_COINS,
   DuelPlayers,
   DuelState,
@@ -187,4 +188,12 @@ export const getNeighboursIndexes = (
   }
 
   return [index - 1, index + 1]
+}
+
+export const handleIncome = (state: DuelState, playerId: string) => {
+  const player = state.players[playerId]
+  if (player.income) {
+    player.coins += DUEL_INCOME_PER_TURN
+    player.income -= DUEL_INCOME_PER_TURN
+  }
 }

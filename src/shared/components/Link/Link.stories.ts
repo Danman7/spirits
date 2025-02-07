@@ -5,6 +5,7 @@ import { Link } from 'src/shared/components'
 const meta = {
   title: 'Link',
   component: Link,
+  tags: ['Common', 'Stateless'],
   parameters: {
     layout: 'centered',
     docs: {

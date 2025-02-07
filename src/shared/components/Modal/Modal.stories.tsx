@@ -4,6 +4,7 @@ import { Link, Modal } from 'src/shared/components'
 const meta = {
   title: 'Modal',
   component: Modal,
+  tags: ['Common', 'Stateless'],
   parameters: {
     layout: 'fullscreen',
     docs: {

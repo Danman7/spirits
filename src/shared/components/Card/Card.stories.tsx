@@ -20,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'This is the project’s fundamental stateless component. It is used on various modules to display both static reference cards and dynamically updated instances of card bases. Its only mandatory properties are a unique id and a card base name which is used to find the prototype from which this instance was made. It also takes an array of optional properties which potentially control its animation and styles. The Card doesn’t contact the store, so it is usually paired with a stateful wrapper on the various modules.',
+          'This stateless component serves as the foundation for displaying both static reference cards and dynamic card instances across modules. It requires only a unique ID and a card object. Optional properties control animation and styles. Since it doesn’t interact with the store, it is typically wrapped in a stateful component within modules.',
       },
     },
   },
