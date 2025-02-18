@@ -19,7 +19,7 @@ export * from 'src/shared/components/LoadingMessage/styles'
 
 export {
   AnimatedNumber,
-  CardComponent as Card,
+  CardComponent,
   CardContent,
   CardFooter,
   CardHeader,

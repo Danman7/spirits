@@ -16,7 +16,7 @@ export const AnimatedNumber: FC<AnimatedNumberProps> = ({
   value,
   uniqueId,
 }) => {
-  let { current: updateIdRef } = useRef(0)
+  const updateIdRef = useRef(0)
   const previousValue = usePrevious(value)
   const [updates, setUpdates] = useState<ValueUpdate[]>([])
 
@@ -29,13 +29,14 @@ export const AnimatedNumber: FC<AnimatedNumberProps> = ({
       setUpdates((prev) => [
         ...prev,
         {
-          id: updateIdRef,
+          id: updateIdRef.current,
           text: `${value > previousValue ? '+' : ''}${value - previousValue}`,
         },
       ])
-      updateIdRef += 1
+
+      updateIdRef.current += 1
     }
-  }, [value, previousValue])
+  }, [value])
 
   return (
     <StyledAnimatedNumber>

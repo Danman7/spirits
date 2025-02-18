@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Card } from 'src/shared/components'
+import { CardComponent } from 'src/shared/components'
 import {
   AzaranTheCruel,
   BookOfAsh,
@@ -13,7 +13,7 @@ import {
 
 const meta = {
   title: 'Card',
-  component: Card,
+  component: CardComponent,
   tags: ['Common', 'Stateless'],
   parameters: {
     layout: 'centered',
@@ -63,7 +63,7 @@ const meta = {
         'An optional onClick function that determines if the isActive styles apply.',
     },
   },
-} satisfies Meta<typeof Card>
+} satisfies Meta<typeof CardComponent>
 
 export default meta
 type Story = StoryObj<typeof meta>

@@ -1,35 +1,25 @@
-import { Action } from '@reduxjs/toolkit'
-import { ListenerApi } from 'src/app'
 import {
+  AttackOrder,
   CARD_STACKS,
   CardStack,
-  DUEL_INCOME_PER_TURN,
-  DUEL_STARTING_COINS,
+  DuelAction,
+  DuelDispatch,
   DuelPlayers,
-  DuelState,
   DuelUser,
-  playCard,
+  INITIAL_CARDS_DRAWN_IN_DUEL,
   Player,
+  PlayerCards,
+  PlayerStacks,
   PlayerStacksAndCards,
+  STARTING_COINS_IN_DUEL,
 } from 'src/modules/duel'
 import { CardBaseName, CardBases } from 'src/shared/data'
+import { Agent } from 'src/shared/types'
 import { generateUUID, shuffleArray } from 'src/shared/utils'
 
-/**
- * Returns an array of ids of all cards in a player's hand that cost within the player's coins reserve.
- * @param player A Player object
- */
 export const getPlayableCardIds = (player: Player) =>
   player.hand.filter((cardId) => player.cards[cardId].cost <= player.coins)
 
-/**
- * Takes a record with a card stack as key and an array of card bases as value and returns a partial player object with normalized cards and stacks with the card ids to be concatenated with a player object.
- * @example
- * normalizePlayerCards({
-	   board: [TempleGuard],
-	   hand: [HammeriteNovice],
-  })
-*/
 export const normalizePlayerCards = (
   stacks: Partial<Record<CardStack, CardBaseName[]>>,
 ): PlayerStacksAndCards => {
@@ -58,13 +48,10 @@ export const normalizePlayerCards = (
   return partialPlayer
 }
 
-/**
- * Takes a user object and returns a player object in its expected initial state for a duel.
- */
 export const setupInitialDuelPlayerFromUser = (user: DuelUser): Player => ({
   ...user,
   ...normalizePlayerCards({ deck: shuffleArray(user.deck) }),
-  coins: DUEL_STARTING_COINS,
+  coins: STARTING_COINS_IN_DUEL,
   hand: [],
   board: [],
   discard: [],
@@ -72,44 +59,6 @@ export const setupInitialDuelPlayerFromUser = (user: DuelUser): Player => ({
   income: 0,
 })
 
-interface MoveCardBetweenStacksArgs {
-  state: DuelState
-  playerId: string
-  movedCardId: string
-  to: CardStack
-  inFront?: boolean
-}
-
-/**
- * This utility handles moving cards between stacks during a duel. It filters a card’s id from all a player’s stacks and adds it to the target stack. It manipulates the state directly, thus requiring it as a prop.
- */
-export const moveCardBetweenStacks = ({
-  state,
-  playerId,
-  movedCardId,
-  to,
-  inFront,
-}: MoveCardBetweenStacksArgs) => {
-  const { players } = state
-
-  if (!players[playerId].cards[movedCardId]) return
-
-  CARD_STACKS.forEach((stack) => {
-    if (stack !== to) {
-      players[playerId][stack] = players[playerId][stack].filter(
-        (cardId) => cardId !== movedCardId,
-      )
-    }
-  })
-
-  players[playerId][to] = inFront
-    ? [movedCardId, ...players[playerId][to]]
-    : [...players[playerId][to], movedCardId]
-}
-
-/**
- * Sorts players so the logged in player prespective is on the bottom of the board.
- */
 export const sortDuelPlayers = (
   players: DuelPlayers,
   loggedInPlayerId: string,
@@ -120,80 +69,162 @@ export const sortDuelPlayers = (
       Number(playerB.id === loggedInPlayerId),
   )
 
-/**
- * Get the id of the opposite player.
- */
-export const getOppositePlayerId = (players: DuelPlayers, playerId: string) =>
-  Object.keys(players).find((id) => id !== playerId)
-
-export const getOnPlayPredicateForCardBase = (
-  action: Action,
-  players: DuelPlayers,
-  baseName: CardBaseName,
-) =>
-  playCard.match(action) &&
-  players[action.payload.playerId].cards[action.payload.cardId].name ===
-    CardBases[baseName].name
-
-export const getPlayAllCopiesEffect = (
-  action: Action,
-  listenerApi: ListenerApi,
-  comparingBase: CardBaseName,
-) => {
-  if (playCard.match(action)) {
-    const { players } = listenerApi.getState().duel
-    const { playerId, cardId: playedCardId } = action.payload
-
-    const player = players[playerId]
-    const { cards, board, discard } = player
-    const base = CardBases[comparingBase]
-
-    // Move each copy to board if it is not on board or in discard
-    Object.keys(cards).forEach((cardId) => {
-      const { name } = cards[cardId]
-
-      if (
-        name !== base.name ||
-        cardId === playedCardId ||
-        board.includes(cardId) ||
-        discard.includes(cardId)
-      )
-        return
-
-      listenerApi.dispatch(
-        playCard({
-          cardId,
-          playerId,
-          shouldPay: false,
-        }),
-      )
-    })
-  }
-}
-
 export const getNeighboursIndexes = (
   index: number,
   array: string[],
 ): [] | [number] | [number, number] => {
-  if (array.length <= 1) {
-    return []
-  }
+  if (array.length <= 1) return []
 
-  if (!index && array.length > 1) {
-    return [1]
-  }
-
-  if (index === array.length - 1 && array.length > 1) {
-    return [index - 1]
-  }
-
-  return [index - 1, index + 1]
+  return index === 0
+    ? [1]
+    : index === array.length - 1
+      ? [index - 1]
+      : [index - 1, index + 1]
 }
 
-export const handleIncome = (state: DuelState, playerId: string) => {
-  const player = state.players[playerId]
-  if (player.income) {
-    player.coins += DUEL_INCOME_PER_TURN
-    player.income -= DUEL_INCOME_PER_TURN
+const moveCardsForPlayer = ({
+  player,
+  source,
+  target,
+  count = 1,
+}: {
+  player: Player
+  source: CardStack
+  target: CardStack
+  count?: number
+}): Partial<Player> => {
+  const sourceStack = [...player[source]]
+  const targetStack = [...player[target]]
+
+  if (sourceStack.length === 0) return {}
+
+  return {
+    [source]: sourceStack.slice(count),
+    [target]: [...targetStack, ...sourceStack.slice(0, count)],
   }
+}
+
+export const moveSingleCard = ({
+  player,
+  cardId,
+  target,
+}: {
+  player: Player
+  cardId: string
+  target: CardStack
+}): Partial<PlayerStacks> => {
+  const updatedStacks: Partial<PlayerStacks> = {}
+
+  CARD_STACKS.forEach((stack) => {
+    if (stack !== target) {
+      updatedStacks[stack] = player[stack].filter((id) => id !== cardId)
+    }
+  })
+
+  updatedStacks[target] = [...player[target], cardId]
+
+  return updatedStacks
+}
+
+export const drawInitialCards = (player: Player): Partial<Player> =>
+  moveCardsForPlayer({
+    player,
+    count: INITIAL_CARDS_DRAWN_IN_DUEL,
+    source: 'deck',
+    target: 'hand',
+  })
+
+export const drawCardFromDeck = (player: Player): Partial<Player> =>
+  moveCardsForPlayer({
+    player,
+    count: 1,
+    source: 'deck',
+    target: 'hand',
+  })
+
+export const calculateAttackQueue = (
+  players: DuelPlayers,
+  playerOrder: [string, string],
+): AttackOrder[] => {
+  const [activePlayerId, inactivePlayerId] = playerOrder
+  const activePlayerBoard = players[activePlayerId].board
+
+  return activePlayerBoard.flatMap((attackerId, index) => {
+    const defenderId =
+      players[inactivePlayerId].board[index] ||
+      players[inactivePlayerId].board.at(-1) ||
+      ''
+    const queue = [{ attackerId, defenderId }]
+
+    const defendingAgent = players[inactivePlayerId].cards[defenderId] as Agent
+
+    if (defendingAgent?.traits?.retaliates)
+      queue.push({ attackerId: defenderId, defenderId: attackerId })
+
+    return queue
+  })
+}
+
+export const redrawCard = (player: Player, cardId: string): Partial<Player> => {
+  const { hand, deck } = player
+
+  const cardMovedToBottomOfDeck: Partial<Player> = {
+    hand: hand.filter((id) => id !== cardId),
+    deck: [...deck, cardId],
+  }
+
+  return drawCardFromDeck({ ...player, ...cardMovedToBottomOfDeck })
+}
+
+export const filterBrowsedCards = (cards: PlayerCards, stack: string[]) =>
+  Object.fromEntries(Object.entries(cards).filter(([id]) => stack.includes(id)))
+
+export const haveBothPlayersDrawnCards = (players: DuelPlayers) =>
+  Object.values(players).every(
+    ({ hand }) => hand.length >= INITIAL_CARDS_DRAWN_IN_DUEL,
+  )
+
+export const getOnPlayCardPredicate = (
+  action: DuelAction,
+  players: DuelPlayers,
+  baseName: CardBaseName,
+) =>
+  action.type === 'PLAY_CARD' &&
+  !!action.shouldPay &&
+  players[action.playerId].cards[action.cardId].name ===
+    CardBases[baseName].name
+
+export const getPlayAllCopiesEffect = (
+  action: DuelAction,
+  players: DuelPlayers,
+  comparingBase: CardBaseName,
+  dispatch: DuelDispatch,
+) => {
+  if (action.type !== 'PLAY_CARD') return
+
+  const { playerId, cardId: playedCardId } = action
+
+  const player = players[playerId]
+  const { cards, board, discard } = player
+  const base = CardBases[comparingBase]
+
+  // Move each copy to board if it is not on board or in discard
+  Object.keys(cards).forEach((cardId) => {
+    const { name } = cards[cardId]
+
+    if (
+      name !== base.name ||
+      cardId === playedCardId ||
+      board.includes(cardId) ||
+      discard.includes(cardId)
+    )
+      return
+
+    dispatch({
+      type: 'PLAY_CARD',
+      cardId,
+      playerId,
+      shouldPay: false,
+    })
+  })
 }

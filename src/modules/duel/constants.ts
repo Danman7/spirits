@@ -1,20 +1,5 @@
-import { Player } from 'src/modules/duel'
-
-export const EMPTY_PLAYER: Player = {
-  id: '',
-  name: '',
-  coins: 0,
-  income: 0,
-  deck: [],
-  hand: [],
-  board: [],
-  discard: [],
-  cards: {},
-  hasPerformedAction: false,
-}
-
-export const DUEL_STARTING_COINS = 30
-export const DUEL_INITIAL_CARDS_DRAWN = 4
-export const DUEL_INCOME_PER_TURN = 1
+export const STARTING_COINS_IN_DUEL = 30
+export const INITIAL_CARDS_DRAWN_IN_DUEL = 4
+export const INCOME_PER_TURN = 1
 
 export const CARD_STACKS = ['board', 'discard', 'hand', 'deck'] as const

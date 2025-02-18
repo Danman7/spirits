@@ -11,7 +11,7 @@ import {
   useCardStrengthAnimation,
   useCardVisibility,
 } from 'src/shared/components/Card/hooks'
-import { CARD_TEST_ID } from 'src/shared/testIds'
+import { CARD_TEST_ID } from 'src/shared/test'
 import { Card } from 'src/shared/types'
 
 interface CardProps {

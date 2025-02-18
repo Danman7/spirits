@@ -1,2 +1,5 @@
-export * from 'src/modules/user/slice'
-export * from 'src/modules/user/selectors'
+export * from 'src/modules/user/state/actions'
+export * from 'src/modules/user/state/context'
+export * from 'src/modules/user/state/reducer'
+export * from 'src/modules/user/types'
+export * from 'src/modules/user/components/UserProvider'

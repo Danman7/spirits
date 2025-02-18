@@ -1,12 +1,12 @@
 import { fireEvent } from '@testing-library/dom'
 import { AnimatedNumber } from 'src/shared/components/AnimatedNumber/AnimatedNumber'
-import { renderWithProviders } from 'src/shared/rtlRender'
+import { render } from 'src/shared/test'
 
 it('should show changes in value', () => {
   const value = 3
   const update = 4
 
-  const { getByText, rerender, queryByText } = renderWithProviders(
+  const { getByText, rerender, queryByText } = render(
     <AnimatedNumber value={value} />,
   )
 

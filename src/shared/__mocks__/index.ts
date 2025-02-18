@@ -1,12 +1,10 @@
-import { RootState } from 'src/app'
 import {
+  DuelState,
   initialState as initialDuelState,
   normalizePlayerCards,
-  setupInitialDuelPlayerFromUser,
-  DuelState,
   Player,
+  setupInitialDuelPlayerFromUser,
 } from 'src/modules/duel'
-import { initialState as initialUserState } from 'src/modules/user'
 import { Bot, User } from 'src/shared/types'
 
 export const playerId = 'player'
@@ -84,17 +82,7 @@ export const stackedDuelStateMock: DuelState = {
   phase: 'Player Turn',
   playerOrder: [playerId, opponentId],
   players: {
-    [stackedPlayerMock.id]: stackedPlayerMock,
-    [stackedOpponentMock.id]: stackedOpponentMock,
+    [playerId]: stackedPlayerMock,
+    [opponentId]: stackedOpponentMock,
   },
-}
-
-export const mockRootState: RootState = {
-  duel: { ...initialDuelState },
-  user: { ...initialUserState },
-}
-
-export const stackedStateMock: RootState = {
-  duel: { ...stackedDuelStateMock },
-  user: { ...userMock },
 }

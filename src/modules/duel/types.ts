@@ -1,6 +1,5 @@
-import { PayloadAction } from '@reduxjs/toolkit'
 import { CARD_STACKS } from 'src/modules/duel'
-import { Bot, Card, User } from 'src/shared/types'
+import { Agent, Bot, Card, User } from 'src/shared/types'
 
 export type CardStack = (typeof CARD_STACKS)[number]
 
@@ -24,56 +23,7 @@ export interface Player extends Omit<User, 'deck'>, PlayerStacksAndCards {
   isBot?: boolean
 }
 
-export type DuelPhase =
-  | 'Initial Draw'
-  | 'Redrawing'
-  | 'Player Turn'
-  | 'Resolving turn'
-  | 'Duel End'
-
-export type DuelPlayers = {
-  [index: string]: Player
-}
-
-export interface AttackOrder {
-  attackerId: string
-  defenderId: string
-}
-
-export interface DuelState {
-  phase: DuelPhase
-  attackingAgentId: string
-  victoriousPlayerId: string
-  browsedStack: CardStack
-  isBrowsingStack: boolean
-  attackingQueue: AttackOrder[]
-  players: DuelPlayers
-  playerOrder: [string, string]
-}
-
-export type PlayerAction = PayloadAction<{ playerId: string }>
-
-interface PlayerCardActionPayload {
-  cardId: string
-  playerId: string
-}
-
-export type PlayerCardAction = PayloadAction<PlayerCardActionPayload>
-
-export type PlayCardAction = PayloadAction<
-  PlayerCardActionPayload & {
-    shouldPay: boolean
-  }
->
-
-export type AddNewCardsAction = PayloadAction<{
-  playerId: string
-  cards: PlayerCards
-}>
-
 export type DuelUser = User | Bot
-
-export type DuelStartUsers = [DuelUser, DuelUser]
 
 interface StackComponentProps {
   'data-testid': string
@@ -86,4 +36,71 @@ export interface StackConfiguration {
   component: React.ComponentType<StackComponentProps>
   testId: string
   onClickStack?: React.MouseEventHandler<HTMLDivElement>
+}
+
+export type DuelAction =
+  | {
+      type: 'START_DUEL'
+      users: [DuelUser, DuelUser]
+      firstPlayerId?: string
+    }
+  | { type: 'DRAW_INITIAL_CARDS' }
+  | { type: 'PLAYER_READY'; playerId: string }
+  | { type: 'COMPLETE_REDRAW' }
+  | { type: 'ADVANCE_TURN' }
+  | { type: 'RESOLVE_TURN' }
+  | {
+      type: 'AGENT_ATTACK'
+      defendingPlayerId: string
+      defendingAgentId?: string
+    }
+  | { type: 'MOVE_TO_NEXT_ATTACKER' }
+  | { type: 'REDRAW_CARD'; playerId: string; cardId: string }
+  | { type: 'PLAY_CARD'; playerId: string; cardId: string; shouldPay?: boolean }
+  | { type: 'DISCARD_CARD'; playerId: string; cardId: string }
+  | {
+      type: 'UPDATE_AGENT'
+      playerId: string
+      cardId: string
+      update: Partial<Agent>
+    }
+
+export type DuelPlayers = {
+  [index: string]: Player
+}
+
+export interface AttackOrder {
+  attackerId: string
+  defenderId: string
+}
+
+export type DuelPhase =
+  | 'Initial Draw'
+  | 'Redrawing'
+  | 'Player Turn'
+  | 'Resolving turn'
+  | 'Duel End'
+
+export interface DuelState {
+  phase: DuelPhase
+  attackingQueue: AttackOrder[]
+  players: DuelPlayers
+  playerOrder: [string, string]
+}
+
+export type DuelDispatch = React.ActionDispatch<[action: DuelAction]>
+
+export interface DuelTrigger {
+  predicate: (state: DuelState, action: DuelAction) => boolean
+  effect: ({
+    state,
+    action,
+    dispatch,
+    setLastAction,
+  }: {
+    state: DuelState
+    action: DuelAction
+    dispatch: DuelDispatch
+    setLastAction: React.Dispatch<React.SetStateAction<DuelAction | null>>
+  }) => void
 }

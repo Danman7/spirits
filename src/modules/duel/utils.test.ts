@@ -1,25 +1,24 @@
 import {
   CARD_STACKS,
-  DUEL_STARTING_COINS,
-  DuelState,
-  EMPTY_PLAYER,
   Player,
+  STARTING_COINS_IN_DUEL,
   getNeighboursIndexes,
   getPlayableCardIds,
-  moveCardBetweenStacks,
+  moveSingleCard,
   normalizePlayerCards,
 } from 'src/modules/duel'
 import { playerId, stackedDuelStateMock } from 'src/shared/__mocks__'
 
 it('should get all playable card ids for a given player with getPlayableCardIds', () => {
   const mockBudgetPlayer: Player = {
-    ...EMPTY_PLAYER,
     id: 'player3',
     name: 'Hume',
-    coins: DUEL_STARTING_COINS,
+    coins: STARTING_COINS_IN_DUEL,
     ...normalizePlayerCards({
       hand: ['TempleGuard', 'HammeriteNovice'],
     }),
+    income: 0,
+    hasPerformedAction: false,
   }
 
   expect(getPlayableCardIds(mockBudgetPlayer)).toHaveLength(2)
@@ -58,54 +57,22 @@ it("should normalize a player's cards into some stacks with normalizePlayerCards
 it('should move a card between stacks', () => {
   const player = { ...stackedDuelStateMock.players[playerId] }
 
-  const state: DuelState = { ...stackedDuelStateMock }
-
   expect(player.deck).toHaveLength(2)
   expect(player.hand).toHaveLength(2)
 
-  const movedCardId = player.deck[0]
+  const cardId = player.deck[0]
 
-  moveCardBetweenStacks({
-    state: stackedDuelStateMock,
-    playerId,
-    movedCardId,
-    to: 'hand',
+  const updatedPlayer = moveSingleCard({
+    player,
+    cardId,
+    target: 'hand',
   })
-
-  const updatedPlayer = state.players[playerId]
 
   expect(updatedPlayer.deck).toHaveLength(1)
   expect(updatedPlayer.hand).toHaveLength(3)
 
-  expect(updatedPlayer.hand).toContain(movedCardId)
-  expect(updatedPlayer.hand.indexOf(movedCardId)).toBe(2)
-})
-
-it('should move a card to the front of a stack', () => {
-  const player = { ...stackedDuelStateMock.players[playerId] }
-
-  const state: DuelState = { ...stackedDuelStateMock }
-
-  expect(player.deck).toHaveLength(1)
-  expect(player.hand).toHaveLength(3)
-
-  const movedCardId = player.hand[0]
-
-  moveCardBetweenStacks({
-    state: stackedDuelStateMock,
-    playerId,
-    movedCardId,
-    to: 'deck',
-    inFront: true,
-  })
-
-  const updatedPlayer = state.players[playerId]
-
-  expect(updatedPlayer.deck).toHaveLength(2)
-  expect(updatedPlayer.hand).toHaveLength(2)
-
-  expect(updatedPlayer.deck).toContain(movedCardId)
-  expect(updatedPlayer.deck.indexOf(movedCardId)).toBe(0)
+  expect(updatedPlayer.hand).toContain(cardId)
+  expect(updatedPlayer.hand?.indexOf(cardId)).toBe(2)
 })
 
 it('should get the correct neighbour indexes from array', () => {
