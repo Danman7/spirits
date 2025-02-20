@@ -11,7 +11,7 @@ const defaultProps = {
 it('should show panel when open', () => {
   const { getByText } = render(<SidePanel {...defaultProps} />)
 
-  expect(getByText(content)).toBeInTheDocument()
+  expect(getByText(content)).toBeTruthy()
 })
 
 it('should hide panel after animations are complete', async () => {
@@ -24,6 +24,6 @@ it('should hide panel after animations are complete', async () => {
   fireEvent.animationEnd(getByTestId(PANEL_TEST_ID))
 
   await waitFor(() => {
-    expect(queryByText(content)).not.toBeInTheDocument()
+    expect(queryByText(content)).not.toBeTruthy()
   })
 })

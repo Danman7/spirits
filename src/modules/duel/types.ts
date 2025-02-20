@@ -10,7 +10,11 @@ export interface PlayerStacks {
   discard: string[]
 }
 
-export type PlayerCards = { [index: string]: Card }
+export type DuelCard = Card & {
+  id: string
+}
+
+export type PlayerCards = { [index: string]: DuelCard }
 
 export interface PlayerStacksAndCards extends PlayerStacks {
   cards: PlayerCards
@@ -26,7 +30,6 @@ export interface Player extends Omit<User, 'deck'>, PlayerStacksAndCards {
 export type DuelUser = User | Bot
 
 interface StackComponentProps {
-  'data-testid': string
   children: React.ReactNode
   $isOnTop?: boolean
   onClick?: React.MouseEventHandler<HTMLDivElement>
@@ -34,7 +37,6 @@ interface StackComponentProps {
 
 export interface StackConfiguration {
   component: React.ComponentType<StackComponentProps>
-  testId: string
   onClickStack?: React.MouseEventHandler<HTMLDivElement>
 }
 

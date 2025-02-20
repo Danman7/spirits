@@ -1,5 +1,4 @@
 import { DuelAction, DuelTrigger } from 'src/modules/duel/types'
-import { ACTION_WAIT_TIMEOUT } from 'src/shared/constants'
 import { HighPriestMarkander } from 'src/shared/data'
 import { AgentWithCounter } from 'src/shared/types'
 
@@ -24,39 +23,37 @@ export const handlePostPlayCard: DuelTrigger = {
   effect: ({ state, action, dispatch, setLastAction }) => {
     if (action.type !== 'PLAY_CARD') return
 
-    setTimeout(() => {
-      const { players } = state
-      const { shouldPay, cardId, playerId } = action
+    const { players } = state
+    const { shouldPay, cardId, playerId } = action
 
-      if (shouldPay) dispatch({ type: 'RESOLVE_TURN' })
+    if (shouldPay) dispatch({ type: 'RESOLVE_TURN' })
 
-      const { cards } = players[playerId]
-      const { categories } = cards[cardId]
+    const { cards } = players[playerId]
+    const { categories } = cards[cardId]
 
-      const HighPriest = Object.entries(cards).find(
-        ([, card]) => card.name === HighPriestMarkander.name,
-      )
+    const HighPriest = Object.entries(cards).find(
+      ([, card]) => card.name === HighPriestMarkander.name,
+    )
 
-      if (!HighPriest) return
+    if (!HighPriest) return
 
-      const [priestId, card] = HighPriest
+    const [priestId, card] = HighPriest
 
-      const priest = card as AgentWithCounter
+    const priest = card as AgentWithCounter
 
-      if (categories.includes('Hammerite') && priest.counter > 0) {
-        const action: DuelAction = {
-          type: 'UPDATE_AGENT',
-          playerId,
-          cardId: priestId,
-          update: {
-            counter: priest.counter - 1,
-          },
-        }
-
-        dispatch(action)
-
-        setLastAction(action)
+    if (categories.includes('Hammerite') && priest.counter > 0) {
+      const action: DuelAction = {
+        type: 'UPDATE_AGENT',
+        playerId,
+        cardId: priestId,
+        update: {
+          counter: priest.counter - 1,
+        },
       }
-    }, ACTION_WAIT_TIMEOUT)
+
+      dispatch(action)
+
+      setLastAction(action)
+    }
   },
 }

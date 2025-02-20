@@ -28,7 +28,6 @@ const config: Config = {
     '!**/*.stories.{ts,tsx}',
     '!**/app/**',
   ],
-  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   coverageThreshold: {
     global: {
       branches: 80,

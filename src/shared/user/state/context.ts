@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import { UserAction } from 'src/modules/user'
+import { UserAction } from 'src/shared/user'
 import { User } from 'src/shared/types'
 
 export const UserContext = createContext<

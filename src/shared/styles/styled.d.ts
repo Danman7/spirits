@@ -6,6 +6,12 @@ declare module 'styled-components' {
     padding: string
     transitionTime: string
     pulsationTime: string
+    card: {
+      width: string
+      height: string
+      smallWidth: string
+      smallHeight: string
+    }
     colors: {
       primary: string
       hilight: string

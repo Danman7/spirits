@@ -20,13 +20,13 @@ export const DuelModal: React.FC = () => {
     state: {
       players,
       phase,
-      playerOrder: [activePlayerId],
+      playerOrder: [activePlayerId, inactivePlayerId],
     },
     dispatch,
   } = useDuel()
 
-  const playerNames = Object.values(players).map(({ name }) => name)
   const { name: firstPlayerName } = players[activePlayerId]
+  const { name: secontPlayerName } = players[inactivePlayerId]
 
   const [isDuelModalOpen, setIsDuelModalOpen] = useState(false)
 
@@ -40,7 +40,7 @@ export const DuelModal: React.FC = () => {
       case 'Initial Draw':
         return (
           <>
-            <h1>{`${playerNames[0]} vs ${playerNames[1]}`}</h1>
+            <h1>{`${firstPlayerName} vs ${secontPlayerName}`}</h1>
             <p>{initialDrawMessage}</p>
             <h3>{`${firstPlayerName} ${firstPlayerMessage}`}</h3>
           </>

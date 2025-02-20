@@ -1,12 +1,11 @@
-import { useEffect } from 'react'
-import { useDuel, CardStack } from 'src/modules/duel'
-import { useUser } from 'src/modules/user'
+import { useEffect, useMemo } from 'react'
+import { CardStack, useDuel } from 'src/modules/duel'
 import { ACTION_WAIT_TIMEOUT } from 'src/shared/constants'
+import { useUser } from 'src/shared/user'
 
 interface CardProps {
   cardId: string
   playerId: string
-  stack: CardStack
 }
 
 interface UseDuelCardStateProps extends CardProps {
@@ -17,7 +16,6 @@ export const useDuelCardState = ({
   cardId,
   isOnTop,
   playerId,
-  stack,
 }: UseDuelCardStateProps) => {
   const { state: user } = useUser()
   const { id: userId } = user
@@ -30,11 +28,20 @@ export const useDuelCardState = ({
     },
   } = useDuel()
 
-  const { cards } = players[playerId]
+  const { cards, hand, deck, board } = players[playerId]
   const card = cards[cardId]
+
+  const stack: CardStack = useMemo(() => {
+    if (hand.includes(cardId)) return 'hand'
+    if (deck.includes(cardId)) return 'deck'
+    if (board.includes(cardId)) return 'board'
+
+    return 'discard'
+  }, [players[playerId]])
 
   return {
     card,
+    stack,
     isFaceDown: isOnTop
       ? ['deck', 'discard', 'hand'].includes(stack)
       : ['deck', 'discard'].includes(stack),
@@ -47,6 +54,7 @@ export const useDuelCardState = ({
 interface UseDuelCardActionsProps extends CardProps {
   isUserActive: boolean
   cost: number
+  stack: CardStack
 }
 
 export const useDuelCardActions = ({
@@ -123,8 +131,6 @@ export const useDefeatHandler = (
   useEffect(() => {
     if (stack !== 'board' || strength > 0) return
 
-    setTimeout(() => {
-      dispatch({ type: 'DISCARD_CARD', cardId, playerId })
-    }, ACTION_WAIT_TIMEOUT)
+    dispatch({ type: 'DISCARD_CARD', cardId, playerId })
   }, [stack, strength])
 }

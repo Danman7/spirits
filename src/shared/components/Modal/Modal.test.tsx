@@ -11,7 +11,7 @@ const defaultProps = {
 it('should show modal when open', () => {
   const { getByText } = render(<Modal {...defaultProps} />)
 
-  expect(getByText(content)).toBeInTheDocument()
+  expect(getByText(content)).toBeTruthy()
 })
 
 it('should fire onClosingComplete', async () => {
@@ -35,7 +35,7 @@ it('should fire onClosingComplete', async () => {
   fireEvent.animationEnd(getByTestId(OVERLAY_TEST_ID))
 
   await waitFor(() => {
-    expect(queryByText(content)).not.toBeInTheDocument()
+    expect(queryByText(content)).not.toBeTruthy()
   })
 
   expect(onClosingComplete).toHaveBeenCalled()

@@ -38,7 +38,7 @@ export const normalizePlayerCards = (
 
         partialPlayer.cards = {
           ...partialPlayer.cards,
-          [cardId]: CardBases[cardBaseName],
+          [cardId]: { id: cardId, ...CardBases[cardBaseName] },
         }
         partialPlayer[stack] = [...partialPlayer[stack], cardId]
       })

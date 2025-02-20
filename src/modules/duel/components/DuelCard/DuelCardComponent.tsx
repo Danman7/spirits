@@ -1,5 +1,4 @@
 import { FC } from 'react'
-import { CardStack } from 'src/modules/duel'
 import {
   useAttackHandler,
   useDefeatHandler,
@@ -11,18 +10,16 @@ import { CardComponent } from 'src/shared/components'
 interface DuelCardProps {
   cardId: string
   playerId: string
-  stack: CardStack
   isOnTop?: boolean
 }
 
-export const DuelCard: FC<DuelCardProps> = ({
+export const DuelCardComponent: FC<DuelCardProps> = ({
   cardId,
   playerId,
-  stack,
   isOnTop = false,
 }) => {
-  const { card, isFaceDown, isSmall, isUserActive, isAttacking } =
-    useDuelCardState({ cardId, playerId, stack, isOnTop })
+  const { card, stack, isFaceDown, isSmall, isUserActive, isAttacking } =
+    useDuelCardState({ cardId, playerId, isOnTop })
 
   const { cost, type } = card
 

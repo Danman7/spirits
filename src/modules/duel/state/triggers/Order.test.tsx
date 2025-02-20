@@ -1,7 +1,11 @@
 import { fireEvent, within } from '@testing-library/dom'
 import { act } from 'react'
-import { DuelState, normalizePlayerCards } from 'src/modules/duel'
-import { Duel } from 'src/modules/duel/components'
+import {
+  DuelState,
+  normalizePlayerCards,
+  renderWithProviders,
+} from 'src/modules/duel'
+import { Board } from 'src/modules/duel/components'
 import {
   initialOpponentMock,
   initialPlayerMock,
@@ -17,21 +21,17 @@ import {
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   HighPriestMarkander,
 } from 'src/shared/data'
-import {
-  CARD_TEST_ID,
-  PLAYER_BOARD_ID,
-  renderWithUserProvider,
-} from 'src/shared/test'
+import { CARD_TEST_ID } from 'src/shared/test'
 import { Agent } from 'src/shared/types'
 import { deepClone } from 'src/shared/utils'
 
 jest.useFakeTimers()
 
-let preloadedState: DuelState
+let preloadedDuel: DuelState
 let baseName: CardBaseName
 
 beforeEach(() => {
-  preloadedState = deepClone(stackedDuelStateMock)
+  preloadedDuel = deepClone(stackedDuelStateMock)
 })
 
 describe('Hammerite Novice', () => {
@@ -43,7 +43,7 @@ describe('Hammerite Novice', () => {
   })
 
   it('should play all copies if another Hammerite is in play', () => {
-    preloadedState.players[playerId] = {
+    preloadedDuel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizePlayerCards({
         deck: [baseName],
@@ -52,22 +52,20 @@ describe('Hammerite Novice', () => {
       }),
     }
 
-    const { getByText, getByTestId } = renderWithUserProvider(
-      <Duel preloadedState={preloadedState} />,
-      {
-        preloadedUser,
-      },
-    )
+    const { getByText, getByTestId } = renderWithProviders(<Board />, {
+      preloadedUser,
+      preloadedDuel,
+    })
 
     fireEvent.click(getByText(base.name))
 
     expect(
-      within(getByTestId(PLAYER_BOARD_ID)).getAllByText(base.name),
+      within(getByTestId(`${playerId}-board`)).getAllByText(base.name),
     ).toHaveLength(2)
   })
 
   it('should not play any copies if there is no Hammerite is in play', () => {
-    preloadedState.players[playerId] = {
+    preloadedDuel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizePlayerCards({
         deck: [baseName],
@@ -75,22 +73,20 @@ describe('Hammerite Novice', () => {
       }),
     }
 
-    const { getByText, getByTestId } = renderWithUserProvider(
-      <Duel preloadedState={preloadedState} />,
-      {
-        preloadedUser,
-      },
-    )
+    const { getByText, getByTestId } = renderWithProviders(<Board />, {
+      preloadedUser,
+      preloadedDuel,
+    })
 
     fireEvent.click(getByText(base.name))
 
     expect(
-      within(getByTestId(PLAYER_BOARD_ID)).getAllByText(base.name),
+      within(getByTestId(`${playerId}-board`)).getAllByText(base.name),
     ).toHaveLength(1)
   })
 
   it('should not play copies from discard or opponent', () => {
-    preloadedState.players[playerId] = {
+    preloadedDuel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizePlayerCards({
         discard: [baseName],
@@ -98,17 +94,15 @@ describe('Hammerite Novice', () => {
       }),
     }
 
-    const { getByText, getByTestId } = renderWithUserProvider(
-      <Duel preloadedState={preloadedState} />,
-      {
-        preloadedUser,
-      },
-    )
+    const { getByText, getByTestId } = renderWithProviders(<Board />, {
+      preloadedUser,
+      preloadedDuel,
+    })
 
     fireEvent.click(getByText(base.name))
 
     expect(
-      within(getByTestId(PLAYER_BOARD_ID)).getAllByText(base.name),
+      within(getByTestId(`${playerId}-board`)).getAllByText(base.name),
     ).toHaveLength(1)
   })
 })
@@ -122,25 +116,25 @@ describe('Elevated Acolyte', () => {
   })
 
   it('should damage self if played alone', () => {
-    preloadedState.players[playerId] = {
+    preloadedDuel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizePlayerCards({
         hand: [baseName],
       }),
     }
 
-    const { getByText, getByTestId } = renderWithUserProvider(
-      <Duel preloadedState={preloadedState} />,
-      {
-        preloadedUser,
-      },
-    )
+    const { getByText, getByTestId } = renderWithProviders(<Board />, {
+      preloadedUser,
+      preloadedDuel,
+    })
 
     fireEvent.click(getByText(base.name))
 
     expect(
-      within(getByTestId(PLAYER_BOARD_ID)).getByRole('heading', { level: 3 }),
-    ).toHaveTextContent(`${base.name}${base.strength - 1}`)
+      within(getByTestId(`${playerId}-board`)).getByRole('heading', {
+        level: 3,
+      }).textContent,
+    ).toContain(`${base.name}${base.strength - 1}`)
   })
 
   it('should damage self if not played next to a Hammerite with higher strength', () => {
@@ -149,27 +143,21 @@ describe('Elevated Acolyte', () => {
       board: ['HammeriteNovice'],
     })
 
-    preloadedState.players[playerId] = {
+    preloadedDuel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizedCards,
     }
 
-    const { getByText, getByTestId } = renderWithUserProvider(
-      <Duel preloadedState={preloadedState} />,
-      {
-        preloadedUser,
-      },
-    )
+    const { getByText, getByTestId } = renderWithProviders(<Board />, {
+      preloadedUser,
+      preloadedDuel,
+    })
 
     fireEvent.click(getByText(base.name))
 
     expect(
-      within(
-        getByTestId(`${CARD_TEST_ID}${normalizedCards.hand[0]}`),
-      ).getByRole('heading', {
-        level: 3,
-      }),
-    ).toHaveTextContent(`${base.name}${base.strength - 1}`)
+      getByTestId(`${CARD_TEST_ID}${normalizedCards.hand[0]}`).textContent,
+    ).toContain(`${base.name}${base.strength - 1}`)
   })
 
   it('should not damage self if played next to a Hammerite with higher strength', () => {
@@ -178,17 +166,15 @@ describe('Elevated Acolyte', () => {
       board: ['TempleGuard'],
     })
 
-    preloadedState.players[playerId] = {
+    preloadedDuel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizedCards,
     }
 
-    const { getByText, getByTestId } = renderWithUserProvider(
-      <Duel preloadedState={preloadedState} />,
-      {
-        preloadedUser,
-      },
-    )
+    const { getByText, getByTestId } = renderWithProviders(<Board />, {
+      preloadedUser,
+      preloadedDuel,
+    })
 
     fireEvent.click(getByText(base.name))
 
@@ -197,8 +183,8 @@ describe('Elevated Acolyte', () => {
         getByTestId(`${CARD_TEST_ID}${normalizedCards.hand[0]}`),
       ).getByRole('heading', {
         level: 3,
-      }),
-    ).toHaveTextContent(`${base.name}${base.strength}`)
+      }).textContent,
+    ).toContain(`${base.name}${base.strength}`)
   })
 })
 
@@ -216,17 +202,15 @@ describe('Brother Sachelman', () => {
       board: ['HammeriteNovice', 'HammeriteNovice'],
     })
 
-    preloadedState.players[playerId] = {
+    preloadedDuel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizedCards,
     }
 
-    const { getByText, getByTestId } = renderWithUserProvider(
-      <Duel preloadedState={preloadedState} />,
-      {
-        preloadedUser,
-      },
-    )
+    const { getByText, getByTestId } = renderWithProviders(<Board />, {
+      preloadedUser,
+      preloadedDuel,
+    })
 
     fireEvent.click(getByText(base.name))
 
@@ -236,10 +220,8 @@ describe('Brother Sachelman', () => {
       expect(
         within(getByTestId(`${CARD_TEST_ID}${cardId}`)).getByRole('heading', {
           level: 3,
-        }),
-      ).toHaveTextContent(
-        `${name}${strength + HAMMERITES_WITH_LOWER_STRENGTH_BOOST}`,
-      )
+        }).textContent,
+      ).toContain(`${name}${strength + HAMMERITES_WITH_LOWER_STRENGTH_BOOST}`)
     })
   })
 
@@ -249,17 +231,15 @@ describe('Brother Sachelman', () => {
       board: ['HouseGuard', 'TempleGuard'],
     })
 
-    preloadedState.players[playerId] = {
+    preloadedDuel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizedCards,
     }
 
-    const { getByText, getByTestId } = renderWithUserProvider(
-      <Duel preloadedState={preloadedState} />,
-      {
-        preloadedUser,
-      },
-    )
+    const { getByText, getByTestId } = renderWithProviders(<Board />, {
+      preloadedUser,
+      preloadedDuel,
+    })
 
     fireEvent.click(getByText(base.name))
 
@@ -269,8 +249,8 @@ describe('Brother Sachelman', () => {
       expect(
         within(getByTestId(`${CARD_TEST_ID}${cardId}`)).getByRole('heading', {
           level: 3,
-        }),
-      ).toHaveTextContent(`${name}${strength}`)
+        }).textContent,
+      ).toContain(`${name}${strength}`)
     })
   })
 })
@@ -281,28 +261,26 @@ describe('Temple Guard', () => {
   })
 
   it('should not retaliate when not attacked', () => {
-    preloadedState.players[playerId] = {
+    preloadedDuel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizePlayerCards({
         hand: [],
         board: ['ElevatedAcolyte', baseName],
       }),
     }
-    preloadedState.playerOrder = [opponentId, playerId]
+    preloadedDuel.playerOrder = [opponentId, playerId]
 
-    const player = preloadedState.players[playerId]
-    const opponent = preloadedState.players[opponentId]
+    const player = preloadedDuel.players[playerId]
+    const opponent = preloadedDuel.players[opponentId]
     const firstAttackerId = opponent.board[0]
     const firstAttacker = opponent.cards[firstAttackerId] as Agent
     const templeGuardId = player.board[1]
     const templeGuard = player.cards[templeGuardId] as Agent
 
-    const { getByTestId } = renderWithUserProvider(
-      <Duel preloadedState={preloadedState} />,
-      {
-        preloadedUser,
-      },
-    )
+    const { getByTestId } = renderWithProviders(<Board />, {
+      preloadedUser,
+      preloadedDuel,
+    })
 
     act(() => {
       jest.runAllTimers()
@@ -314,8 +292,8 @@ describe('Temple Guard', () => {
         {
           level: 3,
         },
-      ),
-    ).toHaveTextContent(`${templeGuard.name}${templeGuard.strength}`)
+      ).textContent,
+    ).toContain(`${templeGuard.name}${templeGuard.strength}`)
 
     act(() => {
       jest.runAllTimers()
@@ -327,40 +305,38 @@ describe('Temple Guard', () => {
         {
           level: 3,
         },
-      ),
-    ).toHaveTextContent(`${firstAttacker.name}${firstAttacker.strength}`)
+      ).textContent,
+    ).toContain(`${firstAttacker.name}${firstAttacker.strength}`)
   })
 
   it('should retaliate when attacked', () => {
-    preloadedState.players[playerId] = {
+    preloadedDuel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizePlayerCards({
         hand: [],
         board: [baseName],
       }),
     }
-    preloadedState.players[opponentId] = {
+    preloadedDuel.players[opponentId] = {
       ...initialOpponentMock,
       ...normalizePlayerCards({
         hand: [],
         board: ['Zombie'],
       }),
     }
-    preloadedState.playerOrder = [opponentId, playerId]
+    preloadedDuel.playerOrder = [opponentId, playerId]
 
-    const player = preloadedState.players[playerId]
-    const opponent = preloadedState.players[opponentId]
+    const player = preloadedDuel.players[playerId]
+    const opponent = preloadedDuel.players[opponentId]
     const firstAttackerId = opponent.board[0]
     const firstAttacker = opponent.cards[firstAttackerId] as Agent
     const templeGuardId = player.board[0]
     const templeGuard = player.cards[templeGuardId] as Agent
 
-    const { getByTestId } = renderWithUserProvider(
-      <Duel preloadedState={preloadedState} />,
-      {
-        preloadedUser,
-      },
-    )
+    const { getByTestId } = renderWithProviders(<Board />, {
+      preloadedUser,
+      preloadedDuel,
+    })
 
     act(() => {
       jest.runAllTimers()
@@ -372,8 +348,8 @@ describe('Temple Guard', () => {
         {
           level: 3,
         },
-      ),
-    ).toHaveTextContent(`${templeGuard.name}${templeGuard.strength - 1}`)
+      ).textContent,
+    ).toContain(`${templeGuard.name}${templeGuard.strength - 1}`)
 
     act(() => {
       jest.runAllTimers()
@@ -385,29 +361,29 @@ describe('Temple Guard', () => {
         {
           level: 3,
         },
-      ),
-    ).toHaveTextContent(`${firstAttacker.name}${firstAttacker.strength - 1}`)
+      ).textContent,
+    ).toContain(`${firstAttacker.name}${firstAttacker.strength - 1}`)
   })
 
   it('should retaliate twice if attacked twice', () => {
-    preloadedState.players[playerId] = {
+    preloadedDuel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizePlayerCards({
         hand: [],
         board: [baseName],
       }),
     }
-    preloadedState.players[opponentId] = {
+    preloadedDuel.players[opponentId] = {
       ...initialOpponentMock,
       ...normalizePlayerCards({
         hand: [],
         board: ['Haunt', 'Zombie'],
       }),
     }
-    preloadedState.playerOrder = [opponentId, playerId]
+    preloadedDuel.playerOrder = [opponentId, playerId]
 
-    const player = preloadedState.players[playerId]
-    const opponent = preloadedState.players[opponentId]
+    const player = preloadedDuel.players[playerId]
+    const opponent = preloadedDuel.players[opponentId]
     const firstAttackerId = opponent.board[0]
     const secondAttackerId = opponent.board[1]
     const firstAttacker = opponent.cards[firstAttackerId] as Agent
@@ -415,12 +391,10 @@ describe('Temple Guard', () => {
     const templeGuardId = player.board[0]
     const templeGuard = player.cards[templeGuardId] as Agent
 
-    const { getByTestId } = renderWithUserProvider(
-      <Duel preloadedState={preloadedState} />,
-      {
-        preloadedUser,
-      },
-    )
+    const { getByTestId } = renderWithProviders(<Board />, {
+      preloadedUser,
+      preloadedDuel,
+    })
 
     // First round of attacks
     act(() => {
@@ -433,8 +407,8 @@ describe('Temple Guard', () => {
         {
           level: 3,
         },
-      ),
-    ).toHaveTextContent(`${templeGuard.name}${templeGuard.strength - 1}`)
+      ).textContent,
+    ).toContain(`${templeGuard.name}${templeGuard.strength - 1}`)
 
     act(() => {
       jest.runAllTimers()
@@ -446,8 +420,8 @@ describe('Temple Guard', () => {
         {
           level: 3,
         },
-      ),
-    ).toHaveTextContent(`${firstAttacker.name}${firstAttacker.strength - 1}`)
+      ).textContent,
+    ).toContain(`${firstAttacker.name}${firstAttacker.strength - 1}`)
 
     // Second round of attacks
     act(() => {
@@ -460,8 +434,8 @@ describe('Temple Guard', () => {
         {
           level: 3,
         },
-      ),
-    ).toHaveTextContent(`${templeGuard.name}${templeGuard.strength - 2}`)
+      ).textContent,
+    ).toContain(`${templeGuard.name}${templeGuard.strength - 2}`)
 
     act(() => {
       jest.runAllTimers()
@@ -473,8 +447,8 @@ describe('Temple Guard', () => {
         {
           level: 3,
         },
-      ),
-    ).toHaveTextContent(`${secondAttacker.name}${secondAttacker.strength - 1}`)
+      ).textContent,
+    ).toContain(`${secondAttacker.name}${secondAttacker.strength - 1}`)
   })
 })
 
@@ -487,7 +461,7 @@ describe('High Priest Markander', () => {
   })
 
   it('should reduce the counter if a Hammerite is played', () => {
-    preloadedState.players[playerId] = {
+    preloadedDuel.players[playerId] = {
       ...initialPlayerMock,
       ...normalizePlayerCards({
         deck: [],
@@ -496,14 +470,12 @@ describe('High Priest Markander', () => {
       }),
     }
 
-    const { getByText } = renderWithUserProvider(
-      <Duel preloadedState={preloadedState} />,
-      {
-        preloadedUser,
-      },
-    )
+    const { getByText } = renderWithProviders(<Board />, {
+      preloadedUser,
+      preloadedDuel,
+    })
 
-    expect(getByText(`Counter: ${base.counter}`)).toBeInTheDocument()
+    expect(getByText(`Counter: ${base.counter}`)).toBeTruthy()
 
     fireEvent.click(getByText(ElevatedAcolyte.name))
 
@@ -511,40 +483,35 @@ describe('High Priest Markander', () => {
       jest.runAllTimers()
     })
 
-    expect(
-      getByText(`Counter: ${(base.counter as number) - 1}`),
-    ).toBeInTheDocument()
+    expect(getByText(`Counter: ${(base.counter as number) - 1}`)).toBeTruthy()
   })
 
   it('should play High Priest Markander if counter reaches 0', () => {
-    preloadedState.players[playerId] = {
+    preloadedDuel.players[playerId] = {
       ...initialPlayerMock,
       board: [],
       hand: ['1'],
       deck: ['2'],
       cards: {
-        '1': ElevatedAcolyte,
-        '2': { ...HighPriestMarkander, counter: 1 },
+        '1': { id: '1', ...ElevatedAcolyte },
+        '2': { ...HighPriestMarkander, id: '2', counter: 1 },
       },
     }
 
-    const { getByText, queryByText, getByTestId } = renderWithUserProvider(
-      <Duel preloadedState={preloadedState} />,
+    const { getByText, queryByText, getByTestId } = renderWithProviders(
+      <Board />,
       {
         preloadedUser,
+        preloadedDuel,
       },
     )
 
-    expect(queryByText(base.name)).not.toBeInTheDocument()
+    expect(queryByText(base.name)).not.toBeTruthy()
 
     fireEvent.click(getByText(ElevatedAcolyte.name))
 
-    act(() => {
-      jest.runAllTimers()
-    })
-
     expect(
-      within(getByTestId(PLAYER_BOARD_ID)).getAllByText(base.name),
+      within(getByTestId(`${playerId}-board`)).getAllByText(base.name),
     ).toHaveLength(1)
   })
 })

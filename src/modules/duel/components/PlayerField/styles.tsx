@@ -2,11 +2,6 @@ import { CardOutline } from 'src/shared/components'
 import { Pop } from 'src/shared/styles'
 import styled, { css } from 'styled-components'
 
-export const StyledBoard = styled.div`
-  height: 100vh;
-  overflow: hidden;
-`
-
 interface StyledPlayerFieldProps {
   $isOnTop: boolean
 }
@@ -58,7 +53,7 @@ export const PlayerHand = styled.div<StyledPlayerFieldProps>`
         transition: bottom ${theme.transitionTime};
 
         &:hover {
-          bottom: calc(350px - 64px);
+          bottom: calc(${theme.card.height} - 64px);
           z-index: 2;
           box-shadow: ${theme.boxShadow.level3};
         }
@@ -68,7 +63,7 @@ export const PlayerHand = styled.div<StyledPlayerFieldProps>`
 
 const FaceDownStack = styled.div<StyledPlayerFieldProps>`
   height: 25px;
-  width: 150px;
+  width: ${({ theme }) => theme.card.smallWidth};
   display: flex;
   align-items: ${({ $isOnTop }) => ($isOnTop ? 'flex-end' : 'inherit')};
 

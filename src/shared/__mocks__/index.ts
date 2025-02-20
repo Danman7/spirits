@@ -26,7 +26,7 @@ export const userMock: User = {
   ],
 }
 
-export const opponentMock: Bot = {
+const opponentMock: Bot = {
   id: opponentId,
   name: 'Karras',
   isBot: true,
@@ -56,7 +56,7 @@ export const initialDuelStateMock: DuelState = {
   playerOrder: [playerId, opponentId],
 }
 
-export const stackedPlayerMock: Player = {
+const stackedPlayerMock: Player = {
   ...initialPlayerMock,
   income: 2,
   ...normalizePlayerCards({
@@ -67,7 +67,7 @@ export const stackedPlayerMock: Player = {
   }),
 }
 
-export const stackedOpponentMock: Player = {
+const stackedOpponentMock: Player = {
   ...initialOpponentMock,
   ...normalizePlayerCards({
     deck: ['BookOfAsh'],

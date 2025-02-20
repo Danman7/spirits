@@ -5,7 +5,7 @@ import {
   PlayerField,
   StyledBoard,
 } from 'src/modules/duel/components'
-import { useUser } from 'src/modules/user'
+import { useUser } from 'src/shared/user'
 
 export const Board: React.FC = () => {
   const { state: user } = useUser()
@@ -20,13 +20,8 @@ export const Board: React.FC = () => {
 
   return activePlayerId ? (
     <StyledBoard>
-      {sortDuelPlayers(players, userId).map((player, index) => (
-        <PlayerField
-          key={player.id}
-          player={player}
-          isOnTop={!index}
-          isActive={player.id === activePlayerId}
-        />
+      {sortDuelPlayers(players, userId).map(({ id }, index) => (
+        <PlayerField key={id} playerId={id} isOnTop={!index} />
       ))}
 
       <DuelModal />

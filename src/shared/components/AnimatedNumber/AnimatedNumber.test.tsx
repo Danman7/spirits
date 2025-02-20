@@ -14,10 +14,10 @@ it('should show changes in value', () => {
 
   const differenceElement = getByText(`+${update - value}`)
 
-  expect(getByText(update)).toBeInTheDocument()
-  expect(differenceElement).toBeInTheDocument()
+  expect(getByText(update)).toBeTruthy()
+  expect(differenceElement).toBeTruthy()
 
   fireEvent.animationEnd(differenceElement)
 
-  expect(queryByText(`+${update - value}`)).not.toBeInTheDocument()
+  expect(queryByText(`+${update - value}`)).not.toBeTruthy()
 })

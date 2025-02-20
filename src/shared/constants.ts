@@ -1,6 +1,6 @@
 import { defaultTheme } from 'src/shared/styles'
 
-export const ACTION_WAIT_TIMEOUT = 1000
+export const ACTION_WAIT_TIMEOUT = 500
 export const PHASE_MODAL_TIMEOUT = 2500
 
 const { orderFaction, chaosFaction, shadowFaction } = defaultTheme.colors

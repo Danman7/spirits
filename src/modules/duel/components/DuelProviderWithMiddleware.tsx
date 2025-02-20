@@ -7,13 +7,16 @@ import {
   DuelState,
   initialState,
 } from 'src/modules/duel'
-import { Board } from 'src/modules/duel/components'
 
 export interface DuelProps {
+  children: React.ReactNode
   preloadedState?: DuelState
 }
 
-export const Duel: React.FC<DuelProps> = ({ preloadedState }) => {
+export const DuelProviderWithMiddleware: React.FC<DuelProps> = ({
+  children,
+  preloadedState,
+}) => {
   const [state, dispatch] = useReducer(
     duelReducer,
     preloadedState || initialState,
@@ -34,7 +37,7 @@ export const Duel: React.FC<DuelProps> = ({ preloadedState }) => {
 
   return (
     <DuelContext.Provider value={{ state, dispatch: dispatchWithMiddleware }}>
-      <Board />
+      {children}
     </DuelContext.Provider>
   )
 }

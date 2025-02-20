@@ -30,8 +30,10 @@ interface CardOutlineProps extends CardFaceProps {
 }
 
 export const CardOutline = styled(motion.div)<CardOutlineProps>`
-  width: ${({ $isSmall }) => ($isSmall ? '150px' : '250px')};
-  height: ${({ $isSmall }) => ($isSmall ? '210px' : '350px')};
+  width: ${({ theme, $isSmall }) =>
+    $isSmall ? theme.card.smallWidth : theme.card.width};
+  height: ${({ theme, $isSmall }) =>
+    $isSmall ? theme.card.smallHeight : theme.card.height};
   border-radius: ${({ theme, $isSmall }) =>
     $isSmall ? '3px' : theme.borderRadius};
   font-size: ${({ $isSmall }) => ($isSmall ? '0.594rem' : '1rem')};

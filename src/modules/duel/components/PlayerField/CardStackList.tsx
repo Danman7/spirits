@@ -1,6 +1,6 @@
 import { FC } from 'react'
-import { DuelCard } from 'src/modules/duel/components'
 import { CardStack, Player, StackConfiguration } from 'src/modules/duel'
+import { DuelCardComponent } from 'src/modules/duel/components'
 
 interface CardStackListProps {
   stack: CardStack
@@ -16,14 +16,13 @@ export const CardStackList: FC<CardStackListProps> = ({
   isOnTop,
 }) => (
   <config.component
-    data-testid={config.testId}
+    data-testid={`${player.id}-${stack}`}
     $isOnTop={isOnTop}
     onClick={config.onClickStack}
   >
     {player[stack].map((cardId) => (
-      <DuelCard
+      <DuelCardComponent
         key={`${stack}-${cardId}`}
-        stack={stack}
         playerId={player.id}
         cardId={cardId}
         isOnTop={isOnTop}

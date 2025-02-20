@@ -1,10 +1,14 @@
-import { Box } from 'src/shared/styles'
+import { Box, defaultTheme } from 'src/shared/styles'
 import { AnimateStateProps } from 'src/shared/types'
 import styled, { keyframes } from 'styled-components'
 
+const {
+  card: { height },
+} = defaultTheme
+
 const SlideInFromLeft = keyframes`
   from {
-    transform: translateX(-350px);
+    transform: translateX(-${height});
   }
 
   to {
@@ -18,7 +22,7 @@ const SlideOutToLeft = keyframes`
   }
 
   to {
-    transform: translateX(-350px);
+    transform: translateX(-${height});
   }
 `
 

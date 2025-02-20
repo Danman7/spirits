@@ -1,16 +1,17 @@
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useMemo } from 'react'
 import {
   opponentDecidingMessage,
   opponentTurnTitle,
   passButtonMessage,
+  redrawingtitle,
   redrawMessage,
   skipRedrawLinkMessage,
   useDuel,
   yourTurnMessage,
   yourTurnTitle,
 } from 'src/modules/duel'
-import { useUser } from 'src/modules/user'
 import { Link, LoadingMessage, SidePanel } from 'src/shared/components'
+import { useUser } from 'src/shared/user'
 
 const OppponentIsDeciding = () => (
   <LoadingMessage message={opponentDecidingMessage} />
@@ -34,8 +35,6 @@ export const ActionPanel: React.FC = () => {
   const { id: playerId, hasPerformedAction } = player
   const isUserActive = userId === activePlayerId
 
-  const [sidePanelContent, setSidePanelContent] = useState<ReactNode>(null)
-
   const isOpen =
     phase === 'Redrawing' ||
     (phase === 'Player Turn' && !isUserActive) ||
@@ -52,12 +51,12 @@ export const ActionPanel: React.FC = () => {
       playerId,
     })
 
-  useEffect(() => {
+  const sidePanelContent: ReactNode = useMemo(() => {
     switch (phase) {
       case 'Redrawing':
-        setSidePanelContent(
+        return (
           <>
-            <h3>Redrawing Phase</h3>
+            <h3>{redrawingtitle}</h3>
             {hasPerformedAction ? (
               <OppponentIsDeciding />
             ) : (
@@ -66,28 +65,25 @@ export const ActionPanel: React.FC = () => {
                 <Link onClick={onReady}>{skipRedrawLinkMessage}</Link>
               </>
             )}
-          </>,
+          </>
         )
-
-        break
 
       case 'Player Turn':
-        setSidePanelContent(
+        return isUserActive ? (
           <>
-            {isUserActive ? (
-              <>
-                <h3>{yourTurnTitle}</h3>
-                {yourTurnMessage}
-                <Link onClick={onPassTurn}>{passButtonMessage}</Link>
-              </>
-            ) : (
-              <>
-                <h3>{opponentTurnTitle}</h3>
-                <OppponentIsDeciding />
-              </>
-            )}
-          </>,
+            <h3>{yourTurnTitle}</h3>
+            {yourTurnMessage}
+            <Link onClick={onPassTurn}>{passButtonMessage}</Link>
+          </>
+        ) : (
+          <>
+            <h3>{opponentTurnTitle}</h3>
+            <OppponentIsDeciding />
+          </>
         )
+
+      default:
+        return ''
     }
   }, [hasPerformedAction, isUserActive, phase])
 

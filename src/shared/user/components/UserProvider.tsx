@@ -1,13 +1,13 @@
 import { useReducer } from 'react'
-import { initialState, UserContext, userReducer } from 'src/modules/user'
+import { initialState, UserContext, userReducer } from 'src/shared/user'
 import { User } from 'src/shared/types'
 
-export interface DuelProps {
+export interface UserProviderProps {
   children: React.ReactNode
   preloadedState?: User
 }
 
-export const UserProvider: React.FC<DuelProps> = ({
+export const UserProvider: React.FC<UserProviderProps> = ({
   children,
   preloadedState,
 }) => {

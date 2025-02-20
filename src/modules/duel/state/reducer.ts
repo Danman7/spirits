@@ -166,6 +166,7 @@ export const duelReducer = (
               ? {
                   ...cards,
                   [defendingAgentId]: {
+                    id: defendingAgentId,
                     ...defendingAgent,
                     strength: defendingAgent?.strength - 1,
                   },
@@ -242,6 +243,7 @@ export const duelReducer = (
             cards: {
               ...cards,
               [cardId]: {
+                id: cardId,
                 ...updatedCard,
                 ...update,
               },

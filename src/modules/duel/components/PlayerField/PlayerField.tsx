@@ -2,8 +2,8 @@ import { useState } from 'react'
 import {
   CARD_STACKS,
   CardStack,
-  Player,
   StackConfiguration,
+  useDuel,
 } from 'src/modules/duel'
 import {
   BotController,
@@ -17,18 +17,6 @@ import {
   StyledPlayerField,
 } from 'src/modules/duel/components'
 import { AnimatedNumber } from 'src/shared/components'
-import {
-  OPPONENT_BOARD_ID,
-  OPPONENT_DECK_ID,
-  OPPONENT_DISCARD_ID,
-  OPPONENT_HAND_ID,
-  OPPONENT_INFO_ID,
-  PLAYER_BOARD_ID,
-  PLAYER_DECK_ID,
-  PLAYER_DISCARD_ID,
-  PLAYER_HAND_ID,
-  PLAYER_INFO_ID,
-} from 'src/shared/test'
 
 const getStackConfiguration = (
   stack: CardStack,
@@ -37,21 +25,17 @@ const getStackConfiguration = (
 ): StackConfiguration => {
   const stackConfigs: Record<CardStack, StackConfiguration> = {
     board: {
-      testId: isOnTop ? OPPONENT_BOARD_ID : PLAYER_BOARD_ID,
       component: PlayerBoard,
     },
     deck: {
-      testId: isOnTop ? OPPONENT_DECK_ID : PLAYER_DECK_ID,
       component: PlayerDeck,
       onClickStack: !isOnTop ? () => browseStack(stack) : undefined,
     },
     discard: {
-      testId: isOnTop ? OPPONENT_DISCARD_ID : PLAYER_DISCARD_ID,
       component: PlayerDiscard,
       onClickStack: !isOnTop ? () => browseStack(stack) : undefined,
     },
     hand: {
-      testId: isOnTop ? OPPONENT_HAND_ID : PLAYER_HAND_ID,
       component: PlayerHand,
     },
   }
@@ -60,17 +44,23 @@ const getStackConfiguration = (
 }
 
 interface PlayerFieldProps {
-  player: Player
-  isActive: boolean
+  playerId: string
   isOnTop?: boolean
 }
 
 export const PlayerField: React.FC<PlayerFieldProps> = ({
-  player,
-  isActive,
+  playerId,
   isOnTop = false,
 }) => {
-  const { id, name, coins, income, isBot, cards } = player
+  const {
+    state: {
+      players,
+      playerOrder: [activePlayerId],
+    },
+  } = useDuel()
+
+  const player = players[playerId]
+  const { id, name, coins, income, isBot, cards } = players[playerId]
 
   const [isBrowsingStack, setIsBrowsingStack] = useState(false)
   const [browsedStack, setBrowsedStack] = useState<CardStack>('deck')
@@ -85,9 +75,9 @@ export const PlayerField: React.FC<PlayerFieldProps> = ({
   return (
     <StyledPlayerField $isOnTop={isOnTop}>
       <PlayerInfo
-        $isActive={isActive}
+        $isActive={playerId === activePlayerId}
         $isOnTop={isOnTop}
-        data-testid={isOnTop ? OPPONENT_INFO_ID : PLAYER_INFO_ID}
+        data-testid={`${playerId}-info`}
       >
         <span>{name}</span> / <AnimatedNumber value={coins} uniqueId={id} />
         {income ? <span> (+{income})</span> : null}
