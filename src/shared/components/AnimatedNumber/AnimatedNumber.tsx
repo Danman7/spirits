@@ -1,5 +1,8 @@
 import { FC, useEffect, useRef, useState } from 'react'
-import { Difference, StyledAnimatedNumber } from 'src/shared/components'
+import {
+  Difference,
+  StyledAnimatedNumber,
+} from 'src/shared/components/AnimatedNumber/styles'
 import { usePrevious } from 'src/shared/hooks'
 
 interface AnimatedNumberProps {

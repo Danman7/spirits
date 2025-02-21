@@ -1,11 +1,11 @@
-import { FC, ReactNode } from 'react'
-import { StyledLink } from 'src/shared/components'
+import { ReactNode } from 'react'
+import { StyledLink } from 'src/shared/components/Link/styles'
 
 interface LinkProps {
   children: ReactNode
   onClick?: () => void
 }
 
-export const Link: FC<LinkProps> = ({ children, onClick }) => (
+export const Link: React.FC<LinkProps> = ({ children, onClick }) => (
   <StyledLink onClick={onClick}>{children}</StyledLink>
 )

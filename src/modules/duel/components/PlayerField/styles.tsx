@@ -1,5 +1,5 @@
-import { CardOutline } from 'src/shared/components'
-import { Pop } from 'src/shared/styles'
+import { CardOutline } from 'src/shared/modules/cards/components/styles'
+import { Pop } from 'src/shared/styles/global'
 import styled, { css } from 'styled-components'
 
 interface StyledPlayerFieldProps {

@@ -1,5 +1,6 @@
-import { Modal } from 'src/shared/components'
-import { render, MODAL_TEST_ID, OVERLAY_TEST_ID } from 'src/shared/test'
+import { Modal } from 'src/shared/components/Modal'
+import { render } from 'src/shared/test/render'
+import { MODAL_TEST_ID, OVERLAY_TEST_ID } from 'src/shared/test/testIds'
 
 const content = 'Modal content'
 

@@ -1,3 +1,4 @@
+import { AnimateStateProps } from 'src/shared/components/types'
 import {
   Animated,
   Box,
@@ -5,8 +6,7 @@ import {
   FadeOut,
   SlideIn,
   SlideOut,
-} from 'src/shared/styles'
-import { AnimateStateProps } from 'src/shared/types'
+} from 'src/shared/styles/global'
 import styled from 'styled-components'
 
 export const StyledModal = styled(Box)<AnimateStateProps>`

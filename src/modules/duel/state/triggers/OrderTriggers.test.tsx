@@ -1,11 +1,9 @@
 import { fireEvent, within } from '@testing-library/dom'
 import { act } from 'react'
-import {
-  DuelState,
-  normalizePlayerCards,
-  renderWithProviders,
-} from 'src/modules/duel'
-import { Board } from 'src/modules/duel/components'
+import { Board } from 'src/modules/duel/components/Board'
+import { renderWithProviders } from 'src/modules/duel/testRender'
+import { DuelState } from 'src/modules/duel/types'
+import { normalizePlayerCards } from 'src/modules/duel/utils'
 import {
   initialOpponentMock,
   initialPlayerMock,
@@ -13,22 +11,21 @@ import {
   playerId,
   userMock as preloadedUser,
   stackedDuelStateMock,
-} from 'src/shared/__mocks__'
+} from 'src/modules/duel/__mocks__'
+import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/shared/modules/cards/constants'
 import {
-  CardBaseName,
   CardBases,
   ElevatedAcolyte,
-  HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   HighPriestMarkander,
-} from 'src/shared/data'
-import { CARD_TEST_ID } from 'src/shared/test'
-import { Agent } from 'src/shared/types'
+} from 'src/shared/modules/cards/data/bases'
+import { Agent, CardBaseKey } from 'src/shared/modules/cards/types'
+import { CARD_TEST_ID } from 'src/shared/test/testIds'
 import { deepClone } from 'src/shared/utils'
 
 jest.useFakeTimers()
 
 let preloadedDuel: DuelState
-let baseName: CardBaseName
+let baseName: CardBaseKey
 
 beforeEach(() => {
   preloadedDuel = deepClone(stackedDuelStateMock)

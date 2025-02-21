@@ -1,27 +1,29 @@
 import {
-  AttackOrder,
   CARD_STACKS,
+  INITIAL_CARDS_DRAWN_IN_DUEL,
+  STARTING_COINS_IN_DUEL,
+} from 'src/modules/duel/constants'
+import {
+  AttackOrder,
   CardStack,
   DuelAction,
   DuelDispatch,
   DuelPlayers,
   DuelUser,
-  INITIAL_CARDS_DRAWN_IN_DUEL,
   Player,
   PlayerCards,
   PlayerStacks,
   PlayerStacksAndCards,
-  STARTING_COINS_IN_DUEL,
-} from 'src/modules/duel'
-import { CardBaseName, CardBases } from 'src/shared/data'
-import { Agent } from 'src/shared/types'
+} from 'src/modules/duel/types'
+import { CardBases } from 'src/shared/modules/cards/data/bases'
+import { Agent, CardBaseKey } from 'src/shared/modules/cards/types'
 import { generateUUID, shuffleArray } from 'src/shared/utils'
 
 export const getPlayableCardIds = (player: Player) =>
   player.hand.filter((cardId) => player.cards[cardId].cost <= player.coins)
 
 export const normalizePlayerCards = (
-  stacks: Partial<Record<CardStack, CardBaseName[]>>,
+  stacks: Partial<Record<CardStack, CardBaseKey[]>>,
 ): PlayerStacksAndCards => {
   const partialPlayer: PlayerStacksAndCards = {
     deck: [],
@@ -33,12 +35,12 @@ export const normalizePlayerCards = (
 
   CARD_STACKS.forEach((stack) => {
     if (stacks[stack]) {
-      stacks[stack].forEach((cardBaseName) => {
+      stacks[stack].forEach((CardBaseKey) => {
         const cardId = generateUUID()
 
         partialPlayer.cards = {
           ...partialPlayer.cards,
-          [cardId]: { id: cardId, ...CardBases[cardBaseName] },
+          [cardId]: { id: cardId, ...CardBases[CardBaseKey] },
         }
         partialPlayer[stack] = [...partialPlayer[stack], cardId]
       })
@@ -193,7 +195,7 @@ export const haveBothPlayersDrawnCards = (players: DuelPlayers) =>
 export const getOnPlayCardPredicate = (
   action: DuelAction,
   players: DuelPlayers,
-  baseName: CardBaseName,
+  baseName: CardBaseKey,
 ) =>
   action.type === 'PLAY_CARD' &&
   !!action.shouldPay &&
@@ -203,7 +205,7 @@ export const getOnPlayCardPredicate = (
 export const getPlayAllCopiesEffect = (
   action: DuelAction,
   players: DuelPlayers,
-  comparingBase: CardBaseName,
+  comparingBase: CardBaseKey,
   dispatch: DuelDispatch,
 ) => {
   if (action.type !== 'PLAY_CARD') return

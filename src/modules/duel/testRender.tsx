@@ -1,11 +1,11 @@
 import { RenderOptions, render as rtlRender } from '@testing-library/react'
 import { PropsWithChildren, ReactElement } from 'react'
-import { DuelState, initialState as initialDuelState } from 'src/modules/duel'
-import { DuelProviderWithMiddleware } from 'src/modules/duel/components'
-import { defaultTheme, GlobalStyles } from 'src/shared/styles'
-import { User } from 'src/shared/types'
-import { initialState as initialUserState, UserProvider } from 'src/shared/user'
-import { ThemeProvider } from 'styled-components'
+import { DuelProviderWithMiddleware } from 'src/modules/duel/components/DuelProviderWithMiddleware'
+import { initialState as initialDuelState } from 'src/modules/duel/state/duelReducer'
+import { DuelState } from 'src/modules/duel/types'
+import { Providers } from 'src/shared/components/Providers'
+import { initialState as initialUserState } from 'src/shared/modules/user/state/userReducer'
+import { User } from 'src/shared/modules/user/types'
 
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
   preloadedUser?: User
@@ -23,14 +23,11 @@ export const renderWithProviders = (
   } = extendedRenderOptions
 
   const Wrapper = ({ children }: PropsWithChildren) => (
-    <UserProvider preloadedState={preloadedUser}>
+    <Providers preloadedUserState={preloadedUser}>
       <DuelProviderWithMiddleware preloadedState={preloadedDuel}>
-        <ThemeProvider theme={defaultTheme}>
-          <GlobalStyles />
-          {children}
-        </ThemeProvider>
+        {children}
       </DuelProviderWithMiddleware>
-    </UserProvider>
+    </Providers>
   )
 
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions })

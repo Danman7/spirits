@@ -1,17 +1,16 @@
+import { INCOME_PER_TURN } from 'src/modules/duel/constants'
+import { invalidFirstPlayerIdError } from 'src/modules/duel/state/messages'
+import { DuelAction, DuelState } from 'src/modules/duel/types'
 import {
   calculateAttackQueue,
   drawCardFromDeck,
   drawInitialCards,
-  DuelAction,
-  DuelState,
   haveBothPlayersDrawnCards,
-  INCOME_PER_TURN,
-  invalidFirstPlayerIdError,
   moveSingleCard,
   redrawCard,
   setupInitialDuelPlayerFromUser,
-} from 'src/modules/duel'
-import { Agent } from 'src/shared/types'
+} from 'src/modules/duel/utils'
+import { Agent } from 'src/shared/modules/cards/types'
 import { getRandomArrayItem } from 'src/shared/utils'
 
 export const initialState: DuelState = {

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { AnimatedNumber } from 'src/shared/components'
+import { AnimatedNumber } from 'src/shared/components/AnimatedNumber'
 
 const meta = {
   title: 'AnimatedNumber',

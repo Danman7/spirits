@@ -1,19 +1,17 @@
 import { fireEvent, within } from '@testing-library/dom'
+import { PlayerField } from 'src/modules/duel/components/PlayerField'
 import {
   browsingStackModalTitle,
-  CARD_STACKS,
-  CardStack,
   closeMessage,
-  DuelState,
-  Player,
-  renderWithProviders,
-} from 'src/modules/duel'
-import { PlayerField } from 'src/modules/duel/components'
+} from 'src/modules/duel/components/PlayerField/messages'
+import { CARD_STACKS } from 'src/modules/duel/constants'
+import { renderWithProviders } from 'src/modules/duel/testRender'
+import { CardStack, DuelState, Player } from 'src/modules/duel/types'
 import {
   userMock as preloadedUser,
   stackedDuelStateMock,
-} from 'src/shared/__mocks__'
-import { OVERLAY_TEST_ID } from 'src/shared/test'
+} from 'src/modules/duel/__mocks__'
+import { OVERLAY_TEST_ID } from 'src/shared/test/testIds'
 import { deepClone } from 'src/shared/utils'
 
 let preloadedDuel: DuelState

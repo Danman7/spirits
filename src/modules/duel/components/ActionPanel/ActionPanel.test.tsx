@@ -1,22 +1,22 @@
 import { fireEvent } from '@testing-library/dom'
+import { ActionPanel } from 'src/modules/duel/components/ActionPanel'
 import {
-  DuelState,
   opponentDecidingMessage,
   opponentTurnTitle,
   passButtonMessage,
   redrawingtitle,
   redrawMessage,
-  renderWithProviders,
   skipRedrawLinkMessage,
   yourTurnMessage,
   yourTurnTitle,
-} from 'src/modules/duel'
-import { ActionPanel } from 'src/modules/duel/components'
+} from 'src/modules/duel/components/ActionPanel/messages'
+import { renderWithProviders } from 'src/modules/duel/testRender'
+import { DuelState } from 'src/modules/duel/types'
 import {
   initialDuelStateMock,
   userMock as preloadedUser,
-} from 'src/shared/__mocks__'
-import { PANEL_TEST_ID } from 'src/shared/test'
+} from 'src/modules/duel/__mocks__'
+import { PANEL_TEST_ID } from 'src/shared/test/testIds'
 import { deepClone } from 'src/shared/utils'
 
 let preloadedDuel: DuelState

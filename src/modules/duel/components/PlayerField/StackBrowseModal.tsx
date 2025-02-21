@@ -1,14 +1,16 @@
 import {
   browsingStackModalTitle,
   closeMessage,
-  PlayerCards,
-} from 'src/modules/duel'
+} from 'src/modules/duel/components/PlayerField/messages'
 import {
   CardBrowserModal,
   CardBrowserModalFooter,
   CardList,
-} from 'src/modules/duel/components'
-import { CardComponent, Link, Modal } from 'src/shared/components'
+} from 'src/modules/duel/components/PlayerField/styles'
+import { PlayerCards } from 'src/modules/duel/types'
+import { Link } from 'src/shared/components/Link'
+import { Modal } from 'src/shared/components/Modal'
+import { CardComponent } from 'src/shared/modules/cards/components/Card'
 import { shuffleArray } from 'src/shared/utils'
 
 interface StackBrowseModalProps {

@@ -1,4 +1,4 @@
-import { Animated } from 'src/shared/styles'
+import { Animated } from 'src/shared/styles/global'
 import styled, { keyframes } from 'styled-components'
 
 export const StyledAnimatedNumber = styled.div`

@@ -6,12 +6,14 @@ import {
   redrawingtitle,
   redrawMessage,
   skipRedrawLinkMessage,
-  useDuel,
   yourTurnMessage,
   yourTurnTitle,
-} from 'src/modules/duel'
-import { Link, LoadingMessage, SidePanel } from 'src/shared/components'
-import { useUser } from 'src/shared/user'
+} from 'src/modules/duel/components/ActionPanel/messages'
+import { useDuel } from 'src/modules/duel/state/DuelContext'
+import { Link } from 'src/shared/components/Link'
+import { LoadingMessage } from 'src/shared/components/LoadingMessage'
+import { SidePanel } from 'src/shared/components/SidePanel'
+import { useUser } from 'src/shared/modules/user/state/UserContext'
 
 const OppponentIsDeciding = () => (
   <LoadingMessage message={opponentDecidingMessage} />

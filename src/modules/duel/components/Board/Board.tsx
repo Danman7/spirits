@@ -1,11 +1,10 @@
-import { sortDuelPlayers, useDuel } from 'src/modules/duel'
-import {
-  ActionPanel,
-  DuelModal,
-  PlayerField,
-  StyledBoard,
-} from 'src/modules/duel/components'
-import { useUser } from 'src/shared/user'
+import { ActionPanel } from 'src/modules/duel/components/ActionPanel'
+import { StyledBoard } from 'src/modules/duel/components/Board/styles'
+import { DuelModal } from 'src/modules/duel/components/DuelModal'
+import { PlayerField } from 'src/modules/duel/components/PlayerField'
+import { useDuel } from 'src/modules/duel/state/DuelContext'
+import { sortDuelPlayers } from 'src/modules/duel/utils'
+import { useUser } from 'src/shared/modules/user/state/UserContext'
 
 export const Board: React.FC = () => {
   const { state: user } = useUser()

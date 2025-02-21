@@ -1,5 +1,6 @@
-import { Box, defaultTheme } from 'src/shared/styles'
-import { AnimateStateProps } from 'src/shared/types'
+import { AnimateStateProps } from 'src/shared/components/types'
+import { Box } from 'src/shared/styles/global'
+import { defaultTheme } from 'src/shared/styles/theme'
 import styled, { keyframes } from 'styled-components'
 
 const {

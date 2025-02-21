@@ -1,5 +1,6 @@
 import { FC, useEffect } from 'react'
-import { getPlayableCardIds, useDuel } from 'src/modules/duel'
+import { useDuel } from 'src/modules/duel/state/DuelContext'
+import { getPlayableCardIds } from 'src/modules/duel/utils'
 import { getRandomArrayItem } from 'src/shared/utils'
 
 interface BotControllerProps {

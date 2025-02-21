@@ -1,22 +1,19 @@
 import { useState } from 'react'
+import { BotController } from 'src/modules/duel/components/PlayerField/BotController'
+import { CardStackList } from 'src/modules/duel/components/PlayerField/CardStackList'
+import { StackBrowseModal } from 'src/modules/duel/components/PlayerField/StackBrowseModal'
 import {
-  CARD_STACKS,
-  CardStack,
-  StackConfiguration,
-  useDuel,
-} from 'src/modules/duel'
-import {
-  BotController,
-  CardStackList,
   PlayerBoard,
   PlayerDeck,
   PlayerDiscard,
   PlayerHand,
   PlayerInfo,
-  StackBrowseModal,
   StyledPlayerField,
-} from 'src/modules/duel/components'
-import { AnimatedNumber } from 'src/shared/components'
+} from 'src/modules/duel/components/PlayerField/styles'
+import { CARD_STACKS } from 'src/modules/duel/constants'
+import { useDuel } from 'src/modules/duel/state/DuelContext'
+import { CardStack, StackConfiguration } from 'src/modules/duel/types'
+import { AnimatedNumber } from 'src/shared/components/AnimatedNumber'
 
 const getStackConfiguration = (
   stack: CardStack,

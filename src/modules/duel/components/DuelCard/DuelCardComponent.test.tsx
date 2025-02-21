@@ -1,14 +1,15 @@
 import { fireEvent } from '@testing-library/dom'
 import { act } from 'react'
-import { DuelState, Player, renderWithProviders } from 'src/modules/duel'
-import { DuelCardComponent } from 'src/modules/duel/components'
+import { DuelCardComponent } from 'src/modules/duel/components/DuelCard'
+import { renderWithProviders } from 'src/modules/duel/testRender'
+import { DuelState, Player } from 'src/modules/duel/types'
 import {
   userMock as preloadedUser,
   stackedDuelStateMock,
-} from 'src/shared/__mocks__'
-import { defaultTheme } from 'src/shared/styles'
-import { CARD_TEST_ID } from 'src/shared/test'
-import { deepClone, joinStringArrayWithComma } from 'src/shared/utils'
+} from 'src/modules/duel/__mocks__'
+import { defaultTheme } from 'src/shared/styles/theme'
+import { CARD_TEST_ID } from 'src/shared/test/testIds'
+import { deepClone } from 'src/shared/utils'
 
 jest.useFakeTimers()
 
@@ -29,7 +30,7 @@ it('should show the correct card in hand', () => {
 
   const cardId = hand[0]
   const card = cards[cardId]
-  const { name, categories } = card
+  const { name } = card
 
   const { getByText, getByTestId } = renderWithProviders(
     <DuelCardComponent cardId={cardId} playerId={id} />,
@@ -40,7 +41,6 @@ it('should show the correct card in hand', () => {
   )
 
   expect(getByText(name)).toBeTruthy()
-  expect(getByText(joinStringArrayWithComma(categories))).toBeTruthy()
 
   const cardElementStyle = window.getComputedStyle(
     getByTestId(`${CARD_TEST_ID}${cardId}`),

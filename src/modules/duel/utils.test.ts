@@ -1,13 +1,12 @@
+import { CARD_STACKS, STARTING_COINS_IN_DUEL } from 'src/modules/duel/constants'
+import { Player } from 'src/modules/duel/types'
 import {
-  CARD_STACKS,
-  Player,
-  STARTING_COINS_IN_DUEL,
   getNeighboursIndexes,
   getPlayableCardIds,
   moveSingleCard,
   normalizePlayerCards,
-} from 'src/modules/duel'
-import { playerId, stackedDuelStateMock } from 'src/shared/__mocks__'
+} from 'src/modules/duel/utils'
+import { playerId, stackedDuelStateMock } from 'src/modules/duel/__mocks__'
 
 it('should get all playable card ids for a given player with getPlayableCardIds', () => {
   const mockBudgetPlayer: Player = {

@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
-import { CardStack, useDuel } from 'src/modules/duel'
-import { Agent } from 'src/shared/types'
-import { useUser } from 'src/shared/user'
+import { useDuel } from 'src/modules/duel/state/DuelContext'
+import { CardStack } from 'src/modules/duel/types'
+import { Agent } from 'src/shared/modules/cards/types'
+import { useUser } from 'src/shared/modules/user/state/UserContext'
 
 export const useCard = (playerId: string, cardId: string) => {
   const {

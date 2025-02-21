@@ -1,17 +1,17 @@
 import { fireEvent } from '@testing-library/dom'
 import { act } from 'react'
+import { DuelModal } from 'src/modules/duel/components/DuelModal'
 import {
-  DuelState,
   firstPlayerMessage,
   initialDrawMessage,
-  renderWithProviders,
-} from 'src/modules/duel'
-import { DuelModal } from 'src/modules/duel/components'
+} from 'src/modules/duel/components/DuelModal/messages'
+import { renderWithProviders } from 'src/modules/duel/testRender'
+import { DuelState } from 'src/modules/duel/types'
 import {
   initialDuelStateMock,
   userMock as preloadedUser,
-} from 'src/shared/__mocks__'
-import { OVERLAY_TEST_ID } from 'src/shared/test'
+} from 'src/modules/duel/__mocks__'
+import { OVERLAY_TEST_ID } from 'src/shared/test/testIds'
 import { deepClone } from 'src/shared/utils'
 
 jest.useFakeTimers()

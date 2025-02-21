@@ -1,6 +1,4 @@
-import { FACTION_COLOR_MAP } from 'src/shared/constants'
-import { CardBases } from 'src/shared/data'
-import { Card } from 'src/shared/types'
+import { Card } from 'src/shared/modules/cards/types'
 
 export const generateUUID = () =>
   'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {
@@ -33,16 +31,3 @@ export const deepClone = <T>(object: T) => JSON.parse(JSON.stringify(object))
 
 export const joinStringArrayWithComma = (categories: Card['categories']) =>
   categories.join(', ')
-
-export const getCardFactionColor = (factions: Card['factions']): string => {
-  const firstColor = FACTION_COLOR_MAP[factions[0]]
-
-  if (factions.length === 1) return firstColor
-
-  return `linear-gradient(300deg, ${firstColor}, ${
-    FACTION_COLOR_MAP[factions[1]]
-  })`
-}
-
-export const findCardBaseFromName = (name: string) =>
-  Object.values(CardBases).find(({ name: baseName }) => baseName === name)

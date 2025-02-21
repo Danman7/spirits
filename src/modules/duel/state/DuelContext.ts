@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import { DuelAction, DuelState } from 'src/modules/duel'
+import { DuelAction, DuelState } from 'src/modules/duel/types'
 
 export const DuelContext = createContext<
   { state: DuelState; dispatch: (action: DuelAction) => void } | undefined

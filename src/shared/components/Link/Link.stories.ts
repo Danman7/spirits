@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from '@storybook/test'
-import { Link } from 'src/shared/components'
+import { Link } from 'src/shared/components/Link'
 
 const meta = {
   title: 'Link',

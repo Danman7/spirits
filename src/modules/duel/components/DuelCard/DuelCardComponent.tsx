@@ -5,8 +5,8 @@ import {
   useDefeatHandler,
   useDuelCardOnClick,
   useIsAttacking,
-} from 'src/modules/duel/components'
-import { CardComponent } from 'src/shared/components'
+} from 'src/modules/duel/components/DuelCard/hooks'
+import { CardComponent } from 'src/shared/modules/cards/components/Card'
 
 interface DuelCardProps {
   cardId: string

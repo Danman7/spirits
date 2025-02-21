@@ -1,8 +1,6 @@
-import { Haunt } from 'src/shared/data'
-import { defaultTheme } from 'src/shared/styles'
+import { Haunt } from 'src/shared/modules/cards/data/bases'
 import {
   generateUUID,
-  getCardFactionColor,
   getRandomArrayItem,
   joinStringArrayWithComma,
   shuffleArray,
@@ -32,15 +30,4 @@ it('should shuffle an array', () => {
 
 it('should return a joined types string for a card', () => {
   expect(joinStringArrayWithComma(Haunt.categories)).toBe('Undead, Hammerite')
-})
-
-const { orderFaction, chaosFaction, shadowFaction } = defaultTheme.colors
-
-it('should get the proper faction color', () => {
-  expect(getCardFactionColor(['Chaos'])).toBe(chaosFaction)
-  expect(getCardFactionColor(['Order'])).toBe(orderFaction)
-  expect(getCardFactionColor(['Shadow'])).toBe(shadowFaction)
-  expect(getCardFactionColor(['Chaos', 'Shadow'])).toBe(
-    `linear-gradient(300deg, ${chaosFaction}, ${shadowFaction})`,
-  )
 })

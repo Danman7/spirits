@@ -1,7 +1,7 @@
 import { FC, ReactNode, useEffect, useState } from 'react'
-import { Panel } from 'src/shared/components'
-import { PANEL_TEST_ID } from 'src/shared/test'
-import { AnimateState } from 'src/shared/types'
+import { Panel } from 'src/shared/components/SidePanel/styles'
+import { AnimateState } from 'src/shared/components/types'
+import { PANEL_TEST_ID } from 'src/shared/test/testIds'
 
 interface SidePanelProps {
   isOpen: boolean

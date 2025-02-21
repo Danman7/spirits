@@ -2,18 +2,10 @@ import { ReactNode, useEffect, useMemo, useState } from 'react'
 import {
   firstPlayerMessage,
   initialDrawMessage,
-  useDuel,
-} from 'src/modules/duel'
-import { Modal } from 'src/shared/components'
-import { PHASE_MODAL_TIMEOUT } from 'src/shared/constants'
-
-const flashModal = (setModalVisibility: (isOpen: boolean) => void) => {
-  setModalVisibility(true)
-
-  setTimeout(() => {
-    setModalVisibility(false)
-  }, PHASE_MODAL_TIMEOUT)
-}
+} from 'src/modules/duel/components/DuelModal/messages'
+import { flashModal } from 'src/modules/duel/components/DuelModal/utils'
+import { useDuel } from 'src/modules/duel/state/DuelContext'
+import { Modal } from 'src/shared/components/Modal'
 
 export const DuelModal: React.FC = () => {
   const {
