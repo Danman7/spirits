@@ -32,6 +32,9 @@ export const ActionPanel: React.FC = () => {
   } = useDuel()
 
   const player = players[userId]
+
+  if (!player) return null
+
   const { id: playerId, hasPerformedAction } = player
   const isUserActive = userId === activePlayerId
 

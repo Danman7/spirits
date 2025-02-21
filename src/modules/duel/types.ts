@@ -66,6 +66,7 @@ export type DuelAction =
       cardId: string
       update: Partial<Agent>
     }
+  | { type: 'RESET_DUEL' }
 
 export type DuelPlayers = {
   [index: string]: Player

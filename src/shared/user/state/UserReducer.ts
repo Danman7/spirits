@@ -13,7 +13,11 @@ export const userReducer = (
 ): User => {
   switch (action.type) {
     case 'LOAD_USER': {
-      return { ...action.user }
+      return action.user
+    }
+
+    case 'RESET_USER': {
+      return initialState
     }
 
     default:

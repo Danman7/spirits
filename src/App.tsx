@@ -1,29 +1,22 @@
 import { useEffect } from 'react'
 import { Board, DuelProviderWithMiddleware } from 'src/modules/duel/components'
-import { useUser } from 'src/shared/user'
 import { initialDuelStateMock, userMock } from 'src/shared/__mocks__'
-
-let hasLoadedUser = false
+import { useUser } from 'src/shared/user'
 
 export const App: React.FC = () => {
-  const {
-    state: { id: userId },
-    dispatch,
-  } = useUser()
+  const { dispatch } = useUser()
 
   useEffect(() => {
-    if (hasLoadedUser) return
-    hasLoadedUser = true
+    dispatch({ type: 'LOAD_USER', user: userMock })
 
-    dispatch({
-      type: 'LOAD_USER',
-      user: userMock,
-    })
+    return () => {
+      dispatch({ type: 'RESET_USER' })
+    }
   }, [dispatch])
 
-  return userId ? (
+  return (
     <DuelProviderWithMiddleware preloadedState={initialDuelStateMock}>
       <Board />
     </DuelProviderWithMiddleware>
-  ) : null
+  )
 }
