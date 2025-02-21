@@ -19,7 +19,7 @@ export const App: React.FC = () => {
       type: 'LOAD_USER',
       user: userMock,
     })
-  }, [])
+  }, [dispatch])
 
   return userId ? (
     <DuelProviderWithMiddleware preloadedState={initialDuelStateMock}>

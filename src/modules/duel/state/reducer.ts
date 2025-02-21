@@ -128,7 +128,9 @@ export const duelReducer = (
             ...inactivePlayer,
             ...drawCardFromDeck(inactivePlayer),
             hasPerformedAction: false,
-            coins: inactivePlayer.coins + INCOME_PER_TURN,
+            coins:
+              inactivePlayer.coins +
+              (inactivePlayer.income ? INCOME_PER_TURN : 0),
           },
           [activePlayerId]: {
             ...activePlayer,
@@ -201,6 +203,7 @@ export const duelReducer = (
               cardId,
               target: 'board',
             }),
+            hasPerformedAction: true,
             coins: shouldPay ? coins - cost : coins,
           },
         },

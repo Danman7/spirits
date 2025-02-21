@@ -1,4 +1,5 @@
-import { DuelAction, DuelTrigger } from 'src/modules/duel/types'
+import { DuelTrigger } from 'src/modules/duel/types'
+import { ACTION_WAIT_TIMEOUT } from 'src/shared/constants'
 import { HighPriestMarkander } from 'src/shared/data'
 import { AgentWithCounter } from 'src/shared/types'
 
@@ -20,7 +21,7 @@ export const advanceTurn: DuelTrigger = {
 
 export const handlePostPlayCard: DuelTrigger = {
   predicate: (_, action) => action.type === 'PLAY_CARD',
-  effect: ({ state, action, dispatch, setLastAction }) => {
+  effect: ({ state, action, dispatch }) => {
     if (action.type !== 'PLAY_CARD') return
 
     const { players } = state
@@ -42,18 +43,37 @@ export const handlePostPlayCard: DuelTrigger = {
     const priest = card as AgentWithCounter
 
     if (categories.includes('Hammerite') && priest.counter > 0) {
-      const action: DuelAction = {
+      dispatch({
         type: 'UPDATE_AGENT',
         playerId,
         cardId: priestId,
         update: {
           counter: priest.counter - 1,
         },
-      }
-
-      dispatch(action)
-
-      setLastAction(action)
+      })
     }
+  },
+}
+
+export const handleAttack: DuelTrigger = {
+  predicate: (state, action) =>
+    (action.type === 'MOVE_TO_NEXT_ATTACKER' ||
+      action.type === 'RESOLVE_TURN') &&
+    !!state.attackingQueue.length,
+  effect: ({ state, dispatch }) => {
+    const { attackingQueue } = state
+    const currentAttack = attackingQueue[0]
+
+    const defendingPlayerId = currentAttack.defendingPlayerId
+
+    dispatch({
+      type: 'AGENT_ATTACK',
+      defendingAgentId: currentAttack.defenderId,
+      defendingPlayerId,
+    })
+
+    setTimeout(() => {
+      dispatch({ type: 'MOVE_TO_NEXT_ATTACKER' })
+    }, ACTION_WAIT_TIMEOUT)
   },
 }

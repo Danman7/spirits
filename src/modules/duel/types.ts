@@ -74,6 +74,7 @@ export type DuelPlayers = {
 export interface AttackOrder {
   attackerId: string
   defenderId: string
+  defendingPlayerId: string
 }
 
 export type DuelPhase =
@@ -90,7 +91,7 @@ export interface DuelState {
   playerOrder: [string, string]
 }
 
-export type DuelDispatch = React.ActionDispatch<[action: DuelAction]>
+export type DuelDispatch = (action: DuelAction) => void
 
 export interface DuelTrigger {
   predicate: (state: DuelState, action: DuelAction) => boolean
@@ -98,11 +99,9 @@ export interface DuelTrigger {
     state,
     action,
     dispatch,
-    setLastAction,
   }: {
     state: DuelState
     action: DuelAction
     dispatch: DuelDispatch
-    setLastAction: React.Dispatch<React.SetStateAction<DuelAction | null>>
   }) => void
 }

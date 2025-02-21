@@ -46,7 +46,7 @@ export const DuelModal: React.FC = () => {
           </>
         )
     }
-  }, [phase])
+  }, [firstPlayerName, secontPlayerName, phase])
 
   useEffect(() => {
     switch (phase) {

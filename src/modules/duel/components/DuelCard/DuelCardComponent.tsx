@@ -1,9 +1,10 @@
 import { FC } from 'react'
 import {
-  useAttackHandler,
+  useCard,
+  useCardStack,
   useDefeatHandler,
-  useDuelCardActions,
-  useDuelCardState,
+  useDuelCardOnClick,
+  useIsAttacking,
 } from 'src/modules/duel/components'
 import { CardComponent } from 'src/shared/components'
 
@@ -18,26 +19,19 @@ export const DuelCardComponent: FC<DuelCardProps> = ({
   playerId,
   isOnTop = false,
 }) => {
-  const { card, stack, isFaceDown, isSmall, isUserActive, isAttacking } =
-    useDuelCardState({ cardId, playerId, isOnTop })
+  const stack = useCardStack(playerId, cardId)
+  const isAttacking = useIsAttacking(cardId)
 
-  const { cost, type } = card
+  const isFaceDown = isOnTop
+    ? ['deck', 'discard', 'hand'].includes(stack)
+    : ['deck', 'discard'].includes(stack)
+  const isSmall = ['deck', 'discard', 'board'].includes(stack)
 
-  const onClick = useDuelCardActions({
-    cardId,
-    playerId,
-    stack,
-    isUserActive,
-    cost,
-  })
+  const onClick = useDuelCardOnClick(cardId, playerId, stack)
 
-  useAttackHandler(cardId, playerId, isAttacking)
-  useDefeatHandler(
-    cardId,
-    playerId,
-    stack,
-    type === 'agent' ? card.strength : 0,
-  )
+  const card = useCard(playerId, cardId)
+
+  useDefeatHandler(cardId, playerId, stack)
 
   return (
     <CardComponent

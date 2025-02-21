@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react'
 import { DuelAction, DuelState } from 'src/modules/duel'
 
 export const DuelContext = createContext<
-  { state: DuelState; dispatch: React.Dispatch<DuelAction> } | undefined
+  { state: DuelState; dispatch: (action: DuelAction) => void } | undefined
 >(undefined)
 
 export const useDuel = () => {

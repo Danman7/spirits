@@ -22,18 +22,20 @@ export const DuelProviderWithMiddleware: React.FC<DuelProps> = ({
     preloadedState || initialState,
   )
 
-  const [lastAction, setLastAction] = useState<DuelAction | null>(null)
+  const [actionList, setActionList] = useState<DuelAction[]>([])
 
   const dispatchWithMiddleware = (action: DuelAction) => {
     dispatch(action)
-    setLastAction(action)
+    setActionList((prev) => [...prev, action])
   }
 
   useEffect(() => {
-    if (!lastAction) return
+    if (!actionList.length) return
 
-    duelMiddleware(state, lastAction, dispatch, setLastAction)
-  }, [lastAction])
+    duelMiddleware(state, actionList[0], dispatchWithMiddleware)
+
+    setActionList((prev) => prev.slice(1))
+  }, [state, actionList])
 
   return (
     <DuelContext.Provider value={{ state, dispatch: dispatchWithMiddleware }}>

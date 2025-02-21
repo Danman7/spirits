@@ -36,7 +36,7 @@ export const AnimatedNumber: FC<AnimatedNumberProps> = ({
 
       updateIdRef.current += 1
     }
-  }, [value])
+  }, [value, previousValue])
 
   return (
     <StyledAnimatedNumber>

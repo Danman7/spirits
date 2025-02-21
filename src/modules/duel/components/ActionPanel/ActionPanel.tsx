@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from 'react'
+import { ReactNode } from 'react'
 import {
   opponentDecidingMessage,
   opponentTurnTitle,
@@ -51,7 +51,7 @@ export const ActionPanel: React.FC = () => {
       playerId,
     })
 
-  const sidePanelContent: ReactNode = useMemo(() => {
+  const sidePanelContent = (): ReactNode => {
     switch (phase) {
       case 'Redrawing':
         return (
@@ -85,7 +85,7 @@ export const ActionPanel: React.FC = () => {
       default:
         return ''
     }
-  }, [hasPerformedAction, isUserActive, phase])
+  }
 
-  return <SidePanel isOpen={isOpen}>{sidePanelContent}</SidePanel>
+  return <SidePanel isOpen={isOpen}>{sidePanelContent()}</SidePanel>
 }

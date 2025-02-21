@@ -154,12 +154,18 @@ export const calculateAttackQueue = (
       players[inactivePlayerId].board[index] ||
       players[inactivePlayerId].board.at(-1) ||
       ''
-    const queue = [{ attackerId, defenderId }]
+    const queue: AttackOrder[] = [
+      { attackerId, defenderId, defendingPlayerId: inactivePlayerId },
+    ]
 
     const defendingAgent = players[inactivePlayerId].cards[defenderId] as Agent
 
     if (defendingAgent?.traits?.retaliates)
-      queue.push({ attackerId: defenderId, defenderId: attackerId })
+      queue.push({
+        attackerId: defenderId,
+        defenderId: attackerId,
+        defendingPlayerId: activePlayerId,
+      })
 
     return queue
   })

@@ -268,6 +268,14 @@ describe('Temple Guard', () => {
         board: ['ElevatedAcolyte', baseName],
       }),
     }
+    preloadedDuel.players[opponentId] = {
+      ...initialOpponentMock,
+      ...normalizePlayerCards({
+        hand: [],
+        board: ['Zombie'],
+      }),
+    }
+
     preloadedDuel.playerOrder = [opponentId, playerId]
 
     const player = preloadedDuel.players[playerId]
