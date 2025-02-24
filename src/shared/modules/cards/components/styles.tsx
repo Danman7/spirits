@@ -1,4 +1,3 @@
-import { motion } from 'motion/react'
 import {
   CardFaction,
   CardStrengthAnimateState,
@@ -27,19 +26,22 @@ const AttackFromBottomOutline = keyframes`
   }
 `
 
-interface CardOutlineProps extends CardFaceProps {
+interface CardIsSmall {
+  $isSmall: boolean
+}
+
+interface AttackingProps {
   $isAttacking: boolean
   $isAttackingFromAbove: boolean
 }
 
-export const CardOutline = styled(motion.div)<CardOutlineProps>`
-  width: ${({ theme, $isSmall }) =>
-    $isSmall ? theme.card.smallWidth : theme.card.width};
-  height: ${({ theme, $isSmall }) =>
-    $isSmall ? theme.card.smallHeight : theme.card.height};
-  border-radius: ${({ theme, $isSmall }) =>
-    $isSmall ? '3px' : theme.borderRadius};
-  font-size: ${({ $isSmall }) => ($isSmall ? '0.594rem' : '1rem')};
+interface CardOutlineProps extends CardIsSmall, AttackingProps {}
+
+export const CardOutline = styled.div<CardOutlineProps>`
+  width: ${({ theme }) => theme.card.width};
+  height: ${({ theme }) => theme.card.height};
+  border-radius: ${({ theme }) => theme.borderRadius};
+  scale: ${({ $isSmall }) => ($isSmall ? '0.6' : '1')};
   perspective: 1000px;
   animation-iteration-count: 2;
   animation-direction: alternate;
@@ -53,30 +55,25 @@ export const CardOutline = styled(motion.div)<CardOutlineProps>`
   }};
 `
 
-interface CardPaperProps extends CardFaceProps {
+interface CardPaperProps {
   $isFaceDown: boolean
 }
 
-export const CardPaper = styled(motion.div)<CardPaperProps>`
+export const CardPaper = styled.div<CardPaperProps>`
   height: 100%;
   transform-style: preserve-3d;
   transition: ${({ theme }) => `transform ${theme.pulsationTime}`};
-  box-shadow: ${({ $isSmall, theme }) =>
-    $isSmall ? theme.boxShadow.level1 : theme.boxShadow.level2};
+  box-shadow: ${({ theme }) => theme.boxShadow.level2};
   border-radius: ${({ theme }) => theme.borderRadius};
   transform: ${({ $isFaceDown }) =>
     $isFaceDown ? 'rotateY(180deg)' : 'rotateY(0)'};
 `
 
-interface CardFaceProps {
-  $isSmall: boolean
-}
-
-const CardFace = styled.div<CardFaceProps>`
+const CardFace = styled.div`
   backface-visibility: hidden;
   width: 100%;
   height: 100%;
-  border-width: ${({ $isSmall }) => ($isSmall ? '1px' : '3px')};
+  border-width: 3px;
   border-style: solid;
   border-color: ${({ theme }) => theme.colors.accent};
   border-radius: ${({ theme }) => theme.borderRadius};
@@ -147,7 +144,7 @@ const Damage = keyframes`
   }
 `
 
-interface CardFrontProps extends CardOutlineProps {
+interface CardFrontProps extends AttackingProps {
   $cardStrengthAnimateState: CardStrengthAnimateState
   $isActive: boolean
   $isUnique?: boolean
@@ -186,10 +183,8 @@ export const CardBack = styled(CardFace)`
   position: absolute;
   top: 0;
   transform: rotateY(180deg);
-  background: ${({ $isSmall, theme }) =>
-    $isSmall
-      ? `repeating-linear-gradient(45deg, ${theme.colors.background}, ${theme.colors.background} 5px, ${theme.colors.accent} 5px, ${theme.colors.accent} 10px)`
-      : `repeating-linear-gradient(45deg, ${theme.colors.background}, ${theme.colors.background} 10px, ${theme.colors.accent} 10px, ${theme.colors.accent} 20px)`};
+  background: ${({ theme }) =>
+    `repeating-linear-gradient(45deg, ${theme.colors.background}, ${theme.colors.background} 10px, ${theme.colors.accent} 10px, ${theme.colors.accent} 20px)`};
 `
 
 interface StyledCardHeaderProps {

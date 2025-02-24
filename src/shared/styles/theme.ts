@@ -27,7 +27,5 @@ export const defaultTheme: DefaultTheme = {
   card: {
     width: '250px',
     height: '350px',
-    smallWidth: '150px',
-    smallHeight: '210px',
   },
 }

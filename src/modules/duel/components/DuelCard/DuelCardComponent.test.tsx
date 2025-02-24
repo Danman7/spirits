@@ -22,7 +22,7 @@ beforeEach(() => {
 })
 
 const {
-  card: { width, height, smallWidth, smallHeight },
+  card: { width, height },
 } = defaultTheme
 
 it('should show the correct card in hand', () => {
@@ -50,27 +50,6 @@ it('should show the correct card in hand', () => {
   expect(cardElementStyle.height).toBe(height)
 })
 
-it('should show a small card on board', () => {
-  const { board, id } = player
-
-  const cardId = board[0]
-
-  const { getByTestId } = renderWithProviders(
-    <DuelCardComponent cardId={cardId} playerId={id} />,
-    {
-      preloadedUser,
-      preloadedDuel,
-    },
-  )
-
-  const cardElementStyle = window.getComputedStyle(
-    getByTestId(`${CARD_TEST_ID}${cardId}`),
-  )
-
-  expect(cardElementStyle.width).toBe(smallWidth)
-  expect(cardElementStyle.height).toBe(smallHeight)
-})
-
 it('should be able to redraw card', () => {
   const { hand, cards, id } = player
 
@@ -80,7 +59,7 @@ it('should be able to redraw card', () => {
 
   preloadedDuel.phase = 'Redrawing'
 
-  const { getByText, queryByText, getByTestId } = renderWithProviders(
+  const { getByText, queryByText } = renderWithProviders(
     <DuelCardComponent cardId={cardId} playerId={id} />,
     {
       preloadedUser,
@@ -95,13 +74,6 @@ it('should be able to redraw card', () => {
   })
 
   expect(queryByText(name)).toBeFalsy()
-
-  const cardElementStyle = window.getComputedStyle(
-    getByTestId(`${CARD_TEST_ID}${cardId}`),
-  )
-
-  expect(cardElementStyle.width).toBe(smallWidth)
-  expect(cardElementStyle.height).toBe(smallHeight)
 })
 
 it('should discard self from board if strength is zero', () => {
@@ -113,7 +85,7 @@ it('should discard self from board if strength is zero', () => {
 
   preloadedDuel.players[id].cards[cardId].strength = 0
 
-  const { queryByText, getByTestId } = renderWithProviders(
+  const { queryByText } = renderWithProviders(
     <DuelCardComponent cardId={cardId} playerId={id} />,
     {
       preloadedUser,
@@ -126,11 +98,4 @@ it('should discard self from board if strength is zero', () => {
   })
 
   expect(queryByText(name)).toBeFalsy()
-
-  const cardElementStyle = window.getComputedStyle(
-    getByTestId(`${CARD_TEST_ID}${cardId}`),
-  )
-
-  expect(cardElementStyle.width).toBe(smallWidth)
-  expect(cardElementStyle.height).toBe(smallHeight)
 })

@@ -41,18 +41,15 @@ export const CardComponent: React.FC<CardProps> = ({
 
   return (
     <CardOutline
-      layoutId={id}
       $isSmall={isSmall}
-      initial={false}
       data-testid={`${CARD_TEST_ID}${id}`}
       $isAttacking={isAttacking}
       $isAttackingFromAbove={isAttackingFromAbove}
       onClick={onClick}
     >
-      <CardPaper $isFaceDown={isFaceDown} $isSmall={isSmall}>
+      <CardPaper $isFaceDown={isFaceDown}>
         {shouldShowFront ? (
           <CardFront
-            $isSmall={isSmall}
             $isAttacking={isAttacking}
             $isAttackingFromAbove={isAttackingFromAbove}
             $isActive={!!onClick}
@@ -65,7 +62,7 @@ export const CardComponent: React.FC<CardProps> = ({
           </CardFront>
         ) : null}
 
-        <CardBack $isSmall={isSmall} />
+        <CardBack />
       </CardPaper>
     </CardOutline>
   )

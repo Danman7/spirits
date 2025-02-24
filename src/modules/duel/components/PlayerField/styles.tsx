@@ -29,6 +29,13 @@ export const PlayerBoard = styled.div<StyledPlayerFieldProps>`
   gap: 0.5rem;
   padding: ${({ theme }) => theme.padding};
   align-items: ${({ $isOnTop }) => ($isOnTop ? 'flex-end' : 'flex-start')};
+  height: 270px;
+
+  ${CardOutline} {
+    transform-origin: ${({ $isOnTop }) =>
+      $isOnTop ? 'bottom center' : 'top center'};
+    margin: 0 -50px;
+  }
 `
 
 export const PlayerHand = styled.div<StyledPlayerFieldProps>`
@@ -63,7 +70,7 @@ export const PlayerHand = styled.div<StyledPlayerFieldProps>`
 
 const FaceDownStack = styled.div<StyledPlayerFieldProps>`
   height: 25px;
-  width: ${({ theme }) => theme.card.smallWidth};
+  width: 150px;
   display: flex;
   align-items: ${({ $isOnTop }) => ($isOnTop ? 'flex-end' : 'inherit')};
 
@@ -75,6 +82,8 @@ const FaceDownStack = styled.div<StyledPlayerFieldProps>`
 
   ${CardOutline} {
     position: absolute;
+    transform-origin: ${({ $isOnTop }) =>
+      $isOnTop ? 'bottom left' : 'top left'};
   }
 `
 

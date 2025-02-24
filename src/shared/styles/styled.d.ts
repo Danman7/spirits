@@ -9,8 +9,6 @@ declare module 'styled-components' {
     card: {
       width: string
       height: string
-      smallWidth: string
-      smallHeight: string
     }
     colors: {
       primary: string
