@@ -1,6 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDuel } from 'src/modules/duel/state/DuelContext'
 import { CardStack } from 'src/modules/duel/types'
+import { usePrevious } from 'src/shared/hooks'
 import { Agent } from 'src/shared/modules/cards/types'
 import { useUser } from 'src/shared/modules/user/state/UserContext'
 
@@ -94,4 +95,73 @@ export const useDefeatHandler = (
 
     dispatch({ type: 'DISCARD_CARD', cardId, playerId })
   }, [cardId, playerId, stack, card.strength, card.type, discard, dispatch])
+}
+
+function getDomRect(el: HTMLElement | null) {
+  if (!el) return null
+
+  const { top, left, width, height } = el.getBoundingClientRect()
+  return { top, left, width, height }
+}
+
+type MovementState = 'first' | 'last' | 'invert'
+
+export const useMovement = ({
+  stack,
+  playerId,
+  cardId,
+  element,
+}: {
+  stack: CardStack
+  playerId: string
+  cardId: string
+  element: HTMLDivElement | null
+}) => {
+  const oldStack = usePrevious(stack)
+
+  const [portal, setPortal] = useState(`${playerId}-${stack}`)
+  const [oldRect, setOldRect] = useState(getDomRect(element))
+
+  const [movingState, setMovingState] = useState<MovementState>('first')
+  const [style, setStyle] = useState<React.CSSProperties>({})
+
+  useEffect(() => {
+    if (!oldStack || oldStack === stack) return
+
+    setStyle({ visibility: 'hidden' })
+
+    setOldRect(getDomRect(element))
+
+    setPortal(`${playerId}-${stack}`)
+
+    setMovingState('last')
+  }, [cardId, playerId, stack, element, oldStack])
+
+  useEffect(() => {
+    if (movingState !== 'last' || !oldRect) return
+
+    const newRect = getDomRect(element)
+
+    if (!newRect) return
+
+    setStyle({
+      visibility: 'hidden',
+      transform: `translate(${oldRect.left - newRect.left}px, ${oldRect.top - newRect.top}px)`,
+    })
+
+    setMovingState('invert')
+  }, [cardId, element, movingState, oldRect])
+
+  useEffect(() => {
+    if (movingState !== 'invert') return
+
+    setStyle({
+      transform: `translate(0, 0)`,
+      transition: 'all 0.3s ease-in-out',
+    })
+
+    setMovingState('first')
+  }, [movingState])
+
+  return { style, portal }
 }

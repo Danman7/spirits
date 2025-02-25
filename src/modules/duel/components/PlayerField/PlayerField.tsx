@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { DuelCardComponent } from 'src/modules/duel/components/DuelCard'
 import { BotController } from 'src/modules/duel/components/PlayerField/BotController'
 import { CardStackList } from 'src/modules/duel/components/PlayerField/CardStackList'
 import { StackBrowseModal } from 'src/modules/duel/components/PlayerField/StackBrowseModal'
@@ -102,6 +103,15 @@ export const PlayerField: React.FC<PlayerFieldProps> = ({
         isOpen={isBrowsingStack}
         onClose={onCloseBrowseStackModal}
       />
+
+      {Object.keys(cards).map((cardId) => (
+        <DuelCardComponent
+          key={cardId}
+          playerId={player.id}
+          cardId={cardId}
+          isOnTop={isOnTop}
+        />
+      ))}
     </StyledPlayerField>
   )
 }

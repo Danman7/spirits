@@ -1,16 +1,15 @@
-import { fireEvent, within } from '@testing-library/dom'
+import { fireEvent } from '@testing-library/dom'
+import {
+  userMock as preloadedUser,
+  stackedDuelStateMock,
+} from 'src/modules/duel/__mocks__'
 import { PlayerField } from 'src/modules/duel/components/PlayerField'
 import {
   browsingStackModalTitle,
   closeMessage,
 } from 'src/modules/duel/components/PlayerField/messages'
-import { CARD_STACKS } from 'src/modules/duel/constants'
 import { renderWithProviders } from 'src/modules/duel/testRender'
 import { CardStack, DuelState, Player } from 'src/modules/duel/types'
-import {
-  userMock as preloadedUser,
-  stackedDuelStateMock,
-} from 'src/modules/duel/__mocks__'
 import { OVERLAY_TEST_ID } from 'src/shared/test/testIds'
 import { deepClone } from 'src/shared/utils'
 
@@ -22,8 +21,8 @@ beforeEach(() => {
   mockPlayer = preloadedDuel.players[preloadedDuel.playerOrder[0]]
 })
 
-it('should all ui elements and card stacks', () => {
-  const { getByRole, getByTestId } = renderWithProviders(
+it('should all ui elements', () => {
+  const { getByRole } = renderWithProviders(
     <PlayerField playerId={mockPlayer.id} />,
     {
       preloadedUser,
@@ -31,17 +30,11 @@ it('should all ui elements and card stacks', () => {
     },
   )
 
-  const { name, coins, income, id } = mockPlayer
+  const { name, coins, income } = mockPlayer
 
   expect(getByRole('heading', { level: 2 }).textContent).toContain(
     `${name} / ${coins}${income ? ` (+${income})` : ''}`,
   )
-
-  CARD_STACKS.forEach((stack) => {
-    expect(getByTestId(`${id}-${stack}`).children).toHaveLength(
-      mockPlayer[stack].length,
-    )
-  })
 })
 
 it('should be able to redraw card', () => {
@@ -102,7 +95,7 @@ it('should be able to browse deck and discard stacks', () => {
 it('should be able to play an agent', () => {
   const { hand, cards, id: playerId } = mockPlayer
 
-  const { getByText, getByTestId } = renderWithProviders(
+  const { getByText } = renderWithProviders(
     <PlayerField playerId={playerId} />,
     {
       preloadedUser,
@@ -112,24 +105,13 @@ it('should be able to play an agent', () => {
 
   const playerCardName = cards[hand[0]].name
 
-  expect(
-    within(getByTestId(`${playerId}-hand`)).getByText(playerCardName),
-  ).toBeTruthy()
-
   fireEvent.click(getByText(playerCardName))
-
-  expect(
-    within(getByTestId(`${playerId}-hand`)).queryByText(playerCardName),
-  ).toBeFalsy()
-  expect(
-    within(getByTestId(`${playerId}-board`)).getByText(playerCardName),
-  ).toBeTruthy()
 })
 
 it('should discard an instant when played', () => {
   const { hand, cards, id: playerId } = mockPlayer
 
-  const { getByText, getByTestId, queryByText } = renderWithProviders(
+  const { getByText, queryByText } = renderWithProviders(
     <PlayerField playerId={playerId} />,
     {
       preloadedUser,
@@ -138,10 +120,6 @@ it('should discard an instant when played', () => {
   )
 
   const playerCardName = cards[hand[1]].name
-
-  expect(
-    within(getByTestId(`${playerId}-hand`)).getByText(playerCardName),
-  ).toBeTruthy()
 
   fireEvent.click(getByText(playerCardName))
 

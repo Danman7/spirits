@@ -31,7 +31,7 @@ export interface Player extends Omit<User, 'deck'>, PlayerStacksAndCards {
 export type DuelUser = User | Bot
 
 interface StackComponentProps {
-  children: React.ReactNode
+  id: string
   $isOnTop?: boolean
   onClick?: React.MouseEventHandler<HTMLDivElement>
 }

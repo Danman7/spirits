@@ -1,3 +1,4 @@
+import { CardMovementWrapper } from 'src/modules/duel/components/DuelCard/styles'
 import { CardOutline } from 'src/shared/modules/cards/components/styles'
 import { Pop } from 'src/shared/styles/global'
 import styled, { css } from 'styled-components'
@@ -31,7 +32,7 @@ export const PlayerBoard = styled.div<StyledPlayerFieldProps>`
   align-items: ${({ $isOnTop }) => ($isOnTop ? 'flex-end' : 'flex-start')};
   height: 270px;
 
-  ${CardOutline} {
+  ${CardMovementWrapper} {
     transform-origin: ${({ $isOnTop }) =>
       $isOnTop ? 'bottom center' : 'top center'};
     margin: 0 -50px;
@@ -71,8 +72,6 @@ export const PlayerHand = styled.div<StyledPlayerFieldProps>`
 const FaceDownStack = styled.div<StyledPlayerFieldProps>`
   height: 25px;
   width: 150px;
-  display: flex;
-  align-items: ${({ $isOnTop }) => ($isOnTop ? 'flex-end' : 'inherit')};
 
   ${({ $isOnTop }) =>
     !$isOnTop &&
@@ -80,10 +79,16 @@ const FaceDownStack = styled.div<StyledPlayerFieldProps>`
   cursor: pointer;
   position: relative;`}
 
+  ${CardMovementWrapper} {
+    ${({ $isOnTop }) =>
+      $isOnTop &&
+      `position: absolute;
+    top: -180px;`}
+  }
+
   ${CardOutline} {
     position: absolute;
-    transform-origin: ${({ $isOnTop }) =>
-      $isOnTop ? 'bottom left' : 'top left'};
+    transform-origin: top left;
   }
 `
 
