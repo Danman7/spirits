@@ -29,8 +29,9 @@ export const PlayerBoard = styled.div<StyledPlayerFieldProps>`
   justify-content: center;
   gap: 0.5rem;
   padding: ${({ theme }) => theme.padding};
-  align-items: ${({ $isOnTop }) => ($isOnTop ? 'flex-end' : 'flex-start')};
-  height: 270px;
+  height: 230px;
+  align-items: anchor-center;
+  align-self: ${({ $isOnTop }) => ($isOnTop ? 'flex-end' : 'flex-start')};
 
   ${CardMovementWrapper} {
     transform-origin: ${({ $isOnTop }) =>

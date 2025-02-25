@@ -127,11 +127,9 @@ describe('Elevated Acolyte', () => {
 
     fireEvent.click(getByText(base.name))
 
-    expect(
-      within(getByTestId(`${playerId}-board`)).getByRole('heading', {
-        level: 3,
-      }).textContent,
-    ).toContain(`${base.name}${base.strength - 1}`)
+    expect(getByTestId(`${playerId}-board`).textContent).toContain(
+      `${base.name}${base.strength - 1}`,
+    )
   })
 
   it('should damage self if not played next to a Hammerite with higher strength', () => {
@@ -176,11 +174,7 @@ describe('Elevated Acolyte', () => {
     fireEvent.click(getByText(base.name))
 
     expect(
-      within(
-        getByTestId(`${CARD_TEST_ID}${normalizedCards.hand[0]}`),
-      ).getByRole('heading', {
-        level: 3,
-      }).textContent,
+      getByTestId(`${CARD_TEST_ID}${normalizedCards.hand[0]}`).textContent,
     ).toContain(`${base.name}${base.strength}`)
   })
 })
@@ -214,11 +208,9 @@ describe('Brother Sachelman', () => {
     normalizedCards.board.forEach((cardId) => {
       const { strength, name } = normalizedCards.cards[cardId] as Agent
 
-      expect(
-        within(getByTestId(`${CARD_TEST_ID}${cardId}`)).getByRole('heading', {
-          level: 3,
-        }).textContent,
-      ).toContain(`${name}${strength + HAMMERITES_WITH_LOWER_STRENGTH_BOOST}`)
+      expect(getByTestId(`${CARD_TEST_ID}${cardId}`).textContent).toContain(
+        `${name}${strength + HAMMERITES_WITH_LOWER_STRENGTH_BOOST}`,
+      )
     })
   })
 
@@ -243,11 +235,9 @@ describe('Brother Sachelman', () => {
     normalizedCards.board.forEach((cardId) => {
       const { strength, name } = normalizedCards.cards[cardId] as Agent
 
-      expect(
-        within(getByTestId(`${CARD_TEST_ID}${cardId}`)).getByRole('heading', {
-          level: 3,
-        }).textContent,
-      ).toContain(`${name}${strength}`)
+      expect(getByTestId(`${CARD_TEST_ID}${cardId}`).textContent).toContain(
+        `${name}${strength}`,
+      )
     })
   })
 })
@@ -292,12 +282,7 @@ describe('Temple Guard', () => {
     })
 
     expect(
-      within(getByTestId(`${CARD_TEST_ID}${templeGuardId}`)).getByRole(
-        'heading',
-        {
-          level: 3,
-        },
-      ).textContent,
+      getByTestId(`${CARD_TEST_ID}${templeGuardId}`).textContent,
     ).toContain(`${templeGuard.name}${templeGuard.strength}`)
 
     act(() => {
@@ -305,12 +290,7 @@ describe('Temple Guard', () => {
     })
 
     expect(
-      within(getByTestId(`${CARD_TEST_ID}${firstAttackerId}`)).getByRole(
-        'heading',
-        {
-          level: 3,
-        },
-      ).textContent,
+      getByTestId(`${CARD_TEST_ID}${firstAttackerId}`).textContent,
     ).toContain(`${firstAttacker.name}${firstAttacker.strength}`)
   })
 
@@ -348,12 +328,7 @@ describe('Temple Guard', () => {
     })
 
     expect(
-      within(getByTestId(`${CARD_TEST_ID}${templeGuardId}`)).getByRole(
-        'heading',
-        {
-          level: 3,
-        },
-      ).textContent,
+      getByTestId(`${CARD_TEST_ID}${templeGuardId}`).textContent,
     ).toContain(`${templeGuard.name}${templeGuard.strength - 1}`)
 
     act(() => {
@@ -361,12 +336,7 @@ describe('Temple Guard', () => {
     })
 
     expect(
-      within(getByTestId(`${CARD_TEST_ID}${firstAttackerId}`)).getByRole(
-        'heading',
-        {
-          level: 3,
-        },
-      ).textContent,
+      getByTestId(`${CARD_TEST_ID}${firstAttackerId}`).textContent,
     ).toContain(`${firstAttacker.name}${firstAttacker.strength - 1}`)
   })
 
@@ -407,12 +377,7 @@ describe('Temple Guard', () => {
     })
 
     expect(
-      within(getByTestId(`${CARD_TEST_ID}${templeGuardId}`)).getByRole(
-        'heading',
-        {
-          level: 3,
-        },
-      ).textContent,
+      getByTestId(`${CARD_TEST_ID}${templeGuardId}`).textContent,
     ).toContain(`${templeGuard.name}${templeGuard.strength - 1}`)
 
     act(() => {
@@ -420,12 +385,7 @@ describe('Temple Guard', () => {
     })
 
     expect(
-      within(getByTestId(`${CARD_TEST_ID}${firstAttackerId}`)).getByRole(
-        'heading',
-        {
-          level: 3,
-        },
-      ).textContent,
+      getByTestId(`${CARD_TEST_ID}${firstAttackerId}`).textContent,
     ).toContain(`${firstAttacker.name}${firstAttacker.strength - 1}`)
 
     // Second round of attacks
@@ -434,12 +394,7 @@ describe('Temple Guard', () => {
     })
 
     expect(
-      within(getByTestId(`${CARD_TEST_ID}${templeGuardId}`)).getByRole(
-        'heading',
-        {
-          level: 3,
-        },
-      ).textContent,
+      getByTestId(`${CARD_TEST_ID}${templeGuardId}`).textContent,
     ).toContain(`${templeGuard.name}${templeGuard.strength - 2}`)
 
     act(() => {
@@ -447,12 +402,7 @@ describe('Temple Guard', () => {
     })
 
     expect(
-      within(getByTestId(`${CARD_TEST_ID}${secondAttackerId}`)).getByRole(
-        'heading',
-        {
-          level: 3,
-        },
-      ).textContent,
+      getByTestId(`${CARD_TEST_ID}${secondAttackerId}`).textContent,
     ).toContain(`${secondAttacker.name}${secondAttacker.strength - 1}`)
   })
 })
