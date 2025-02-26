@@ -1,17 +1,15 @@
 import { INCOME_PER_TURN } from 'src/modules/duel/constants'
-import { invalidFirstPlayerIdError } from 'src/modules/duel/state/messages'
 import { DuelAction, DuelState } from 'src/modules/duel/types'
 import {
   calculateAttackQueue,
   drawCardFromDeck,
   drawInitialCards,
-  haveBothPlayersDrawnCards,
   moveSingleCard,
   redrawCard,
-  setupInitialDuelPlayerFromUser,
+  setInitialPlayerOrder,
+  setPlayersFromUsers,
 } from 'src/modules/duel/utils'
 import { Agent } from 'src/shared/modules/cards/types'
-import { getRandomArrayItem } from 'src/shared/utils'
 
 export const initialState: DuelState = {
   players: {},
@@ -31,22 +29,12 @@ export const duelReducer = (
 
   switch (action.type) {
     case 'START_DUEL': {
-      const { users, firstPlayerId } = action
-
-      if (firstPlayerId && !users.some(({ id }) => id === firstPlayerId))
-        throw new Error(invalidFirstPlayerIdError)
-
-      const activePlayerId = firstPlayerId || getRandomArrayItem(users).id
+      const { users, firstPlayerIndex } = action
 
       return {
         ...state,
-        players: Object.fromEntries(
-          users.map((user) => [user.id, setupInitialDuelPlayerFromUser(user)]),
-        ),
-        playerOrder: [
-          activePlayerId,
-          users.filter(({ id }) => id !== activePlayerId)[0].id,
-        ],
+        players: setPlayersFromUsers(users),
+        playerOrder: setInitialPlayerOrder(users, firstPlayerIndex),
       }
     }
 
@@ -54,18 +42,16 @@ export const duelReducer = (
       return {
         ...state,
         phase: 'Redrawing',
-        players: haveBothPlayersDrawnCards(players)
-          ? players
-          : {
-              [inactivePlayerId]: {
-                ...inactivePlayer,
-                ...drawInitialCards(inactivePlayer),
-              },
-              [activePlayerId]: {
-                ...activePlayer,
-                ...drawInitialCards(activePlayer),
-              },
-            },
+        players: {
+          [inactivePlayerId]: {
+            ...inactivePlayer,
+            ...drawInitialCards(inactivePlayer),
+          },
+          [activePlayerId]: {
+            ...activePlayer,
+            ...drawInitialCards(activePlayer),
+          },
+        },
       }
     }
 

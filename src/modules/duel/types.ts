@@ -41,11 +41,13 @@ export interface StackConfiguration {
   onClickStack?: React.MouseEventHandler<HTMLDivElement>
 }
 
+export type UsersStartingDuel = [DuelUser, DuelUser]
+
 export type DuelAction =
   | {
       type: 'START_DUEL'
-      users: [DuelUser, DuelUser]
-      firstPlayerId?: string
+      users: UsersStartingDuel
+      firstPlayerIndex?: 0 | 1
     }
   | { type: 'DRAW_INITIAL_CARDS' }
   | { type: 'PLAYER_READY'; playerId: string }

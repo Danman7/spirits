@@ -14,10 +14,15 @@ import {
   PlayerCards,
   PlayerStacks,
   PlayerStacksAndCards,
+  UsersStartingDuel,
 } from 'src/modules/duel/types'
 import { CardBases } from 'src/shared/modules/cards/data/bases'
 import { Agent, CardBaseKey } from 'src/shared/modules/cards/types'
-import { generateUUID, shuffleArray } from 'src/shared/utils'
+import {
+  generateUUID,
+  getRandomArrayItem,
+  shuffleArray,
+} from 'src/shared/utils'
 
 export const getPlayableCardIds = (player: Player) =>
   player.hand.filter((cardId) => player.cards[cardId].cost <= player.coins)
@@ -235,4 +240,25 @@ export const getPlayAllCopiesEffect = (
       shouldPay: false,
     })
   })
+}
+
+export const setPlayersFromUsers = (users: UsersStartingDuel): DuelPlayers =>
+  Object.fromEntries(
+    users.map((user) => [user.id, setupInitialDuelPlayerFromUser(user)]),
+  )
+
+export const setInitialPlayerOrder = (
+  users: UsersStartingDuel,
+  firstPlayerIndex?: 0 | 1,
+) => {
+  const userIds = users.map(({ id }) => id) as [string, string]
+
+  const activePlayerId =
+    typeof firstPlayerIndex !== 'undefined'
+      ? userIds[firstPlayerIndex]
+      : getRandomArrayItem(userIds)
+
+  return activePlayerId === userIds[0]
+    ? userIds
+    : ([...userIds].reverse() as [string, string])
 }
