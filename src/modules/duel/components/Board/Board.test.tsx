@@ -1,24 +1,29 @@
 import { fireEvent } from '@testing-library/dom'
-import { passButtonMessage } from 'src/modules/duel/components/ActionPanel/messages'
-import { Board } from 'src/modules/duel/components/Board'
-import { renderWithProviders } from 'src/modules/duel/testRender'
-import { DuelState } from 'src/modules/duel/types'
+import { act } from 'react'
 import {
   initialDuelStateMock,
+  playerId,
   userMock as preloadedUser,
   stackedDuelStateMock,
 } from 'src/modules/duel/__mocks__'
+import {
+  passButtonMessage,
+  skipRedrawLinkMessage,
+} from 'src/modules/duel/components/ActionPanel/messages'
+import { Board } from 'src/modules/duel/components/Board'
+import { INITIAL_CARDS_DRAWN_IN_DUEL } from 'src/modules/duel/constants'
+import { renderWithProviders } from 'src/modules/duel/testRender'
+import { DuelState } from 'src/modules/duel/types'
+import { normalizePlayerCards } from 'src/modules/duel/utils'
 import { Agent } from 'src/shared/modules/cards/types'
 import { CARD_TEST_ID, OVERLAY_TEST_ID } from 'src/shared/test/testIds'
 import { deepClone } from 'src/shared/utils'
-import { INITIAL_CARDS_DRAWN_IN_DUEL } from 'src/modules/duel/constants'
-import { act } from 'react'
 
 jest.useFakeTimers()
 
 let preloadedDuel: DuelState
 
-describe('Initial Setup and Redrawing', () => {
+describe('Setup', () => {
   beforeEach(() => {
     preloadedDuel = deepClone(initialDuelStateMock)
   })
@@ -45,6 +50,59 @@ describe('Initial Setup and Redrawing', () => {
           INITIAL_CARDS_DRAWN_IN_DUEL,
       )
     })
+  })
+})
+
+describe('Redrawing', () => {
+  beforeEach(() => {
+    preloadedDuel = deepClone(initialDuelStateMock)
+
+    preloadedDuel.phase = 'Redrawing'
+    preloadedDuel.players[playerId] = {
+      ...preloadedDuel.players[playerId],
+      ...normalizePlayerCards({
+        hand: ['HammeriteNovice', 'TempleGuard'],
+        deck: ['BrotherSachelman', 'YoraSkull'],
+      }),
+    }
+  })
+
+  it('should be able to redraw a card', () => {
+    const { queryByText, getByText } = renderWithProviders(<Board />, {
+      preloadedUser,
+      preloadedDuel,
+    })
+
+    const { cards, hand, deck } = preloadedDuel.players[playerId]
+    const replacedCardName = cards[hand[0]].name
+    const redrawnCardName = cards[deck[0]].name
+    const advanceTurnDrawnCardName = cards[deck[1]].name
+
+    expect(getByText(replacedCardName)).toBeTruthy()
+    expect(queryByText(redrawnCardName)).toBeFalsy()
+
+    fireEvent.click(getByText(replacedCardName))
+
+    expect(queryByText(replacedCardName)).toBeFalsy()
+    expect(getByText(redrawnCardName)).toBeTruthy()
+    expect(getByText(advanceTurnDrawnCardName)).toBeTruthy()
+  })
+
+  it('should be able to skip redraw', () => {
+    const { queryByText, getByText } = renderWithProviders(<Board />, {
+      preloadedUser,
+      preloadedDuel,
+    })
+
+    const { cards, deck } = preloadedDuel.players[playerId]
+
+    const drawnCardName = cards[deck[0]].name
+
+    expect(queryByText(drawnCardName)).toBeFalsy()
+
+    fireEvent.click(getByText(skipRedrawLinkMessage))
+
+    expect(getByText(drawnCardName)).toBeTruthy()
   })
 })
 

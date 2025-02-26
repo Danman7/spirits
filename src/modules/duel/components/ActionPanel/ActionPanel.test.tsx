@@ -38,7 +38,7 @@ it('should show when the phase is Redrawing', () => {
   expect(getByText(skipRedrawLinkMessage)).toBeTruthy()
 })
 
-it('should be able to skip redrawing', () => {
+it('should be able to skip redraw', () => {
   preloadedDuel.phase = 'Redrawing'
 
   const { getByText } = renderWithProviders(<ActionPanel />, {

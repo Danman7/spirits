@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/dom'
+import { fireEvent, waitFor } from '@testing-library/dom'
 import {
   userMock as preloadedUser,
   stackedDuelStateMock,
@@ -37,31 +37,6 @@ it('should all ui elements', () => {
   )
 })
 
-it('should be able to redraw card', () => {
-  preloadedDuel.phase = 'Redrawing'
-
-  const { getByText, queryByText } = renderWithProviders(
-    <PlayerField playerId={mockPlayer.id} />,
-    {
-      preloadedUser,
-      preloadedDuel,
-    },
-  )
-
-  const { hand, deck, cards } = mockPlayer
-
-  const putBackCard = cards[hand[0]]
-
-  const drawnCardId = cards[deck[0]]
-
-  expect(queryByText(drawnCardId.name)).toBeFalsy()
-
-  fireEvent.click(getByText(putBackCard.name))
-
-  expect(queryByText(putBackCard.name)).toBeFalsy()
-  expect(getByText(drawnCardId.name)).toBeTruthy()
-})
-
 it('should be able to browse deck and discard stacks', () => {
   const { queryByText, getByText, getByTestId } = renderWithProviders(
     <PlayerField playerId={mockPlayer.id} />,
@@ -92,10 +67,10 @@ it('should be able to browse deck and discard stacks', () => {
   })
 })
 
-it('should be able to play an agent', () => {
-  const { hand, cards, id: playerId } = mockPlayer
+it('should be able to play an agent', async () => {
+  const { hand, board, cards, id: playerId } = mockPlayer
 
-  const { getByText } = renderWithProviders(
+  const { getByText, getByTestId } = renderWithProviders(
     <PlayerField playerId={playerId} />,
     {
       preloadedUser,
@@ -105,13 +80,32 @@ it('should be able to play an agent', () => {
 
   const playerCardName = cards[hand[0]].name
 
+  waitFor(() =>
+    expect(getByTestId(`${playerId}-board`).children).toHaveLength(
+      board.length,
+    ),
+  )
+
+  waitFor(() =>
+    expect(getByTestId(`${playerId}-hand`).children).toHaveLength(hand.length),
+  )
+
   fireEvent.click(getByText(playerCardName))
+
+  expect(getByTestId(`${playerId}-board`).textContent).toContain(playerCardName)
+  expect(getByTestId(`${playerId}-board`).children).toHaveLength(
+    board.length + 1,
+  )
+  expect(getByTestId(`${playerId}-hand`).children).toHaveLength(hand.length - 1)
+  expect(getByTestId(`${playerId}-hand`).textContent).not.toContain(
+    playerCardName,
+  )
 })
 
 it('should discard an instant when played', () => {
-  const { hand, cards, id: playerId } = mockPlayer
+  const { hand, discard, board, cards, id: playerId } = mockPlayer
 
-  const { getByText, queryByText } = renderWithProviders(
+  const { getByText, queryByText, getByTestId } = renderWithProviders(
     <PlayerField playerId={playerId} />,
     {
       preloadedUser,
@@ -124,8 +118,13 @@ it('should discard an instant when played', () => {
   fireEvent.click(getByText(playerCardName))
 
   expect(queryByText(playerCardName)).toBeFalsy()
+
+  expect(getByTestId(`${playerId}-discard`).children).toHaveLength(
+    discard.length + 1,
+  )
+  expect(getByTestId(`${playerId}-board`).children).toHaveLength(board.length)
+  expect(getByTestId(`${playerId}-hand`).children).toHaveLength(hand.length - 1)
+  expect(getByTestId(`${playerId}-hand`).textContent).not.toContain(
+    playerCardName,
+  )
 })
-
-it('should attack player with an agent if opponent board is empty', () => {})
-
-it('should attack an agent with an agent if the board is not empty', () => {})

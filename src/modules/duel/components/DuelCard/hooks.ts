@@ -117,47 +117,32 @@ export const useMovement = ({
   const [movingState, setMovingState] = useState<MovementState>('first')
   const [style, setStyle] = useState<React.CSSProperties>({})
 
-  /**
-   * Step 1: Capture the old position before React updates the DOM
-   */
   useLayoutEffect(() => {
     if (!oldStack || oldStack === stack || !element) return
 
-    // Hide the element during movement to prevent flicker
     setStyle({ visibility: 'hidden' })
 
-    // Capture old position
     setOldRect(element.getBoundingClientRect())
 
-    // Move to new portal
     setPortal(`${playerId}-${stack}`)
 
-    // Wait for the next frame before proceeding
     requestAnimationFrame(() => setMovingState('last'))
   }, [cardId, playerId, stack, element, oldStack])
 
-  /**
-   * Step 2: Capture the new position AFTER React has moved the element
-   */
   useLayoutEffect(() => {
     if (movingState !== 'last' || !oldRect || !element) return
 
     const newRect = element.getBoundingClientRect()
     if (!newRect) return
 
-    // Apply initial transform to make it look like it's in the old position
     setStyle({
       visibility: 'visible',
       transform: `translate(${oldRect.left - newRect.left}px, ${oldRect.top - newRect.top}px)`,
     })
 
-    // Move to 'invert' in the next frame
     requestAnimationFrame(() => setMovingState('invert'))
   }, [cardId, element, movingState, oldRect])
 
-  /**
-   * Step 3: Transition to the new position smoothly
-   */
   useEffect(() => {
     if (movingState !== 'invert') return
 
@@ -167,7 +152,6 @@ export const useMovement = ({
       transition: 'transform 0.3s ease',
     }))
 
-    // Reset back to 'first' after animation completes
     setTimeout(() => setMovingState('first'), 300)
   }, [movingState])
 
