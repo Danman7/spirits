@@ -1,5 +1,9 @@
 import { fireEvent } from '@testing-library/dom'
 import { act } from 'react'
+import {
+  initialDuelStateMock,
+  userMock as preloadedUser,
+} from 'src/modules/duel/__mocks__'
 import { DuelModal } from 'src/modules/duel/components/DuelModal'
 import {
   firstPlayerMessage,
@@ -7,10 +11,6 @@ import {
 } from 'src/modules/duel/components/DuelModal/messages'
 import { renderWithProviders } from 'src/modules/duel/testRender'
 import { DuelState } from 'src/modules/duel/types'
-import {
-  initialDuelStateMock,
-  userMock as preloadedUser,
-} from 'src/modules/duel/__mocks__'
 import { OVERLAY_TEST_ID } from 'src/shared/test/testIds'
 import { deepClone } from 'src/shared/utils'
 

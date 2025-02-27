@@ -43,6 +43,7 @@ describe('Setup', () => {
         discard: [],
         hasPerformedAction: false,
       })
+
       expect(deck).toHaveLength(
         users.find(({ id }) => id === playerId)?.deck.length || 0,
       )

@@ -1,12 +1,31 @@
-import { CARD_STACKS, STARTING_COINS_IN_DUEL } from 'src/modules/duel/constants'
-import { Player } from 'src/modules/duel/types'
 import {
+  initialPlayerMock,
+  opponentId,
+  opponentMock,
+  playerId,
+  stackedDuelStateMock,
+  stackedPlayerMock,
+  userMock,
+} from 'src/modules/duel/__mocks__'
+import {
+  CARD_STACKS,
+  INITIAL_CARDS_DRAWN_IN_DUEL,
+  STARTING_COINS_IN_DUEL,
+} from 'src/modules/duel/constants'
+import { AttackOrder, Player } from 'src/modules/duel/types'
+import {
+  calculateAttackQueue,
+  drawCardFromDeck,
+  drawInitialCards,
   getNeighboursIndexes,
   getPlayableCardIds,
   moveSingleCard,
   normalizePlayerCards,
+  redrawCard,
+  setInitialPlayerOrder,
+  setupInitialDuelPlayerFromUser,
+  sortDuelPlayerIdsForBoard,
 } from 'src/modules/duel/utils'
-import { playerId, stackedDuelStateMock } from 'src/modules/duel/__mocks__'
 
 it('should get all playable card ids for a given player with getPlayableCardIds', () => {
   const mockBudgetPlayer: Player = {
@@ -80,4 +99,94 @@ it('should get the correct neighbour indexes from array', () => {
   expect(getNeighboursIndexes(0, ['1', '2'])).toEqual([1])
   expect(getNeighboursIndexes(1, ['1', '2'])).toEqual([0])
   expect(getNeighboursIndexes(1, ['1', '2', '3'])).toEqual([0, 2])
+})
+
+it('should setup setup initial duel players from users', () => {
+  const player = setupInitialDuelPlayerFromUser(userMock)
+  expect(player).toMatchObject({
+    name: userMock.name,
+    id: userMock.id,
+    coins: STARTING_COINS_IN_DUEL,
+    hand: [],
+    board: [],
+    discard: [],
+    hasPerformedAction: false,
+    income: 0,
+  })
+
+  expect(player.deck).toHaveLength(userMock.deck.length)
+})
+
+it('should sort duel players so logged in user is second', () => {
+  expect(
+    sortDuelPlayerIdsForBoard(stackedDuelStateMock.players, playerId),
+  ).toEqual([opponentId, playerId])
+})
+
+it('should get the correct indexes of neighbouring cards', () => {
+  expect(getNeighboursIndexes(0, [])).toEqual([])
+  expect(getNeighboursIndexes(0, ['a', 'b', 'c'])).toEqual([1])
+  expect(getNeighboursIndexes(1, ['a', 'b', 'c'])).toEqual([0, 2])
+  expect(getNeighboursIndexes(2, ['a', 'b', 'c'])).toEqual([1])
+})
+
+it('should update a player when moving a single card between stacks', () => {
+  const cardId = stackedPlayerMock.hand[0]
+  const { hand, board } = moveSingleCard({
+    player: stackedPlayerMock,
+    cardId,
+    target: 'board',
+  })
+
+  expect(hand).not.toContain(cardId)
+  expect(board).toContain(cardId)
+})
+
+it('should update a player when drawing initial cards', () => {
+  const { hand, deck } = drawInitialCards(initialPlayerMock)
+
+  expect(hand).toHaveLength(INITIAL_CARDS_DRAWN_IN_DUEL)
+  expect(deck).toHaveLength(
+    initialPlayerMock.deck.length - INITIAL_CARDS_DRAWN_IN_DUEL,
+  )
+})
+
+it('should update a player when drawing a card from deck', () => {
+  const { hand, deck } = drawCardFromDeck(initialPlayerMock)
+
+  expect(hand).toHaveLength(initialPlayerMock.hand.length + 1)
+  expect(deck).toHaveLength(initialPlayerMock.deck.length - 1)
+})
+
+it('should calculate attack queue', () => {
+  const { players, playerOrder } = stackedDuelStateMock
+  expect(calculateAttackQueue(players, playerOrder)).toEqual([
+    {
+      attackerId: players[playerOrder[0]].board[0],
+      defenderId: players[playerOrder[1]].board[0],
+      defendingPlayerId: playerOrder[1],
+    },
+  ] as AttackOrder[])
+})
+
+it('should redraw a card', () => {
+  const { hand, deck } = redrawCard(
+    stackedPlayerMock,
+    stackedPlayerMock.hand[0],
+  )
+
+  expect(deck).toContain(stackedPlayerMock.hand[0])
+  expect(hand).toContain(stackedPlayerMock.deck[0])
+})
+
+it('should set the initial player order', () => {
+  expect(setInitialPlayerOrder([userMock, opponentMock], 0)).toEqual([
+    userMock.id,
+    opponentMock.id,
+  ])
+
+  expect(setInitialPlayerOrder([userMock, opponentMock], 1)).toEqual([
+    opponentMock.id,
+    userMock.id,
+  ])
 })

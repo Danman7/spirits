@@ -23,6 +23,12 @@ jest.useFakeTimers()
 
 let preloadedDuel: DuelState
 
+it('should not render board if no duel is initiated', () => {
+  const { queryByTestId } = renderWithProviders(<Board />)
+
+  expect(queryByTestId(OVERLAY_TEST_ID)).toBeFalsy()
+})
+
 describe('Setup', () => {
   beforeEach(() => {
     preloadedDuel = deepClone(initialDuelStateMock)

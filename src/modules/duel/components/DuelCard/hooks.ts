@@ -148,7 +148,7 @@ export const useMovement = ({
 
     setStyle((prevStyle) => ({
       ...prevStyle,
-      transform: `translate(0, 0)`,
+      transform: 'translate(0, 0)',
       transition: 'transform 0.3s ease',
     }))
 

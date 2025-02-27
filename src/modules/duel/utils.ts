@@ -10,8 +10,8 @@ import {
   DuelDispatch,
   DuelPlayers,
   DuelUser,
+  PlayCardAction,
   Player,
-  PlayerCards,
   PlayerStacks,
   PlayerStacksAndCards,
   UsersStartingDuel,
@@ -66,15 +66,17 @@ export const setupInitialDuelPlayerFromUser = (user: DuelUser): Player => ({
   income: 0,
 })
 
-export const sortDuelPlayers = (
+export const sortDuelPlayerIdsForBoard = (
   players: DuelPlayers,
   loggedInPlayerId: string,
 ) =>
-  Object.values(players).sort(
-    (playerA, playerB) =>
-      Number(playerA.id === loggedInPlayerId) -
-      Number(playerB.id === loggedInPlayerId),
-  )
+  Object.values(players)
+    .sort(
+      (playerA, playerB) =>
+        Number(playerA.id === loggedInPlayerId) -
+        Number(playerB.id === loggedInPlayerId),
+    )
+    .map(({ id }) => id) as [string, string]
 
 export const getNeighboursIndexes = (
   index: number,
@@ -144,7 +146,6 @@ export const drawInitialCards = (player: Player): Partial<Player> =>
 export const drawCardFromDeck = (player: Player): Partial<Player> =>
   moveCardsForPlayer({
     player,
-    count: 1,
     source: 'deck',
     target: 'hand',
   })
@@ -189,14 +190,6 @@ export const redrawCard = (player: Player, cardId: string): Partial<Player> => {
   return drawCardFromDeck({ ...player, ...cardMovedToBottomOfDeck })
 }
 
-export const filterBrowsedCards = (cards: PlayerCards, stack: string[]) =>
-  Object.fromEntries(Object.entries(cards).filter(([id]) => stack.includes(id)))
-
-export const haveBothPlayersDrawnCards = (players: DuelPlayers) =>
-  Object.values(players).every(
-    ({ hand }) => hand.length >= INITIAL_CARDS_DRAWN_IN_DUEL,
-  )
-
 export const getOnPlayCardPredicate = (
   action: DuelAction,
   players: DuelPlayers,
@@ -213,9 +206,7 @@ export const getPlayAllCopiesEffect = (
   comparingBase: CardBaseKey,
   dispatch: DuelDispatch,
 ) => {
-  if (action.type !== 'PLAY_CARD') return
-
-  const { playerId, cardId: playedCardId } = action
+  const { playerId, cardId: playedCardId } = action as PlayCardAction
 
   const player = players[playerId]
   const { cards, board, discard } = player

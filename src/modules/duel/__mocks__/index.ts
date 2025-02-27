@@ -55,7 +55,7 @@ export const initialDuelStateMock: DuelState = {
   playerOrder: [playerId, opponentId],
 }
 
-const stackedPlayerMock: Player = {
+export const stackedPlayerMock: Player = {
   ...initialPlayerMock,
   income: 2,
   ...normalizePlayerCards({

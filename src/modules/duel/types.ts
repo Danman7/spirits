@@ -43,6 +43,20 @@ export interface StackConfiguration {
 
 export type UsersStartingDuel = [DuelUser, DuelUser]
 
+export type PlayCardAction = {
+  type: 'PLAY_CARD'
+  playerId: string
+  cardId: string
+  shouldPay?: boolean
+}
+
+export type UpdateAgentAction = {
+  type: 'UPDATE_AGENT'
+  playerId: string
+  cardId: string
+  update: Partial<Agent>
+}
+
 export type DuelAction =
   | {
       type: 'START_DUEL'
@@ -61,14 +75,9 @@ export type DuelAction =
     }
   | { type: 'MOVE_TO_NEXT_ATTACKER' }
   | { type: 'REDRAW_CARD'; playerId: string; cardId: string }
-  | { type: 'PLAY_CARD'; playerId: string; cardId: string; shouldPay?: boolean }
+  | PlayCardAction
   | { type: 'DISCARD_CARD'; playerId: string; cardId: string }
-  | {
-      type: 'UPDATE_AGENT'
-      playerId: string
-      cardId: string
-      update: Partial<Agent>
-    }
+  | UpdateAgentAction
   | { type: 'RESET_DUEL' }
 
 export type DuelPlayers = {

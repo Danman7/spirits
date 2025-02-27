@@ -1,4 +1,4 @@
-import { DuelTrigger } from 'src/modules/duel/types'
+import { DuelTrigger, PlayCardAction } from 'src/modules/duel/types'
 import { ACTION_WAIT_TIMEOUT } from 'src/shared/constants'
 import { HighPriestMarkander } from 'src/shared/modules/cards/data/bases'
 import { AgentWithCounter } from 'src/shared/modules/cards/types'
@@ -22,10 +22,8 @@ export const advanceTurn: DuelTrigger = {
 export const handlePostPlayCard: DuelTrigger = {
   predicate: (_, action) => action.type === 'PLAY_CARD',
   effect: ({ state, action, dispatch }) => {
-    if (action.type !== 'PLAY_CARD') return
-
     const { players } = state
-    const { shouldPay, cardId, playerId } = action
+    const { shouldPay, cardId, playerId } = action as PlayCardAction
 
     if (shouldPay) dispatch({ type: 'RESOLVE_TURN' })
 

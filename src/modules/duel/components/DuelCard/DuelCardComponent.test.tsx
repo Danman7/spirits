@@ -1,12 +1,12 @@
 import { fireEvent } from '@testing-library/dom'
 import { act } from 'react'
-import { DuelCardComponent } from 'src/modules/duel/components/DuelCard'
-import { renderWithProviders } from 'src/modules/duel/testRender'
-import { DuelState, Player } from 'src/modules/duel/types'
 import {
   userMock as preloadedUser,
   stackedDuelStateMock,
 } from 'src/modules/duel/__mocks__'
+import { DuelCardComponent } from 'src/modules/duel/components/DuelCard'
+import { renderWithProviders } from 'src/modules/duel/testRender'
+import { DuelState, Player } from 'src/modules/duel/types'
 import { defaultTheme } from 'src/shared/styles/theme'
 import { CARD_TEST_ID } from 'src/shared/test/testIds'
 import { deepClone } from 'src/shared/utils'

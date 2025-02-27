@@ -67,7 +67,7 @@ it('should be able to browse deck and discard stacks', () => {
   })
 })
 
-it('should be able to play an agent', async () => {
+it('should be able to play an agent', () => {
   const { hand, board, cards, id: playerId } = mockPlayer
 
   const { getByText, getByTestId } = renderWithProviders(
