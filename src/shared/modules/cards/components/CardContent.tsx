@@ -15,11 +15,9 @@ export const CardContent: React.FC<CardContentProps> = ({ card, id }) => {
 
   return (
     <StyledCardContent>
-      {description
-        ? description.map((paragraph, index) => (
-            <p key={`${id}-description-${index}`}>{paragraph}</p>
-          ))
-        : null}
+      {description.map((paragraph, index) => (
+        <p key={`${id}-description-${index}`}>{paragraph}</p>
+      ))}
 
       {type === 'agent' && card.traits
         ? Object.keys(card.traits).map((trait: AgentTraitName) => (
