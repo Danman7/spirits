@@ -5,4 +5,6 @@ export const StyledBoard = styled.div`
   height: 100vh;
   position: relative;
   overflow: hidden;
+  color: ${({ theme }) => theme.colors.text};
+  background: ${({ theme }) => theme.colors.background};
 `

@@ -23,8 +23,6 @@ body {
   font-size: 16px;
   font-weight: 400;
   line-height: 1.5;
-  color: ${({ theme }) => theme.colors.text};
-  background: ${({ theme }) => theme.colors.background};
 }
 
 small {
