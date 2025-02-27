@@ -1,4 +1,5 @@
 import { createContext, useContext } from 'react'
+import { duelContextError } from 'src/modules/duel/state/messages'
 import { DuelAction, DuelState } from 'src/modules/duel/types'
 
 export const DuelContext = createContext<
@@ -7,6 +8,6 @@ export const DuelContext = createContext<
 
 export const useDuel = () => {
   const context = useContext(DuelContext)
-  if (!context) throw new Error('useDuel must be used within a DuelProvider')
+  if (!context) throw new Error(duelContextError)
   return context
 }

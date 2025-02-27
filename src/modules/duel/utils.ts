@@ -221,7 +221,6 @@ export const getPlayAllCopiesEffect = (
   const { cards, board, discard } = player
   const base = CardBases[comparingBase]
 
-  // Move each copy to board if it is not on board or in discard
   Object.keys(cards).forEach((cardId) => {
     const { name } = cards[cardId]
 

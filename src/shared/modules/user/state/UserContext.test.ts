@@ -1,8 +1,9 @@
 import { renderHook } from '@testing-library/react'
+import { userContextError } from 'src/shared/modules/user/messages'
 import { useUser } from 'src/shared/modules/user/state/UserContext'
 
-test('useUser throws an error when used outside UserProvider', () => {
+it('should throw an error when useUser is used outside UserProvider', () => {
   expect(() => {
     renderHook(() => useUser())
-  }).toThrow('useUser must be used within a UserProvider')
+  }).toThrow(userContextError)
 })

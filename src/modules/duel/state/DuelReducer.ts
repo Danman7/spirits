@@ -113,9 +113,12 @@ export const duelReducer = (
             ...inactivePlayer,
             ...drawCardFromDeck(inactivePlayer),
             hasPerformedAction: false,
-            coins:
-              inactivePlayer.coins +
-              (inactivePlayer.income ? INCOME_PER_TURN : 0),
+            coins: inactivePlayer.income
+              ? inactivePlayer.coins + INCOME_PER_TURN
+              : inactivePlayer.coins,
+            income: inactivePlayer.income
+              ? inactivePlayer.income - INCOME_PER_TURN
+              : inactivePlayer.income,
           },
           [activePlayerId]: {
             ...activePlayer,

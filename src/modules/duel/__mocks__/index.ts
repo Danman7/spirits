@@ -25,7 +25,7 @@ export const userMock: User = {
   ],
 }
 
-const opponentMock: Bot = {
+export const opponentMock: Bot = {
   id: opponentId,
   name: 'Karras',
   isBot: true,

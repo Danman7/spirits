@@ -4,7 +4,7 @@ import {
 } from 'src/shared/modules/user/state/userReducer'
 import { User, UserAction } from 'src/shared/modules/user/types'
 
-test('should load a user when LOAD_USER action is dispatched', () => {
+it('should load a user when LOAD_USER action is dispatched', () => {
   const action: UserAction = {
     type: 'LOAD_USER',
     user: {
@@ -17,10 +17,10 @@ test('should load a user when LOAD_USER action is dispatched', () => {
   const newState = userReducer(initialState, action)
 
   expect(newState).toEqual(action.user)
-  expect(newState).not.toBe(initialState) // Ensures immutability
+  expect(newState).not.toBe(initialState)
 })
 
-test('should reset user when RESET_USER action is dispatched', () => {
+it('should reset user when RESET_USER action is dispatched', () => {
   const action: UserAction = { type: 'RESET_USER' }
 
   const previousState: User = {
@@ -34,7 +34,7 @@ test('should reset user when RESET_USER action is dispatched', () => {
   expect(newState).not.toBe(previousState)
 })
 
-test('should return current state for unknown actions', () => {
+it('should return current state for unknown actions', () => {
   const action = { type: 'UNKNOWN_ACTION' } as unknown as UserAction
 
   const previousState: User = {
