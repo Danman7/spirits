@@ -237,3 +237,7 @@ export const CardFlavor = styled.small`
   font-style: italic;
   color: ${({ theme }) => theme.colors.accent};
 `
+
+export const FooterSection = styled.div`
+  display: inline-block;
+`

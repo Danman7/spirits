@@ -52,7 +52,7 @@ export const ActionPanel: React.FC = () => {
 
   const onReady = () =>
     dispatch({
-      type: 'PLAYER_READY',
+      type: 'SKIP_REDRAW',
       playerId,
     })
 

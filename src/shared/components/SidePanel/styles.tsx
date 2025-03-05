@@ -27,14 +27,16 @@ const SlideOutToLeft = keyframes`
   }
 `
 
-export const Panel = styled(Box)<AnimateStateProps>`
+interface PanelProps extends AnimateStateProps {
+  $color: React.CSSProperties['color']
+}
+
+export const Panel = styled(Box)<PanelProps>`
   max-width: 280px;
-  position: absolute;
   text-align: left;
-  left: 1em;
-  bottom: 3em;
-  border-left: 3px solid var(--primary-color);
-  border-left: ${({ theme }) => `3px solid ${theme.colors.primary}`};
+  border-left-width: 3px;
+  border-left-style: solid;
+  border-left-color: ${({ $color, theme }) => $color || theme.colors.primary};
   z-index: 3;
   animation-duration: ${({ theme }) => theme.transitionTime};
   animation-timing-function: ease-in-out;

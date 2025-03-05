@@ -16,13 +16,14 @@ export const initialState: DuelState = {
   playerOrder: ['', ''],
   attackingQueue: [],
   phase: 'Initial Draw',
+  logs: [],
 }
 
 export const duelReducer = (
   state: Readonly<DuelState>,
   action: DuelAction,
 ): DuelState => {
-  const { playerOrder, players } = state
+  const { playerOrder, players, logs } = state
   const [activePlayerId, inactivePlayerId] = playerOrder
   const activePlayer = state.players[activePlayerId]
   const inactivePlayer = state.players[inactivePlayerId]
@@ -55,7 +56,7 @@ export const duelReducer = (
       }
     }
 
-    case 'PLAYER_READY': {
+    case 'SKIP_REDRAW': {
       const { playerId } = action
 
       return {
@@ -64,6 +65,12 @@ export const duelReducer = (
           ...players,
           [playerId]: { ...players[playerId], hasPerformedAction: true },
         },
+        logs: [
+          ...logs,
+          <p>
+            <strong>{players[playerId].name}</strong> has skipped redraw.
+          </p>,
+        ],
       }
     }
 
@@ -81,6 +88,12 @@ export const duelReducer = (
             hasPerformedAction: true,
           },
         },
+        logs: [
+          ...logs,
+          <p>
+            <strong>{players[playerId].name}</strong> has redrawn a card.
+          </p>,
+        ],
       }
     }
 
@@ -243,6 +256,12 @@ export const duelReducer = (
         },
       }
     }
+
+    case 'ADD_LOG':
+      return {
+        ...state,
+        logs: [...state.logs, action.message],
+      }
 
     default:
       return state

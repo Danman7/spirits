@@ -430,7 +430,7 @@ describe('High Priest Markander', () => {
       preloadedDuel,
     })
 
-    expect(getByText(`Counter: ${base.counter}`)).toBeTruthy()
+    expect(getByText(base.counter as number)).toBeTruthy()
 
     fireEvent.click(getByText(ElevatedAcolyte.name))
 
@@ -438,7 +438,7 @@ describe('High Priest Markander', () => {
       jest.runAllTimers()
     })
 
-    expect(getByText(`Counter: ${(base.counter as number) - 1}`)).toBeTruthy()
+    expect(getByText((base.counter as number) - 1)).toBeTruthy()
   })
 
   it('should play High Priest Markander if counter reaches 0', () => {

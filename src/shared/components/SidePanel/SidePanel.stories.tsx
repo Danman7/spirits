@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { LeftPanelsWrapper } from 'src/modules/duel/components/Board/styles'
 import { Link } from 'src/shared/components/Link'
 import { SidePanel } from 'src/shared/components/SidePanel/SidePanel'
+import { defaultTheme } from 'src/shared/styles/theme'
 
 const meta = {
   title: 'SidePanel',
@@ -16,7 +18,11 @@ const meta = {
     },
   },
   decorators: [
-    (story) => <div style={{ width: '100%', height: '300px' }}>{story()}</div>,
+    (story) => (
+      <div style={{ width: '100%', height: '300px' }}>
+        <LeftPanelsWrapper>{story()}</LeftPanelsWrapper>
+      </div>
+    ),
   ],
   args: {
     isOpen: true,
@@ -47,5 +53,11 @@ export const NodeContent: Story = {
         <Link onClick={() => {}}>A link</Link>
       </>
     ),
+  },
+}
+
+export const CustomColor: Story = {
+  args: {
+    color: defaultTheme.colors.hilight,
   },
 }

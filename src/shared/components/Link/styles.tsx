@@ -8,6 +8,8 @@ export const StyledLink = styled.button`
   color: ${({ theme }) => theme.colors.primary};
   font-weight: 700;
   transition: ${({ theme }) => `all ${theme.transitionTime}`};
+  margin: 0;
+  padding: 0;
 
   &:hover {
     scale: 1.1;

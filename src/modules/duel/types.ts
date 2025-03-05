@@ -64,7 +64,7 @@ export type DuelAction =
       firstPlayerIndex?: 0 | 1
     }
   | { type: 'DRAW_INITIAL_CARDS' }
-  | { type: 'PLAYER_READY'; playerId: string }
+  | { type: 'SKIP_REDRAW'; playerId: string }
   | { type: 'COMPLETE_REDRAW' }
   | { type: 'ADVANCE_TURN' }
   | { type: 'RESOLVE_TURN' }
@@ -79,6 +79,7 @@ export type DuelAction =
   | { type: 'DISCARD_CARD'; playerId: string; cardId: string }
   | UpdateAgentAction
   | { type: 'RESET_DUEL' }
+  | { type: 'ADD_LOG'; message: React.ReactNode }
 
 export type DuelPlayers = {
   [index: string]: Player
@@ -102,6 +103,7 @@ export interface DuelState {
   attackingQueue: AttackOrder[]
   players: DuelPlayers
   playerOrder: [string, string]
+  logs: React.ReactNode[]
 }
 
 export type DuelDispatch = (action: DuelAction) => void

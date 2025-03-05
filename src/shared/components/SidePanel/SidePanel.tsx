@@ -6,9 +6,10 @@ import { PANEL_TEST_ID } from 'src/shared/test/testIds'
 interface SidePanelProps {
   isOpen: boolean
   children: ReactNode
+  color?: React.CSSProperties['color']
 }
 
-export const SidePanel: FC<SidePanelProps> = ({ isOpen, children }) => {
+export const SidePanel: FC<SidePanelProps> = ({ isOpen, children, color }) => {
   const [shouldShowPanel, setShouldShowPanel] = useState(isOpen)
   const [animation, setAnimation] = useState<AnimateState>('')
 
@@ -34,6 +35,7 @@ export const SidePanel: FC<SidePanelProps> = ({ isOpen, children }) => {
       data-testid={PANEL_TEST_ID}
       $animateState={animation}
       onAnimationEnd={onAnimationEnd}
+      $color={color}
     >
       {children}
     </Panel>

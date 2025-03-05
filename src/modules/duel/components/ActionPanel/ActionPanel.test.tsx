@@ -28,13 +28,13 @@ beforeEach(() => {
 it('should show when the phase is Redrawing', () => {
   preloadedDuel.phase = 'Redrawing'
 
-  const { getByText } = renderWithProviders(<ActionPanel />, {
+  const { getByText, getByTestId } = renderWithProviders(<ActionPanel />, {
     preloadedUser,
     preloadedDuel,
   })
 
   expect(getByText(redrawingtitle)).toBeTruthy()
-  expect(getByText(redrawMessage)).toBeTruthy()
+  expect(getByTestId(PANEL_TEST_ID).textContent).toContain(redrawMessage)
   expect(getByText(skipRedrawLinkMessage)).toBeTruthy()
 })
 
@@ -55,13 +55,13 @@ it('should be able to skip redraw', () => {
 it("should show when it's the player's turn and he hasn't performed an action", () => {
   preloadedDuel.phase = 'Player Turn'
 
-  const { getByText } = renderWithProviders(<ActionPanel />, {
+  const { getByTestId, getByText } = renderWithProviders(<ActionPanel />, {
     preloadedUser,
     preloadedDuel,
   })
 
   expect(getByText(yourTurnTitle)).toBeTruthy()
-  expect(getByText(yourTurnMessage)).toBeTruthy()
+  expect(getByTestId(PANEL_TEST_ID).textContent).toContain(yourTurnMessage)
   expect(getByText(passButtonMessage)).toBeTruthy()
 })
 

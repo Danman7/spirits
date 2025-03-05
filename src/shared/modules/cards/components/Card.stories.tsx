@@ -8,6 +8,7 @@ import {
   HammeriteNovice,
   Haunt,
   HighPriestMarkander,
+  TempleGuard,
   ViktoriaThiefPawn,
 } from 'src/shared/modules/cards/data/bases'
 
@@ -206,6 +207,19 @@ export const DamagedAgent: Story = {
     docs: {
       description: {
         story: 'An example of an agent with less strength that its base.',
+      },
+    },
+  },
+}
+
+export const WithTraits: Story = {
+  args: {
+    card: TempleGuard,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'An example of an agent with the Retaliates trait.',
       },
     },
   },

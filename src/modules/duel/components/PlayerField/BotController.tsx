@@ -24,7 +24,7 @@ export const BotController: FC<BotControllerProps> = ({ playerId }) => {
     if (phase !== 'Redrawing' || hasPerformedAction) return
 
     dispatch({
-      type: 'PLAYER_READY',
+      type: 'SKIP_REDRAW',
       playerId,
     })
   }, [playerId, phase, hasPerformedAction, dispatch])

@@ -78,23 +78,9 @@ describe('Setup', () => {
 })
 
 describe('Redraw', () => {
-  it('should set player hasPerformedAction to true when PLAYER_READY action is dispatched', () => {
+  it('should set player hasPerformedAction to true when SKIP_REDRAW action is dispatched', () => {
     const action: DuelAction = {
-      type: 'PLAYER_READY',
-      playerId,
-    }
-
-    const {
-      players: { [playerId]: player, [opponentId]: opponent },
-    } = duelReducer(initialDuelStateMock, action)
-
-    expect(player.hasPerformedAction).toBe(true)
-    expect(opponent.hasPerformedAction).toBe(false)
-  })
-
-  it('should set player hasPerformedAction to true when PLAYER_READY action is dispatched', () => {
-    const action: DuelAction = {
-      type: 'PLAYER_READY',
+      type: 'SKIP_REDRAW',
       playerId,
     }
 
@@ -325,14 +311,32 @@ describe('Player Turns', () => {
   })
 })
 
-it('should return current state for unknown actions', () => {
-  const action = { type: 'UNKNOWN_ACTION' } as unknown as DuelAction
+describe('General', () => {
+  it('should return current state for unknown actions', () => {
+    const action = { type: 'UNKNOWN_ACTION' } as unknown as DuelAction
 
-  const previousState: DuelState = {
-    ...initialState,
-    phase: 'Resolving turn',
-  }
-  const newState = duelReducer(previousState, action)
+    const previousState: DuelState = {
+      ...initialState,
+      phase: 'Resolving turn',
+    }
+    const newState = duelReducer(previousState, action)
 
-  expect(newState).toBe(previousState)
+    expect(newState).toBe(previousState)
+  })
+
+  it('should be able to add a message to the logs', () => {
+    const opponent = stackedDuelStateMock.players[opponentId]
+    const message: React.ReactNode = (
+      <p>
+        {opponent.name} has played {opponent.cards[opponent.hand[0]].name}.
+      </p>
+    )
+    const action: DuelAction = {
+      type: 'ADD_LOG',
+      message,
+    }
+
+    const { logs } = duelReducer(initialDuelStateMock, action)
+    expect(logs).toContain(message)
+  })
 })

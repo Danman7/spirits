@@ -17,7 +17,7 @@ it('should display all UI segments of a card when face up', () => {
   expect(getByRole('heading', { level: 3 }).textContent).toContain(
     `${name}${strength}`,
   )
-  expect(getByText(`Cost: ${cost}`)).toBeTruthy()
+  expect(getByText(cost)).toBeTruthy()
   expect(getByText(joinStringArrayWithComma(categories))).toBeTruthy()
   expect(getByText(description[0])).toBeTruthy()
   expect(getByText(flavor)).toBeTruthy()

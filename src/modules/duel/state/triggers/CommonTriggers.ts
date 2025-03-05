@@ -5,7 +5,7 @@ import { AgentWithCounter } from 'src/shared/modules/cards/types'
 
 export const completeRedraw: DuelTrigger = {
   predicate: (state, action) =>
-    (action.type === 'PLAYER_READY' || action.type === 'REDRAW_CARD') &&
+    (action.type === 'SKIP_REDRAW' || action.type === 'REDRAW_CARD') &&
     state.phase === 'Redrawing' &&
     Object.values(state.players).every(
       ({ hasPerformedAction }) => !!hasPerformedAction,

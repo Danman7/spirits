@@ -1,6 +1,10 @@
 import { ActionPanel } from 'src/modules/duel/components/ActionPanel'
-import { StyledBoard } from 'src/modules/duel/components/Board/styles'
+import {
+  LeftPanelsWrapper,
+  StyledBoard,
+} from 'src/modules/duel/components/Board/styles'
 import { DuelModal } from 'src/modules/duel/components/DuelModal'
+import { LogsPanel } from 'src/modules/duel/components/LogsPanel'
 import { PlayerField } from 'src/modules/duel/components/PlayerField'
 import { useDuel } from 'src/modules/duel/state/DuelContext'
 import { sortDuelPlayerIdsForBoard } from 'src/modules/duel/utils'
@@ -25,7 +29,10 @@ export const Board: React.FC = () => {
 
       <DuelModal />
 
-      <ActionPanel />
+      <LeftPanelsWrapper>
+        <LogsPanel />
+        <ActionPanel />
+      </LeftPanelsWrapper>
     </StyledBoard>
   ) : null
 }
