@@ -6,6 +6,7 @@ const config: Config = {
   moduleDirectories: ['node_modules', 'src'],
   moduleNameMapper: {
     '.+\\.(css|styl|less|sass|scss)$': 'identity-obj-proxy',
+    '\\.svg\\?react$': '<rootDir>/src/__mocks__/SvgMock.tsx',
     'src/(.*)': '<rootDir>/src/$1',
   },
   transform: {
