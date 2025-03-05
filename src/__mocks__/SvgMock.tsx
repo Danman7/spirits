@@ -4,5 +4,5 @@ const MockSvg = (props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) => (
   <svg {...props} />
 )
 
-export default MockSvg // For default imports
-export const ReactComponent = MockSvg // For named imports
+export default MockSvg
+export const ReactComponent = MockSvg

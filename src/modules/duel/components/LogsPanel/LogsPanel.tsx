@@ -13,13 +13,11 @@ import { Icon } from 'src/shared/components/Icon'
 import { Link } from 'src/shared/components/Link'
 import { SidePanel } from 'src/shared/components/SidePanel'
 import { defaultTheme } from 'src/shared/styles/theme'
+import { OPEN_LOGS_ICON } from 'src/shared/test/testIds'
 
 export const LogsPanel: React.FC = () => {
   const {
-    state: {
-      playerOrder: [activePlayerId],
-      logs,
-    },
+    state: { logs },
   } = useDuel()
 
   const [isOpen, setIsOpen] = useState(false)
@@ -27,9 +25,13 @@ export const LogsPanel: React.FC = () => {
   const onOpenLogs = () => setIsOpen(true)
   const onHideLogs = () => setIsOpen(false)
 
-  return activePlayerId ? (
+  return (
     <LogsPanelWrapper>
-      <OpenLogsIcon $isVisible={!!logs.length && !isOpen} onClick={onOpenLogs}>
+      <OpenLogsIcon
+        $isVisible={!!logs.length && !isOpen}
+        onClick={onOpenLogs}
+        data-testid={OPEN_LOGS_ICON}
+      >
         <Icon name="Scroll" />
       </OpenLogsIcon>
       <SidePanel isOpen={isOpen} color={defaultTheme.colors.hilight}>
@@ -42,5 +44,5 @@ export const LogsPanel: React.FC = () => {
         <Link onClick={onHideLogs}>{hideLogsLink}</Link>
       </SidePanel>
     </LogsPanelWrapper>
-  ) : null
+  )
 }
