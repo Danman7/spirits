@@ -32,7 +32,7 @@ interface PanelProps extends AnimateStateProps {
 }
 
 export const Panel = styled(Box)<PanelProps>`
-  max-width: 280px;
+  width: 290px;
   text-align: left;
   border-left-width: 3px;
   border-left-style: solid;

@@ -60,13 +60,11 @@ export const handleAttack: DuelTrigger = {
     !!state.attackingQueue.length,
   effect: ({ state, dispatch }) => {
     const { attackingQueue } = state
-    const currentAttack = attackingQueue[0]
-
-    const defendingPlayerId = currentAttack.defendingPlayerId
+    const { defenderId, defendingPlayerId } = attackingQueue[0]
 
     dispatch({
       type: 'AGENT_ATTACK',
-      defendingAgentId: currentAttack.defenderId,
+      defendingAgentId: defenderId,
       defendingPlayerId,
     })
 

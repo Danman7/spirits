@@ -190,6 +190,7 @@ describe('Player Turns', () => {
       {
         attackerId: activePlayer.board[0],
         defenderId: inactivePlayer.board[0],
+        attackingPlayerId: activePlayerId,
         defendingPlayerId: inactivePlayerId,
       },
     ] as AttackOrder[])
@@ -197,6 +198,14 @@ describe('Player Turns', () => {
 
   it('should attack the defending agent if AGENT_ATTACK action is dispatched', () => {
     const defendingAgentId = stackedDuelStateMock.players[opponentId].board[0]
+    stackedDuelStateMock.attackingQueue = [
+      {
+        attackerId: stackedDuelStateMock.players[playerId].board[0],
+        attackingPlayerId: playerId,
+        defenderId: defendingAgentId,
+        defendingPlayerId: opponentId,
+      },
+    ]
 
     const action: DuelAction = {
       type: 'AGENT_ATTACK',
@@ -221,6 +230,14 @@ describe('Player Turns', () => {
       type: 'AGENT_ATTACK',
       defendingPlayerId: opponentId,
     }
+    stackedDuelStateMock.attackingQueue = [
+      {
+        attackerId: stackedDuelStateMock.players[playerId].board[0],
+        attackingPlayerId: playerId,
+        defenderId: '',
+        defendingPlayerId: opponentId,
+      },
+    ]
 
     const {
       players: { [opponentId]: opponent },
@@ -240,6 +257,7 @@ describe('Player Turns', () => {
     mockState.attackingQueue = [
       {
         attackerId: '1',
+        attackingPlayerId: '4',
         defenderId: '2',
         defendingPlayerId: '3',
       },

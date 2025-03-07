@@ -19,8 +19,16 @@ import {
   HighPriestMarkander,
 } from 'src/shared/modules/cards/data/bases'
 import { Agent, CardBaseKey } from 'src/shared/modules/cards/types'
-import { CARD_TEST_ID } from 'src/shared/test/testIds'
+import {
+  CARD_TEST_ID,
+  LOGS_CONTENT,
+  OPEN_LOGS_ICON,
+} from 'src/shared/test/testIds'
 import { deepClone } from 'src/shared/utils'
+import {
+  agentRetaliatesLogMessage,
+  hasPlayedCardLogMessage,
+} from 'src/modules/duel/state/messages'
 
 jest.useFakeTimers()
 
@@ -59,6 +67,12 @@ describe('Hammerite Novice', () => {
     expect(
       within(getByTestId(`${playerId}-board`)).getAllByText(base.name),
     ).toHaveLength(2)
+
+    fireEvent.click(getByTestId(OPEN_LOGS_ICON))
+
+    expect(getByTestId(LOGS_CONTENT).textContent).toContain(
+      `${hasPlayedCardLogMessage}${base.name}`,
+    )
   })
 
   it('should not play any copies if there is no Hammerite is in play', () => {
@@ -338,6 +352,12 @@ describe('Temple Guard', () => {
     expect(
       getByTestId(`${CARD_TEST_ID}${firstAttackerId}`).textContent,
     ).toContain(`${firstAttacker.name}${firstAttacker.strength - 1}`)
+
+    fireEvent.click(getByTestId(OPEN_LOGS_ICON))
+
+    expect(getByTestId(LOGS_CONTENT).textContent).toContain(
+      `${templeGuard.name}${agentRetaliatesLogMessage}${firstAttacker.name}`,
+    )
   })
 
   it('should retaliate twice if attacked twice', () => {

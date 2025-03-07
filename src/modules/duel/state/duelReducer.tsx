@@ -1,4 +1,14 @@
 import { INCOME_PER_TURN } from 'src/modules/duel/constants'
+import {
+  agentAttackLogMessage,
+  agentRetaliatesLogMessage,
+  hasPlayedCardLogMessage,
+  playerHasDrawnCardLogMessage,
+  playerHasSkippedRedrawLogMessage,
+  playersTurnLogMessage,
+  reduceStrengthLogMessage,
+  reducingCoinsLogMessage,
+} from 'src/modules/duel/state/messages'
 import { DuelAction, DuelState } from 'src/modules/duel/types'
 import {
   calculateAttackQueue,
@@ -23,7 +33,7 @@ export const duelReducer = (
   state: Readonly<DuelState>,
   action: DuelAction,
 ): DuelState => {
-  const { playerOrder, players, logs } = state
+  const { playerOrder, players, logs, attackingQueue } = state
   const [activePlayerId, inactivePlayerId] = playerOrder
   const activePlayer = state.players[activePlayerId]
   const inactivePlayer = state.players[inactivePlayerId]
@@ -68,7 +78,8 @@ export const duelReducer = (
         logs: [
           ...logs,
           <p>
-            <strong>{players[playerId].name}</strong> has skipped redraw.
+            <strong>{players[playerId].name}</strong>
+            {playerHasSkippedRedrawLogMessage}
           </p>,
         ],
       }
@@ -91,7 +102,8 @@ export const duelReducer = (
         logs: [
           ...logs,
           <p>
-            <strong>{players[playerId].name}</strong> has redrawn a card.
+            <strong>{players[playerId].name}</strong>
+            {playerHasDrawnCardLogMessage}
           </p>,
         ],
       }
@@ -112,6 +124,13 @@ export const duelReducer = (
             hasPerformedAction: false,
           },
         },
+        logs: [
+          ...logs,
+          <h3>
+            {activePlayer.name}
+            {playersTurnLogMessage}
+          </h3>,
+        ],
       }
     }
 
@@ -138,6 +157,13 @@ export const duelReducer = (
             hasPerformedAction: false,
           },
         },
+        logs: [
+          ...logs,
+          <h3>
+            {inactivePlayer.name}
+            {playersTurnLogMessage}
+          </h3>,
+        ],
       }
     }
 
@@ -157,6 +183,10 @@ export const duelReducer = (
       const { coins, cards } = defendingPlayer
       const defendingAgent =
         defendingAgentId && (cards[defendingAgentId] as Agent)
+      const { attackingPlayerId, attackerId } = attackingQueue[0]
+      const { name: attackerName, traits } = players[attackingPlayerId].cards[
+        attackerId
+      ] as Agent
 
       return {
         ...state,
@@ -164,34 +194,56 @@ export const duelReducer = (
           ...players,
           [defendingPlayerId]: {
             ...defendingPlayer,
-            coins: defendingAgentId ? coins : coins - 1,
+            coins: defendingAgent ? coins : coins - 1,
             cards: defendingAgent
               ? {
                   ...cards,
                   [defendingAgentId]: {
                     id: defendingAgentId,
                     ...defendingAgent,
-                    strength: defendingAgent?.strength - 1,
+                    strength: defendingAgent.strength - 1,
                   },
                 }
               : cards,
           },
         },
+        logs: [
+          ...logs,
+          <p>
+            <strong>{attackerName}</strong>
+            {traits?.retaliates && defendingAgent
+              ? agentRetaliatesLogMessage
+              : agentAttackLogMessage}
+            {defendingAgent ? (
+              <>
+                <strong>{defendingAgent.name}</strong>
+                {reduceStrengthLogMessage}
+                {defendingAgent.strength - 1}.
+              </>
+            ) : (
+              <>
+                <strong>{defendingPlayer.name}</strong>
+                {reducingCoinsLogMessage}
+                {coins - 1}.
+              </>
+            )}
+          </p>,
+        ],
       }
     }
 
     case 'MOVE_TO_NEXT_ATTACKER': {
       return {
         ...state,
-        attackingQueue: state.attackingQueue.slice(1),
+        attackingQueue: attackingQueue.slice(1),
       }
     }
 
     case 'PLAY_CARD': {
       const { cardId, playerId, shouldPay } = action
       const playingPlayer = players[playerId]
-      const { coins } = playingPlayer
-      const { cost } = playingPlayer.cards[cardId]
+      const { coins, name } = playingPlayer
+      const { cost, name: playedCardName } = playingPlayer.cards[cardId]
 
       return {
         ...state,
@@ -208,6 +260,14 @@ export const duelReducer = (
             coins: shouldPay ? coins - cost : coins,
           },
         },
+        logs: [
+          ...logs,
+          <p>
+            <strong>{name}</strong>
+            {hasPlayedCardLogMessage}
+            <strong>{playedCardName}</strong>.
+          </p>,
+        ],
       }
     }
 
@@ -260,7 +320,7 @@ export const duelReducer = (
     case 'ADD_LOG':
       return {
         ...state,
-        logs: [...state.logs, action.message],
+        logs: [...logs, action.message],
       }
 
     default:

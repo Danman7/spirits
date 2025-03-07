@@ -155,7 +155,7 @@ export const calculateAttackQueue = (
   playerOrder: [string, string],
 ): AttackOrder[] => {
   const [activePlayerId, inactivePlayerId] = playerOrder
-  const activePlayerBoard = players[activePlayerId].board
+  const { board: activePlayerBoard } = players[activePlayerId]
 
   return activePlayerBoard.flatMap((attackerId, index) => {
     const defenderId =
@@ -163,7 +163,12 @@ export const calculateAttackQueue = (
       players[inactivePlayerId].board.at(-1) ||
       ''
     const queue: AttackOrder[] = [
-      { attackerId, defenderId, defendingPlayerId: inactivePlayerId },
+      {
+        attackerId,
+        attackingPlayerId: activePlayerId,
+        defenderId,
+        defendingPlayerId: inactivePlayerId,
+      },
     ]
 
     const defendingAgent = players[inactivePlayerId].cards[defenderId] as Agent
@@ -171,6 +176,7 @@ export const calculateAttackQueue = (
     if (defendingAgent?.traits?.retaliates)
       queue.push({
         attackerId: defenderId,
+        attackingPlayerId: inactivePlayerId,
         defenderId: attackerId,
         defendingPlayerId: activePlayerId,
       })

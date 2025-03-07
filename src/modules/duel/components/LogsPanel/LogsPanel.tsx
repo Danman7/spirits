@@ -13,7 +13,7 @@ import { Icon } from 'src/shared/components/Icon'
 import { Link } from 'src/shared/components/Link'
 import { SidePanel } from 'src/shared/components/SidePanel'
 import { defaultTheme } from 'src/shared/styles/theme'
-import { OPEN_LOGS_ICON } from 'src/shared/test/testIds'
+import { LOGS_CONTENT, OPEN_LOGS_ICON } from 'src/shared/test/testIds'
 
 export const LogsPanel: React.FC = () => {
   const {
@@ -36,7 +36,7 @@ export const LogsPanel: React.FC = () => {
       </OpenLogsIcon>
       <SidePanel isOpen={isOpen} color={defaultTheme.colors.hilight}>
         <h2>{logsTitle}</h2>
-        <LogsScroll>
+        <LogsScroll data-testid={LOGS_CONTENT}>
           {logs.map((log, index) => (
             <div key={`log-item-${index}`}>{log}</div>
           ))}

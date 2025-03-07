@@ -163,6 +163,7 @@ it('should calculate attack queue', () => {
   expect(calculateAttackQueue(players, playerOrder)).toEqual([
     {
       attackerId: players[playerOrder[0]].board[0],
+      attackingPlayerId: playerOrder[0],
       defenderId: players[playerOrder[1]].board[0],
       defendingPlayerId: playerOrder[1],
     },

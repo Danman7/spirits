@@ -87,6 +87,7 @@ export type DuelPlayers = {
 
 export interface AttackOrder {
   attackerId: string
+  attackingPlayerId: string
   defenderId: string
   defendingPlayerId: string
 }

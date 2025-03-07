@@ -12,11 +12,23 @@ import {
 } from 'src/modules/duel/components/ActionPanel/messages'
 import { Board } from 'src/modules/duel/components/Board'
 import { INITIAL_CARDS_DRAWN_IN_DUEL } from 'src/modules/duel/constants'
+import {
+  playerHasDrawnCardLogMessage,
+  playerHasSkippedRedrawLogMessage,
+  playersTurnLogMessage,
+  reduceStrengthLogMessage,
+  reducingCoinsLogMessage,
+} from 'src/modules/duel/state/messages'
 import { renderWithProviders } from 'src/modules/duel/testRender'
 import { DuelState } from 'src/modules/duel/types'
 import { normalizePlayerCards } from 'src/modules/duel/utils'
 import { Agent } from 'src/shared/modules/cards/types'
-import { CARD_TEST_ID, OVERLAY_TEST_ID } from 'src/shared/test/testIds'
+import {
+  CARD_TEST_ID,
+  LOGS_CONTENT,
+  OPEN_LOGS_ICON,
+  OVERLAY_TEST_ID,
+} from 'src/shared/test/testIds'
 import { deepClone } from 'src/shared/utils'
 
 jest.useFakeTimers()
@@ -74,12 +86,15 @@ describe('Redrawing', () => {
   })
 
   it('should be able to redraw a card', () => {
-    const { queryByText, getByText } = renderWithProviders(<Board />, {
-      preloadedUser,
-      preloadedDuel,
-    })
+    const { queryByText, getByText, getByTestId } = renderWithProviders(
+      <Board />,
+      {
+        preloadedUser,
+        preloadedDuel,
+      },
+    )
 
-    const { cards, hand, deck } = preloadedDuel.players[playerId]
+    const { cards, hand, deck, name } = preloadedDuel.players[playerId]
     const replacedCardName = cards[hand[0]].name
     const redrawnCardName = cards[deck[0]].name
     const advanceTurnDrawnCardName = cards[deck[1]].name
@@ -92,15 +107,24 @@ describe('Redrawing', () => {
     expect(queryByText(replacedCardName)).toBeFalsy()
     expect(getByText(redrawnCardName)).toBeTruthy()
     expect(getByText(advanceTurnDrawnCardName)).toBeTruthy()
+
+    fireEvent.click(getByTestId(OPEN_LOGS_ICON))
+
+    expect(getByTestId(LOGS_CONTENT).textContent).toContain(
+      `${name}${playerHasDrawnCardLogMessage}`,
+    )
   })
 
   it('should be able to skip redraw', () => {
-    const { queryByText, getByText } = renderWithProviders(<Board />, {
-      preloadedUser,
-      preloadedDuel,
-    })
+    const { queryByText, getByText, getByTestId } = renderWithProviders(
+      <Board />,
+      {
+        preloadedUser,
+        preloadedDuel,
+      },
+    )
 
-    const { cards, deck } = preloadedDuel.players[playerId]
+    const { cards, deck, name } = preloadedDuel.players[playerId]
 
     const drawnCardName = cards[deck[0]].name
 
@@ -109,6 +133,15 @@ describe('Redrawing', () => {
     fireEvent.click(getByText(skipRedrawLinkMessage))
 
     expect(getByText(drawnCardName)).toBeTruthy()
+
+    fireEvent.click(getByTestId(OPEN_LOGS_ICON))
+
+    expect(getByTestId(LOGS_CONTENT).textContent).toContain(
+      `${name}${playerHasSkippedRedrawLogMessage}`,
+    )
+    expect(getByTestId(LOGS_CONTENT).textContent).toContain(
+      `${name}${playersTurnLogMessage}`,
+    )
   })
 })
 
@@ -136,6 +169,12 @@ describe('Player Turns', () => {
     expect(getByTestId(`${defenderId}-info`).textContent).toContain(
       `${name} / ${coins - 1}`,
     )
+
+    fireEvent.click(getByTestId(OPEN_LOGS_ICON))
+
+    expect(getByTestId(LOGS_CONTENT).textContent).toContain(
+      `${name}${reducingCoinsLogMessage}${coins - 1}`,
+    )
   })
 
   it('should attack an agent with an agent if the board is not empty', () => {
@@ -148,9 +187,16 @@ describe('Player Turns', () => {
 
     const { players, playerOrder } = preloadedDuel
     const { board, cards } = players[playerOrder[1]]
+    const { name, strength } = cards[board[0]] as Agent
 
     expect(getByTestId(`${CARD_TEST_ID}${board[0]}`).textContent).toContain(
-      `${cards[board[0]].name}${(cards[board[0]] as Agent).strength - 1}`,
+      `${name}${strength - 1}`,
+    )
+
+    fireEvent.click(getByTestId(OPEN_LOGS_ICON))
+
+    expect(getByTestId(LOGS_CONTENT).textContent).toContain(
+      `${name}${reduceStrengthLogMessage}${strength - 1}`,
     )
   })
 })
