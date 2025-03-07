@@ -11,7 +11,7 @@ import {
   CARD_STACKS,
   INITIAL_CARDS_DRAWN_IN_DUEL,
   STARTING_COINS_IN_DUEL,
-} from 'src/modules/duel/constants'
+} from 'src/modules/duel/DuelConstants'
 import { AttackOrder, Player } from 'src/modules/duel/DuelTypes'
 import {
   calculateAttackQueue,
@@ -31,6 +31,7 @@ it('should get all playable card ids for a given player with getPlayableCardIds'
   const mockBudgetPlayer: Player = {
     id: 'player3',
     name: 'Hume',
+    color: '#495',
     coins: STARTING_COINS_IN_DUEL,
     ...normalizePlayerCards({
       hand: ['TempleGuard', 'HammeriteNovice'],

@@ -9,7 +9,7 @@ import {
 import {
   INITIAL_CARDS_DRAWN_IN_DUEL,
   STARTING_COINS_IN_DUEL,
-} from 'src/modules/duel/constants'
+} from 'src/modules/duel/DuelConstants'
 import { duelReducer, initialState } from 'src/modules/duel/state/duelReducer'
 import {
   AttackOrder,

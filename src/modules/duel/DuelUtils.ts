@@ -2,7 +2,7 @@ import {
   CARD_STACKS,
   INITIAL_CARDS_DRAWN_IN_DUEL,
   STARTING_COINS_IN_DUEL,
-} from 'src/modules/duel/constants'
+} from 'src/modules/duel/DuelConstants'
 import {
   AttackOrder,
   CardStack,

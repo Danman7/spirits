@@ -1,8 +1,10 @@
 import { CardBaseKey } from 'src/shared/modules/cards/CardTypes'
+import { Color } from 'src/shared/SharedTypes'
 
 export interface User {
   id: string
   name: string
+  color: Color
   deck: CardBaseKey[]
 }
 

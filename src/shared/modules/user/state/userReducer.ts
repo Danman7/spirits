@@ -3,6 +3,7 @@ import { User, UserAction } from 'src/shared/modules/user/UserTypes'
 export const initialState: User = {
   id: '',
   name: '',
+  color: '',
   deck: [],
 }
 

@@ -11,7 +11,7 @@ import {
   PlayerInfo,
   StyledPlayerField,
 } from 'src/modules/duel/components/PlayerField/PlayerFieldStyles'
-import { CARD_STACKS } from 'src/modules/duel/constants'
+import { CARD_STACKS } from 'src/modules/duel/DuelConstants'
 import { useDuel } from 'src/modules/duel/state/DuelContext'
 import { CardStack, StackConfiguration } from 'src/modules/duel/DuelTypes'
 import { AnimatedNumber } from 'src/shared/components/AnimatedNumber'

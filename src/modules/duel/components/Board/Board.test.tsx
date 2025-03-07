@@ -11,7 +11,7 @@ import {
   skipRedrawLinkMessage,
 } from 'src/modules/duel/components/ActionPanel/ActionPanelMessages'
 import { Board } from 'src/modules/duel/components/Board'
-import { INITIAL_CARDS_DRAWN_IN_DUEL } from 'src/modules/duel/constants'
+import { INITIAL_CARDS_DRAWN_IN_DUEL } from 'src/modules/duel/DuelConstants'
 import {
   playerHasDrawnCardLogMessage,
   playerHasSkippedRedrawLogMessage,

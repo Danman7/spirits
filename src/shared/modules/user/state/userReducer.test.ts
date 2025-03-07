@@ -10,6 +10,7 @@ it('should load a user when LOAD_USER action is dispatched', () => {
     user: {
       id: '123',
       name: 'John Doe',
+      color: '#f40',
       deck: ['HammeriteNovice', 'TempleGuard'],
     },
   }
@@ -26,6 +27,7 @@ it('should reset user when RESET_USER action is dispatched', () => {
   const previousState: User = {
     id: '123',
     name: 'John Doe',
+    color: '#4f0',
     deck: ['HammeriteNovice'],
   }
   const newState = userReducer(previousState, action)
@@ -40,6 +42,7 @@ it('should return current state for unknown actions', () => {
   const previousState: User = {
     id: '456',
     name: 'Jane Doe',
+    color: '#40f',
     deck: ['HammeriteNovice'],
   }
   const newState = userReducer(previousState, action)

@@ -1,4 +1,4 @@
-import { INCOME_PER_TURN } from 'src/modules/duel/constants'
+import { INCOME_PER_TURN } from 'src/modules/duel/DuelConstants'
 import {
   agentAttackLogMessage,
   agentRetaliatesLogMessage,
@@ -68,17 +68,18 @@ export const duelReducer = (
 
     case 'SKIP_REDRAW': {
       const { playerId } = action
+      const player = players[playerId]
 
       return {
         ...state,
         players: {
           ...players,
-          [playerId]: { ...players[playerId], hasPerformedAction: true },
+          [playerId]: { ...player, hasPerformedAction: true },
         },
         logs: [
           ...logs,
           <p>
-            <strong>{players[playerId].name}</strong>
+            <strong style={{ color: player.color }}>{player.name}</strong>
             {playerHasSkippedRedrawLogMessage}
           </p>,
         ],
@@ -102,7 +103,9 @@ export const duelReducer = (
         logs: [
           ...logs,
           <p>
-            <strong>{players[playerId].name}</strong>
+            <strong style={{ color: redrawingPlayer.color }}>
+              {redrawingPlayer.name}
+            </strong>
             {playerHasDrawnCardLogMessage}
           </p>,
         ],
@@ -127,7 +130,9 @@ export const duelReducer = (
         logs: [
           ...logs,
           <h3>
-            {activePlayer.name}
+            <strong style={{ color: activePlayer.color }}>
+              {activePlayer.name}
+            </strong>
             {playersTurnLogMessage}
           </h3>,
         ],
@@ -160,7 +165,9 @@ export const duelReducer = (
         logs: [
           ...logs,
           <h3>
-            {inactivePlayer.name}
+            <strong style={{ color: inactivePlayer.color }}>
+              {inactivePlayer.name}
+            </strong>
             {playersTurnLogMessage}
           </h3>,
         ],
@@ -222,7 +229,9 @@ export const duelReducer = (
               </>
             ) : (
               <>
-                <strong>{defendingPlayer.name}</strong>
+                <strong style={{ color: defendingPlayer.color }}>
+                  {defendingPlayer.name}
+                </strong>
                 {reducingCoinsLogMessage}
                 {coins - 1}.
               </>
@@ -242,7 +251,7 @@ export const duelReducer = (
     case 'PLAY_CARD': {
       const { cardId, playerId, shouldPay } = action
       const playingPlayer = players[playerId]
-      const { coins, name } = playingPlayer
+      const { coins, name, color } = playingPlayer
       const { cost, name: playedCardName } = playingPlayer.cards[cardId]
 
       return {
@@ -263,7 +272,7 @@ export const duelReducer = (
         logs: [
           ...logs,
           <p>
-            <strong>{name}</strong>
+            <strong style={{ color }}>{name}</strong>
             {hasPlayedCardLogMessage}
             <strong>{playedCardName}</strong>.
           </p>,
