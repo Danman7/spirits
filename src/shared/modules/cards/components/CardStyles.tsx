@@ -1,9 +1,9 @@
 import {
   CardFaction,
   CardStrengthAnimateState,
-} from 'src/shared/modules/cards/types'
-import { getCardFactionColor } from 'src/shared/modules/cards/utils'
-import { defaultTheme } from 'src/shared/styles/theme'
+} from 'src/shared/modules/cards/CardTypes'
+import { getCardFactionColor } from 'src/shared/modules/cards/CardUtils'
+import { defaultTheme } from 'src/shared/styles/DefaultTheme'
 import styled, { keyframes } from 'styled-components'
 
 const AttackFromTopOutline = keyframes`

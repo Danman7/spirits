@@ -2,12 +2,12 @@ import {
   ELEVATED_ACOLYTE_SELF_DAMAGE,
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   HIGH_PRIEST_MAKANDER_COUNTER,
-} from 'src/shared/modules/cards/constants'
+} from 'src/shared/modules/cards/CardConstants'
 import {
   Agent,
   AgentWithCounter,
   Instant,
-} from 'src/shared/modules/cards/types'
+} from 'src/shared/modules/cards/CardTypes'
 
 export const YoraSkull: Instant = {
   type: 'instant',

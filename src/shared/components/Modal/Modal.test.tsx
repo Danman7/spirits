@@ -1,5 +1,5 @@
 import { Modal } from 'src/shared/components/Modal'
-import { render } from 'src/shared/test/render'
+import { render } from 'src/shared/test/TestRender'
 import { MODAL_TEST_ID, OVERLAY_TEST_ID } from 'src/shared/test/testIds'
 
 const content = 'Modal content'

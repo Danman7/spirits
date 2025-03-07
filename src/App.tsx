@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { initialDuelStateMock, userMock } from 'src/modules/duel/__mocks__'
+import { initialDuelStateMock, userMock } from 'src/__mocks__/DuelMocks'
 import { Board } from 'src/modules/duel/components/Board'
 import { DuelProviderWithMiddleware } from 'src/modules/duel/components/DuelProviderWithMiddleware'
 import { useUser } from 'src/shared/modules/user/state/UserContext'

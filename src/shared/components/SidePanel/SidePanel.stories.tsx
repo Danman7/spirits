@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { LeftPanelsWrapper } from 'src/modules/duel/components/Board/styles'
+import { LeftPanelsWrapper } from 'src/modules/duel/components/Board/BoardStyles'
 import { Link } from 'src/shared/components/Link'
 import { SidePanel } from 'src/shared/components/SidePanel/SidePanel'
-import { defaultTheme } from 'src/shared/styles/theme'
+import { defaultTheme } from 'src/shared/styles/DefaultTheme'
 
 const meta = {
   title: 'SidePanel',

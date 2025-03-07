@@ -1,4 +1,4 @@
-import { DuelAction, DuelState } from 'src/modules/duel/types'
+import { DuelAction, DuelState } from 'src/modules/duel/DuelTypes'
 import { duelTriggers } from 'src/modules/duel/state/triggers'
 
 export const duelMiddleware = (

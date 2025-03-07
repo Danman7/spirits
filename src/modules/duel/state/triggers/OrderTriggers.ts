@@ -2,15 +2,15 @@ import {
   DuelTrigger,
   PlayCardAction,
   UpdateAgentAction,
-} from 'src/modules/duel/types'
+} from 'src/modules/duel/DuelTypes'
 import {
   getNeighboursIndexes,
   getOnPlayCardPredicate,
   getPlayAllCopiesEffect,
-} from 'src/modules/duel/utils'
-import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/shared/modules/cards/constants'
+} from 'src/modules/duel/DuelUtils'
+import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/shared/modules/cards/CardConstants'
 import { HighPriestMarkander } from 'src/shared/modules/cards/data/bases'
-import { Agent } from 'src/shared/modules/cards/types'
+import { Agent } from 'src/shared/modules/cards/CardTypes'
 
 export const hammeriteNoviceOnPlay: DuelTrigger = {
   predicate: (state, action) =>

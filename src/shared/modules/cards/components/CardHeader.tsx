@@ -2,10 +2,10 @@ import { ColoredNumber } from 'src/shared/components/ColoredNumber'
 import {
   CardTitle,
   StyledCardHeader,
-} from 'src/shared/modules/cards/components/styles'
-import { Card } from 'src/shared/modules/cards/types'
-import { getCardBaseFromName } from 'src/shared/modules/cards/utils'
-import { joinStringArrayWithComma } from 'src/shared/utils'
+} from 'src/shared/modules/cards/components/CardStyles'
+import { Card } from 'src/shared/modules/cards/CardTypes'
+import { getCardBaseFromName } from 'src/shared/modules/cards/CardUtils'
+import { joinStringArrayWithComma } from 'src/shared/SharedUtils'
 
 interface CardHeaderProps {
   id: string

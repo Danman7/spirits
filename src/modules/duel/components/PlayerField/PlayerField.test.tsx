@@ -2,16 +2,16 @@ import { fireEvent, waitFor } from '@testing-library/dom'
 import {
   userMock as preloadedUser,
   stackedDuelStateMock,
-} from 'src/modules/duel/__mocks__'
+} from 'src/__mocks__/DuelMocks'
 import { PlayerField } from 'src/modules/duel/components/PlayerField'
 import {
   browsingStackModalTitle,
   closeMessage,
-} from 'src/modules/duel/components/PlayerField/messages'
-import { renderWithProviders } from 'src/modules/duel/testRender'
-import { CardStack, DuelState, Player } from 'src/modules/duel/types'
+} from 'src/modules/duel/components/PlayerField/PlayerFieldMessages'
+import { renderWithProviders } from 'src/modules/duel/DuelTestRender'
+import { CardStack, DuelState, Player } from 'src/modules/duel/DuelTypes'
 import { OVERLAY_TEST_ID } from 'src/shared/test/testIds'
-import { deepClone } from 'src/shared/utils'
+import { deepClone } from 'src/shared/SharedUtils'
 
 let preloadedDuel: DuelState
 let mockPlayer: Player

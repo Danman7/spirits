@@ -1,7 +1,7 @@
-import { DuelTrigger, PlayCardAction } from 'src/modules/duel/types'
-import { ACTION_WAIT_TIMEOUT } from 'src/shared/constants'
+import { DuelTrigger, PlayCardAction } from 'src/modules/duel/DuelTypes'
+import { ACTION_WAIT_TIMEOUT } from 'src/shared/SharedConstants'
 import { HighPriestMarkander } from 'src/shared/modules/cards/data/bases'
-import { AgentWithCounter } from 'src/shared/modules/cards/types'
+import { AgentWithCounter } from 'src/shared/modules/cards/CardTypes'
 
 export const completeRedraw: DuelTrigger = {
   predicate: (state, action) =>

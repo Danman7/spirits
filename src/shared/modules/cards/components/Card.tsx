@@ -4,14 +4,14 @@ import { CardHeader } from 'src/shared/modules/cards/components/CardHeader'
 import {
   useCardStrengthAnimation,
   useCardVisibility,
-} from 'src/shared/modules/cards/components/hooks'
+} from 'src/shared/modules/cards/components/CardHooks'
 import {
   CardBack,
   CardFront,
   CardOutline,
   CardPaper,
-} from 'src/shared/modules/cards/components/styles'
-import { Card } from 'src/shared/modules/cards/types'
+} from 'src/shared/modules/cards/components/CardStyles'
+import { Card } from 'src/shared/modules/cards/CardTypes'
 import { CARD_TEST_ID } from 'src/shared/test/testIds'
 
 interface CardProps {

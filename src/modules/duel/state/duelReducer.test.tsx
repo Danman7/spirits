@@ -5,7 +5,7 @@ import {
   playerId,
   stackedDuelStateMock,
   userMock,
-} from 'src/modules/duel/__mocks__'
+} from 'src/__mocks__/DuelMocks'
 import {
   INITIAL_CARDS_DRAWN_IN_DUEL,
   STARTING_COINS_IN_DUEL,
@@ -17,8 +17,8 @@ import {
   DuelPhase,
   DuelState,
   UsersStartingDuel,
-} from 'src/modules/duel/types'
-import { Agent } from 'src/shared/modules/cards/types'
+} from 'src/modules/duel/DuelTypes'
+import { Agent } from 'src/shared/modules/cards/CardTypes'
 
 describe('Setup', () => {
   const users: UsersStartingDuel = [userMock, opponentMock]

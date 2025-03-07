@@ -2,17 +2,17 @@ import { useState } from 'react'
 import {
   hideLogsLink,
   logsTitle,
-} from 'src/modules/duel/components/LogsPanel/messages'
+} from 'src/modules/duel/components/LogsPanel/LogsPanelMessages'
 import {
   OpenLogsIcon,
   LogsPanelWrapper,
   LogsScroll,
-} from 'src/modules/duel/components/LogsPanel/styles'
+} from 'src/modules/duel/components/LogsPanel/LogsPanelStyles'
 import { useDuel } from 'src/modules/duel/state/DuelContext'
 import { Icon } from 'src/shared/components/Icon'
 import { Link } from 'src/shared/components/Link'
 import { SidePanel } from 'src/shared/components/SidePanel'
-import { defaultTheme } from 'src/shared/styles/theme'
+import { defaultTheme } from 'src/shared/styles/DefaultTheme'
 import { LOGS_CONTENT, OPEN_LOGS_ICON } from 'src/shared/test/testIds'
 
 export const LogsPanel: React.FC = () => {

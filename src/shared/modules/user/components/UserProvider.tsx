@@ -4,7 +4,7 @@ import {
   initialState,
   userReducer,
 } from 'src/shared/modules/user/state/userReducer'
-import { User } from 'src/shared/modules/user/types'
+import { User } from 'src/shared/modules/user/UserTypes'
 
 export interface UserProviderProps {
   children: React.ReactNode

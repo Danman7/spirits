@@ -1,6 +1,7 @@
 import { AnimateStateProps } from 'src/shared/components/types'
-import { Box } from 'src/shared/styles/global'
-import { defaultTheme } from 'src/shared/styles/theme'
+import { Color } from 'src/shared/SharedTypes'
+import { Box } from 'src/shared/styles/GlobalStyles'
+import { defaultTheme } from 'src/shared/styles/DefaultTheme'
 import styled, { keyframes } from 'styled-components'
 
 const {
@@ -28,7 +29,7 @@ const SlideOutToLeft = keyframes`
 `
 
 interface PanelProps extends AnimateStateProps {
-  $color: React.CSSProperties['color']
+  $color: Color
 }
 
 export const Panel = styled(Box)<PanelProps>`

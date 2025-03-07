@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { useDuel } from 'src/modules/duel/state/DuelContext'
-import { CardStack } from 'src/modules/duel/types'
-import { usePrevious } from 'src/shared/hooks'
-import { Agent } from 'src/shared/modules/cards/types'
+import { CardStack } from 'src/modules/duel/DuelTypes'
+import { usePrevious } from 'src/shared/SharedHooks'
+import { Agent } from 'src/shared/modules/cards/CardTypes'
 import { useUser } from 'src/shared/modules/user/state/UserContext'
 
 export const useCard = (playerId: string, cardId: string) => {

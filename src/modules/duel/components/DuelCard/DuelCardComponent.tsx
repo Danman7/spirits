@@ -7,8 +7,8 @@ import {
   useDuelCardOnClick,
   useIsAttacking,
   useMovement,
-} from 'src/modules/duel/components/DuelCard/hooks'
-import { CardMovementWrapper } from 'src/modules/duel/components/DuelCard/styles'
+} from 'src/modules/duel/components/DuelCard/DuelCardHooks'
+import { CardMovementWrapper } from 'src/modules/duel/components/DuelCard/DuelCardStyles'
 import { CardComponent } from 'src/shared/modules/cards/components/Card'
 
 interface DuelCardProps {

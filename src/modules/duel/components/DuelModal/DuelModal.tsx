@@ -2,8 +2,8 @@ import { ReactNode, useEffect, useMemo, useState } from 'react'
 import {
   firstPlayerMessage,
   initialDrawMessage,
-} from 'src/modules/duel/components/DuelModal/messages'
-import { flashModal } from 'src/modules/duel/components/DuelModal/utils'
+} from 'src/modules/duel/components/DuelModal/DuelModalMessages'
+import { flashModal } from 'src/modules/duel/components/DuelModal/DuelModalUtils'
 import { useDuel } from 'src/modules/duel/state/DuelContext'
 import { Modal } from 'src/shared/components/Modal'
 

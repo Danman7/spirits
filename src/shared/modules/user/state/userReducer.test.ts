@@ -2,7 +2,7 @@ import {
   initialState,
   userReducer,
 } from 'src/shared/modules/user/state/userReducer'
-import { User, UserAction } from 'src/shared/modules/user/types'
+import { User, UserAction } from 'src/shared/modules/user/UserTypes'
 
 it('should load a user when LOAD_USER action is dispatched', () => {
   const action: UserAction = {

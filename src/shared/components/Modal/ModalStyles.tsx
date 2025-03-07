@@ -6,7 +6,7 @@ import {
   FadeOut,
   SlideIn,
   SlideOut,
-} from 'src/shared/styles/global'
+} from 'src/shared/styles/GlobalStyles'
 import styled from 'styled-components'
 
 export const StyledModal = styled(Box)<AnimateStateProps>`

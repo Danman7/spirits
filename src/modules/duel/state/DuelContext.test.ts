@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react'
 import { useDuel } from 'src/modules/duel/state/DuelContext'
-import { duelContextError } from 'src/modules/duel/state/messages'
+import { duelContextError } from 'src/modules/duel/state/DuelStateMessages'
 
 it('should throw an error when useDuel is used outside UserProvider', () => {
   expect(() => {

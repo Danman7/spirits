@@ -1,10 +1,10 @@
 import { HammeriteNovice } from 'src/shared/modules/cards/data/OrderBases'
-import { Agent } from 'src/shared/modules/cards/types'
+import { Agent } from 'src/shared/modules/cards/CardTypes'
 import {
   getCardBaseFromName,
   getCardFactionColor,
-} from 'src/shared/modules/cards/utils'
-import { defaultTheme } from 'src/shared/styles/theme'
+} from 'src/shared/modules/cards/CardUtils'
+import { defaultTheme } from 'src/shared/styles/DefaultTheme'
 
 const { orderFaction, chaosFaction, shadowFaction } = defaultTheme.colors
 

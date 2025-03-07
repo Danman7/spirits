@@ -1,9 +1,9 @@
 import {
   CardFlavor,
   StyledCardContent,
-} from 'src/shared/modules/cards/components/styles'
-import { traitDescriptions } from 'src/shared/modules/cards/messages'
-import { AgentTraitName, Card } from 'src/shared/modules/cards/types'
+} from 'src/shared/modules/cards/components/CardStyles'
+import { traitDescriptions } from 'src/shared/modules/cards/CardMessages'
+import { AgentTraitName, Card } from 'src/shared/modules/cards/CardTypes'
 
 interface CardContentProps {
   card: Card

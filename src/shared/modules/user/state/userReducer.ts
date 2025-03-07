@@ -1,4 +1,4 @@
-import { User, UserAction } from 'src/shared/modules/user/types'
+import { User, UserAction } from 'src/shared/modules/user/UserTypes'
 
 export const initialState: User = {
   id: '',

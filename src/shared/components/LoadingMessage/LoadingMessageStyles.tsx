@@ -1,4 +1,4 @@
-import { defaultTheme } from 'src/shared/styles/theme'
+import { defaultTheme } from 'src/shared/styles/DefaultTheme'
 import styled, { keyframes } from 'styled-components'
 
 const { primary } = defaultTheme.colors

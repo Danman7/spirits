@@ -1,5 +1,8 @@
-import { AZARAN_BOOST, HAUNT_DAMAGE } from 'src/shared/modules/cards/constants'
-import { Agent, Instant } from 'src/shared/modules/cards/types'
+import {
+  AZARAN_BOOST,
+  HAUNT_DAMAGE,
+} from 'src/shared/modules/cards/CardConstants'
+import { Agent, Instant } from 'src/shared/modules/cards/CardTypes'
 
 export const Zombie: Agent = {
   type: 'agent',

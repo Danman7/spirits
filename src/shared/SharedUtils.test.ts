@@ -4,7 +4,7 @@ import {
   getRandomArrayItem,
   joinStringArrayWithComma,
   shuffleArray,
-} from 'src/shared/utils'
+} from 'src/shared/SharedUtils'
 
 it('should generate a UUID', () => {
   expect(generateUUID()).toHaveLength(36)

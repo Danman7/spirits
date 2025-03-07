@@ -2,12 +2,12 @@ import { ActionPanel } from 'src/modules/duel/components/ActionPanel'
 import {
   LeftPanelsWrapper,
   StyledBoard,
-} from 'src/modules/duel/components/Board/styles'
+} from 'src/modules/duel/components/Board/BoardStyles'
 import { DuelModal } from 'src/modules/duel/components/DuelModal'
 import { LogsPanel } from 'src/modules/duel/components/LogsPanel'
 import { PlayerField } from 'src/modules/duel/components/PlayerField'
 import { useDuel } from 'src/modules/duel/state/DuelContext'
-import { sortDuelPlayerIdsForBoard } from 'src/modules/duel/utils'
+import { sortDuelPlayerIdsForBoard } from 'src/modules/duel/DuelUtils'
 import { useUser } from 'src/shared/modules/user/state/UserContext'
 
 export const Board: React.FC = () => {

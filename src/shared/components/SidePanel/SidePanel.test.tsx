@@ -1,5 +1,5 @@
 import { SidePanel } from 'src/shared/components/SidePanel/SidePanel'
-import { render } from 'src/shared/test/render'
+import { render } from 'src/shared/test/TestRender'
 import { PANEL_TEST_ID } from 'src/shared/test/testIds'
 
 const content = 'Side panel content'

@@ -1,7 +1,8 @@
+import { Color } from 'src/shared/SharedTypes'
 import styled from 'styled-components'
 
 export const StyledIcon = styled.div<{
-  $color: React.CSSProperties['fill']
+  $color: Color
   $isSmall?: boolean
 }>`
   display: inline-flex;

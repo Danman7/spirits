@@ -8,8 +8,8 @@ import {
   playersTurnLogMessage,
   reduceStrengthLogMessage,
   reducingCoinsLogMessage,
-} from 'src/modules/duel/state/messages'
-import { DuelAction, DuelState } from 'src/modules/duel/types'
+} from 'src/modules/duel/state/DuelStateMessages'
+import { DuelAction, DuelState } from 'src/modules/duel/DuelTypes'
 import {
   calculateAttackQueue,
   drawCardFromDeck,
@@ -18,8 +18,8 @@ import {
   redrawCard,
   setInitialPlayerOrder,
   setPlayersFromUsers,
-} from 'src/modules/duel/utils'
-import { Agent } from 'src/shared/modules/cards/types'
+} from 'src/modules/duel/DuelUtils'
+import { Agent } from 'src/shared/modules/cards/CardTypes'
 
 export const initialState: DuelState = {
   players: {},

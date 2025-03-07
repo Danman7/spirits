@@ -2,7 +2,7 @@ import { useEffect, useReducer, useState } from 'react'
 import { DuelContext } from 'src/modules/duel/state/DuelContext'
 import { duelMiddleware } from 'src/modules/duel/state/duelMiddleware'
 import { duelReducer, initialState } from 'src/modules/duel/state/duelReducer'
-import { DuelAction, DuelState } from 'src/modules/duel/types'
+import { DuelAction, DuelState } from 'src/modules/duel/DuelTypes'
 
 export interface DuelProps {
   children: React.ReactNode

@@ -1,9 +1,9 @@
 import { fireEvent, within } from '@testing-library/dom'
 import { act } from 'react'
 import { Board } from 'src/modules/duel/components/Board'
-import { renderWithProviders } from 'src/modules/duel/testRender'
-import { DuelState } from 'src/modules/duel/types'
-import { normalizePlayerCards } from 'src/modules/duel/utils'
+import { renderWithProviders } from 'src/modules/duel/DuelTestRender'
+import { DuelState } from 'src/modules/duel/DuelTypes'
+import { normalizePlayerCards } from 'src/modules/duel/DuelUtils'
 import {
   initialOpponentMock,
   initialPlayerMock,
@@ -11,24 +11,24 @@ import {
   playerId,
   userMock as preloadedUser,
   stackedDuelStateMock,
-} from 'src/modules/duel/__mocks__'
-import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/shared/modules/cards/constants'
+} from 'src/__mocks__/DuelMocks'
+import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/shared/modules/cards/CardConstants'
 import {
   CardBases,
   ElevatedAcolyte,
   HighPriestMarkander,
 } from 'src/shared/modules/cards/data/bases'
-import { Agent, CardBaseKey } from 'src/shared/modules/cards/types'
+import { Agent, CardBaseKey } from 'src/shared/modules/cards/CardTypes'
 import {
   CARD_TEST_ID,
   LOGS_CONTENT,
   OPEN_LOGS_ICON,
 } from 'src/shared/test/testIds'
-import { deepClone } from 'src/shared/utils'
+import { deepClone } from 'src/shared/SharedUtils'
 import {
   agentRetaliatesLogMessage,
   hasPlayedCardLogMessage,
-} from 'src/modules/duel/state/messages'
+} from 'src/modules/duel/state/DuelStateMessages'
 
 jest.useFakeTimers()
 

@@ -1,4 +1,4 @@
-import { CardBaseKey } from 'src/shared/modules/cards/types'
+import { CardBaseKey } from 'src/shared/modules/cards/CardTypes'
 
 export interface User {
   id: string

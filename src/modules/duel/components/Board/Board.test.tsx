@@ -5,11 +5,11 @@ import {
   playerId,
   userMock as preloadedUser,
   stackedDuelStateMock,
-} from 'src/modules/duel/__mocks__'
+} from 'src/__mocks__/DuelMocks'
 import {
   passButtonMessage,
   skipRedrawLinkMessage,
-} from 'src/modules/duel/components/ActionPanel/messages'
+} from 'src/modules/duel/components/ActionPanel/ActionPanelMessages'
 import { Board } from 'src/modules/duel/components/Board'
 import { INITIAL_CARDS_DRAWN_IN_DUEL } from 'src/modules/duel/constants'
 import {
@@ -18,18 +18,18 @@ import {
   playersTurnLogMessage,
   reduceStrengthLogMessage,
   reducingCoinsLogMessage,
-} from 'src/modules/duel/state/messages'
-import { renderWithProviders } from 'src/modules/duel/testRender'
-import { DuelState } from 'src/modules/duel/types'
-import { normalizePlayerCards } from 'src/modules/duel/utils'
-import { Agent } from 'src/shared/modules/cards/types'
+} from 'src/modules/duel/state/DuelStateMessages'
+import { renderWithProviders } from 'src/modules/duel/DuelTestRender'
+import { DuelState } from 'src/modules/duel/DuelTypes'
+import { normalizePlayerCards } from 'src/modules/duel/DuelUtils'
+import { Agent } from 'src/shared/modules/cards/CardTypes'
 import {
   CARD_TEST_ID,
   LOGS_CONTENT,
   OPEN_LOGS_ICON,
   OVERLAY_TEST_ID,
 } from 'src/shared/test/testIds'
-import { deepClone } from 'src/shared/utils'
+import { deepClone } from 'src/shared/SharedUtils'
 
 jest.useFakeTimers()
 

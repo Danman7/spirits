@@ -9,15 +9,15 @@ import {
   skipRedrawLinkMessage,
   yourTurnMessage,
   yourTurnTitle,
-} from 'src/modules/duel/components/ActionPanel/messages'
-import { renderWithProviders } from 'src/modules/duel/testRender'
-import { DuelState } from 'src/modules/duel/types'
+} from 'src/modules/duel/components/ActionPanel/ActionPanelMessages'
+import { renderWithProviders } from 'src/modules/duel/DuelTestRender'
+import { DuelState } from 'src/modules/duel/DuelTypes'
 import {
   initialDuelStateMock,
   userMock as preloadedUser,
-} from 'src/modules/duel/__mocks__'
+} from 'src/__mocks__/DuelMocks'
 import { PANEL_TEST_ID } from 'src/shared/test/testIds'
-import { deepClone } from 'src/shared/utils'
+import { deepClone } from 'src/shared/SharedUtils'
 
 let preloadedDuel: DuelState
 

@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
-import { userContextError } from 'src/shared/modules/user/messages'
-import { User, UserAction } from 'src/shared/modules/user/types'
+import { userContextError } from 'src/shared/modules/user/UserMessages'
+import { User, UserAction } from 'src/shared/modules/user/UserTypes'
 
 export const UserContext = createContext<
   { state: User; dispatch: React.Dispatch<UserAction> } | undefined

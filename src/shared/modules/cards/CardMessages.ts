@@ -1,4 +1,4 @@
-import { AgentTraitName } from 'src/shared/modules/cards/types'
+import { AgentTraitName } from 'src/shared/modules/cards/CardTypes'
 
 export const traitDescriptions: Record<
   AgentTraitName,

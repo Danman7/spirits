@@ -3,8 +3,8 @@ import {
   BookOfAsh,
   BrotherSachelman,
 } from 'src/shared/modules/cards/data/bases'
-import { render } from 'src/shared/test/render'
-import { joinStringArrayWithComma } from 'src/shared/utils'
+import { render } from 'src/shared/test/TestRender'
+import { joinStringArrayWithComma } from 'src/shared/SharedUtils'
 
 it('should display all UI segments of a card when face up', () => {
   const { name, strength, cost, description, flavor, categories } =

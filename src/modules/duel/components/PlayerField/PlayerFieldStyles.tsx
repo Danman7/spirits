@@ -1,6 +1,6 @@
-import { CardMovementWrapper } from 'src/modules/duel/components/DuelCard/styles'
-import { CardOutline } from 'src/shared/modules/cards/components/styles'
-import { Pop } from 'src/shared/styles/global'
+import { CardMovementWrapper } from 'src/modules/duel/components/DuelCard/DuelCardStyles'
+import { CardOutline } from 'src/shared/modules/cards/components/CardStyles'
+import { Pop } from 'src/shared/styles/GlobalStyles'
 import styled, { css } from 'styled-components'
 
 interface StyledPlayerFieldProps {

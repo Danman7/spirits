@@ -2,8 +2,8 @@ import { Icon } from 'src/shared/components/Icon'
 import {
   FooterSection,
   StyledCardFooter,
-} from 'src/shared/modules/cards/components/styles'
-import { AgentTraitName, Card } from 'src/shared/modules/cards/types'
+} from 'src/shared/modules/cards/components/CardStyles'
+import { AgentTraitName, Card } from 'src/shared/modules/cards/CardTypes'
 
 interface CardFooterProps {
   card: Card

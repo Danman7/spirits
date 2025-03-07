@@ -6,11 +6,11 @@ import {
   playerId,
   stackedDuelStateMock,
   userMock,
-} from 'src/modules/duel/__mocks__'
+} from 'src/__mocks__/DuelMocks'
 import { Board } from 'src/modules/duel/components/Board'
 import { DuelProviderWithMiddleware } from 'src/modules/duel/components/DuelProviderWithMiddleware'
-import { DuelState } from 'src/modules/duel/types'
-import { normalizePlayerCards } from 'src/modules/duel/utils'
+import { DuelState } from 'src/modules/duel/DuelTypes'
+import { normalizePlayerCards } from 'src/modules/duel/DuelUtils'
 import { UserProvider } from 'src/shared/modules/user/components/UserProvider'
 
 const preloadedDuelState: DuelState = {

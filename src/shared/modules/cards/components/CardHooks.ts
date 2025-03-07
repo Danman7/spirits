@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { ACTION_WAIT_TIMEOUT } from 'src/shared/constants'
-import { usePrevious } from 'src/shared/hooks'
-import { CardStrengthAnimateState } from 'src/shared/modules/cards/types'
+import { ACTION_WAIT_TIMEOUT } from 'src/shared/SharedConstants'
+import { usePrevious } from 'src/shared/SharedHooks'
+import { CardStrengthAnimateState } from 'src/shared/modules/cards/CardTypes'
 
 export const useCardVisibility = (isFaceDown: boolean) => {
   const prevIsFaceDown = usePrevious(isFaceDown)

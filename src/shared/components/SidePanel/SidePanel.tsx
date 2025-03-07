@@ -1,12 +1,13 @@
 import { FC, ReactNode, useEffect, useState } from 'react'
-import { Panel } from 'src/shared/components/SidePanel/styles'
+import { Panel } from 'src/shared/components/SidePanel/SidePanelStyles'
 import { AnimateState } from 'src/shared/components/types'
+import { Color } from 'src/shared/SharedTypes'
 import { PANEL_TEST_ID } from 'src/shared/test/testIds'
 
 interface SidePanelProps {
   isOpen: boolean
   children: ReactNode
-  color?: React.CSSProperties['color']
+  color?: Color
 }
 
 export const SidePanel: FC<SidePanelProps> = ({ isOpen, children, color }) => {

@@ -6,13 +6,13 @@ import {
   stackedDuelStateMock,
   stackedPlayerMock,
   userMock,
-} from 'src/modules/duel/__mocks__'
+} from 'src/__mocks__/DuelMocks'
 import {
   CARD_STACKS,
   INITIAL_CARDS_DRAWN_IN_DUEL,
   STARTING_COINS_IN_DUEL,
 } from 'src/modules/duel/constants'
-import { AttackOrder, Player } from 'src/modules/duel/types'
+import { AttackOrder, Player } from 'src/modules/duel/DuelTypes'
 import {
   calculateAttackQueue,
   drawCardFromDeck,
@@ -25,7 +25,7 @@ import {
   setInitialPlayerOrder,
   setupInitialDuelPlayerFromUser,
   sortDuelPlayerIdsForBoard,
-} from 'src/modules/duel/utils'
+} from 'src/modules/duel/DuelUtils'
 
 it('should get all playable card ids for a given player with getPlayableCardIds', () => {
   const mockBudgetPlayer: Player = {

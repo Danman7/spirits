@@ -1,10 +1,10 @@
 import { initialState as initialDuelState } from 'src/modules/duel/state/duelReducer'
-import { DuelState, Player } from 'src/modules/duel/types'
+import { DuelState, Player } from 'src/modules/duel/DuelTypes'
 import {
   normalizePlayerCards,
   setupInitialDuelPlayerFromUser,
-} from 'src/modules/duel/utils'
-import { Bot, User } from 'src/shared/modules/user/types'
+} from 'src/modules/duel/DuelUtils'
+import { Bot, User } from 'src/shared/modules/user/UserTypes'
 
 export const playerId = 'player'
 export const opponentId = 'opponent'

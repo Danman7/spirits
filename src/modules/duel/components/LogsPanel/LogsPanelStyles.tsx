@@ -1,4 +1,4 @@
-import { StyledIcon } from 'src/shared/components/Icon/styles'
+import { StyledIcon } from 'src/shared/components/Icon/IconStyles'
 import styled from 'styled-components'
 
 const size = '2.5em'

@@ -15,14 +15,14 @@ import {
   PlayerStacks,
   PlayerStacksAndCards,
   UsersStartingDuel,
-} from 'src/modules/duel/types'
+} from 'src/modules/duel/DuelTypes'
 import { CardBases } from 'src/shared/modules/cards/data/bases'
-import { Agent, CardBaseKey } from 'src/shared/modules/cards/types'
+import { Agent, CardBaseKey } from 'src/shared/modules/cards/CardTypes'
 import {
   generateUUID,
   getRandomArrayItem,
   shuffleArray,
-} from 'src/shared/utils'
+} from 'src/shared/SharedUtils'
 
 export const getPlayableCardIds = (player: Player) =>
   player.hand.filter((cardId) => player.cards[cardId].cost <= player.coins)

@@ -1,6 +1,6 @@
-import { defaultTheme } from 'src/shared/styles/theme'
+import { defaultTheme } from 'src/shared/styles/DefaultTheme'
 import { CardBases } from 'src/shared/modules/cards/data/bases'
-import { Card } from 'src/shared/modules/cards/types'
+import { Card } from 'src/shared/modules/cards/CardTypes'
 
 export const getCardFactionColor = (factions: Card['factions']): string => {
   const { orderFaction, chaosFaction, shadowFaction } = defaultTheme.colors

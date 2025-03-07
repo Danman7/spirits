@@ -1,4 +1,4 @@
-import { Card } from 'src/shared/modules/cards/types'
+import { Card } from 'src/shared/modules/cards/CardTypes'
 
 export const generateUUID = () =>
   'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (char) => {

@@ -3,16 +3,16 @@ import { act } from 'react'
 import {
   initialDuelStateMock,
   userMock as preloadedUser,
-} from 'src/modules/duel/__mocks__'
+} from 'src/__mocks__/DuelMocks'
 import { DuelModal } from 'src/modules/duel/components/DuelModal'
 import {
   firstPlayerMessage,
   initialDrawMessage,
-} from 'src/modules/duel/components/DuelModal/messages'
-import { renderWithProviders } from 'src/modules/duel/testRender'
-import { DuelState } from 'src/modules/duel/types'
+} from 'src/modules/duel/components/DuelModal/DuelModalMessages'
+import { renderWithProviders } from 'src/modules/duel/DuelTestRender'
+import { DuelState } from 'src/modules/duel/DuelTypes'
 import { OVERLAY_TEST_ID } from 'src/shared/test/testIds'
-import { deepClone } from 'src/shared/utils'
+import { deepClone } from 'src/shared/SharedUtils'
 
 jest.useFakeTimers()
 

@@ -1,6 +1,6 @@
 import { CARD_STACKS } from 'src/modules/duel/constants'
-import { Agent, Card } from 'src/shared/modules/cards/types'
-import { User, Bot } from 'src/shared/modules/user/types'
+import { Agent, Card } from 'src/shared/modules/cards/CardTypes'
+import { User, Bot } from 'src/shared/modules/user/UserTypes'
 
 export type CardStack = (typeof CARD_STACKS)[number]
 

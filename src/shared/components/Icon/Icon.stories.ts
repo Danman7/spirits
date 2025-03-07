@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Icon, IconName, Icons } from 'src/shared/components/Icon'
-import { defaultTheme } from 'src/shared/styles/theme'
+import { defaultTheme } from 'src/shared/styles/DefaultTheme'
 
 const meta = {
   title: 'Icon',
