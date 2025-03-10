@@ -10,8 +10,8 @@ import {
 } from 'src/modules/duel/components/PlayerField/PlayerFieldMessages'
 import { renderWithProviders } from 'src/modules/duel/DuelTestRender'
 import { CardStack, DuelState, Player } from 'src/modules/duel/DuelTypes'
-import { OVERLAY_TEST_ID } from 'src/shared/test/testIds'
 import { deepClone } from 'src/shared/SharedUtils'
+import { OVERLAY_TEST_ID } from 'src/shared/test/testIds'
 
 let preloadedDuel: DuelState
 let mockPlayer: Player
@@ -96,33 +96,6 @@ it('should be able to play an agent', () => {
   expect(getByTestId(`${playerId}-board`).children).toHaveLength(
     board.length + 1,
   )
-  expect(getByTestId(`${playerId}-hand`).children).toHaveLength(hand.length - 1)
-  expect(getByTestId(`${playerId}-hand`).textContent).not.toContain(
-    playerCardName,
-  )
-})
-
-it('should discard an instant when played', () => {
-  const { hand, discard, board, cards, id: playerId } = mockPlayer
-
-  const { getByText, queryByText, getByTestId } = renderWithProviders(
-    <PlayerField playerId={playerId} />,
-    {
-      preloadedUser,
-      preloadedDuel,
-    },
-  )
-
-  const playerCardName = cards[hand[1]].name
-
-  fireEvent.click(getByText(playerCardName))
-
-  expect(queryByText(playerCardName)).toBeFalsy()
-
-  expect(getByTestId(`${playerId}-discard`).children).toHaveLength(
-    discard.length + 1,
-  )
-  expect(getByTestId(`${playerId}-board`).children).toHaveLength(board.length)
   expect(getByTestId(`${playerId}-hand`).children).toHaveLength(hand.length - 1)
   expect(getByTestId(`${playerId}-hand`).textContent).not.toContain(
     playerCardName,

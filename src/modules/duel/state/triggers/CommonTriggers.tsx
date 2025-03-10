@@ -2,6 +2,7 @@ import { DuelTrigger, PlayCardAction } from 'src/modules/duel/DuelTypes'
 import { ACTION_WAIT_TIMEOUT } from 'src/shared/SharedConstants'
 import { HighPriestMarkander } from 'src/shared/modules/cards/data/bases'
 import { AgentWithCounter } from 'src/shared/modules/cards/CardTypes'
+import { reduceCounterLogMessage } from 'src/modules/duel/state/DuelStateMessages'
 
 export const completeRedraw: DuelTrigger = {
   predicate: (state, action) =>
@@ -38,16 +39,27 @@ export const handlePostPlayCard: DuelTrigger = {
 
     const [priestId, card] = HighPriest
 
-    const priest = card as AgentWithCounter
+    const { counter, name } = card as AgentWithCounter
 
-    if (categories.includes('Hammerite') && priest.counter > 0) {
+    if (categories.includes('Hammerite') && counter > 0) {
       dispatch({
         type: 'UPDATE_AGENT',
         playerId,
         cardId: priestId,
         update: {
-          counter: priest.counter - 1,
+          counter: counter - 1,
         },
+      })
+
+      dispatch({
+        type: 'ADD_LOG',
+        message: (
+          <p>
+            <strong>{name}</strong>
+            {reduceCounterLogMessage}
+            {counter - 1}
+          </p>
+        ),
       })
     }
   },

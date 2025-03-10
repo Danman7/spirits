@@ -27,7 +27,10 @@ import {
 import { deepClone } from 'src/shared/SharedUtils'
 import {
   agentRetaliatesLogMessage,
+  hasDamagedSelfLogMessage,
+  hasPlayedAllCopiesLogMessage,
   hasPlayedCardLogMessage,
+  reduceCounterLogMessage,
 } from 'src/modules/duel/state/DuelStateMessages'
 
 jest.useFakeTimers()
@@ -72,6 +75,9 @@ describe('Hammerite Novice', () => {
 
     expect(getByTestId(LOGS_CONTENT).textContent).toContain(
       `${hasPlayedCardLogMessage}${base.name}`,
+    )
+    expect(getByTestId(LOGS_CONTENT).textContent).toContain(
+      hasPlayedAllCopiesLogMessage(base.name),
     )
   })
 
@@ -143,6 +149,12 @@ describe('Elevated Acolyte', () => {
 
     expect(getByTestId(`${playerId}-board`).textContent).toContain(
       `${base.name}${base.strength - 1}`,
+    )
+
+    fireEvent.click(getByTestId(OPEN_LOGS_ICON))
+
+    expect(getByTestId(LOGS_CONTENT).textContent).toContain(
+      `${base.name}${hasDamagedSelfLogMessage}1`,
     )
   })
 
@@ -445,7 +457,7 @@ describe('High Priest Markander', () => {
       }),
     }
 
-    const { getByText } = renderWithProviders(<Board />, {
+    const { getByText, getByTestId } = renderWithProviders(<Board />, {
       preloadedUser,
       preloadedDuel,
     })
@@ -458,7 +470,15 @@ describe('High Priest Markander', () => {
       jest.runAllTimers()
     })
 
-    expect(getByText((base.counter as number) - 1)).toBeTruthy()
+    const expectedReducedCounter = (base.counter as number) - 1
+
+    expect(getByText(expectedReducedCounter)).toBeTruthy()
+
+    fireEvent.click(getByTestId(OPEN_LOGS_ICON))
+
+    expect(getByTestId(LOGS_CONTENT).textContent).toContain(
+      `${base.name}${reduceCounterLogMessage}${expectedReducedCounter}`,
+    )
   })
 
   it('should play High Priest Markander if counter reaches 0', () => {

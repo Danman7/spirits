@@ -52,12 +52,10 @@ export const elevatedAcolyteOnPlay: DuelTrigger = {
       })
     ) {
       dispatch({
-        type: 'UPDATE_AGENT',
+        type: 'AGENT_DAMAGE_SELF',
         cardId,
         playerId,
-        update: {
-          strength: matchedCard.strength - 1,
-        },
+        amount: 1,
       })
     }
   },

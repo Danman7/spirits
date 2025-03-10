@@ -23,6 +23,7 @@ import {
   getRandomArrayItem,
   shuffleArray,
 } from 'src/shared/SharedUtils'
+import { hasPlayedAllCopiesLogMessage } from 'src/modules/duel/state/DuelStateMessages'
 
 export const getPlayableCardIds = (player: Player) =>
   player.hand.filter((cardId) => player.cards[cardId].cost <= player.coins)
@@ -234,6 +235,15 @@ export const getPlayAllCopiesEffect = (
       cardId,
       playerId,
       shouldPay: false,
+    })
+
+    dispatch({
+      type: 'ADD_LOG',
+      message: (
+        <p>
+          <i>{hasPlayedAllCopiesLogMessage(base.name)}</i>
+        </p>
+      ),
     })
   })
 }

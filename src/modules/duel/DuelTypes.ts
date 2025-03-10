@@ -79,7 +79,13 @@ export type DuelAction =
   | { type: 'DISCARD_CARD'; playerId: string; cardId: string }
   | UpdateAgentAction
   | { type: 'RESET_DUEL' }
-  | { type: 'ADD_LOG'; message: React.ReactNode }
+  | { type: 'ADD_LOG'; message: React.JSX.Element }
+  | {
+      type: 'AGENT_DAMAGE_SELF'
+      playerId: string
+      cardId: string
+      amount: number
+    }
 
 export type DuelPlayers = {
   [index: string]: Player

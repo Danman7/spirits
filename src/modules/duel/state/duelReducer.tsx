@@ -2,6 +2,8 @@ import { INCOME_PER_TURN } from 'src/modules/duel/DuelConstants'
 import {
   agentAttackLogMessage,
   agentRetaliatesLogMessage,
+  discardLogMessage,
+  hasDamagedSelfLogMessage,
   hasPlayedCardLogMessage,
   playerHasDrawnCardLogMessage,
   playerHasSkippedRedrawLogMessage,
@@ -274,7 +276,7 @@ export const duelReducer = (
           <p>
             <strong style={{ color }}>{name}</strong>
             {hasPlayedCardLogMessage}
-            <strong>{playedCardName}</strong>.
+            <strong>{playedCardName}</strong> for {cost}.
           </p>,
         ],
       }
@@ -298,6 +300,15 @@ export const duelReducer = (
             }),
           },
         },
+        logs: [
+          ...logs,
+          <p>
+            <strong>
+              {discardingPlayer.cards[cardId].name}
+              {discardLogMessage}
+            </strong>
+          </p>,
+        ],
       }
     }
 
@@ -331,6 +342,41 @@ export const duelReducer = (
         ...state,
         logs: [...logs, action.message],
       }
+
+    case 'AGENT_DAMAGE_SELF': {
+      const { amount, cardId, playerId } = action
+      const player = players[playerId]
+      const { cards } = player
+      const updatedCard = cards[cardId] as Agent
+
+      return {
+        ...state,
+        players: {
+          ...players,
+          [playerId]: {
+            ...player,
+            cards: {
+              ...cards,
+              [cardId]: {
+                id: cardId,
+                ...updatedCard,
+                strength: updatedCard.strength - amount,
+              },
+            },
+          },
+        },
+        logs: [
+          ...logs,
+          <p>
+            <i>
+              {updatedCard.name}
+              {hasDamagedSelfLogMessage}
+              {amount}
+            </i>
+          </p>,
+        ],
+      }
+    }
 
     default:
       return state

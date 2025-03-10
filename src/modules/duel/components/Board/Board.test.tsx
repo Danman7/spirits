@@ -13,6 +13,7 @@ import {
 import { Board } from 'src/modules/duel/components/Board'
 import { INITIAL_CARDS_DRAWN_IN_DUEL } from 'src/modules/duel/DuelConstants'
 import {
+  discardLogMessage,
   playerHasDrawnCardLogMessage,
   playerHasSkippedRedrawLogMessage,
   playersTurnLogMessage,
@@ -197,6 +198,44 @@ describe('Player Turns', () => {
 
     expect(getByTestId(LOGS_CONTENT).textContent).toContain(
       `${name}${reduceStrengthLogMessage}${strength - 1}`,
+    )
+  })
+
+  it('should discard an instant when played', () => {
+    const { getByText, queryByText, getByTestId } = renderWithProviders(
+      <Board />,
+      {
+        preloadedUser,
+        preloadedDuel,
+      },
+    )
+
+    const {
+      players,
+      playerOrder: [activePlayerId],
+    } = preloadedDuel
+    const { cards, discard, hand, board } = players[activePlayerId]
+    const playerCardName = cards[hand[1]].name
+
+    fireEvent.click(getByText(playerCardName))
+
+    expect(queryByText(playerCardName)).toBeFalsy()
+
+    expect(getByTestId(`${playerId}-discard`).children).toHaveLength(
+      discard.length + 1,
+    )
+    expect(getByTestId(`${playerId}-board`).children).toHaveLength(board.length)
+    expect(getByTestId(`${playerId}-hand`).children).toHaveLength(
+      hand.length - 1,
+    )
+    expect(getByTestId(`${playerId}-hand`).textContent).not.toContain(
+      playerCardName,
+    )
+
+    fireEvent.click(getByTestId(OPEN_LOGS_ICON))
+
+    expect(getByTestId(LOGS_CONTENT).textContent).toContain(
+      `${playerCardName}${discardLogMessage}`,
     )
   })
 })
