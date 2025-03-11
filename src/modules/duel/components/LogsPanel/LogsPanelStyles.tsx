@@ -37,17 +37,13 @@ export const OpenLogsIcon = styled.div<{ $isVisible: boolean }>`
 export const LogsPanelWrapper = styled.div`
   min-height: ${size};
   position: relative;
-
-  h2 {
-    margin: 0 0 0.5em;
-  }
 `
 
 export const LogsScroll = styled.div`
   max-height: 300px;
   overflow-y: auto;
+`
 
-  h3 {
-    margin: 0.5em 0;
-  }
+export const LogItem = styled.div`
+  padding: 0.5em 0;
 `

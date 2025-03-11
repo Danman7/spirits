@@ -1,17 +1,18 @@
 import { INCOME_PER_TURN } from 'src/modules/duel/DuelConstants'
+import { DuelAction, DuelState } from 'src/modules/duel/DuelTypes'
 import {
-  agentAttackLogMessage,
-  agentRetaliatesLogMessage,
-  discardLogMessage,
-  hasDamagedSelfLogMessage,
-  hasPlayedCardLogMessage,
+  generateAttackLogMessage,
+  generateDamagedSelfLogMessage,
+  generateDiscardLogMessage,
+  generateHasPlayedCardMessage,
+  generatePlayerActionLogMessage,
+  generateTriggerLogMessage,
+} from 'src/modules/duel/state/DuelLogMessageUtils'
+import {
   playerHasDrawnCardLogMessage,
   playerHasSkippedRedrawLogMessage,
   playersTurnLogMessage,
-  reduceStrengthLogMessage,
-  reducingCoinsLogMessage,
 } from 'src/modules/duel/state/DuelStateMessages'
-import { DuelAction, DuelState } from 'src/modules/duel/DuelTypes'
 import {
   calculateAttackQueue,
   drawCardFromDeck,
@@ -20,7 +21,7 @@ import {
   redrawCard,
   setInitialPlayerOrder,
   setPlayersFromUsers,
-} from 'src/modules/duel/DuelUtils'
+} from 'src/modules/duel/state/DuelStateUtils'
 import { Agent } from 'src/shared/modules/cards/CardTypes'
 
 export const initialState: DuelState = {
@@ -80,10 +81,10 @@ export const duelReducer = (
         },
         logs: [
           ...logs,
-          <p>
-            <strong style={{ color: player.color }}>{player.name}</strong>
-            {playerHasSkippedRedrawLogMessage}
-          </p>,
+          generatePlayerActionLogMessage(
+            player,
+            playerHasSkippedRedrawLogMessage,
+          ),
         ],
       }
     }
@@ -104,12 +105,10 @@ export const duelReducer = (
         },
         logs: [
           ...logs,
-          <p>
-            <strong style={{ color: redrawingPlayer.color }}>
-              {redrawingPlayer.name}
-            </strong>
-            {playerHasDrawnCardLogMessage}
-          </p>,
+          generatePlayerActionLogMessage(
+            redrawingPlayer,
+            playerHasDrawnCardLogMessage,
+          ),
         ],
       }
     }
@@ -131,12 +130,11 @@ export const duelReducer = (
         },
         logs: [
           ...logs,
-          <h3>
-            <strong style={{ color: activePlayer.color }}>
-              {activePlayer.name}
-            </strong>
-            {playersTurnLogMessage}
-          </h3>,
+          generatePlayerActionLogMessage(
+            activePlayer,
+            playersTurnLogMessage,
+            true,
+          ),
         ],
       }
     }
@@ -166,12 +164,11 @@ export const duelReducer = (
         },
         logs: [
           ...logs,
-          <h3>
-            <strong style={{ color: inactivePlayer.color }}>
-              {inactivePlayer.name}
-            </strong>
-            {playersTurnLogMessage}
-          </h3>,
+          generatePlayerActionLogMessage(
+            inactivePlayer,
+            playersTurnLogMessage,
+            true,
+          ),
         ],
       }
     }
@@ -190,10 +187,11 @@ export const duelReducer = (
       const { defendingPlayerId, defendingAgentId } = action
       const defendingPlayer = players[defendingPlayerId]
       const { coins, cards } = defendingPlayer
-      const defendingAgent =
-        defendingAgentId && (cards[defendingAgentId] as Agent)
+      const defendingAgent = defendingAgentId
+        ? (cards[defendingAgentId] as Agent)
+        : undefined
       const { attackingPlayerId, attackerId } = attackingQueue[0]
-      const { name: attackerName, traits } = players[attackingPlayerId].cards[
+      const attackingAgent = players[attackingPlayerId].cards[
         attackerId
       ] as Agent
 
@@ -204,41 +202,26 @@ export const duelReducer = (
           [defendingPlayerId]: {
             ...defendingPlayer,
             coins: defendingAgent ? coins : coins - 1,
-            cards: defendingAgent
-              ? {
-                  ...cards,
-                  [defendingAgentId]: {
-                    id: defendingAgentId,
-                    ...defendingAgent,
-                    strength: defendingAgent.strength - 1,
-                  },
-                }
-              : cards,
+            cards:
+              defendingAgentId && defendingAgent
+                ? {
+                    ...cards,
+                    [defendingAgentId]: {
+                      id: defendingAgentId,
+                      ...defendingAgent,
+                      strength: defendingAgent.strength - 1,
+                    },
+                  }
+                : cards,
           },
         },
         logs: [
           ...logs,
-          <p>
-            <strong>{attackerName}</strong>
-            {traits?.retaliates && defendingAgent
-              ? agentRetaliatesLogMessage
-              : agentAttackLogMessage}
-            {defendingAgent ? (
-              <>
-                <strong>{defendingAgent.name}</strong>
-                {reduceStrengthLogMessage}
-                {defendingAgent.strength - 1}.
-              </>
-            ) : (
-              <>
-                <strong style={{ color: defendingPlayer.color }}>
-                  {defendingPlayer.name}
-                </strong>
-                {reducingCoinsLogMessage}
-                {coins - 1}.
-              </>
-            )}
-          </p>,
+          generateAttackLogMessage(
+            attackingAgent,
+            defendingPlayer,
+            defendingAgent,
+          ),
         ],
       }
     }
@@ -253,8 +236,8 @@ export const duelReducer = (
     case 'PLAY_CARD': {
       const { cardId, playerId, shouldPay } = action
       const playingPlayer = players[playerId]
-      const { coins, name, color } = playingPlayer
-      const { cost, name: playedCardName } = playingPlayer.cards[cardId]
+      const { coins } = playingPlayer
+      const playedCard = playingPlayer.cards[cardId]
 
       return {
         ...state,
@@ -268,16 +251,12 @@ export const duelReducer = (
               target: 'board',
             }),
             hasPerformedAction: true,
-            coins: shouldPay ? coins - cost : coins,
+            coins: shouldPay ? coins - playedCard.cost : coins,
           },
         },
         logs: [
           ...logs,
-          <p>
-            <strong style={{ color }}>{name}</strong>
-            {hasPlayedCardLogMessage}
-            <strong>{playedCardName}</strong> for {cost}.
-          </p>,
+          generateHasPlayedCardMessage(playingPlayer, playedCard),
         ],
       }
     }
@@ -300,15 +279,7 @@ export const duelReducer = (
             }),
           },
         },
-        logs: [
-          ...logs,
-          <p>
-            <strong>
-              {discardingPlayer.cards[cardId].name}
-              {discardLogMessage}
-            </strong>
-          </p>,
-        ],
+        logs: [...logs, generateDiscardLogMessage(discardingPlayer, cardId)],
       }
     }
 
@@ -367,13 +338,9 @@ export const duelReducer = (
         },
         logs: [
           ...logs,
-          <p>
-            <i>
-              {updatedCard.name}
-              {hasDamagedSelfLogMessage}
-              {amount}
-            </i>
-          </p>,
+          generateTriggerLogMessage(
+            generateDamagedSelfLogMessage(updatedCard, amount),
+          ),
         ],
       }
     }

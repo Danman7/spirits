@@ -1,9 +1,7 @@
-import {
-  CardFlavor,
-  StyledCardContent,
-} from 'src/shared/modules/cards/components/CardStyles'
 import { traitDescriptions } from 'src/shared/modules/cards/CardMessages'
 import { AgentTraitName, Card } from 'src/shared/modules/cards/CardTypes'
+import { StyledCardContent } from 'src/shared/modules/cards/components/CardStyles'
+import { AccentText } from 'src/shared/styles/GlobalStyles'
 
 interface CardContentProps {
   card: Card
@@ -28,7 +26,7 @@ export const CardContent: React.FC<CardContentProps> = ({ card, id }) => {
           ))
         : null}
 
-      <CardFlavor>{flavor}</CardFlavor>
+      <AccentText>{flavor}</AccentText>
     </StyledCardContent>
   )
 }

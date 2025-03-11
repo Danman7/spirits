@@ -1,8 +1,11 @@
 import { DuelTrigger, PlayCardAction } from 'src/modules/duel/DuelTypes'
+import {
+  generateReduceCounterMessage,
+  generateTriggerLogMessage,
+} from 'src/modules/duel/state/DuelLogMessageUtils'
 import { ACTION_WAIT_TIMEOUT } from 'src/shared/SharedConstants'
-import { HighPriestMarkander } from 'src/shared/modules/cards/data/bases'
 import { AgentWithCounter } from 'src/shared/modules/cards/CardTypes'
-import { reduceCounterLogMessage } from 'src/modules/duel/state/DuelStateMessages'
+import { HighPriestMarkander } from 'src/shared/modules/cards/data/bases'
 
 export const completeRedraw: DuelTrigger = {
   predicate: (state, action) =>
@@ -39,7 +42,7 @@ export const handlePostPlayCard: DuelTrigger = {
 
     const [priestId, card] = HighPriest
 
-    const { counter, name } = card as AgentWithCounter
+    const { counter } = card as AgentWithCounter
 
     if (categories.includes('Hammerite') && counter > 0) {
       dispatch({
@@ -53,12 +56,8 @@ export const handlePostPlayCard: DuelTrigger = {
 
       dispatch({
         type: 'ADD_LOG',
-        message: (
-          <p>
-            <strong>{name}</strong>
-            {reduceCounterLogMessage}
-            {counter - 1}
-          </p>
+        message: generateTriggerLogMessage(
+          generateReduceCounterMessage(card as AgentWithCounter),
         ),
       })
     }

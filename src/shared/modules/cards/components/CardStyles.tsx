@@ -232,12 +232,6 @@ export const StyledCardFooter = styled.div`
   border-top: ${({ theme }) => `1px solid ${theme.colors.accent}`};
 `
 
-export const CardFlavor = styled.small`
-  display: block;
-  font-style: italic;
-  color: ${({ theme }) => theme.colors.accent};
-`
-
 export const FooterSection = styled.div`
   display: inline-block;
 `

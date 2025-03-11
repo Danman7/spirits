@@ -122,3 +122,15 @@ from {
     scale: 2;
   }
 `
+
+export const Separator = styled.div`
+  opacity: 0.2;
+  width: 100%;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.accent};
+`
+
+export const AccentText = styled.small`
+  display: block;
+  font-style: italic;
+  color: ${({ theme }) => theme.colors.accent};
+`
