@@ -66,3 +66,12 @@ export const sortDuelPlayerIdsForBoard = (
         Number(playerB.id === loggedInPlayerId),
     )
     .map(({ id }) => id) as [string, string]
+
+export const getOtherPlayer = (
+  players: DuelPlayers,
+  playerOrder: [string, string],
+  playerId: string,
+) => {
+  const otherId = playerOrder[0] === playerId ? playerOrder[1] : playerOrder[0]
+  return players[otherId]
+}

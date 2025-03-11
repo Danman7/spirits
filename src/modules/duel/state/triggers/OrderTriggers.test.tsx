@@ -22,7 +22,10 @@ import {
   playedLogMessage,
   reduceCounterLogMessage,
 } from 'src/modules/duel/state/DuelStateMessages'
-import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/shared/modules/cards/CardConstants'
+import {
+  HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
+  TEMPLE_GUARD_BOOST,
+} from 'src/shared/modules/cards/CardConstants'
 import { Agent, CardBaseKey } from 'src/shared/modules/cards/CardTypes'
 import {
   CardBases,
@@ -278,8 +281,44 @@ describe('Brother Sachelman', () => {
 })
 
 describe('Temple Guard', () => {
+  let base: Agent
+
   beforeEach(() => {
     baseName = 'TempleGuard'
+    base = CardBases[baseName]
+  })
+
+  it('should boost self if the opponent has a larger board', () => {
+    preloadedDuel.players[playerId] = {
+      ...initialPlayerMock,
+      ...normalizePlayerCards({
+        hand: [baseName],
+      }),
+    }
+    preloadedDuel.players[opponentId] = {
+      ...initialOpponentMock,
+      ...normalizePlayerCards({
+        hand: [],
+        board: ['Zombie', 'Haunt'],
+      }),
+    }
+
+    const { getByText, getByTestId } = renderWithProviders(<Board />, {
+      preloadedUser,
+      preloadedDuel,
+    })
+
+    fireEvent.click(getByText(base.name))
+
+    expect(getByTestId(`${playerId}-board`).textContent).toContain(
+      `${base.name}${base.strength + TEMPLE_GUARD_BOOST}`,
+    )
+
+    fireEvent.click(getByTestId(OPEN_LOGS_ICON))
+
+    expect(getByTestId(LOGS_CONTENT).textContent).toContain(
+      `${base.name}${boostedLogMessage}${TEMPLE_GUARD_BOOST}`,
+    )
   })
 
   it('should not retaliate when not attacked', () => {

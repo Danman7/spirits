@@ -6,3 +6,4 @@ export const GARRETT_COIN_GAIN = 1
 export const DOWNWINDER_BOOST = 1
 export const AZARAN_BOOST = 1
 export const HIGH_PRIEST_MAKANDER_COUNTER = 10
+export const TEMPLE_GUARD_BOOST = 1

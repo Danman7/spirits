@@ -2,6 +2,7 @@ import {
   ELEVATED_ACOLYTE_SELF_DAMAGE,
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   HIGH_PRIEST_MAKANDER_COUNTER,
+  TEMPLE_GUARD_BOOST,
 } from 'src/shared/modules/cards/CardConstants'
 import {
   Agent,
@@ -38,11 +39,11 @@ export const HammeriteNovice: Agent = {
   type: 'agent',
   name: 'Hammerite Novice',
   strength: 2,
-  cost: 3,
+  cost: 2,
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
-    'On play if you have another Hammerite in play also play all other copies of this card from your hand or deck for free.',
+    'On play, if another Hammerite is on your board, play all other copies of this card from your hand or deck for free.',
   ],
   flavor:
     'This novice has been instructed in the rules and strictures of the Order and has sworn his warrants to be silent in his vigils.',
@@ -56,7 +57,7 @@ export const ElevatedAcolyte: Agent = {
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
-    `On play, damage self by ${ELEVATED_ACOLYTE_SELF_DAMAGE} if is not played next to a Hammerite with higher strength.`,
+    `On play, take ${ELEVATED_ACOLYTE_SELF_DAMAGE} damage unless played next to a stronger Hammerite.`,
   ],
   flavor:
     'He will endure a standard three-year contract of service, at the end of which he will be considered for indoctrination as an Elevated Acolyte.',
@@ -65,11 +66,13 @@ export const ElevatedAcolyte: Agent = {
 export const TempleGuard: Agent = {
   type: 'agent',
   name: 'Temple Guard',
-  strength: 5,
+  strength: 4,
   cost: 5,
   factions: ['Order'],
   categories: ['Hammerite', 'Guard'],
-  description: [''],
+  description: [
+    `On play, boost self by ${TEMPLE_GUARD_BOOST} if your opponent has more cards on board.`,
+  ],
   traits: {
     retaliates: true,
   },

@@ -3,6 +3,7 @@ import {
   PlayCardAction,
   UpdateAgentAction,
 } from 'src/modules/duel/DuelTypes'
+import { getOtherPlayer } from 'src/modules/duel/DuelUtils'
 import {
   generateBoostedLogMessage,
   generatePlayedFromTriggerLogMessage,
@@ -13,7 +14,10 @@ import {
   getOnPlayCardPredicate,
   getPlayAllCopiesEffect,
 } from 'src/modules/duel/state/DuelStateUtils'
-import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/shared/modules/cards/CardConstants'
+import {
+  HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
+  TEMPLE_GUARD_BOOST,
+} from 'src/shared/modules/cards/CardConstants'
 import { Agent } from 'src/shared/modules/cards/CardTypes'
 import { HighPriestMarkander } from 'src/shared/modules/cards/data/bases'
 
@@ -63,6 +67,36 @@ export const elevatedAcolyteOnPlay: DuelTrigger = {
         amount: 1,
       })
     }
+  },
+}
+
+export const templeGuardOnPlay: DuelTrigger = {
+  predicate: (state, action) =>
+    getOnPlayCardPredicate(action, state.players, 'TempleGuard'),
+  effect: ({ action, state, dispatch }) => {
+    const { cardId, playerId } = action as PlayCardAction
+    const { players, playerOrder } = state
+    const player = players[playerId]
+    const opponent = getOtherPlayer(players, playerOrder, playerId)
+    const matchedCard = player.cards[cardId] as Agent
+
+    if (opponent.board.length <= player.board.length) return
+
+    dispatch({
+      type: 'UPDATE_AGENT',
+      cardId,
+      playerId,
+      update: {
+        strength: matchedCard.strength + TEMPLE_GUARD_BOOST,
+      },
+    })
+
+    dispatch({
+      type: 'ADD_LOG',
+      message: generateTriggerLogMessage(
+        generateBoostedLogMessage(matchedCard.name, TEMPLE_GUARD_BOOST),
+      ),
+    })
   },
 }
 
