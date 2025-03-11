@@ -194,6 +194,7 @@ export const duelReducer = (
       const attackingAgent = players[attackingPlayerId].cards[
         attackerId
       ] as Agent
+      const attackerIsActive = attackingPlayerId === activePlayerId
 
       return {
         ...state,
@@ -221,6 +222,7 @@ export const duelReducer = (
             attackingAgent,
             defendingPlayer,
             defendingAgent,
+            attackerIsActive,
           ),
         ],
       }
@@ -254,10 +256,9 @@ export const duelReducer = (
             coins: shouldPay ? coins - playedCard.cost : coins,
           },
         },
-        logs: [
-          ...logs,
-          generateHasPlayedCardMessage(playingPlayer, playedCard),
-        ],
+        logs: shouldPay
+          ? [...logs, generateHasPlayedCardMessage(playingPlayer, playedCard)]
+          : logs,
       }
     }
 

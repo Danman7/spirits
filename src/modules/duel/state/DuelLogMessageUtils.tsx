@@ -3,9 +3,13 @@ import { Player } from 'src/modules/duel/DuelTypes'
 import {
   agentAttackLogMessage,
   agentRetaliatesLogMessage,
+  boostedLogMessage,
+  copiesLogMessage,
   discardLogMessage,
   hasDamagedSelfLogMessage,
   hasPlayedCardLogMessage,
+  isPlayedLogMessage,
+  playedLogMessage,
   reduceCounterLogMessage,
   reduceStrengthLogMessage,
   reducingCoinsLogMessage,
@@ -15,6 +19,7 @@ import {
   AgentWithCounter,
   Card,
 } from 'src/shared/modules/cards/CardTypes'
+import { getCoinsMessage } from 'src/shared/SharedUtils'
 import { AccentText } from 'src/shared/styles/GlobalStyles'
 
 export const generateTriggerLogMessage = (message: React.ReactNode) => (
@@ -39,7 +44,9 @@ export const generateHasPlayedCardMessage = (player: Player, card: Card) => (
   <p>
     <strong style={{ color: player.color }}>{player.name}</strong>
     {hasPlayedCardLogMessage}
-    <strong>{card.name}</strong> for {card.cost} coins.
+    <strong>{card.name}</strong> for {card.cost} {getCoinsMessage(card.cost)} (
+    {player.coins - card.cost} {getCoinsMessage(player.coins - card.cost)}{' '}
+    left).
   </p>
 )
 
@@ -47,10 +54,11 @@ export const generateAttackLogMessage = (
   attackingAgent: Agent,
   defendingPlayer: Player,
   defendingAgent?: Agent,
+  attackerIsActive?: boolean,
 ) => (
   <p>
     <strong>{attackingAgent.name}</strong>
-    {attackingAgent.traits?.retaliates && defendingAgent
+    {attackingAgent.traits?.retaliates && defendingAgent && !attackerIsActive
       ? agentRetaliatesLogMessage
       : agentAttackLogMessage}
     {defendingAgent ? (
@@ -96,6 +104,29 @@ export const generateDamagedSelfLogMessage = (
   <>
     <strong>{updatedCard.name}</strong>
     {hasDamagedSelfLogMessage}
-    {amount}
+    {amount}.
+  </>
+)
+
+export const generatePlayedCopyLogMessage = (name: string) => (
+  <>
+    {copiesLogMessage}
+    <strong>{name}</strong>
+    {playedLogMessage}
+  </>
+)
+
+export const generateBoostedLogMessage = (name: string, amount: number) => (
+  <>
+    <strong>{name}</strong>
+    {boostedLogMessage}
+    {amount}.
+  </>
+)
+
+export const generatePlayedFromTriggerLogMessage = (name: string) => (
+  <>
+    <strong>{name}</strong>
+    {isPlayedLogMessage}
   </>
 )

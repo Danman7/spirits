@@ -12,6 +12,8 @@ export const reduceStrengthLogMessage = ' reducing its strength to '
 export const discardLogMessage = ' is discarded.'
 
 export const reduceCounterLogMessage = "'s counter is reduced to "
-export const hasPlayedAllCopiesLogMessage = (name: string) =>
-  `All copies of ${name} are played.`
+export const copiesLogMessage = 'A copy of '
+export const playedLogMessage = ' is played.'
 export const hasDamagedSelfLogMessage = ' damaged self by '
+export const boostedLogMessage = ' is boosted by '
+export const isPlayedLogMessage = ' is played.'

@@ -1,9 +1,5 @@
 import { fireEvent, within } from '@testing-library/dom'
 import { act } from 'react'
-import { Board } from 'src/modules/duel/components/Board'
-import { renderWithProviders } from 'src/modules/duel/DuelTestRender'
-import { DuelState } from 'src/modules/duel/DuelTypes'
-import { normalizePlayerCards } from 'src/modules/duel/DuelUtils'
 import {
   initialOpponentMock,
   initialPlayerMock,
@@ -12,26 +8,33 @@ import {
   userMock as preloadedUser,
   stackedDuelStateMock,
 } from 'src/__mocks__/DuelMocks'
+import { Board } from 'src/modules/duel/components/Board'
+import { renderWithProviders } from 'src/modules/duel/DuelTestRender'
+import { DuelState } from 'src/modules/duel/DuelTypes'
+import { normalizePlayerCards } from 'src/modules/duel/DuelUtils'
+import {
+  agentRetaliatesLogMessage,
+  boostedLogMessage,
+  copiesLogMessage,
+  hasDamagedSelfLogMessage,
+  hasPlayedCardLogMessage,
+  isPlayedLogMessage,
+  playedLogMessage,
+  reduceCounterLogMessage,
+} from 'src/modules/duel/state/DuelStateMessages'
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/shared/modules/cards/CardConstants'
+import { Agent, CardBaseKey } from 'src/shared/modules/cards/CardTypes'
 import {
   CardBases,
   ElevatedAcolyte,
   HighPriestMarkander,
 } from 'src/shared/modules/cards/data/bases'
-import { Agent, CardBaseKey } from 'src/shared/modules/cards/CardTypes'
+import { deepClone } from 'src/shared/SharedUtils'
 import {
   CARD_TEST_ID,
   LOGS_CONTENT,
   OPEN_LOGS_ICON,
 } from 'src/shared/test/testIds'
-import { deepClone } from 'src/shared/SharedUtils'
-import {
-  agentRetaliatesLogMessage,
-  hasDamagedSelfLogMessage,
-  hasPlayedAllCopiesLogMessage,
-  hasPlayedCardLogMessage,
-  reduceCounterLogMessage,
-} from 'src/modules/duel/state/DuelStateMessages'
 
 jest.useFakeTimers()
 
@@ -77,7 +80,7 @@ describe('Hammerite Novice', () => {
       `${hasPlayedCardLogMessage}${base.name}`,
     )
     expect(getByTestId(LOGS_CONTENT).textContent).toContain(
-      hasPlayedAllCopiesLogMessage(base.name),
+      `${copiesLogMessage}${base.name}${playedLogMessage}`,
     )
   })
 
@@ -231,11 +234,17 @@ describe('Brother Sachelman', () => {
 
     fireEvent.click(getByText(base.name))
 
+    fireEvent.click(getByTestId(OPEN_LOGS_ICON))
+
     normalizedCards.board.forEach((cardId) => {
       const { strength, name } = normalizedCards.cards[cardId] as Agent
 
       expect(getByTestId(`${CARD_TEST_ID}${cardId}`).textContent).toContain(
         `${name}${strength + HAMMERITES_WITH_LOWER_STRENGTH_BOOST}`,
+      )
+
+      expect(getByTestId(LOGS_CONTENT).textContent).toContain(
+        `${name}${boostedLogMessage}${HAMMERITES_WITH_LOWER_STRENGTH_BOOST}`,
       )
     })
   })
@@ -508,5 +517,11 @@ describe('High Priest Markander', () => {
     expect(
       within(getByTestId(`${playerId}-board`)).getAllByText(base.name),
     ).toHaveLength(1)
+
+    fireEvent.click(getByTestId(OPEN_LOGS_ICON))
+
+    expect(getByTestId(LOGS_CONTENT).textContent).toContain(
+      `${base.name}${isPlayedLogMessage}`,
+    )
   })
 })

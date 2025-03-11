@@ -14,8 +14,10 @@ import {
   UsersStartingDuel,
 } from 'src/modules/duel/DuelTypes'
 import { setupInitialDuelPlayerFromUser } from 'src/modules/duel/DuelUtils'
-import { generateTriggerLogMessage } from 'src/modules/duel/state/DuelLogMessageUtils'
-import { hasPlayedAllCopiesLogMessage } from 'src/modules/duel/state/DuelStateMessages'
+import {
+  generatePlayedCopyLogMessage,
+  generateTriggerLogMessage,
+} from 'src/modules/duel/state/DuelLogMessageUtils'
 import { Agent, CardBaseKey } from 'src/shared/modules/cards/CardTypes'
 import { CardBases } from 'src/shared/modules/cards/data/bases'
 import { getRandomArrayItem } from 'src/shared/SharedUtils'
@@ -181,7 +183,7 @@ export const getPlayAllCopiesEffect = (
     dispatch({
       type: 'ADD_LOG',
       message: generateTriggerLogMessage(
-        hasPlayedAllCopiesLogMessage(base.name),
+        generatePlayedCopyLogMessage(base.name),
       ),
     })
   })

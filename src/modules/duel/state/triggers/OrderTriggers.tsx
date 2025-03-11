@@ -4,13 +4,18 @@ import {
   UpdateAgentAction,
 } from 'src/modules/duel/DuelTypes'
 import {
+  generateBoostedLogMessage,
+  generatePlayedFromTriggerLogMessage,
+  generateTriggerLogMessage,
+} from 'src/modules/duel/state/DuelLogMessageUtils'
+import {
   getNeighboursIndexes,
   getOnPlayCardPredicate,
   getPlayAllCopiesEffect,
 } from 'src/modules/duel/state/DuelStateUtils'
 import { HAMMERITES_WITH_LOWER_STRENGTH_BOOST } from 'src/shared/modules/cards/CardConstants'
-import { HighPriestMarkander } from 'src/shared/modules/cards/data/bases'
 import { Agent } from 'src/shared/modules/cards/CardTypes'
+import { HighPriestMarkander } from 'src/shared/modules/cards/data/bases'
 
 export const hammeriteNoviceOnPlay: DuelTrigger = {
   predicate: (state, action) =>
@@ -70,7 +75,7 @@ export const brotherSachelmanOnPlay: DuelTrigger = {
     const { board, cards } = players[playerId]
 
     board.forEach((boardCardId) => {
-      const { strength, categories } = cards[boardCardId] as Agent
+      const { strength, categories, name } = cards[boardCardId] as Agent
 
       if (
         categories.includes('Hammerite') &&
@@ -84,6 +89,16 @@ export const brotherSachelmanOnPlay: DuelTrigger = {
           update: {
             strength: strength + HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
           },
+        })
+
+        dispatch({
+          type: 'ADD_LOG',
+          message: generateTriggerLogMessage(
+            generateBoostedLogMessage(
+              name,
+              HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
+            ),
+          ),
         })
       }
     })
@@ -101,12 +116,20 @@ export const highPriestMarkanderOnUpdate: DuelTrigger = {
     const { cards, board } = players[playerId]
     const { counter } = cards[cardId] as Agent
 
-    if ((counter as number) <= 0 && !board.includes(cardId))
+    if ((counter as number) <= 0 && !board.includes(cardId)) {
       dispatch({
         type: 'PLAY_CARD',
         cardId,
         playerId,
         shouldPay: false,
       })
+
+      dispatch({
+        type: 'ADD_LOG',
+        message: generateTriggerLogMessage(
+          generatePlayedFromTriggerLogMessage(HighPriestMarkander.name),
+        ),
+      })
+    }
   },
 }

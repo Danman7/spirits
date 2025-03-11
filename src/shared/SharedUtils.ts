@@ -31,3 +31,6 @@ export const deepClone = <T>(object: T) => JSON.parse(JSON.stringify(object))
 
 export const joinStringArrayWithComma = (categories: Card['categories']) =>
   categories.join(', ')
+
+export const getCoinsMessage = (amount: number) =>
+  amount > 1 ? 'coins' : 'coin'
