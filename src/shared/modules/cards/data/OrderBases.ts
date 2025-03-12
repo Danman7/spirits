@@ -89,7 +89,7 @@ export const BrotherSachelman: Agent = {
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
-    `On play boost all allied Hammerites on board that have lower strength than this card's strength by ${HAMMERITES_WITH_LOWER_STRENGTH_BOOST}`,
+    `On play boost all allied Hammerites on board with lower strength than this card's strength by ${HAMMERITES_WITH_LOWER_STRENGTH_BOOST}`,
   ],
   flavor:
     'May the Hammer fall on the unrighteous. Officially, Brother Sachelman',
@@ -105,8 +105,23 @@ export const HighPriestMarkander: AgentWithCounter = {
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
-    `This card starts with a counter of ${HIGH_PRIEST_MAKANDER_COUNTER}. Every time a Hammerite is played, the counter is reduced by 1. Once the counter reaches 0 play this card from deck or hand for free.`,
+    `Every time a Hammerite is played, reduce the counter of this card by 1. Once the counter reaches 0 play this card from deck or hand for free.`,
   ],
   flavor:
     "He is old, and the Master Forgers do jostle each other for precedence. But I spy not on my betters. 'Tis in The Builder's Hands.",
+}
+
+export const HammeritePriest: Agent = {
+  type: 'agent',
+  name: 'Hammerite Priest',
+  strength: 3,
+  cost: 6,
+  isUnique: true,
+  factions: ['Order'],
+  categories: ['Hammerite'],
+  description: [
+    'On play, choose a card from your board to discard and immediately recover its cost.',
+  ],
+  flavor:
+    'The harlot did say to the priest "Tarry a while, and wait upon thy duties" and the priest did tarry. And was the priest crushed beneath the great gears, for the path of righteousness leads ever upwards, to where it is perilous to fall.',
 }

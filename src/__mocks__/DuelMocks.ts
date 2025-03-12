@@ -22,8 +22,8 @@ export const userMock: User = {
     'ElevatedAcolyte',
     'TempleGuard',
     'TempleGuard',
-    'YoraSkull',
-    'HighPriestMarkander',
+    'HammeritePriest',
+    'HammeritePriest',
   ],
 }
 
