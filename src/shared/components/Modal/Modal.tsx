@@ -4,7 +4,7 @@ import {
   Overlay,
   StyledModal,
 } from 'src/shared/components/Modal/ModalStyles'
-import { AnimateState } from 'src/shared/components/types'
+import { AnimateState } from 'src/shared/components/SharedComponentTypes'
 import { MODAL_TEST_ID, OVERLAY_TEST_ID } from 'src/shared/test/testIds'
 
 interface ModalProps {

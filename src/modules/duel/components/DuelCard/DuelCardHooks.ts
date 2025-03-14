@@ -1,16 +1,16 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
-import { useDuel } from 'src/modules/duel/state/DuelContext'
-import { CardStack } from 'src/modules/duel/DuelTypes'
+import { useDuel } from 'src/modules/duel/state/context/DuelContext'
+import { CardStack } from 'src/modules/duel/state/duelStateTypes'
 import { usePrevious } from 'src/shared/SharedHooks'
 import { Agent } from 'src/shared/modules/cards/CardTypes'
 import { useUser } from 'src/shared/modules/user/state/UserContext'
 
-export const useCard = (playerId: string, cardId: string) => {
+export const useCard = (cardId: string) => {
   const {
-    state: { players },
+    state: { cards },
   } = useDuel()
 
-  return players[playerId].cards[cardId]
+  return cards[cardId]
 }
 
 export const useCardStack = (playerId: string, cardId: string): CardStack => {
@@ -42,6 +42,7 @@ export const useDuelCardOnClick = (
 ) => {
   const {
     state: {
+      cards,
       players,
       phase,
       playerOrder: [activePlayerId],
@@ -52,7 +53,7 @@ export const useDuelCardOnClick = (
   const { state: user } = useUser()
   const { id: userId } = user
 
-  const { hasPerformedAction, coins, cards } = players[playerId]
+  const { hasPerformedAction, coins } = players[playerId]
   const { cost } = cards[cardId]
 
   if (stack === 'hand' && !hasPerformedAction) {
@@ -82,11 +83,11 @@ export const useDefeatHandler = (
   stack: CardStack,
 ) => {
   const {
-    state: { players },
+    state: { players, cards },
     dispatch,
   } = useDuel()
 
-  const { cards, discard } = players[playerId]
+  const { discard } = players[playerId]
   const card = cards[cardId] as Agent
 
   useEffect(() => {

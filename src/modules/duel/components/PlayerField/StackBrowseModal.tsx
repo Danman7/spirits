@@ -7,7 +7,7 @@ import {
   CardBrowserModalFooter,
   CardList,
 } from 'src/modules/duel/components/PlayerField/PlayerFieldStyles'
-import { PlayerCards } from 'src/modules/duel/DuelTypes'
+import { DuelCards } from 'src/modules/duel/state/duelStateTypes'
 import { Link } from 'src/shared/components/Link'
 import { Modal } from 'src/shared/components/Modal'
 import { CardComponent } from 'src/shared/modules/cards/components/Card'
@@ -16,7 +16,7 @@ import { shuffleArray } from 'src/shared/SharedUtils'
 interface StackBrowseModalProps {
   isOpen: boolean
   browsedStack: string
-  browsedCards: PlayerCards
+  browsedCards: DuelCards
   onClose: () => void
 }
 

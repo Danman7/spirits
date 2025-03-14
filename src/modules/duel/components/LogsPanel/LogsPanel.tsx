@@ -9,7 +9,7 @@ import {
   LogsScroll,
   LogItem,
 } from 'src/modules/duel/components/LogsPanel/LogsPanelStyles'
-import { useDuel } from 'src/modules/duel/state/DuelContext'
+import { useDuel } from 'src/modules/duel/state/context/DuelContext'
 import { Icon } from 'src/shared/components/Icon'
 import { Link } from 'src/shared/components/Link'
 import { SidePanel } from 'src/shared/components/SidePanel'

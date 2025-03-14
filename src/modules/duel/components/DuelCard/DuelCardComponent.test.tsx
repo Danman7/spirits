@@ -3,13 +3,14 @@ import { act } from 'react'
 import {
   userMock as preloadedUser,
   stackedDuelStateMock,
-} from 'src/__mocks__/DuelMocks'
+} from 'src/__mocks__/duelMocks'
 import { DuelCardComponent } from 'src/modules/duel/components/DuelCard'
-import { renderWithProviders } from 'src/modules/duel/DuelTestRender'
-import { DuelState, Player } from 'src/modules/duel/DuelTypes'
+import { renderWithProviders } from 'src/modules/duel/duelTestRender'
 import { defaultTheme } from 'src/shared/styles/DefaultTheme'
 import { CARD_TEST_ID } from 'src/shared/test/testIds'
 import { deepClone } from 'src/shared/SharedUtils'
+import { DuelState } from 'src/modules/duel/state/duelStateTypes'
+import { Player } from 'src/modules/duel/playerTypes'
 
 jest.useFakeTimers()
 
@@ -26,10 +27,10 @@ const {
 } = defaultTheme
 
 it('should show the correct card in hand', () => {
-  const { id, hand, cards } = player
+  const { id, hand } = player
 
   const cardId = hand[0]
-  const card = cards[cardId]
+  const card = preloadedDuel.cards[cardId]
   const { name } = card
 
   const { getByText, getByTestId } = renderWithProviders(
@@ -51,10 +52,10 @@ it('should show the correct card in hand', () => {
 })
 
 it('should be able to redraw card', () => {
-  const { hand, cards, id } = player
+  const { hand, id } = player
 
   const cardId = hand[0]
-  const card = cards[cardId]
+  const card = preloadedDuel.cards[cardId]
   const { name } = card
 
   preloadedDuel.phase = 'Redrawing'
@@ -77,13 +78,13 @@ it('should be able to redraw card', () => {
 })
 
 it('should discard self from board if strength is zero', () => {
-  const { board, id, cards } = player
+  const { board, id } = player
   const cardId = board[0]
-  const { name } = cards[cardId]
+  const { name } = preloadedDuel.cards[cardId]
 
-  if (preloadedDuel.players[id].cards[cardId].type !== 'agent') return
+  if (preloadedDuel.cards[cardId].type !== 'agent') return
 
-  preloadedDuel.players[id].cards[cardId].strength = 0
+  preloadedDuel.cards[cardId].strength = 0
 
   const { queryByText } = renderWithProviders(
     <DuelCardComponent cardId={cardId} playerId={id} />,

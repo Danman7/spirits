@@ -6,8 +6,8 @@ import {
 import { DuelModal } from 'src/modules/duel/components/DuelModal'
 import { LogsPanel } from 'src/modules/duel/components/LogsPanel'
 import { PlayerField } from 'src/modules/duel/components/PlayerField'
-import { useDuel } from 'src/modules/duel/state/DuelContext'
-import { sortDuelPlayerIdsForBoard } from 'src/modules/duel/DuelUtils'
+import { useDuel } from 'src/modules/duel/state/context/DuelContext'
+import { sortPlayerIdsForBoard } from 'src/modules/duel/duelUtils'
 import { useUser } from 'src/shared/modules/user/state/UserContext'
 
 export const Board: React.FC = () => {
@@ -23,7 +23,7 @@ export const Board: React.FC = () => {
 
   return activePlayerId ? (
     <StyledBoard>
-      {sortDuelPlayerIdsForBoard(players, userId).map((id, index) => (
+      {sortPlayerIdsForBoard(players, userId).map((id, index) => (
         <PlayerField key={id} playerId={id} isOnTop={!index} />
       ))}
 

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { DuelCardComponent } from 'src/modules/duel/components/DuelCard'
+import { StackConfiguration } from 'src/modules/duel/components/duelComponentTypes'
 import { BotController } from 'src/modules/duel/components/PlayerField/BotController'
 import { CardStackList } from 'src/modules/duel/components/PlayerField/CardStackList'
-import { StackBrowseModal } from 'src/modules/duel/components/PlayerField/StackBrowseModal'
 import {
   PlayerBoard,
   PlayerDeck,
@@ -11,9 +11,10 @@ import {
   PlayerInfo,
   StyledPlayerField,
 } from 'src/modules/duel/components/PlayerField/PlayerFieldStyles'
-import { CARD_STACKS } from 'src/modules/duel/DuelConstants'
-import { useDuel } from 'src/modules/duel/state/DuelContext'
-import { CardStack, StackConfiguration } from 'src/modules/duel/DuelTypes'
+import { StackBrowseModal } from 'src/modules/duel/components/PlayerField/StackBrowseModal'
+import { CARD_STACKS } from 'src/modules/duel/duelConstants'
+import { useDuel } from 'src/modules/duel/state/context/DuelContext'
+import { CardStack } from 'src/modules/duel/state/duelStateTypes'
 import { AnimatedNumber } from 'src/shared/components/AnimatedNumber'
 
 const getStackConfiguration = (
@@ -54,11 +55,13 @@ export const PlayerField: React.FC<PlayerFieldProps> = ({
     state: {
       players,
       playerOrder: [activePlayerId],
+      cards,
     },
   } = useDuel()
 
   const player = players[playerId]
-  const { id, name, coins, income, isBot, cards } = players[playerId]
+  const { id, name, coins, income, isBot, deck, discard, board, hand } =
+    players[playerId]
 
   const [isBrowsingStack, setIsBrowsingStack] = useState(false)
   const [browsedStack, setBrowsedStack] = useState<CardStack>('deck')
@@ -104,7 +107,7 @@ export const PlayerField: React.FC<PlayerFieldProps> = ({
         onClose={onCloseBrowseStackModal}
       />
 
-      {Object.keys(cards).map((cardId) => (
+      {[...deck, ...discard, ...board, ...hand].map((cardId) => (
         <DuelCardComponent
           key={cardId}
           playerId={player.id}

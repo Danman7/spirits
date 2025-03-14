@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react'
-import { useDuel } from 'src/modules/duel/state/DuelContext'
-import { getPlayableCardIds } from 'src/modules/duel/DuelUtils'
+import { useDuel } from 'src/modules/duel/state/context/DuelContext'
+import { getPlayableCardIds } from 'src/modules/duel/duelUtils'
 import { getRandomArrayItem } from 'src/shared/SharedUtils'
 
 interface BotControllerProps {
@@ -13,6 +13,7 @@ export const BotController: FC<BotControllerProps> = ({ playerId }) => {
       players,
       playerOrder: [activePlayerId],
       phase,
+      cards,
     },
     dispatch,
   } = useDuel()
@@ -34,7 +35,7 @@ export const BotController: FC<BotControllerProps> = ({ playerId }) => {
   useEffect(() => {
     if (phase !== 'Player Turn' || !isActive || hasPerformedAction) return
 
-    const playableCardIds = getPlayableCardIds(player)
+    const playableCardIds = getPlayableCardIds(player, cards)
 
     if (playableCardIds.length) {
       const cardId = getRandomArrayItem(playableCardIds)
@@ -48,7 +49,7 @@ export const BotController: FC<BotControllerProps> = ({ playerId }) => {
     } else {
       dispatch({ type: 'RESOLVE_TURN' })
     }
-  }, [playerId, hasPerformedAction, isActive, phase, player, dispatch])
+  }, [playerId, hasPerformedAction, isActive, phase, player, cards, dispatch])
 
   return <></>
 }

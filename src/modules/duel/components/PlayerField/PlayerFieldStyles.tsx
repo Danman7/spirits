@@ -51,6 +51,12 @@ export const PlayerHand = styled.div<StyledPlayerFieldProps>`
   align-items: ${({ $isOnTop }) => ($isOnTop ? 'flex-end' : 'inherit')};
   align-self: ${({ $isOnTop }) => ($isOnTop ? 'inherit' : 'end')};
 
+  ${CardMovementWrapper} {
+    &:hover {
+      z-index: 2;
+    }
+  }
+
   ${CardOutline} {
     position: relative;
     margin: 0 -80px;
@@ -63,7 +69,6 @@ export const PlayerHand = styled.div<StyledPlayerFieldProps>`
 
         &:hover {
           bottom: calc(${theme.card.height} - 64px);
-          z-index: 2;
           box-shadow: ${theme.boxShadow.level3};
         }
       `}

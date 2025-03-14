@@ -1,5 +1,5 @@
 import { createElement } from 'react'
-import { Player } from 'src/modules/duel/DuelTypes'
+import { Player } from 'src/modules/duel/playerTypes'
 import {
   agentAttackLogMessage,
   agentRetaliatesLogMessage,
@@ -13,7 +13,7 @@ import {
   reduceCounterLogMessage,
   reduceStrengthLogMessage,
   reducingCoinsLogMessage,
-} from 'src/modules/duel/state/DuelStateMessages'
+} from 'src/modules/duel/state/duelStateMessages'
 import {
   Agent,
   AgentWithCounter,
@@ -79,12 +79,9 @@ export const generateAttackLogMessage = (
   </p>
 )
 
-export const generateDiscardLogMessage = (
-  discardingPlayer: Player,
-  cardId: string,
-) => (
+export const generateDiscardLogMessage = (name: string) => (
   <p>
-    <strong>{discardingPlayer.cards[cardId].name}</strong>
+    <strong>{name}</strong>
     {discardLogMessage}
   </p>
 )

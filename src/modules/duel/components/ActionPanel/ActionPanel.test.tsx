@@ -10,14 +10,14 @@ import {
   yourTurnMessage,
   yourTurnTitle,
 } from 'src/modules/duel/components/ActionPanel/ActionPanelMessages'
-import { renderWithProviders } from 'src/modules/duel/DuelTestRender'
-import { DuelState } from 'src/modules/duel/DuelTypes'
+import { renderWithProviders } from 'src/modules/duel/duelTestRender'
 import {
   initialDuelStateMock,
   userMock as preloadedUser,
-} from 'src/__mocks__/DuelMocks'
+} from 'src/__mocks__/duelMocks'
 import { PANEL_TEST_ID } from 'src/shared/test/testIds'
 import { deepClone } from 'src/shared/SharedUtils'
+import { DuelState } from 'src/modules/duel/state/duelStateTypes'
 
 let preloadedDuel: DuelState
 

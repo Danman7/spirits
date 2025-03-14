@@ -1,61 +1,62 @@
-import {
-  CARD_STACKS,
-  STARTING_COINS_IN_DUEL,
-} from 'src/modules/duel/DuelConstants'
+import { CARD_STACKS } from 'src/modules/duel/duelConstants'
+import { DuelPlayers, Player, PlayerStacks } from 'src/modules/duel/playerTypes'
 import {
   CardStack,
-  DuelPlayers,
-  DuelUser,
-  Player,
-  PlayerStacksAndCards,
-} from 'src/modules/duel/DuelTypes'
+  DuelCards,
+  DuelState,
+} from 'src/modules/duel/state/duelStateTypes'
 import { CardBaseKey } from 'src/shared/modules/cards/CardTypes'
 import { CardBases } from 'src/shared/modules/cards/data/bases'
-import { generateUUID, shuffleArray } from 'src/shared/SharedUtils'
+import { generateUUID } from 'src/shared/SharedUtils'
 
-export const getPlayableCardIds = (player: Player) =>
-  player.hand.filter((cardId) => player.cards[cardId].cost <= player.coins)
+export const getPlayableCardIds = (player: Player, cards: DuelCards) =>
+  player.hand.filter((cardId) => cards[cardId].cost <= player.coins)
 
-export const normalizePlayerCards = (
-  stacks: Partial<Record<CardStack, CardBaseKey[]>>,
-): PlayerStacksAndCards => {
-  const partialPlayer: PlayerStacksAndCards = {
-    deck: [],
-    hand: [],
-    board: [],
-    discard: [],
-    cards: {},
-  }
+type NormalizedPlayers = Record<
+  string,
+  Partial<Record<CardStack, CardBaseKey[]>>
+>
 
-  CARD_STACKS.forEach((stack) => {
-    if (stacks[stack]) {
-      stacks[stack].forEach((CardBaseKey) => {
+export const normalizeStateCards = (
+  state: DuelState,
+  players: NormalizedPlayers,
+): DuelState => {
+  const updatedPlayers = { ...state.players }
+  const cards = { ...state.cards }
+
+  Object.entries(players).forEach(([playerId, stacks]) => {
+    const playerStacks: PlayerStacks = {
+      deck: [],
+      hand: [],
+      board: [],
+      discard: [],
+    }
+
+    CARD_STACKS.forEach((stack) => {
+      const cardKeys = stacks[stack]
+      if (!cardKeys) return
+
+      cardKeys.forEach((CardBaseKey) => {
         const cardId = generateUUID()
-
-        partialPlayer.cards = {
-          ...partialPlayer.cards,
-          [cardId]: { id: cardId, ...CardBases[CardBaseKey] },
-        }
-        partialPlayer[stack] = [...partialPlayer[stack], cardId]
+        cards[cardId] = { id: cardId, ...CardBases[CardBaseKey] }
+        playerStacks[stack].push(cardId)
       })
+    })
+
+    updatedPlayers[playerId] = {
+      ...updatedPlayers[playerId],
+      ...playerStacks,
     }
   })
 
-  return partialPlayer
+  return {
+    ...state,
+    players: updatedPlayers,
+    cards,
+  }
 }
 
-export const setupInitialDuelPlayerFromUser = (user: DuelUser): Player => ({
-  ...user,
-  ...normalizePlayerCards({ deck: shuffleArray(user.deck) }),
-  coins: STARTING_COINS_IN_DUEL,
-  hand: [],
-  board: [],
-  discard: [],
-  hasPerformedAction: false,
-  income: 0,
-})
-
-export const sortDuelPlayerIdsForBoard = (
+export const sortPlayerIdsForBoard = (
   players: DuelPlayers,
   loggedInPlayerId: string,
 ) =>

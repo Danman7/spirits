@@ -1,17 +1,15 @@
 import { fireEvent, within } from '@testing-library/dom'
 import { act } from 'react'
 import {
-  initialOpponentMock,
-  initialPlayerMock,
+  initialDuelStateMock,
   opponentId,
   playerId,
   userMock as preloadedUser,
   stackedDuelStateMock,
-} from 'src/__mocks__/DuelMocks'
+} from 'src/__mocks__/duelMocks'
 import { Board } from 'src/modules/duel/components/Board'
-import { renderWithProviders } from 'src/modules/duel/DuelTestRender'
-import { DuelState } from 'src/modules/duel/DuelTypes'
-import { normalizePlayerCards } from 'src/modules/duel/DuelUtils'
+import { renderWithProviders } from 'src/modules/duel/duelTestRender'
+import { normalizeStateCards } from 'src/modules/duel/duelUtils'
 import {
   agentRetaliatesLogMessage,
   boostedLogMessage,
@@ -21,7 +19,8 @@ import {
   isPlayedLogMessage,
   playedLogMessage,
   reduceCounterLogMessage,
-} from 'src/modules/duel/state/DuelStateMessages'
+} from 'src/modules/duel/state/duelStateMessages'
+import { DuelState } from 'src/modules/duel/state/duelStateTypes'
 import {
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   TEMPLE_GUARD_BOOST,
@@ -57,14 +56,13 @@ describe('Hammerite Novice', () => {
   })
 
   it('should play all copies if another Hammerite is in play', () => {
-    preloadedDuel.players[playerId] = {
-      ...initialPlayerMock,
-      ...normalizePlayerCards({
+    preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
+      [playerId]: {
         deck: [baseName],
         hand: [baseName],
         board: ['TempleGuard'],
-      }),
-    }
+      },
+    })
 
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
       preloadedUser,
@@ -88,13 +86,12 @@ describe('Hammerite Novice', () => {
   })
 
   it('should not play any copies if there is no Hammerite is in play', () => {
-    preloadedDuel.players[playerId] = {
-      ...initialPlayerMock,
-      ...normalizePlayerCards({
+    preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
+      [playerId]: {
         deck: [baseName],
         hand: [baseName],
-      }),
-    }
+      },
+    })
 
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
       preloadedUser,
@@ -109,13 +106,12 @@ describe('Hammerite Novice', () => {
   })
 
   it('should not play copies from discard or opponent', () => {
-    preloadedDuel.players[playerId] = {
-      ...initialPlayerMock,
-      ...normalizePlayerCards({
+    preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
+      [playerId]: {
         discard: [baseName],
         hand: [baseName],
-      }),
-    }
+      },
+    })
 
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
       preloadedUser,
@@ -139,12 +135,11 @@ describe('Elevated Acolyte', () => {
   })
 
   it('should damage self if played alone', () => {
-    preloadedDuel.players[playerId] = {
-      ...initialPlayerMock,
-      ...normalizePlayerCards({
+    preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
+      [playerId]: {
         hand: [baseName],
-      }),
-    }
+      },
+    })
 
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
       preloadedUser,
@@ -165,15 +160,12 @@ describe('Elevated Acolyte', () => {
   })
 
   it('should damage self if not played next to a Hammerite with higher strength', () => {
-    const normalizedCards = normalizePlayerCards({
-      hand: [baseName],
-      board: ['HammeriteNovice'],
+    preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
+      [playerId]: {
+        hand: [baseName],
+        board: ['HammeriteNovice'],
+      },
     })
-
-    preloadedDuel.players[playerId] = {
-      ...initialPlayerMock,
-      ...normalizedCards,
-    }
 
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
       preloadedUser,
@@ -183,20 +175,18 @@ describe('Elevated Acolyte', () => {
     fireEvent.click(getByText(base.name))
 
     expect(
-      getByTestId(`${CARD_TEST_ID}${normalizedCards.hand[0]}`).textContent,
+      getByTestId(`${CARD_TEST_ID}${preloadedDuel.players[playerId].hand[0]}`)
+        .textContent,
     ).toContain(`${base.name}${base.strength - 1}`)
   })
 
   it('should not damage self if played next to a Hammerite with higher strength', () => {
-    const normalizedCards = normalizePlayerCards({
-      hand: [baseName],
-      board: ['TempleGuard'],
+    preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
+      [playerId]: {
+        hand: [baseName],
+        board: ['TempleGuard'],
+      },
     })
-
-    preloadedDuel.players[playerId] = {
-      ...initialPlayerMock,
-      ...normalizedCards,
-    }
 
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
       preloadedUser,
@@ -206,7 +196,8 @@ describe('Elevated Acolyte', () => {
     fireEvent.click(getByText(base.name))
 
     expect(
-      getByTestId(`${CARD_TEST_ID}${normalizedCards.hand[0]}`).textContent,
+      getByTestId(`${CARD_TEST_ID}${preloadedDuel.players[playerId].hand[0]}`)
+        .textContent,
     ).toContain(`${base.name}${base.strength}`)
   })
 })
@@ -220,15 +211,12 @@ describe('Brother Sachelman', () => {
   })
 
   it('should boost all allied Hammerites on board that have lower strength', () => {
-    const normalizedCards = normalizePlayerCards({
-      hand: [baseName],
-      board: ['HammeriteNovice', 'HammeriteNovice'],
+    preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
+      [playerId]: {
+        hand: [baseName],
+        board: ['HammeriteNovice', 'HammeriteNovice'],
+      },
     })
-
-    preloadedDuel.players[playerId] = {
-      ...initialPlayerMock,
-      ...normalizedCards,
-    }
 
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
       preloadedUser,
@@ -239,8 +227,8 @@ describe('Brother Sachelman', () => {
 
     fireEvent.click(getByTestId(OPEN_LOGS_ICON))
 
-    normalizedCards.board.forEach((cardId) => {
-      const { strength, name } = normalizedCards.cards[cardId] as Agent
+    preloadedDuel.players[playerId].board.forEach((cardId) => {
+      const { strength, name } = preloadedDuel.cards[cardId] as Agent
 
       expect(getByTestId(`${CARD_TEST_ID}${cardId}`).textContent).toContain(
         `${name}${strength + HAMMERITES_WITH_LOWER_STRENGTH_BOOST}`,
@@ -253,15 +241,12 @@ describe('Brother Sachelman', () => {
   })
 
   it('should not boost non-Hammerite agents or Hammerites with highet strength', () => {
-    const normalizedCards = normalizePlayerCards({
-      hand: [baseName],
-      board: ['HouseGuard', 'TempleGuard'],
+    preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
+      [playerId]: {
+        hand: [baseName],
+        board: ['HouseGuard', 'TempleGuard'],
+      },
     })
-
-    preloadedDuel.players[playerId] = {
-      ...initialPlayerMock,
-      ...normalizedCards,
-    }
 
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
       preloadedUser,
@@ -270,8 +255,8 @@ describe('Brother Sachelman', () => {
 
     fireEvent.click(getByText(base.name))
 
-    normalizedCards.board.forEach((cardId) => {
-      const { strength, name } = normalizedCards.cards[cardId] as Agent
+    preloadedDuel.players[playerId].board.forEach((cardId) => {
+      const { strength, name } = preloadedDuel.cards[cardId] as Agent
 
       expect(getByTestId(`${CARD_TEST_ID}${cardId}`).textContent).toContain(
         `${name}${strength}`,
@@ -289,19 +274,14 @@ describe('Temple Guard', () => {
   })
 
   it('should boost self if the opponent has a larger board', () => {
-    preloadedDuel.players[playerId] = {
-      ...initialPlayerMock,
-      ...normalizePlayerCards({
+    preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
+      [playerId]: {
         hand: [baseName],
-      }),
-    }
-    preloadedDuel.players[opponentId] = {
-      ...initialOpponentMock,
-      ...normalizePlayerCards({
-        hand: [],
+      },
+      [opponentId]: {
         board: ['Zombie', 'Haunt'],
-      }),
-    }
+      },
+    })
 
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
       preloadedUser,
@@ -322,29 +302,23 @@ describe('Temple Guard', () => {
   })
 
   it('should not retaliate when not attacked', () => {
-    preloadedDuel.players[playerId] = {
-      ...initialPlayerMock,
-      ...normalizePlayerCards({
-        hand: [],
+    preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
+      [playerId]: {
         board: ['ElevatedAcolyte', baseName],
-      }),
-    }
-    preloadedDuel.players[opponentId] = {
-      ...initialOpponentMock,
-      ...normalizePlayerCards({
-        hand: [],
+      },
+      [opponentId]: {
         board: ['Zombie'],
-      }),
-    }
+      },
+    })
 
     preloadedDuel.playerOrder = [opponentId, playerId]
 
     const player = preloadedDuel.players[playerId]
     const opponent = preloadedDuel.players[opponentId]
     const firstAttackerId = opponent.board[0]
-    const firstAttacker = opponent.cards[firstAttackerId] as Agent
+    const firstAttacker = preloadedDuel.cards[firstAttackerId] as Agent
     const templeGuardId = player.board[1]
-    const templeGuard = player.cards[templeGuardId] as Agent
+    const templeGuard = preloadedDuel.cards[templeGuardId] as Agent
 
     const { getByTestId } = renderWithProviders(<Board />, {
       preloadedUser,
@@ -369,28 +343,23 @@ describe('Temple Guard', () => {
   })
 
   it('should retaliate when attacked', () => {
-    preloadedDuel.players[playerId] = {
-      ...initialPlayerMock,
-      ...normalizePlayerCards({
-        hand: [],
+    preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
+      [playerId]: {
         board: [baseName],
-      }),
-    }
-    preloadedDuel.players[opponentId] = {
-      ...initialOpponentMock,
-      ...normalizePlayerCards({
-        hand: [],
+      },
+      [opponentId]: {
         board: ['Zombie'],
-      }),
-    }
+      },
+    })
+
     preloadedDuel.playerOrder = [opponentId, playerId]
 
     const player = preloadedDuel.players[playerId]
     const opponent = preloadedDuel.players[opponentId]
     const firstAttackerId = opponent.board[0]
-    const firstAttacker = opponent.cards[firstAttackerId] as Agent
+    const firstAttacker = preloadedDuel.cards[firstAttackerId] as Agent
     const templeGuardId = player.board[0]
-    const templeGuard = player.cards[templeGuardId] as Agent
+    const templeGuard = preloadedDuel.cards[templeGuardId] as Agent
 
     const { getByTestId } = renderWithProviders(<Board />, {
       preloadedUser,
@@ -421,30 +390,25 @@ describe('Temple Guard', () => {
   })
 
   it('should retaliate twice if attacked twice', () => {
-    preloadedDuel.players[playerId] = {
-      ...initialPlayerMock,
-      ...normalizePlayerCards({
-        hand: [],
+    preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
+      [playerId]: {
         board: [baseName],
-      }),
-    }
-    preloadedDuel.players[opponentId] = {
-      ...initialOpponentMock,
-      ...normalizePlayerCards({
-        hand: [],
+      },
+      [opponentId]: {
         board: ['Haunt', 'Zombie'],
-      }),
-    }
+      },
+    })
+
     preloadedDuel.playerOrder = [opponentId, playerId]
 
     const player = preloadedDuel.players[playerId]
     const opponent = preloadedDuel.players[opponentId]
     const firstAttackerId = opponent.board[0]
     const secondAttackerId = opponent.board[1]
-    const firstAttacker = opponent.cards[firstAttackerId] as Agent
-    const secondAttacker = opponent.cards[secondAttackerId] as Agent
+    const firstAttacker = preloadedDuel.cards[firstAttackerId] as Agent
+    const secondAttacker = preloadedDuel.cards[secondAttackerId] as Agent
     const templeGuardId = player.board[0]
-    const templeGuard = player.cards[templeGuardId] as Agent
+    const templeGuard = preloadedDuel.cards[templeGuardId] as Agent
 
     const { getByTestId } = renderWithProviders(<Board />, {
       preloadedUser,
@@ -497,14 +461,17 @@ describe('High Priest Markander', () => {
 
   it('should reduce the counter if a Hammerite is played', () => {
     preloadedDuel.players[playerId] = {
-      ...initialPlayerMock,
-      ...normalizePlayerCards({
-        deck: [],
-        hand: [baseName, 'ElevatedAcolyte'],
-        board: [],
-      }),
+      ...deepClone(initialDuelStateMock.players[playerId]),
+      board: [],
+      hand: ['1', '2'],
+      deck: [],
     }
 
+    preloadedDuel.cards = {
+      ...deepClone(preloadedDuel.cards),
+      '1': { id: '1', ...ElevatedAcolyte },
+      '2': { ...HighPriestMarkander, id: '2' },
+    }
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
       preloadedUser,
       preloadedDuel,
@@ -531,14 +498,16 @@ describe('High Priest Markander', () => {
 
   it('should play High Priest Markander if counter reaches 0', () => {
     preloadedDuel.players[playerId] = {
-      ...initialPlayerMock,
+      ...deepClone(initialDuelStateMock.players[playerId]),
       board: [],
       hand: ['1'],
       deck: ['2'],
-      cards: {
-        '1': { id: '1', ...ElevatedAcolyte },
-        '2': { ...HighPriestMarkander, id: '2', counter: 1 },
-      },
+    }
+
+    preloadedDuel.cards = {
+      ...deepClone(preloadedDuel.cards),
+      '1': { id: '1', ...ElevatedAcolyte },
+      '2': { ...HighPriestMarkander, id: '2', counter: 1 },
     }
 
     const { getByText, queryByText, getByTestId } = renderWithProviders(

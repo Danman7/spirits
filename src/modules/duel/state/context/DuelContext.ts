@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react'
-import { duelContextError } from 'src/modules/duel/state/DuelStateMessages'
-import { DuelAction, DuelState } from 'src/modules/duel/DuelTypes'
+import { DuelAction } from 'src/modules/duel/state/duelActionTypes'
+import { duelContextError } from 'src/modules/duel/state/duelStateMessages'
+import { DuelState } from 'src/modules/duel/state/duelStateTypes'
 
 export const DuelContext = createContext<
   { state: DuelState; dispatch: (action: DuelAction) => void } | undefined

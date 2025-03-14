@@ -5,19 +5,22 @@ import {
   playerId,
   stackedDuelStateMock,
   userMock,
-} from 'src/__mocks__/DuelMocks'
+} from 'src/__mocks__/duelMocks'
 import {
   INITIAL_CARDS_DRAWN_IN_DUEL,
   STARTING_COINS_IN_DUEL,
-} from 'src/modules/duel/DuelConstants'
+} from 'src/modules/duel/duelConstants'
+import {
+  DuelAction,
+  UsersStartingDuel,
+} from 'src/modules/duel/state/duelActionTypes'
 import { duelReducer, initialState } from 'src/modules/duel/state/duelReducer'
 import {
   AttackOrder,
-  DuelAction,
   DuelPhase,
   DuelState,
-  UsersStartingDuel,
-} from 'src/modules/duel/DuelTypes'
+} from 'src/modules/duel/state/duelStateTypes'
+
 import { Agent } from 'src/shared/modules/cards/CardTypes'
 
 describe('Setup', () => {
@@ -215,12 +218,12 @@ describe('Player Turns', () => {
 
     const {
       players: { [opponentId]: opponent },
+      cards,
     } = duelReducer(stackedDuelStateMock, action)
 
-    const mockCard =
-      stackedDuelStateMock.players[opponentId].cards[defendingAgentId]
+    const mockCard = stackedDuelStateMock.cards[defendingAgentId]
 
-    expect((opponent.cards[opponent.board[0]] as Agent).strength).toBe(
+    expect((cards[opponent.board[0]] as Agent).strength).toBe(
       (mockCard as Agent).strength - 1,
     )
   })
@@ -280,13 +283,13 @@ describe('Player Turns', () => {
 
     const {
       players: { [playerId]: player },
+      cards,
     } = duelReducer(stackedDuelStateMock, action)
 
     expect(player.board).toContain(playedCardId)
     expect(player.hand).not.toContain(playedCardId)
     expect(player.coins).toBe(
-      stackedDuelStateMock.players[playerId].coins -
-        player.cards[playedCardId].cost,
+      stackedDuelStateMock.players[playerId].coins - cards[playedCardId].cost,
     )
   })
 
@@ -321,11 +324,9 @@ describe('Player Turns', () => {
       update,
     }
 
-    const {
-      players: { [playerId]: player },
-    } = duelReducer(stackedDuelStateMock, action)
+    const { cards } = duelReducer(stackedDuelStateMock, action)
 
-    expect(player.cards[updatedCardId]).toMatchObject(update)
+    expect(cards[updatedCardId]).toMatchObject(update)
   })
 })
 
@@ -346,7 +347,8 @@ describe('General', () => {
     const opponent = stackedDuelStateMock.players[opponentId]
     const message: React.ReactNode = (
       <p>
-        {opponent.name} has played {opponent.cards[opponent.hand[0]].name}.
+        {opponent.name} has played{' '}
+        {stackedDuelStateMock.cards[opponent.hand[0]].name}.
       </p>
     )
     const action: DuelAction = {

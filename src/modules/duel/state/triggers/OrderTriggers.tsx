@@ -1,48 +1,52 @@
-import {
-  DuelTrigger,
-  PlayCardAction,
-  UpdateAgentAction,
-} from 'src/modules/duel/DuelTypes'
-import { getOtherPlayer } from 'src/modules/duel/DuelUtils'
+import { getOtherPlayer } from 'src/modules/duel/duelUtils'
 import {
   generateBoostedLogMessage,
   generatePlayedFromTriggerLogMessage,
   generateTriggerLogMessage,
-} from 'src/modules/duel/state/DuelLogMessageUtils'
+} from 'src/modules/duel/state/logMessageUtils'
 import {
   getNeighboursIndexes,
   getOnPlayCardPredicate,
   getPlayAllCopiesEffect,
-} from 'src/modules/duel/state/DuelStateUtils'
+} from 'src/modules/duel/state/duelStateUtils'
 import {
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   TEMPLE_GUARD_BOOST,
 } from 'src/shared/modules/cards/CardConstants'
 import { Agent } from 'src/shared/modules/cards/CardTypes'
 import { HighPriestMarkander } from 'src/shared/modules/cards/data/bases'
+import { DuelTrigger } from 'src/modules/duel/state/duelStateTypes'
+import {
+  PlayCardAction,
+  UpdateAgentAction,
+} from 'src/modules/duel/state/duelActionTypes'
 
 export const hammeriteNoviceOnPlay: DuelTrigger = {
   predicate: (state, action) =>
-    getOnPlayCardPredicate(action, state.players, 'HammeriteNovice') &&
+    getOnPlayCardPredicate(action, state.cards, 'HammeriteNovice') &&
     action.type === 'PLAY_CARD' &&
     !!state.players[action.playerId].board.find(
       (cardId) =>
         cardId !== action.cardId &&
-        state.players[action.playerId].cards[cardId].categories.includes(
-          'Hammerite',
-        ),
+        state.cards[cardId].categories.includes('Hammerite'),
     ),
   effect: ({ action, state, dispatch }) =>
-    getPlayAllCopiesEffect(action, state.players, 'HammeriteNovice', dispatch),
+    getPlayAllCopiesEffect(
+      action,
+      state.players,
+      state.cards,
+      'HammeriteNovice',
+      dispatch,
+    ),
 }
 
 export const elevatedAcolyteOnPlay: DuelTrigger = {
   predicate: (state, action) =>
-    getOnPlayCardPredicate(action, state.players, 'ElevatedAcolyte'),
+    getOnPlayCardPredicate(action, state.cards, 'ElevatedAcolyte'),
   effect: ({ action, state, dispatch }) => {
     const { cardId, playerId } = action as PlayCardAction
-    const { players } = state
-    const { board, cards } = players[playerId]
+    const { players, cards } = state
+    const { board } = players[playerId]
     const matchedCard = cards[cardId] as Agent
 
     const playerdCardIndex = board.indexOf(cardId)
@@ -63,7 +67,6 @@ export const elevatedAcolyteOnPlay: DuelTrigger = {
       dispatch({
         type: 'AGENT_DAMAGE_SELF',
         cardId,
-        playerId,
         amount: 1,
       })
     }
@@ -72,13 +75,13 @@ export const elevatedAcolyteOnPlay: DuelTrigger = {
 
 export const templeGuardOnPlay: DuelTrigger = {
   predicate: (state, action) =>
-    getOnPlayCardPredicate(action, state.players, 'TempleGuard'),
+    getOnPlayCardPredicate(action, state.cards, 'TempleGuard'),
   effect: ({ action, state, dispatch }) => {
     const { cardId, playerId } = action as PlayCardAction
-    const { players, playerOrder } = state
+    const { players, playerOrder, cards } = state
     const player = players[playerId]
     const opponent = getOtherPlayer(players, playerOrder, playerId)
-    const matchedCard = player.cards[cardId] as Agent
+    const matchedCard = cards[cardId] as Agent
 
     if (opponent.board.length <= player.board.length) return
 
@@ -102,11 +105,11 @@ export const templeGuardOnPlay: DuelTrigger = {
 
 export const brotherSachelmanOnPlay: DuelTrigger = {
   predicate: (state, action) =>
-    getOnPlayCardPredicate(action, state.players, 'BrotherSachelman'),
+    getOnPlayCardPredicate(action, state.cards, 'BrotherSachelman'),
   effect: ({ action, state, dispatch }) => {
     const { cardId: playedCardId, playerId } = action as PlayCardAction
-    const { players } = state
-    const { board, cards } = players[playerId]
+    const { players, cards } = state
+    const { board } = players[playerId]
 
     board.forEach((boardCardId) => {
       const { strength, categories, name } = cards[boardCardId] as Agent
@@ -142,12 +145,11 @@ export const brotherSachelmanOnPlay: DuelTrigger = {
 export const highPriestMarkanderOnUpdate: DuelTrigger = {
   predicate: (state, action) =>
     action.type === 'UPDATE_AGENT' &&
-    state.players[action.playerId].cards[action.cardId].name ===
-      HighPriestMarkander.name,
+    state.cards[action.cardId].name === HighPriestMarkander.name,
   effect: ({ action, state, dispatch }) => {
-    const { players } = state
+    const { players, cards } = state
     const { cardId, playerId } = action as UpdateAgentAction
-    const { cards, board } = players[playerId]
+    const { board } = players[playerId]
     const { counter } = cards[cardId] as Agent
 
     if ((counter as number) <= 0 && !board.includes(cardId)) {

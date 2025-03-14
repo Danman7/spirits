@@ -1,26 +1,33 @@
 import {
   CARD_STACKS,
+  INCOME_PER_TURN,
   INITIAL_CARDS_DRAWN_IN_DUEL,
-} from 'src/modules/duel/DuelConstants'
+  STARTING_COINS_IN_DUEL,
+} from 'src/modules/duel/duelConstants'
+import { DuelPlayers, Player, PlayerStacks } from 'src/modules/duel/playerTypes'
+import {
+  DuelAction,
+  PlayCardAction,
+  UsersStartingDuel,
+} from 'src/modules/duel/state/duelActionTypes'
 import {
   AttackOrder,
   CardStack,
-  DuelAction,
+  DuelCards,
   DuelDispatch,
-  DuelPlayers,
-  PlayCardAction,
-  Player,
-  PlayerStacks,
-  UsersStartingDuel,
-} from 'src/modules/duel/DuelTypes'
-import { setupInitialDuelPlayerFromUser } from 'src/modules/duel/DuelUtils'
+  DuelState,
+} from 'src/modules/duel/state/duelStateTypes'
 import {
   generatePlayedCopyLogMessage,
   generateTriggerLogMessage,
-} from 'src/modules/duel/state/DuelLogMessageUtils'
+} from 'src/modules/duel/state/logMessageUtils'
 import { Agent, CardBaseKey } from 'src/shared/modules/cards/CardTypes'
 import { CardBases } from 'src/shared/modules/cards/data/bases'
-import { getRandomArrayItem } from 'src/shared/SharedUtils'
+import {
+  generateUUID,
+  getRandomArrayItem,
+  shuffleArray,
+} from 'src/shared/SharedUtils'
 
 export const getNeighboursIndexes = (
   index: number,
@@ -94,10 +101,8 @@ export const drawCardFromDeck = (player: Player): Partial<Player> =>
     target: 'hand',
   })
 
-export const calculateAttackQueue = (
-  players: DuelPlayers,
-  playerOrder: [string, string],
-): AttackOrder[] => {
+export const calculateAttackQueue = (state: DuelState): AttackOrder[] => {
+  const { players, playerOrder, cards } = state
   const [activePlayerId, inactivePlayerId] = playerOrder
   const { board: activePlayerBoard } = players[activePlayerId]
 
@@ -115,7 +120,7 @@ export const calculateAttackQueue = (
       },
     ]
 
-    const defendingAgent = players[inactivePlayerId].cards[defenderId] as Agent
+    const defendingAgent = cards[defenderId] as Agent
 
     if (defendingAgent?.traits?.retaliates)
       queue.push({
@@ -142,24 +147,24 @@ export const redrawCard = (player: Player, cardId: string): Partial<Player> => {
 
 export const getOnPlayCardPredicate = (
   action: DuelAction,
-  players: DuelPlayers,
+  cards: DuelCards,
   baseName: CardBaseKey,
 ) =>
   action.type === 'PLAY_CARD' &&
   !!action.shouldPay &&
-  players[action.playerId].cards[action.cardId].name ===
-    CardBases[baseName].name
+  cards[action.cardId].name === CardBases[baseName].name
 
 export const getPlayAllCopiesEffect = (
   action: DuelAction,
   players: DuelPlayers,
+  cards: DuelCards,
   comparingBase: CardBaseKey,
   dispatch: DuelDispatch,
 ) => {
   const { playerId, cardId: playedCardId } = action as PlayCardAction
 
   const player = players[playerId]
-  const { cards, board, discard } = player
+  const { board, discard, hand, deck } = player
   const base = CardBases[comparingBase]
 
   Object.keys(cards).forEach((cardId) => {
@@ -169,7 +174,8 @@ export const getPlayAllCopiesEffect = (
       name !== base.name ||
       cardId === playedCardId ||
       board.includes(cardId) ||
-      discard.includes(cardId)
+      discard.includes(cardId) ||
+      (!hand.includes(cardId) && !deck.includes(cardId))
     )
       return
 
@@ -189,11 +195,6 @@ export const getPlayAllCopiesEffect = (
   })
 }
 
-export const setPlayersFromUsers = (users: UsersStartingDuel): DuelPlayers =>
-  Object.fromEntries(
-    users.map((user) => [user.id, setupInitialDuelPlayerFromUser(user)]),
-  )
-
 export const setInitialPlayerOrder = (
   users: UsersStartingDuel,
   firstPlayerIndex?: 0 | 1,
@@ -209,3 +210,52 @@ export const setInitialPlayerOrder = (
     ? userIds
     : ([...userIds].reverse() as [string, string])
 }
+
+export const setupPlayersFromUsers = (
+  users: UsersStartingDuel,
+): {
+  players: DuelPlayers
+  cards: DuelCards
+} => {
+  const players: DuelPlayers = {}
+  const cards: DuelCards = {}
+
+  users.forEach((user) => {
+    const player: Player = {
+      ...user,
+      coins: STARTING_COINS_IN_DUEL,
+      hand: [],
+      board: [],
+      discard: [],
+      deck: [],
+      hasPerformedAction: false,
+      income: 0,
+    }
+
+    shuffleArray(user.deck).forEach((cardBaseKey) => {
+      const cardId = generateUUID()
+      cards[cardId] = { id: cardId, ...CardBases[cardBaseKey] }
+      player.deck.push(cardId)
+    })
+
+    players[user.id] = player
+  })
+
+  return { cards, players }
+}
+
+export const drawInitialCardsForBothPlayers = (players: DuelPlayers) =>
+  Object.fromEntries(
+    Object.entries(players).map(([playerId, player]) => [
+      playerId,
+      {
+        ...player,
+        ...drawInitialCards(player),
+      },
+    ]),
+  )
+
+export const handleIncome = (player: Player) => ({
+  coins: player.income ? player.coins + INCOME_PER_TURN : player.coins,
+  income: player.income ? player.income - INCOME_PER_TURN : player.income,
+})

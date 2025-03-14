@@ -2,16 +2,16 @@ import { fireEvent } from '@testing-library/dom'
 import {
   initialDuelStateMock,
   userMock as preloadedUser,
-} from 'src/__mocks__/DuelMocks'
+} from 'src/__mocks__/duelMocks'
 import { LogsPanel } from 'src/modules/duel/components/LogsPanel/LogsPanel'
 import {
   hideLogsLink,
   logsTitle,
 } from 'src/modules/duel/components/LogsPanel/LogsPanelMessages'
-import { renderWithProviders } from 'src/modules/duel/DuelTestRender'
-import { DuelState } from 'src/modules/duel/DuelTypes'
+import { renderWithProviders } from 'src/modules/duel/duelTestRender'
 import { OPEN_LOGS_ICON, PANEL_TEST_ID } from 'src/shared/test/testIds'
 import { deepClone } from 'src/shared/SharedUtils'
+import { DuelState } from 'src/modules/duel/state/duelStateTypes'
 
 let preloadedDuel: DuelState
 const logMessage = 'This is a log message'

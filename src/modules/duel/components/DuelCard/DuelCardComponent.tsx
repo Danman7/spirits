@@ -33,7 +33,7 @@ export const DuelCardComponent: React.FC<DuelCardProps> = ({
 
   const onClick = useDuelCardOnClick(cardId, playerId, stack)
 
-  const card = useCard(playerId, cardId)
+  const card = useCard(cardId)
 
   useDefeatHandler(cardId, playerId, stack)
 

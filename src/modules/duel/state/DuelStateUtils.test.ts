@@ -1,13 +1,12 @@
 import {
-  initialPlayerMock,
+  initialDuelStateMock,
   opponentMock,
   playerId,
   stackedDuelStateMock,
-  stackedPlayerMock,
   userMock,
-} from 'src/__mocks__/DuelMocks'
-import { INITIAL_CARDS_DRAWN_IN_DUEL } from 'src/modules/duel/DuelConstants'
-import { AttackOrder } from 'src/modules/duel/DuelTypes'
+} from 'src/__mocks__/duelMocks'
+import { INITIAL_CARDS_DRAWN_IN_DUEL } from 'src/modules/duel/duelConstants'
+import { AttackOrder } from 'src/modules/duel/state/duelStateTypes'
 import {
   calculateAttackQueue,
   drawCardFromDeck,
@@ -16,7 +15,10 @@ import {
   moveSingleCard,
   redrawCard,
   setInitialPlayerOrder,
-} from 'src/modules/duel/state/DuelStateUtils'
+} from 'src/modules/duel/state/duelStateUtils'
+
+const stackedPlayerMock = stackedDuelStateMock.players[playerId]
+const initialPlayerMock = initialDuelStateMock.players[playerId]
 
 it('should move a card between stacks', () => {
   const player = { ...stackedDuelStateMock.players[playerId] }
@@ -84,7 +86,7 @@ it('should update a player when drawing a card from deck', () => {
 
 it('should calculate attack queue', () => {
   const { players, playerOrder } = stackedDuelStateMock
-  expect(calculateAttackQueue(players, playerOrder)).toEqual([
+  expect(calculateAttackQueue(stackedDuelStateMock)).toEqual([
     {
       attackerId: players[playerOrder[0]].board[0],
       attackingPlayerId: playerOrder[0],

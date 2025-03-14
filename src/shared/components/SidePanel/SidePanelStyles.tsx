@@ -1,4 +1,4 @@
-import { AnimateStateProps } from 'src/shared/components/types'
+import { AnimateStateProps } from 'src/shared/components/SharedComponentTypes'
 import { Color } from 'src/shared/SharedTypes'
 import { Box } from 'src/shared/styles/GlobalStyles'
 import { defaultTheme } from 'src/shared/styles/DefaultTheme'

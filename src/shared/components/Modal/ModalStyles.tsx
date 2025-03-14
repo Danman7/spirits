@@ -1,4 +1,4 @@
-import { AnimateStateProps } from 'src/shared/components/types'
+import { AnimateStateProps } from 'src/shared/components/SharedComponentTypes'
 import {
   Animated,
   Box,

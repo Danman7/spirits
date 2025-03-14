@@ -1,9 +1,7 @@
 import { FC } from 'react'
-import {
-  CardStack,
-  Player,
-  StackConfiguration,
-} from 'src/modules/duel/DuelTypes'
+import { StackConfiguration } from 'src/modules/duel/components/duelComponentTypes'
+import { Player } from 'src/modules/duel/playerTypes'
+import { CardStack } from 'src/modules/duel/state/duelStateTypes'
 
 interface CardStackListProps {
   stack: CardStack

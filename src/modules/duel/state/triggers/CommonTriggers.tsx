@@ -1,8 +1,9 @@
-import { DuelTrigger, PlayCardAction } from 'src/modules/duel/DuelTypes'
+import { PlayCardAction } from 'src/modules/duel/state/duelActionTypes'
+import { DuelTrigger } from 'src/modules/duel/state/duelStateTypes'
 import {
   generateReduceCounterMessage,
   generateTriggerLogMessage,
-} from 'src/modules/duel/state/DuelLogMessageUtils'
+} from 'src/modules/duel/state/logMessageUtils'
 import { ACTION_WAIT_TIMEOUT } from 'src/shared/SharedConstants'
 import { AgentWithCounter } from 'src/shared/modules/cards/CardTypes'
 import { HighPriestMarkander } from 'src/shared/modules/cards/data/bases'
@@ -26,12 +27,11 @@ export const advanceTurn: DuelTrigger = {
 export const handlePostPlayCard: DuelTrigger = {
   predicate: (_, action) => action.type === 'PLAY_CARD',
   effect: ({ state, action, dispatch }) => {
-    const { players } = state
+    const { cards } = state
     const { shouldPay, cardId, playerId } = action as PlayCardAction
 
     if (shouldPay) dispatch({ type: 'RESOLVE_TURN' })
 
-    const { cards } = players[playerId]
     const { categories } = cards[cardId]
 
     const HighPriest = Object.entries(cards).find(

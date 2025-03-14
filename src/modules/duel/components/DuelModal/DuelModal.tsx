@@ -4,7 +4,7 @@ import {
   initialDrawMessage,
 } from 'src/modules/duel/components/DuelModal/DuelModalMessages'
 import { flashModal } from 'src/modules/duel/components/DuelModal/DuelModalUtils'
-import { useDuel } from 'src/modules/duel/state/DuelContext'
+import { useDuel } from 'src/modules/duel/state/context/DuelContext'
 import { Modal } from 'src/shared/components/Modal'
 
 export const DuelModal: React.FC = () => {

@@ -1,9 +1,7 @@
+import { normalizeStateCards } from 'src/modules/duel/duelUtils'
 import { initialState as initialDuelState } from 'src/modules/duel/state/duelReducer'
-import { DuelState, Player } from 'src/modules/duel/DuelTypes'
-import {
-  normalizePlayerCards,
-  setupInitialDuelPlayerFromUser,
-} from 'src/modules/duel/DuelUtils'
+import { DuelState } from 'src/modules/duel/state/duelStateTypes'
+import { setupPlayersFromUsers } from 'src/modules/duel/state/duelStateUtils'
 import { Bot, User } from 'src/shared/modules/user/UserTypes'
 import { defaultTheme } from 'src/shared/styles/DefaultTheme'
 
@@ -22,8 +20,7 @@ export const userMock: User = {
     'ElevatedAcolyte',
     'TempleGuard',
     'TempleGuard',
-    'HammeritePriest',
-    'HammeritePriest',
+    'HighPriestMarkander',
   ],
 }
 
@@ -43,48 +40,30 @@ export const opponentMock: Bot = {
   ],
 }
 
-export const initialPlayerMock: Player =
-  setupInitialDuelPlayerFromUser(userMock)
-
-export const initialOpponentMock: Player =
-  setupInitialDuelPlayerFromUser(opponentMock)
-
 export const initialDuelStateMock: DuelState = {
   ...initialDuelState,
-  players: {
-    [opponentId]: initialOpponentMock,
-    [playerId]: initialPlayerMock,
-  },
+  ...setupPlayersFromUsers([userMock, opponentMock]),
   playerOrder: [playerId, opponentId],
 }
 
-export const stackedPlayerMock: Player = {
-  ...initialPlayerMock,
-  income: 2,
-  ...normalizePlayerCards({
-    deck: ['HammeriteNovice', 'HighPriestMarkander'],
-    hand: ['ElevatedAcolyte', 'YoraSkull'],
-    board: ['TempleGuard'],
-    discard: ['BrotherSachelman'],
-  }),
-}
-
-const stackedOpponentMock: Player = {
-  ...initialOpponentMock,
-  ...normalizePlayerCards({
-    deck: ['BookOfAsh'],
-    hand: ['Haunt', 'ViktoriaThiefPawn'],
-    board: ['Zombie'],
-    discard: ['AzaranTheCruel'],
-  }),
-}
-
-export const stackedDuelStateMock: DuelState = {
-  ...initialDuelState,
-  phase: 'Player Turn',
-  playerOrder: [playerId, opponentId],
-  players: {
-    [playerId]: stackedPlayerMock,
-    [opponentId]: stackedOpponentMock,
+export const stackedDuelStateMock = normalizeStateCards(
+  {
+    ...initialDuelStateMock,
+    phase: 'Player Turn',
+    playerOrder: [playerId, opponentId],
   },
-}
+  {
+    [playerId]: {
+      deck: ['HammeriteNovice', 'HighPriestMarkander'],
+      hand: ['ElevatedAcolyte', 'YoraSkull'],
+      board: ['TempleGuard'],
+      discard: ['BrotherSachelman'],
+    },
+    [opponentId]: {
+      deck: ['BookOfAsh'],
+      hand: ['Haunt', 'ViktoriaThiefPawn'],
+      board: ['Zombie'],
+      discard: ['AzaranTheCruel'],
+    },
+  },
+)

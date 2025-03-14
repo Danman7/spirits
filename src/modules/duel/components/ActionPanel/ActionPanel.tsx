@@ -9,7 +9,7 @@ import {
   yourTurnMessage,
   yourTurnTitle,
 } from 'src/modules/duel/components/ActionPanel/ActionPanelMessages'
-import { useDuel } from 'src/modules/duel/state/DuelContext'
+import { useDuel } from 'src/modules/duel/state/context/DuelContext'
 import { Link } from 'src/shared/components/Link'
 import { LoadingMessage } from 'src/shared/components/LoadingMessage'
 import { SidePanel } from 'src/shared/components/SidePanel'
