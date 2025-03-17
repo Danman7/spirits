@@ -10,6 +10,7 @@ export const StyledLink = styled.button`
   transition: ${({ theme }) => `all ${theme.transitionTime}`};
   margin: 0;
   padding: 0;
+  z-index: 2;
 
   &:hover {
     scale: 1.1;

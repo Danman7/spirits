@@ -25,7 +25,7 @@ beforeEach(() => {
   preloadedDuel = deepClone(initialDuelStateMock)
 })
 
-it('should show when the phase is Redrawing', () => {
+it('should show proper content for redrawing phase', () => {
   preloadedDuel.phase = 'Redrawing'
 
   const { getByText, getByTestId } = renderWithProviders(<ActionPanel />, {
@@ -34,8 +34,8 @@ it('should show when the phase is Redrawing', () => {
   })
 
   expect(getByText(redrawingtitle)).toBeTruthy()
-  expect(getByTestId(PANEL_TEST_ID).textContent).toContain(redrawMessage)
   expect(getByText(skipRedrawLinkMessage)).toBeTruthy()
+  expect(getByTestId(PANEL_TEST_ID).textContent).toContain(redrawMessage)
 })
 
 it('should be able to skip redraw', () => {
@@ -79,7 +79,7 @@ it('should be able to pass the turn', () => {
   fireEvent.click(getByText(passButtonMessage))
   fireEvent.animationEnd(getByTestId(PANEL_TEST_ID))
 
-  expect(queryByTestId(PANEL_TEST_ID)).toBeFalsy()
+  expect(queryByTestId(PANEL_TEST_ID)?.textContent).toContain('...')
 })
 
 it("should show when it's the opponent's turn", () => {
