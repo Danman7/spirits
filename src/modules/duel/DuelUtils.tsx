@@ -25,6 +25,13 @@ export const normalizeStateCards = (
   const cards = { ...state.cards }
 
   Object.entries(players).forEach(([playerId, stacks]) => {
+    const { deck, hand, discard, board } = state.players[playerId]
+    const statePlayerStacks = [...deck, ...hand, ...discard, ...board]
+
+    statePlayerStacks.forEach((cardId) => {
+      delete cards[cardId]
+    })
+
     const playerStacks: PlayerStacks = {
       deck: [],
       hand: [],

@@ -86,6 +86,7 @@ const FaceDownStack = styled.div<StyledPlayerFieldProps>`
   position: relative;`}
 
   ${CardMovementWrapper} {
+    pointer-events: none;
     ${({ $isOnTop }) =>
       $isOnTop &&
       `position: absolute;

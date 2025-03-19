@@ -460,18 +460,12 @@ describe('High Priest Markander', () => {
   })
 
   it('should reduce the counter if a Hammerite is played', () => {
-    preloadedDuel.players[playerId] = {
-      ...deepClone(initialDuelStateMock.players[playerId]),
-      board: [],
-      hand: ['1', '2'],
-      deck: [],
-    }
+    preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
+      [playerId]: {
+        hand: [baseName, 'ElevatedAcolyte'],
+      },
+    })
 
-    preloadedDuel.cards = {
-      ...deepClone(preloadedDuel.cards),
-      '1': { id: '1', ...ElevatedAcolyte },
-      '2': { ...HighPriestMarkander, id: '2' },
-    }
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
       preloadedUser,
       preloadedDuel,

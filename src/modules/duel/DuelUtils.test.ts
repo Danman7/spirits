@@ -42,15 +42,19 @@ it('should normalize players cards into all possible stacks with normalizePlayer
       deck: ['Haunt'],
       discard: ['Zombie'],
     },
+    [opponentId]: {
+      deck: ['BookOfAsh'],
+      hand: ['Haunt'],
+      board: ['Zombie'],
+      discard: ['AzaranTheCruel'],
+    },
   })
 
   CARD_STACKS.forEach((stack) => {
     expect(players[playerId][stack]).toHaveLength(1)
   })
 
-  expect(Object.keys(cards)).toHaveLength(
-    Object.keys(stackedDuelStateMock.cards).length + 4,
-  )
+  expect(Object.keys(cards)).toHaveLength(8)
 })
 
 it("should normalize a player's cards into some stacks with normalizePlayerCards", () => {

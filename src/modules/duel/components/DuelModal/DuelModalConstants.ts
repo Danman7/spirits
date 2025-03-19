@@ -1,1 +1,1 @@
-export const MODAL_TIMEOUT = 2500
+export const MODAL_TIMEOUT = 5000

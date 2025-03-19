@@ -34,7 +34,7 @@ export const ModalWrapper = styled.div`
 `
 
 export const Overlay = styled(Animated)<AnimateStateProps>`
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(61, 44, 41, 0.9);
   position: absolute;
   width: 100%;
   height: 100%;

@@ -5,14 +5,11 @@ import {
   userMock as preloadedUser,
 } from 'src/__mocks__/duelMocks'
 import { DuelModal } from 'src/modules/duel/components/DuelModal'
-import {
-  firstPlayerMessage,
-  initialDrawMessage,
-} from 'src/modules/duel/components/DuelModal/DuelModalMessages'
+import { firstPlayerMessage } from 'src/modules/duel/components/DuelModal/DuelModalMessages'
 import { renderWithProviders } from 'src/modules/duel/duelTestRender'
-import { OVERLAY_TEST_ID } from 'src/shared/test/testIds'
-import { deepClone } from 'src/shared/SharedUtils'
 import { DuelState } from 'src/modules/duel/state/duelStateTypes'
+import { deepClone } from 'src/shared/SharedUtils'
+import { OVERLAY_TEST_ID } from 'src/shared/test/testIds'
 
 jest.useFakeTimers()
 
@@ -35,8 +32,8 @@ it('should show when the duel starts then hide', () => {
   const firstPlayerName = players[playerOrder[0]].name
   const secondPlayerName = players[playerOrder[1]].name
 
-  expect(getByText(`${firstPlayerName} vs ${secondPlayerName}`)).toBeTruthy()
-  expect(getByText(initialDrawMessage)).toBeTruthy()
+  expect(getByText(firstPlayerName)).toBeTruthy()
+  expect(getByText(secondPlayerName)).toBeTruthy()
   expect(getByText(`${firstPlayerName} ${firstPlayerMessage}`)).toBeTruthy()
 
   act(() => {

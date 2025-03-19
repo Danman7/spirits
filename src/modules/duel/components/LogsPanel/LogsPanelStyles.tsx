@@ -1,7 +1,7 @@
 import { StyledIcon } from 'src/shared/components/Icon/IconStyles'
 import styled from 'styled-components'
 
-const size = '2.5em'
+const size = '42px'
 
 export const OpenLogsIcon = styled.div<{ $isVisible: boolean }>`
   cursor: pointer;

@@ -57,7 +57,6 @@ export const Box = styled.div`
   text-align: center;
   overflow: hidden;
   box-shadow: ${({ theme }) => theme.boxShadow.level3};
-  padding: ${({ theme }) => `calc(2 * ${theme.padding})`};
   border-radius: ${({ theme }) => theme.borderRadius};
   color: ${({ theme }) => theme.colors.text};
   background: ${({ theme }) => theme.colors.background};

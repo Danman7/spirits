@@ -34,6 +34,7 @@ interface PanelProps extends AnimateStateProps {
 
 export const Panel = styled(Box)<PanelProps>`
   width: 290px;
+  padding: 1em;
   text-align: left;
   border-left-width: 3px;
   border-left-style: solid;

@@ -105,7 +105,7 @@ export const HighPriestMarkander: AgentWithCounter = {
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
-    `Every time a Hammerite is played, reduce the counter of this card by 1. Once the counter reaches 0 play this card from deck or hand for free.`,
+    'Starts with 10 counters. When a Hammerite is played, lose 1 counter. At 0 counters, if in hand or deck, play for free.',
   ],
   flavor:
     "He is old, and the Master Forgers do jostle each other for precedence. But I spy not on my betters. 'Tis in The Builder's Hands.",
