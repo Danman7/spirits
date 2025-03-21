@@ -40,9 +40,6 @@ export const Panel = styled(Box)<PanelProps>`
   border-left-style: solid;
   border-left-color: ${({ $color, theme }) => $color || theme.colors.primary};
   z-index: 3;
-  animation-duration: ${({ theme }) => theme.transitionTime};
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: both;
   animation-name: ${({ $animateState }) => {
     if ($animateState === 'in') return SlideInFromLeft
     if ($animateState === 'out') return SlideOutToLeft

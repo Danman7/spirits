@@ -3,8 +3,7 @@ import { DefaultTheme } from 'styled-components'
 export const defaultTheme: DefaultTheme = {
   borderRadius: '6px',
   padding: '0.5em',
-  transitionTime: '0.2s',
-  pulsationTime: '0.5s',
+  transitionTime: 200,
   boxShadow: {
     level1:
       '0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)',

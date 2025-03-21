@@ -1,9 +1,11 @@
 import { StyledIcon } from 'src/shared/components/Icon/IconStyles'
+import { transitionMixin } from 'src/shared/styles/mixins'
 import styled from 'styled-components'
 
 const size = '42px'
 
 export const OpenLogsIcon = styled.div<{ $isVisible: boolean }>`
+  ${transitionMixin}
   cursor: pointer;
   position: absolute;
   display: flex;
@@ -17,14 +19,18 @@ export const OpenLogsIcon = styled.div<{ $isVisible: boolean }>`
   border-width: 3px;
   border-style: solid;
   border-color: ${({ theme }) => theme.colors.text};
-  transition: all ${({ theme }) => theme.transitionTime} ease;
+  transition-property: all;
   box-shadow: ${({ theme }) => theme.boxShadow.level2};
+
+  ${StyledIcon} path {
+    ${transitionMixin}
+    transition-property: all;
+  }
 
   &:hover {
     border-color: ${({ theme }) => theme.colors.primary};
 
     ${StyledIcon} path {
-      transition: all ${({ theme }) => theme.transitionTime} ease;
       fill: ${({ theme }) => theme.colors.primary};
     }
   }

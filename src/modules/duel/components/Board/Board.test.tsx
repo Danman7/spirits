@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/dom'
+import { fireEvent, waitFor } from '@testing-library/dom'
 import { act } from 'react'
 import {
   initialDuelStateMock,
@@ -84,7 +84,7 @@ describe('Redrawing', () => {
     preloadedDuel.phase = 'Redrawing'
   })
 
-  it('should be able to redraw a card', () => {
+  it('should be able to redraw a card', async () => {
     const { queryByText, getByText, getByTestId } = renderWithProviders(
       <Board />,
       {
@@ -103,7 +103,10 @@ describe('Redrawing', () => {
 
     fireEvent.click(getByText(replacedCardName))
 
-    expect(queryByText(replacedCardName)).toBeFalsy()
+    await waitFor(() => {
+      expect(queryByText(replacedCardName)).toBeFalsy()
+    })
+
     expect(getByText(redrawnCardName)).toBeTruthy()
     expect(getByText(advanceTurnDrawnCardName)).toBeTruthy()
 
@@ -114,7 +117,7 @@ describe('Redrawing', () => {
     )
   })
 
-  it('should be able to skip redraw', () => {
+  it('should be able to skip redraw', async () => {
     const { queryByText, getByText, getByTestId } = renderWithProviders(
       <Board />,
       {
@@ -131,7 +134,9 @@ describe('Redrawing', () => {
 
     fireEvent.click(getByText(skipRedrawLinkMessage))
 
-    expect(getByText(drawnCardName)).toBeTruthy()
+    await waitFor(() => {
+      expect(queryByText(drawnCardName)).toBeTruthy()
+    })
 
     fireEvent.click(getByTestId(OPEN_LOGS_ICON))
 
@@ -199,7 +204,7 @@ describe('Player Turns', () => {
     )
   })
 
-  it('should discard an instant when played', () => {
+  it('should discard an instant when played', async () => {
     const { getByText, queryByText, getByTestId } = renderWithProviders(
       <Board />,
       {
@@ -218,7 +223,9 @@ describe('Player Turns', () => {
 
     fireEvent.click(getByText(playerCardName))
 
-    expect(queryByText(playerCardName)).toBeFalsy()
+    await waitFor(() => {
+      expect(queryByText(playerCardName)).toBeFalsy()
+    })
 
     expect(getByTestId(`${playerId}-discard`).children).toHaveLength(
       discard.length + 1,

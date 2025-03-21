@@ -1,4 +1,9 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
+import { LAYOUT_ANIMATION_TIME_IN_MS } from 'src/modules/duel/components/DuelCard/duelCardConstants'
+import {
+  getIsFaceDown,
+  getIsSmall,
+} from 'src/modules/duel/components/DuelCard/duelCardUtils'
 import { useDuel } from 'src/modules/duel/state/context/DuelContext'
 import { CardStack } from 'src/modules/duel/state/duelStateTypes'
 import { usePrevious } from 'src/shared/SharedHooks'
@@ -101,22 +106,26 @@ export const useDefeatHandler = (
 type MovementState = 'first' | 'last' | 'invert'
 
 export const useMovement = ({
+  isOnTop,
   stack,
   playerId,
   cardId,
   element,
 }: {
+  isOnTop: boolean
   stack: CardStack
   playerId: string
   cardId: string
   element: HTMLDivElement | null
 }) => {
-  const oldStack = usePrevious(stack)
-
   const [portal, setPortal] = useState(`${playerId}-${stack}`)
   const [oldRect, setOldRect] = useState<DOMRect | null>(null)
   const [movingState, setMovingState] = useState<MovementState>('first')
   const [style, setStyle] = useState<React.CSSProperties>({})
+  const [isFaceDown, setIsFaceDown] = useState(getIsFaceDown(isOnTop, stack))
+  const [isSmall, setIsSmall] = useState(getIsSmall(stack))
+
+  const oldStack = usePrevious(stack)
 
   useLayoutEffect(() => {
     if (!oldStack || oldStack === stack || !element) return
@@ -150,11 +159,16 @@ export const useMovement = ({
     setStyle((prevStyle) => ({
       ...prevStyle,
       transform: 'translate(0, 0)',
-      transition: 'transform 0.3s ease',
+      transition: `transform ${LAYOUT_ANIMATION_TIME_IN_MS}ms ease`,
     }))
 
-    setTimeout(() => setMovingState('first'), 300)
-  }, [movingState])
+    setTimeout(() => {
+      setIsFaceDown(getIsFaceDown(isOnTop, stack))
+      setIsSmall(getIsSmall(stack))
+    }, LAYOUT_ANIMATION_TIME_IN_MS)
 
-  return { style, portal }
+    setTimeout(() => setMovingState('first'), LAYOUT_ANIMATION_TIME_IN_MS * 2)
+  }, [movingState, isOnTop, stack])
+
+  return { style, portal, isFaceDown, isSmall }
 }

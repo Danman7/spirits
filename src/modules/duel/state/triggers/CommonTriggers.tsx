@@ -4,9 +4,9 @@ import {
   generateReduceCounterMessage,
   generateTriggerLogMessage,
 } from 'src/modules/duel/state/logMessageUtils'
-import { ACTION_WAIT_TIMEOUT } from 'src/shared/SharedConstants'
 import { AgentWithCounter } from 'src/shared/modules/cards/CardTypes'
 import { HighPriestMarkander } from 'src/shared/modules/cards/data/bases'
+import { defaultTheme } from 'src/shared/styles/DefaultTheme'
 
 export const completeRedraw: DuelTrigger = {
   predicate: (state, action) =>
@@ -81,6 +81,6 @@ export const handleAttack: DuelTrigger = {
 
     setTimeout(() => {
       dispatch({ type: 'MOVE_TO_NEXT_ATTACKER' })
-    }, ACTION_WAIT_TIMEOUT)
+    }, defaultTheme.transitionTime)
   },
 }

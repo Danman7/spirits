@@ -1,4 +1,5 @@
 import { defaultTheme } from 'src/shared/styles/DefaultTheme'
+import { animationMixin } from 'src/shared/styles/mixins'
 import styled, { keyframes } from 'styled-components'
 
 const { primary } = defaultTheme.colors
@@ -16,23 +17,22 @@ const Wave = keyframes`
 `
 
 export const LoadingDot = styled.div`
-  animation-duration: ${({ theme }) => theme.pulsationTime};
-  animation-timing-function: ease-in-out;
+  ${animationMixin(3)}
   animation-name: ${Wave};
   animation-iteration-count: infinite;
   animation-direction: alternate;
   display: inline-block;
   margin-left: 3px;
 
+  &:nth-child(1) {
+    animation-delay: ${({ theme }) => theme.transitionTime * 1}ms;
+  }
+
   &:nth-child(2) {
-    animation-delay: ${({ theme }) => `calc(${theme.transitionTime} * 1)`};
+    animation-delay: ${({ theme }) => theme.transitionTime * 2}ms;
   }
 
   &:nth-child(3) {
-    animation-delay: ${({ theme }) => `calc(${theme.transitionTime} * 2)`};
-  }
-
-  &:nth-child(4) {
-    animation-delay: ${({ theme }) => `calc(${theme.transitionTime} * 3)`};
+    animation-delay: ${({ theme }) => theme.transitionTime * 3}ms;
   }
 `

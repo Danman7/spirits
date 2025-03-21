@@ -4,8 +4,7 @@ declare module 'styled-components' {
   export interface DefaultTheme {
     borderRadius: string
     padding: string
-    transitionTime: string
-    pulsationTime: string
+    transitionTime: number
     card: {
       width: string
       height: string

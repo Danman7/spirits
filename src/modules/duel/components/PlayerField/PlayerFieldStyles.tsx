@@ -1,6 +1,5 @@
 import { CardMovementWrapper } from 'src/modules/duel/components/DuelCard/DuelCardStyles'
 import { CardOutline } from 'src/shared/modules/cards/components/CardStyles'
-import { Pop } from 'src/shared/styles/GlobalStyles'
 import styled, { css } from 'styled-components'
 
 interface StyledPlayerFieldProps {
@@ -65,7 +64,6 @@ export const PlayerHand = styled.div<StyledPlayerFieldProps>`
       !$isOnTop &&
       css`
         bottom: 0;
-        transition: bottom ${theme.transitionTime};
 
         &:hover {
           bottom: calc(${theme.card.height} - 64px);
@@ -118,17 +116,6 @@ export const PlayerInfo = styled.h2<PlayerInfoProps>`
   font-weight: ${({ $isActive }) => ($isActive ? 800 : 400)};
   top: ${({ $isOnTop }) => ($isOnTop ? '2em' : 'inherit')};
   bottom: ${({ $isOnTop }) => ($isOnTop ? 'inherit' : '2em')};
-
-  ${({ $isActive, theme }) =>
-    $isActive &&
-    css`
-      animation-name: ${Pop};
-      display: inline-block;
-      animation-duration: ${theme.transitionTime};
-      animation-timing-function: ease-in-out;
-      animation-iteration-count: 2;
-      animation-direction: alternate;
-    `}
 `
 
 export const CardBrowserModal = styled.div`

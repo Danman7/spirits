@@ -1,11 +1,11 @@
 import { Color } from 'src/shared/SharedTypes'
 import { Box } from 'src/shared/styles/GlobalStyles'
+import { animationMixin } from 'src/shared/styles/mixins'
 import styled, { keyframes } from 'styled-components'
 
 export const PlayerNamesWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  position: relative;
   width: 600px;
 `
 
@@ -16,12 +16,11 @@ const LeftSlide = keyframes`
   }
 
   20% {
-    transform: translateX(-50px);
     opacity: 1;
   }
 
   100% {
-	transform: translateX(0);
+	  transform: translateX(10px);
   }
 `
 
@@ -32,22 +31,21 @@ const RightSlide = keyframes`
   }
 
   20% {
-    transform: translateX(50px);
     opacity: 1;
   }
 
   100% {
-	transform: translateX(0);
+	  transform: translateX(-10px);
   }
 `
 
 const BoxGrow = keyframes`
  0% {
-    width: 1px;
+    width: 1%;
   }
 
   100% {
-	  width: 300px;
+	  width: 50%;
   }
 `
 
@@ -58,17 +56,15 @@ const PlayerNameBox = styled.div<{ $color: Color }>`
   justify-content: center;
   background-color: ${({ $color }) => $color};
   color: ${({ theme }) => theme.colors.background};
-  animation-delay: 300ms;
+  animation-delay: ${({ theme }) => theme.transitionTime}ms;
   animation-name: ${BoxGrow};
-  animation-duration: 1s;
-  animation-fill-mode: both;
+  ${animationMixin(5)}
 
   h2 {
     padding: 5px 0;
     width: 200px;
-    animation-delay: 300ms;
-    animation-duration: 5s;
-    animation-timing-function: linear;
+    animation-delay: ${({ theme }) => theme.transitionTime}ms;
+    ${animationMixin(20)}
   }
 `
 
@@ -96,7 +92,7 @@ const SlowPopIn = keyframes`
   }
 
   100% {
-    transform: translate(-50%, -75%);
+    transform: translate(-50%, -80%);
     opacity: 1;
   }
 `
@@ -106,11 +102,10 @@ export const Versus = styled.h1`
   top: 50%;
   left: 50%;
   transform-origin: center center;
-  transform: translate(-50%, -75%);
-  animation-delay: 1s;
+  transform: translate(-50%, -80%);
   animation-name: ${SlowPopIn};
-  animation-duration: 1s;
-  animation-fill-mode: both;
+  animation-delay: ${({ theme }) => theme.transitionTime * 5}ms;
+  ${animationMixin(5)}
 `
 
 const FirstPlayerPop = keyframes`
@@ -129,9 +124,8 @@ export const FirstPlayerBox = styled(Box)`
   position: absolute;
   left: 5em;
   right: 5em;
-  bottom: 50px;
-  animation-delay: 2.5s;
+  bottom: 70px;
+  animation-delay: ${({ theme }) => theme.transitionTime * 12}ms;
   animation-name: ${FirstPlayerPop};
-  animation-duration: 500ms;
-  animation-fill-mode: both;
+  ${animationMixin(2)}
 `

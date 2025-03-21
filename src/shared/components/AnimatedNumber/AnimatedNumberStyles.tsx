@@ -1,4 +1,4 @@
-import { Animated } from 'src/shared/styles/GlobalStyles'
+import { animationMixin } from 'src/shared/styles/mixins'
 import styled, { keyframes } from 'styled-components'
 
 export const StyledAnimatedNumber = styled.div`
@@ -25,7 +25,8 @@ const slideUpOpacity = keyframes`
   }
 `
 
-export const Difference = styled(Animated)`
+export const Difference = styled.div`
+  ${animationMixin()}
   position: absolute;
   top: 0;
   opacity: 0;

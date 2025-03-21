@@ -1,1 +1,0 @@
-export const ACTION_WAIT_TIMEOUT = 500

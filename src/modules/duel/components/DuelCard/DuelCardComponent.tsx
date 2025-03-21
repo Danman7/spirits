@@ -26,11 +26,6 @@ export const DuelCardComponent: React.FC<DuelCardProps> = ({
 
   const isAttacking = useIsAttacking(cardId)
 
-  const isFaceDown = isOnTop
-    ? ['deck', 'discard', 'hand'].includes(stack)
-    : ['deck', 'discard'].includes(stack)
-  const isSmall = ['deck', 'discard', 'board'].includes(stack)
-
   const onClick = useDuelCardOnClick(cardId, playerId, stack)
 
   const card = useCard(cardId)
@@ -39,7 +34,8 @@ export const DuelCardComponent: React.FC<DuelCardProps> = ({
 
   const cardMovementWrapper = useRef(null)
 
-  const { style, portal } = useMovement({
+  const { style, portal, isFaceDown, isSmall } = useMovement({
+    isOnTop,
     cardId,
     playerId,
     stack,

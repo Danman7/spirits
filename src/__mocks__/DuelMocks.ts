@@ -3,7 +3,6 @@ import { initialState as initialDuelState } from 'src/modules/duel/state/duelRed
 import { DuelState } from 'src/modules/duel/state/duelStateTypes'
 import { setupPlayersFromUsers } from 'src/modules/duel/state/duelStateUtils'
 import { Bot, User } from 'src/shared/modules/user/UserTypes'
-import { defaultTheme } from 'src/shared/styles/DefaultTheme'
 
 export const playerId = 'player'
 export const opponentId = 'opponent'
@@ -11,7 +10,7 @@ export const opponentId = 'opponent'
 export const userMock: User = {
   id: playerId,
   name: 'Garret',
-  color: defaultTheme.colors.primary,
+  color: '#269',
   deck: [
     'BrotherSachelman',
     'HammeriteNovice',
@@ -28,7 +27,7 @@ export const opponentMock: Bot = {
   id: opponentId,
   name: 'Karras',
   isBot: true,
-  color: defaultTheme.colors.hilight,
+  color: '#174',
   deck: [
     'Zombie',
     'Zombie',

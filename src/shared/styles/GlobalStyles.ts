@@ -1,3 +1,4 @@
+import { animationMixin } from 'src/shared/styles/mixins'
 import styled, { createGlobalStyle, keyframes } from 'styled-components'
 
 export const GlobalStyles = createGlobalStyle`
@@ -54,6 +55,7 @@ select {
 `
 
 export const Box = styled.div`
+  ${animationMixin()}
   text-align: center;
   overflow: hidden;
   box-shadow: ${({ theme }) => theme.boxShadow.level3};
@@ -62,16 +64,11 @@ export const Box = styled.div`
   background: ${({ theme }) => theme.colors.background};
 `
 
-export const Animated = styled.div`
-  animation-duration: ${({ theme }) => theme.transitionTime};
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: both;
-`
-
 export const FadeIn = keyframes`
   from {
     opacity: 0;
   }
+  
 
   to {
     opacity: 1;

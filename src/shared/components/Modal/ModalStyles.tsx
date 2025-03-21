@@ -1,19 +1,16 @@
 import { AnimateStateProps } from 'src/shared/components/SharedComponentTypes'
 import {
-  Animated,
   Box,
   FadeIn,
   FadeOut,
   SlideIn,
   SlideOut,
 } from 'src/shared/styles/GlobalStyles'
+import { animationMixin } from 'src/shared/styles/mixins'
 import styled from 'styled-components'
 
 export const StyledModal = styled(Box)<AnimateStateProps>`
   z-index: 5;
-  animation-duration: ${({ theme }) => theme.transitionTime};
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: both;
   animation-name: ${({ $animateState }) => {
     if ($animateState === 'in') return SlideIn
     if ($animateState === 'out') return SlideOut
@@ -33,7 +30,8 @@ export const ModalWrapper = styled.div`
   bottom: 0;
 `
 
-export const Overlay = styled(Animated)<AnimateStateProps>`
+export const Overlay = styled.div<AnimateStateProps>`
+  ${animationMixin()}
   background: rgba(61, 44, 41, 0.9);
   position: absolute;
   width: 100%;

@@ -34,3 +34,6 @@ export const joinStringArrayWithComma = (categories: Card['categories']) =>
 
 export const getCoinsMessage = (amount: number) =>
   amount > 1 ? 'coins' : 'coin'
+
+export const delay = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms))

@@ -1,16 +1,15 @@
-import { fireEvent } from '@testing-library/dom'
-import { act } from 'react'
+import { fireEvent, waitFor } from '@testing-library/dom'
 import {
   userMock as preloadedUser,
   stackedDuelStateMock,
 } from 'src/__mocks__/duelMocks'
 import { DuelCardComponent } from 'src/modules/duel/components/DuelCard'
 import { renderWithProviders } from 'src/modules/duel/duelTestRender'
+import { Player } from 'src/modules/duel/playerTypes'
+import { DuelState } from 'src/modules/duel/state/duelStateTypes'
+import { deepClone } from 'src/shared/SharedUtils'
 import { defaultTheme } from 'src/shared/styles/DefaultTheme'
 import { CARD_TEST_ID } from 'src/shared/test/testIds'
-import { deepClone } from 'src/shared/SharedUtils'
-import { DuelState } from 'src/modules/duel/state/duelStateTypes'
-import { Player } from 'src/modules/duel/playerTypes'
 
 jest.useFakeTimers()
 
@@ -51,7 +50,7 @@ it('should show the correct card in hand', () => {
   expect(cardElementStyle.height).toBe(height)
 })
 
-it('should be able to redraw card', () => {
+it('should be able to redraw card', async () => {
   const { hand, id } = player
 
   const cardId = hand[0]
@@ -70,14 +69,12 @@ it('should be able to redraw card', () => {
 
   fireEvent.click(getByText(name))
 
-  act(() => {
-    jest.runAllTimers()
+  await waitFor(() => {
+    expect(queryByText(name)).toBeFalsy()
   })
-
-  expect(queryByText(name)).toBeFalsy()
 })
 
-it('should discard self from board if strength is zero', () => {
+it('should discard self from board if strength is zero', async () => {
   const { board, id } = player
   const cardId = board[0]
   const { name } = preloadedDuel.cards[cardId]
@@ -94,9 +91,7 @@ it('should discard self from board if strength is zero', () => {
     },
   )
 
-  act(() => {
-    jest.runAllTimers()
+  await waitFor(() => {
+    expect(queryByText(name)).toBeFalsy()
   })
-
-  expect(queryByText(name)).toBeFalsy()
 })

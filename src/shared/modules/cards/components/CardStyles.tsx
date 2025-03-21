@@ -4,6 +4,7 @@ import {
 } from 'src/shared/modules/cards/CardTypes'
 import { getCardFactionColor } from 'src/shared/modules/cards/CardUtils'
 import { defaultTheme } from 'src/shared/styles/DefaultTheme'
+import { animationMixin, transitionMixin } from 'src/shared/styles/mixins'
 import styled, { keyframes } from 'styled-components'
 
 const AttackFromTopOutline = keyframes`
@@ -38,16 +39,15 @@ interface AttackingProps {
 interface CardOutlineProps extends CardIsSmall, AttackingProps {}
 
 export const CardOutline = styled.div<CardOutlineProps>`
+  ${transitionMixin}
   width: ${({ theme }) => theme.card.width};
   height: ${({ theme }) => theme.card.height};
   border-radius: ${({ theme }) => theme.borderRadius};
   scale: ${({ $isSmall }) => ($isSmall ? '0.6' : '1')};
   perspective: 1000px;
+  transition-property: all;
   animation-iteration-count: 2;
   animation-direction: alternate;
-  animation-duration: ${({ theme }) => theme.transitionTime};
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: both;
   animation-name: ${({ $isAttacking, $isAttackingFromAbove }) => {
     if ($isAttacking && $isAttackingFromAbove) return AttackFromTopOutline
     if ($isAttacking && !$isAttackingFromAbove) return AttackFromBottomOutline
@@ -60,9 +60,10 @@ interface CardPaperProps {
 }
 
 export const CardPaper = styled.div<CardPaperProps>`
+  ${transitionMixin}
   height: 100%;
   transform-style: preserve-3d;
-  transition: ${({ theme }) => `transform ${theme.pulsationTime}`};
+  transition-property: transform;
   box-shadow: ${({ theme }) => theme.boxShadow.level2};
   border-radius: ${({ theme }) => theme.borderRadius};
   transform: ${({ $isFaceDown }) =>
@@ -151,19 +152,15 @@ interface CardFrontProps extends AttackingProps {
 }
 
 export const CardFront = styled(CardFace)<CardFrontProps>`
+  ${animationMixin()}
   display: flex;
   flex-direction: column;
   background: ${({ theme }) => theme.colors.background};
   border-color: ${({ theme, $isUnique }) =>
     $isUnique ? theme.colors.hilight : theme.colors.accent};
   cursor: ${({ $isActive }) => ($isActive ? 'pointer' : 'inherit')};
-
   animation-iteration-count: ${({ $isActive }) => ($isActive ? 'infinite' : 2)};
   animation-direction: alternate;
-  animation-duration: ${({ theme, $isActive }) =>
-    $isActive ? theme.pulsationTime : theme.transitionTime};
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: both;
   animation-name: ${({
     $isAttacking,
     $isActive,
