@@ -26,11 +26,10 @@ const slideUpOpacity = keyframes`
 `
 
 export const Difference = styled.div`
-  ${animationMixin()}
+  ${animationMixin(20)}
   position: absolute;
   top: 0;
   opacity: 0;
   pointer-events: none;
-  animation-duration: 4s;
   animation-name: ${slideUpOpacity};
 `

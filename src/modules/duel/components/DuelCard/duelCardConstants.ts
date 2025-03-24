@@ -1,1 +1,0 @@
-export const LAYOUT_ANIMATION_TIME_IN_MS = 500

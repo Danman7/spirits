@@ -1,5 +1,4 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
-import { LAYOUT_ANIMATION_TIME_IN_MS } from 'src/modules/duel/components/DuelCard/duelCardConstants'
 import {
   getIsFaceDown,
   getIsSmall,
@@ -9,6 +8,7 @@ import { CardStack } from 'src/modules/duel/state/duelStateTypes'
 import { usePrevious } from 'src/shared/SharedHooks'
 import { Agent } from 'src/shared/modules/cards/CardTypes'
 import { useUser } from 'src/shared/modules/user/state/UserContext'
+import { useTheme } from 'styled-components'
 
 export const useCard = (cardId: string) => {
   const {
@@ -125,6 +125,7 @@ export const useMovement = ({
   const [isFaceDown, setIsFaceDown] = useState(getIsFaceDown(isOnTop, stack))
   const [isSmall, setIsSmall] = useState(getIsSmall(stack))
 
+  const { transitionTime } = useTheme()
   const oldStack = usePrevious(stack)
 
   useLayoutEffect(() => {
@@ -159,16 +160,16 @@ export const useMovement = ({
     setStyle((prevStyle) => ({
       ...prevStyle,
       transform: 'translate(0, 0)',
-      transition: `transform ${LAYOUT_ANIMATION_TIME_IN_MS}ms ease`,
+      transition: `transform ${transitionTime * 3}ms ease`,
     }))
 
     setTimeout(() => {
       setIsFaceDown(getIsFaceDown(isOnTop, stack))
       setIsSmall(getIsSmall(stack))
-    }, LAYOUT_ANIMATION_TIME_IN_MS)
+    }, transitionTime * 3)
 
-    setTimeout(() => setMovingState('first'), LAYOUT_ANIMATION_TIME_IN_MS * 2)
-  }, [movingState, isOnTop, stack])
+    setTimeout(() => setMovingState('first'), transitionTime * 6)
+  }, [isOnTop, stack, movingState, transitionTime])
 
   return { style, portal, isFaceDown, isSmall }
 }
