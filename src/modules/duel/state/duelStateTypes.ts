@@ -14,12 +14,11 @@ export type DuelPhase =
   | 'Initial Draw'
   | 'Redrawing'
   | 'Player Turn'
+  | 'Select Target'
   | 'Resolving turn'
   | 'Duel End'
 
-type DuelCard = Card & {
-  id: string
-}
+type DuelCard = Card & { id: string }
 
 export type DuelCards = { [index: string]: DuelCard }
 
@@ -30,6 +29,7 @@ export interface DuelState {
   playerOrder: [string, string]
   cards: DuelCards
   logs: React.ReactNode[]
+  validTargets: string[]
 }
 
 export type DuelDispatch = (action: DuelAction) => void

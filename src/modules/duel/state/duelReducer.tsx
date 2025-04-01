@@ -32,6 +32,7 @@ export const initialState: DuelState = {
   attackingQueue: [],
   phase: 'Initial Draw',
   logs: [],
+  validTargets: [],
 }
 
 export const duelReducer = (
@@ -111,10 +112,7 @@ export const duelReducer = (
         ...state,
         phase: 'Player Turn',
         players: {
-          [inactivePlayerId]: {
-            ...inactivePlayer,
-            hasPerformedAction: false,
-          },
+          [inactivePlayerId]: { ...inactivePlayer, hasPerformedAction: false },
           [activePlayerId]: {
             ...activePlayer,
             ...drawCardFromDeck(activePlayer),
@@ -145,10 +143,7 @@ export const duelReducer = (
             ...handleIncome(inactivePlayer),
             hasPerformedAction: false,
           },
-          [activePlayerId]: {
-            ...activePlayer,
-            hasPerformedAction: false,
-          },
+          [activePlayerId]: { ...activePlayer, hasPerformedAction: false },
         },
         logs: [
           ...logs,
@@ -164,11 +159,7 @@ export const duelReducer = (
     case 'RESOLVE_TURN': {
       const attackingQueue = calculateAttackQueue(state)
 
-      return {
-        ...state,
-        phase: 'Resolving turn',
-        attackingQueue,
-      }
+      return { ...state, phase: 'Resolving turn', attackingQueue }
     }
 
     case 'AGENT_ATTACK': {
@@ -215,10 +206,7 @@ export const duelReducer = (
     }
 
     case 'MOVE_TO_NEXT_ATTACKER': {
-      return {
-        ...state,
-        attackingQueue: attackingQueue.slice(1),
-      }
+      return { ...state, attackingQueue: attackingQueue.slice(1) }
     }
 
     case 'PLAY_CARD': {
@@ -278,20 +266,13 @@ export const duelReducer = (
         ...state,
         cards: {
           ...cards,
-          [cardId]: {
-            id: cardId,
-            ...updatedCard,
-            ...update,
-          },
+          [cardId]: { id: cardId, ...updatedCard, ...update },
         },
       }
     }
 
     case 'ADD_LOG':
-      return {
-        ...state,
-        logs: [...logs, action.message],
-      }
+      return { ...state, logs: [...logs, action.message] }
 
     case 'AGENT_DAMAGE_SELF': {
       const { amount, cardId } = action
@@ -314,6 +295,11 @@ export const duelReducer = (
           ),
         ],
       }
+    }
+
+    case 'TRIGGER_TARGET_SELECTION': {
+      const { validTargets } = action
+      return { ...state, phase: 'Select Target', validTargets }
     }
 
     default:

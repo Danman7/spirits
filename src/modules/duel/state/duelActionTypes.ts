@@ -20,11 +20,7 @@ export type UpdateAgentAction = {
 }
 
 export type DuelAction =
-  | {
-      type: 'START_DUEL'
-      users: UsersStartingDuel
-      firstPlayerIndex?: 0 | 1
-    }
+  | { type: 'START_DUEL'; users: UsersStartingDuel; firstPlayerIndex?: 0 | 1 }
   | { type: 'DRAW_INITIAL_CARDS' }
   | { type: 'SKIP_REDRAW'; playerId: string }
   | { type: 'COMPLETE_REDRAW' }
@@ -40,10 +36,6 @@ export type DuelAction =
   | PlayCardAction
   | { type: 'DISCARD_CARD'; playerId: string; cardId: string }
   | UpdateAgentAction
-  | { type: 'RESET_DUEL' }
   | { type: 'ADD_LOG'; message: React.JSX.Element }
-  | {
-      type: 'AGENT_DAMAGE_SELF'
-      cardId: string
-      amount: number
-    }
+  | { type: 'AGENT_DAMAGE_SELF'; cardId: string; amount: number }
+  | { type: 'TRIGGER_TARGET_SELECTION'; validTargets: string[] }

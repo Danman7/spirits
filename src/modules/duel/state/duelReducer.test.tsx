@@ -27,10 +27,7 @@ describe('Setup', () => {
   const users: UsersStartingDuel = [userMock, opponentMock]
 
   it('should start a duel with a random first player when START_DUEL action is dispatched without firstPlayerIndex', () => {
-    const action: DuelAction = {
-      type: 'START_DUEL',
-      users,
-    }
+    const action: DuelAction = { type: 'START_DUEL', users }
 
     const { players } = duelReducer(initialState, action)
 
@@ -66,9 +63,7 @@ describe('Setup', () => {
   })
 
   it('should draw initial cards when DRAW_INITIAL_CARDS action is dispatched', () => {
-    const action: DuelAction = {
-      type: 'DRAW_INITIAL_CARDS',
-    }
+    const action: DuelAction = { type: 'DRAW_INITIAL_CARDS' }
 
     const { players } = duelReducer(initialDuelStateMock, action)
 
@@ -82,10 +77,7 @@ describe('Setup', () => {
 
 describe('Redraw', () => {
   it('should set player hasPerformedAction to true when SKIP_REDRAW action is dispatched', () => {
-    const action: DuelAction = {
-      type: 'SKIP_REDRAW',
-      playerId,
-    }
+    const action: DuelAction = { type: 'SKIP_REDRAW', playerId }
 
     const {
       players: { [playerId]: player, [opponentId]: opponent },
@@ -116,9 +108,7 @@ describe('Redraw', () => {
   })
 
   it('should reset players hasPerformedAction advance to player turn phase and draw a card for the active player when COMPLETE_REDRAW action is dispatched', () => {
-    const action: DuelAction = {
-      type: 'COMPLETE_REDRAW',
-    }
+    const action: DuelAction = { type: 'COMPLETE_REDRAW' }
 
     const {
       players: { [playerId]: player, [opponentId]: opponent },
@@ -137,9 +127,7 @@ describe('Redraw', () => {
 
 describe('Player Turns', () => {
   it("should move to the next player's turn and reset attack queue when ADVANCE_TURN action is dispatched", () => {
-    const action: DuelAction = {
-      type: 'ADVANCE_TURN',
-    }
+    const action: DuelAction = { type: 'ADVANCE_TURN' }
 
     const {
       players: { [playerId]: player, [opponentId]: opponent },
@@ -158,9 +146,7 @@ describe('Player Turns', () => {
   })
 
   it('should handle income when ADVANCE_TURN action is dispatched', () => {
-    const action: DuelAction = {
-      type: 'ADVANCE_TURN',
-    }
+    const action: DuelAction = { type: 'ADVANCE_TURN' }
 
     const mockState: DuelState = stackedDuelStateMock
     mockState.players[opponentId].income = 2
@@ -174,9 +160,7 @@ describe('Player Turns', () => {
   })
 
   it('should calculateAttackQueue when RESOLVE_TURN action is dispatched', () => {
-    const action: DuelAction = {
-      type: 'RESOLVE_TURN',
-    }
+    const action: DuelAction = { type: 'RESOLVE_TURN' }
 
     const {
       attackingQueue,
@@ -252,9 +236,7 @@ describe('Player Turns', () => {
   })
 
   it('should move to the next attacker if MOVE_TO_NEXT_ATTACKER action is dispatched', () => {
-    const action: DuelAction = {
-      type: 'MOVE_TO_NEXT_ATTACKER',
-    }
+    const action: DuelAction = { type: 'MOVE_TO_NEXT_ATTACKER' }
 
     const mockState: DuelState = stackedDuelStateMock
     mockState.attackingQueue = [
@@ -312,10 +294,7 @@ describe('Player Turns', () => {
 
   it('should update an agent when UPDATE_AGENT action is dispatched', () => {
     const updatedCardId = stackedDuelStateMock.players[playerId].board[0]
-    const update: Partial<Agent> = {
-      strength: 1,
-      cost: 1,
-    }
+    const update: Partial<Agent> = { strength: 1, cost: 1 }
 
     const action: DuelAction = {
       type: 'UPDATE_AGENT',
@@ -327,6 +306,21 @@ describe('Player Turns', () => {
     const { cards } = duelReducer(stackedDuelStateMock, action)
 
     expect(cards[updatedCardId]).toMatchObject(update)
+  })
+
+  it('should trigger target selection', () => {
+    const targetId = stackedDuelStateMock.players[opponentId].board[0]
+    const targets = [targetId]
+
+    const action: DuelAction = {
+      type: 'TRIGGER_TARGET_SELECTION',
+      validTargets: targets,
+    }
+
+    const { phase, validTargets } = duelReducer(stackedDuelStateMock, action)
+
+    expect(phase).toBe('Select Target')
+    expect(validTargets).toEqual(targets)
   })
 })
 
@@ -351,10 +345,7 @@ describe('General', () => {
         {stackedDuelStateMock.cards[opponent.hand[0]].name}.
       </p>
     )
-    const action: DuelAction = {
-      type: 'ADD_LOG',
-      message,
-    }
+    const action: DuelAction = { type: 'ADD_LOG', message }
 
     const { logs } = duelReducer(initialDuelStateMock, action)
     expect(logs).toContain(message)
