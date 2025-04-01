@@ -9,7 +9,7 @@ export const GarrettMasterThief: Agent = {
   name: 'Garrett: Master Thief',
   strength: 4,
   cost: 5,
-  isUnique: true,
+  isElite: true,
   factions: ['Shadow'],
   categories: ['Thief'],
   description: [

@@ -11,3 +11,8 @@ export const transitionMixin = css`
   transition-duration: ${({ theme }) => theme.transitionTime}ms;
   transition-timing-function: ease-in-out;
 `
+
+export const paperMixin = css`
+  color: ${({ theme }) => theme.colors.text};
+  background: ${({ theme }) => theme.colors.background};
+`

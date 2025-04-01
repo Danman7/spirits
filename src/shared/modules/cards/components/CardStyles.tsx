@@ -1,3 +1,4 @@
+import { StyledIcon } from 'src/shared/components/Icon/IconStyles'
 import {
   CardFaction,
   CardStrengthAnimateState,
@@ -7,13 +8,15 @@ import { defaultTheme } from 'src/shared/styles/DefaultTheme'
 import { animationMixin, transitionMixin } from 'src/shared/styles/mixins'
 import styled, { keyframes } from 'styled-components'
 
+const { spacing } = defaultTheme
+
 const AttackFromTopOutline = keyframes`
   from {
     transform: translateY(0);
   }
 
   to {
-    transform: translateY(25px);
+    transform: translateY(${spacing * 4}px);
   }
 `
 
@@ -23,7 +26,7 @@ const AttackFromBottomOutline = keyframes`
   }
 
   to {
-    transform: translateY(-25px);
+    transform: translateY(-${spacing * 4}px);
   }
 `
 
@@ -40,10 +43,10 @@ interface CardOutlineProps extends CardIsSmall, AttackingProps {}
 
 export const CardOutline = styled.div<CardOutlineProps>`
   ${transitionMixin}
-  width: ${({ theme }) => theme.card.width};
-  height: ${({ theme }) => theme.card.height};
-  border-radius: ${({ theme }) => theme.borderRadius};
-  scale: ${({ $isSmall }) => ($isSmall ? '0.6' : '1')};
+  width: ${({ theme, $isSmall }) => theme.card.width * ($isSmall ? 0.6 : 1)}px;
+  height: ${({ theme, $isSmall }) =>
+    theme.card.height * ($isSmall ? 0.6 : 1)}px;
+  font-size: ${({ $isSmall }) => ($isSmall ? 0.6 : 1)}rem;
   perspective: 1000px;
   transition-property: all;
   animation-iteration-count: 2;
@@ -65,19 +68,19 @@ export const CardPaper = styled.div<CardPaperProps>`
   transform-style: preserve-3d;
   transition-property: transform;
   box-shadow: ${({ theme }) => theme.boxShadow.level2};
-  border-radius: ${({ theme }) => theme.borderRadius};
+  border-radius: 0.5em;
   transform: ${({ $isFaceDown }) =>
     $isFaceDown ? 'rotateY(180deg)' : 'rotateY(0)'};
 `
 
 const CardFace = styled.div`
   backface-visibility: hidden;
-  width: 100%;
   height: 100%;
-  border-width: 3px;
+  border-width: 1px;
   border-style: solid;
-  border-color: ${({ theme }) => theme.colors.accent};
-  border-radius: ${({ theme }) => theme.borderRadius};
+  border-color: rgba(0, 0, 0, 0.1);
+  padding: 0.5em;
+  border-radius: 0.5em;
 `
 
 const { primary, action, hilight } = defaultTheme.colors
@@ -148,16 +151,13 @@ const Damage = keyframes`
 interface CardFrontProps extends AttackingProps {
   $cardStrengthAnimateState: CardStrengthAnimateState
   $isActive: boolean
-  $isUnique?: boolean
 }
 
 export const CardFront = styled(CardFace)<CardFrontProps>`
-  ${animationMixin()}
+  ${animationMixin(2)}
   display: flex;
   flex-direction: column;
   background: ${({ theme }) => theme.colors.background};
-  border-color: ${({ theme, $isUnique }) =>
-    $isUnique ? theme.colors.hilight : theme.colors.accent};
   cursor: ${({ $isActive }) => ($isActive ? 'pointer' : 'inherit')};
   animation-iteration-count: ${({ $isActive }) => ($isActive ? 'infinite' : 2)};
   animation-direction: alternate;
@@ -179,20 +179,28 @@ export const CardFront = styled(CardFace)<CardFrontProps>`
 export const CardBack = styled(CardFace)`
   position: absolute;
   top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   transform: rotateY(180deg);
+  border: ${({ theme }) => `${theme.spacing / 2}px solid ${theme.colors.text}`};
   background: ${({ theme }) =>
-    `repeating-linear-gradient(45deg, ${theme.colors.background}, ${theme.colors.background} 10px, ${theme.colors.accent} 10px, ${theme.colors.accent} 20px)`};
+    `repeating-linear-gradient(45deg, ${theme.colors.background}, ${theme.colors.background} 0.5em, ${theme.colors.text} 0.5em, ${theme.colors.text} 1em)`};
 `
 
 interface StyledCardHeaderProps {
   $factions: CardFaction[]
+  $isElite: boolean
 }
 
 export const StyledCardHeader = styled.div<StyledCardHeaderProps>`
-  padding: ${({ theme }) => theme.padding};
-  border-bottom: ${({ theme }) => `1px solid ${theme.colors.accent}`};
+  border-radius: 0.5em;
+  padding: 0.5em;
+  border-bottom-width: 0.25em;
+  border-bottom-style: solid;
+  border-bottom-color: ${({ theme, $isElite }) =>
+    $isElite ? theme.colors.elite : theme.colors.text};
   color: ${({ theme }) => theme.colors.background};
-  border-radius: 3px 3px 0 0;
   background: ${({ $factions }) => getCardFactionColor($factions)};
 `
 
@@ -208,25 +216,32 @@ export const CardTitle = styled.h3<CardTitleProps>`
 `
 
 export const StyledCardContent = styled.div`
-  text-align: left;
+  text-align: justify;
   overflow: auto;
+  padding: 0.5em 0;
   flex-grow: 2;
   color: ${({ theme }) => theme.colors.text};
-  padding: ${({ theme }) => theme.padding};
 
   p {
-    margin-bottom: 0.5em;
+    padding: 0 0 0.5em;
   }
 `
 
-export const StyledCardFooter = styled.div`
+export const StyledCardFooter = styled.div<{ $isElite: boolean }>`
+  border-radius: 0.5em;
   text-align: left;
   display: flex;
   justify-content: space-between;
   bottom: 0;
-  color: ${({ theme }) => theme.colors.text};
-  padding: ${({ theme }) => theme.padding};
-  border-top: ${({ theme }) => `1px solid ${theme.colors.accent}`};
+  color: ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme, $isElite }) =>
+    $isElite ? theme.colors.elite : theme.colors.text};
+  color: ${({ theme }) => theme.colors.background};
+  padding: 0.5em;
+
+  ${StyledIcon} path {
+    fill: ${({ theme }) => theme.colors.background};
+  }
 `
 
 export const FooterSection = styled.div`

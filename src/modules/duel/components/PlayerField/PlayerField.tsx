@@ -1,46 +1,23 @@
 import { useState } from 'react'
+import { ActionPanel } from 'src/modules/duel/components/ActionPanel'
 import { DuelCardComponent } from 'src/modules/duel/components/DuelCard'
-import { StackConfiguration } from 'src/modules/duel/components/duelComponentTypes'
+import { LogsPanel } from 'src/modules/duel/components/LogsPanel'
 import { BotController } from 'src/modules/duel/components/PlayerField/BotController'
 import { CardStackList } from 'src/modules/duel/components/PlayerField/CardStackList'
+import { deckLabel } from 'src/modules/duel/components/PlayerField/PlayerFieldMessages'
 import {
-  PlayerBoard,
-  PlayerDeck,
-  PlayerDiscard,
-  PlayerHand,
+  DeckInfo,
+  LeftPanelsWrapper,
   PlayerInfo,
   StyledPlayerField,
 } from 'src/modules/duel/components/PlayerField/PlayerFieldStyles'
+import { getStackConfiguration } from 'src/modules/duel/components/PlayerField/playerFieldUtils'
 import { StackBrowseModal } from 'src/modules/duel/components/PlayerField/StackBrowseModal'
 import { CARD_STACKS } from 'src/modules/duel/duelConstants'
 import { useDuel } from 'src/modules/duel/state/context/DuelContext'
 import { CardStack } from 'src/modules/duel/state/duelStateTypes'
 import { AnimatedNumber } from 'src/shared/components/AnimatedNumber'
-
-const getStackConfiguration = (
-  stack: CardStack,
-  isOnTop: boolean,
-  browseStack: (stack: CardStack) => void,
-): StackConfiguration => {
-  const stackConfigs: Record<CardStack, StackConfiguration> = {
-    board: {
-      component: PlayerBoard,
-    },
-    deck: {
-      component: PlayerDeck,
-      onClickStack: !isOnTop ? () => browseStack(stack) : undefined,
-    },
-    discard: {
-      component: PlayerDiscard,
-      onClickStack: !isOnTop ? () => browseStack(stack) : undefined,
-    },
-    hand: {
-      component: PlayerHand,
-    },
-  }
-
-  return stackConfigs[stack]
-}
+import { Icon } from 'src/shared/components/Icon'
 
 interface PlayerFieldProps {
   playerId: string
@@ -84,6 +61,12 @@ export const PlayerField: React.FC<PlayerFieldProps> = ({
         {income ? <span> (+{income})</span> : null}
       </PlayerInfo>
 
+      {deck.length ? (
+        <DeckInfo>
+          <Icon name="deck" isSmall /> {deckLabel} ({deck.length})
+        </DeckInfo>
+      ) : null}
+
       {CARD_STACKS.map((stack) => (
         <CardStackList
           key={`${id}-${stack}`}
@@ -95,6 +78,13 @@ export const PlayerField: React.FC<PlayerFieldProps> = ({
       ))}
 
       {isBot ? <BotController playerId={id} /> : null}
+
+      {!isOnTop ? (
+        <LeftPanelsWrapper>
+          <LogsPanel />
+          <ActionPanel />
+        </LeftPanelsWrapper>
+      ) : null}
 
       <StackBrowseModal
         browsedCards={Object.fromEntries(

@@ -37,7 +37,7 @@ export const AzaranTheCruel: Agent = {
   name: 'Azaran the Cruel',
   strength: 5,
   cost: 5,
-  isUnique: true,
+  isElite: true,
   factions: ['Chaos'],
   categories: ['Necromancer'],
   description: [
@@ -51,12 +51,10 @@ export const BookOfAsh: Instant = {
   type: 'instant',
   name: 'The Book of Ash',
   cost: 5,
-  isUnique: true,
+  isElite: true,
   factions: ['Chaos'],
   categories: ['Artifact'],
-  description: [
-    'Summon 2 copies of the top non-unique agent in your discard pile.',
-  ],
+  description: ['Summon 2 copies of the top core agent in your discard pile.'],
   flavor:
     'I owe my transcendence to the Book of Ash, that tome of legend I recovered so long ago from the sands of long forgotten kings. Within its pages lie the secrets of life, death ...and undeath. -- Azaran the Cruel',
 }

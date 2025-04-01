@@ -1,13 +1,8 @@
-import { ActionPanel } from 'src/modules/duel/components/ActionPanel'
-import {
-  LeftPanelsWrapper,
-  StyledBoard,
-} from 'src/modules/duel/components/Board/BoardStyles'
+import { StyledBoard } from 'src/modules/duel/components/Board/BoardStyles'
 import { DuelModal } from 'src/modules/duel/components/DuelModal'
-import { LogsPanel } from 'src/modules/duel/components/LogsPanel'
 import { PlayerField } from 'src/modules/duel/components/PlayerField'
-import { useDuel } from 'src/modules/duel/state/context/DuelContext'
 import { sortPlayerIdsForBoard } from 'src/modules/duel/duelUtils'
+import { useDuel } from 'src/modules/duel/state/context/DuelContext'
 import { useUser } from 'src/shared/modules/user/state/UserContext'
 
 export const Board: React.FC = () => {
@@ -28,11 +23,6 @@ export const Board: React.FC = () => {
       ))}
 
       <DuelModal />
-
-      <LeftPanelsWrapper>
-        <LogsPanel />
-        <ActionPanel />
-      </LeftPanelsWrapper>
     </StyledBoard>
   ) : null
 }

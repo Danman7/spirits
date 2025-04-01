@@ -7,18 +7,22 @@ interface StyledPlayerFieldProps {
 }
 
 export const StyledPlayerField = styled.div<StyledPlayerFieldProps>`
-  height: 50vh;
   display: grid;
+  gap: ${({ theme }) => theme.spacing}px;
   grid-template-columns: 1fr 5fr 1fr;
-  grid-template-rows: auto;
+  grid-template-rows: ${({ $isOnTop, theme }) =>
+    $isOnTop
+      ? `${theme.spacing * 9}px ${theme.spacing * 30}px`
+      : `${theme.spacing * 30}px ${theme.spacing * 9}px`};
   justify-items: center;
-  gap: ${({ theme }) => theme.padding};
+  align-items: center;
   grid-template-areas: ${({ $isOnTop }) =>
     $isOnTop
       ? `'discard hand deck'
-    'board board board'`
-      : `'board board board'
+    'ui board info'`
+      : `'panels board info'
     'discard hand deck'`};
+  align-items: ${({ $isOnTop }) => ($isOnTop ? 'flex-end' : 'flex-start')};
 `
 
 export const PlayerBoard = styled.div<StyledPlayerFieldProps>`
@@ -27,46 +31,38 @@ export const PlayerBoard = styled.div<StyledPlayerFieldProps>`
   flex-direction: row;
   justify-content: center;
   gap: 0.5rem;
-  padding: ${({ theme }) => theme.padding};
-  height: 230px;
   align-items: anchor-center;
   align-self: ${({ $isOnTop }) => ($isOnTop ? 'flex-end' : 'flex-start')};
 
   ${CardMovementWrapper} {
     transform-origin: ${({ $isOnTop }) =>
       $isOnTop ? 'bottom center' : 'top center'};
-    margin: 0 -50px;
   }
 `
 
 export const PlayerHand = styled.div<StyledPlayerFieldProps>`
   grid-area: hand;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-grow: 2;
-  z-index: 2;
-  height: 64px;
-  align-items: ${({ $isOnTop }) => ($isOnTop ? 'flex-end' : 'inherit')};
-  align-self: ${({ $isOnTop }) => ($isOnTop ? 'inherit' : 'end')};
 
   ${CardMovementWrapper} {
-    &:hover {
-      z-index: 2;
-    }
+    ${({ $isOnTop }) =>
+      !$isOnTop &&
+      css`
+        &:hover {
+          z-index: 2;
+        }
+      `}
   }
 
   ${CardOutline} {
-    position: relative;
-    margin: 0 -80px;
+    margin-left: -${({ theme }) => theme.spacing * 10}px;
+    margin-right: -${({ theme }) => theme.spacing * 10}px;
 
     ${({ $isOnTop, theme }) =>
       !$isOnTop &&
       css`
-        bottom: 0;
-
         &:hover {
-          bottom: calc(${theme.card.height} - 64px);
+          margin-top: calc(-${theme.card.height}px + ${theme.spacing * 9}px);
           box-shadow: ${theme.boxShadow.level3};
         }
       `}
@@ -74,26 +70,16 @@ export const PlayerHand = styled.div<StyledPlayerFieldProps>`
 `
 
 const FaceDownStack = styled.div<StyledPlayerFieldProps>`
-  height: 25px;
-  width: 150px;
+  position: relative;
+  cursor: ${({ $isOnTop }) => ($isOnTop ? 'auto' : 'pointer')};
+  display: grid;
 
-  ${({ $isOnTop }) =>
-    !$isOnTop &&
-    `align-self: end;
-  cursor: pointer;
-  position: relative;`}
+  margin: ${({ $isOnTop, theme }) =>
+    $isOnTop ? `0 0 ${theme.spacing * 3}px` : `${theme.spacing * 3}px 0 0`};
 
   ${CardMovementWrapper} {
     pointer-events: none;
-    ${({ $isOnTop }) =>
-      $isOnTop &&
-      `position: absolute;
-    top: -180px;`}
-  }
-
-  ${CardOutline} {
-    position: absolute;
-    transform-origin: top left;
+    grid-area: 1 / 1;
   }
 `
 
@@ -110,12 +96,11 @@ interface PlayerInfoProps extends StyledPlayerFieldProps {
 }
 
 export const PlayerInfo = styled.h2<PlayerInfoProps>`
-  position: fixed;
   right: 1rem;
-  z-index: 4;
+  z-index: 3;
   font-weight: ${({ $isActive }) => ($isActive ? 800 : 400)};
-  top: ${({ $isOnTop }) => ($isOnTop ? '2em' : 'inherit')};
-  bottom: ${({ $isOnTop }) => ($isOnTop ? 'inherit' : '2em')};
+  grid-area: info;
+  align-self: ${({ $isOnTop }) => ($isOnTop ? 'self-start' : 'self-end')};
 `
 
 export const CardBrowserModal = styled.div`
@@ -138,7 +123,7 @@ export const CardBrowserModalFooter = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  padding: ${({ theme }) => theme.padding};
+  padding: ${({ theme }) => theme.spacing}px;
   backdrop-filter: blur(10px);
 `
 
@@ -150,4 +135,19 @@ export const CardList = styled.div`
   gap: 1rem;
   flex-grow: 2;
   align-content: center;
+`
+
+export const DeckInfo = styled.div`
+  grid-area: deck;
+`
+
+export const LeftPanelsWrapper = styled.div`
+  grid-area: panels;
+  width: 100px;
+  justify-self: left;
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 0 1em;
 `

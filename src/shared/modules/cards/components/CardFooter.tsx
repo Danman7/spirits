@@ -10,10 +10,10 @@ interface CardFooterProps {
 }
 
 export const CardFooter: React.FC<CardFooterProps> = ({ card }) => {
-  const { type, cost } = card
+  const { type, cost, isElite } = card
 
   return (
-    <StyledCardFooter>
+    <StyledCardFooter $isElite={!!isElite}>
       <FooterSection>
         <Icon name="Coins" isSmall /> {cost}
       </FooterSection>

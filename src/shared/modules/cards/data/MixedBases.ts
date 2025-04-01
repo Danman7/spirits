@@ -6,7 +6,7 @@ export const ViktoriaThiefPawn: Agent = {
   name: 'Viktoria: Thiefs-pawn',
   strength: 4,
   cost: 5,
-  isUnique: true,
+  isElite: true,
   factions: ['Chaos', 'Shadow'],
   categories: ['Fence', 'Pagan'],
   description: [

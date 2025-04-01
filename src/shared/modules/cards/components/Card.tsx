@@ -33,8 +33,7 @@ export const CardComponent: React.FC<CardProps> = ({
   isAttackingFromAbove = false,
   onClick,
 }) => {
-  const { type, isUnique } = card
-  const strength = type === 'agent' ? card.strength : 0
+  const strength = card.type === 'agent' ? card.strength : 0
 
   const cardStrengthAnimateState = useCardStrengthAnimation(strength)
   const shouldShowFront = useCardVisibility(isFaceDown)
@@ -53,7 +52,6 @@ export const CardComponent: React.FC<CardProps> = ({
             $isAttacking={isAttacking}
             $isAttackingFromAbove={isAttackingFromAbove}
             $isActive={!!onClick}
-            $isUnique={isUnique}
             $cardStrengthAnimateState={cardStrengthAnimateState}
           >
             <CardHeader card={card} id={id} />

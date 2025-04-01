@@ -14,7 +14,7 @@ export const YoraSkull: Instant = {
   type: 'instant',
   name: "Saint Yora's Skull",
   cost: 5,
-  isUnique: true,
+  isElite: true,
   factions: ['Order'],
   categories: ['Artifact'],
   description: [
@@ -73,9 +73,7 @@ export const TempleGuard: Agent = {
   description: [
     `On play, boost self by ${TEMPLE_GUARD_BOOST} if your opponent has more cards on board.`,
   ],
-  traits: {
-    retaliates: true,
-  },
+  traits: { retaliates: true },
   flavor:
     'Thy hammer pounds the nail, holds the roof-beam. Thy hammer strikes the iron, shapes the cauldron.',
 }
@@ -85,7 +83,7 @@ export const BrotherSachelman: Agent = {
   name: 'Brother Sachelman',
   strength: 4,
   cost: 6,
-  isUnique: true,
+  isElite: true,
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
@@ -101,7 +99,7 @@ export const HighPriestMarkander: AgentWithCounter = {
   strength: 4,
   cost: 5,
   counter: HIGH_PRIEST_MAKANDER_COUNTER,
-  isUnique: true,
+  isElite: true,
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [
@@ -116,7 +114,7 @@ export const HammeritePriest: Agent = {
   name: 'Hammerite Priest',
   strength: 3,
   cost: 6,
-  isUnique: true,
+  isElite: true,
   factions: ['Order'],
   categories: ['Hammerite'],
   description: [

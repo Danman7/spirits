@@ -1,8 +1,7 @@
 import { DefaultTheme } from 'styled-components'
 
 export const defaultTheme: DefaultTheme = {
-  borderRadius: '6px',
-  padding: '0.5em',
+  spacing: 8,
   transitionTime: 200,
   boxShadow: {
     level1:
@@ -16,6 +15,7 @@ export const defaultTheme: DefaultTheme = {
     primary: '#e63b19',
     hilight: '#477deb',
     action: '#19e6a2',
+    elite: '#b88214',
     background: '#fafaf9',
     text: '#3d2c29',
     accent: '#996f66',
@@ -23,8 +23,5 @@ export const defaultTheme: DefaultTheme = {
     chaosFaction: '#0d7351',
     shadowFaction: '#1241a1',
   },
-  card: {
-    width: '250px',
-    height: '350px',
-  },
+  card: { width: 250, height: 350 },
 }

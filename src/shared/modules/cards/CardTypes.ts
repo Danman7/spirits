@@ -28,7 +28,7 @@ interface CardBase {
   type: CardType
   description: string[]
   flavor: string
-  isUnique?: boolean
+  isElite?: boolean
 }
 
 export interface Instant extends CardBase {

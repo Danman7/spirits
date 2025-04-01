@@ -2,13 +2,9 @@ import 'styled-components'
 
 declare module 'styled-components' {
   export interface DefaultTheme {
-    borderRadius: string
-    padding: string
+    spacing: number
     transitionTime: number
-    card: {
-      width: string
-      height: string
-    }
+    card: { width: number; height: number }
     colors: {
       primary: string
       hilight: string
@@ -16,14 +12,11 @@ declare module 'styled-components' {
       background: string
       text: string
       accent: string
+      elite: string
       orderFaction: string
       chaosFaction: string
       shadowFaction: string
     }
-    boxShadow: {
-      level1: string
-      level2: string
-      level3: string
-    }
+    boxShadow: { level1: string; level2: string; level3: string }
   }
 }

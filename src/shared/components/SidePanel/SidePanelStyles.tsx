@@ -1,16 +1,11 @@
 import { AnimateStateProps } from 'src/shared/components/SharedComponentTypes'
 import { Color } from 'src/shared/SharedTypes'
 import { Box } from 'src/shared/styles/GlobalStyles'
-import { defaultTheme } from 'src/shared/styles/DefaultTheme'
 import styled, { keyframes } from 'styled-components'
-
-const {
-  card: { height },
-} = defaultTheme
 
 const SlideInFromLeft = keyframes`
   from {
-    transform: translateX(-${height});
+    transform: translateX(-100%);
   }
 
   to {
@@ -24,7 +19,7 @@ const SlideOutToLeft = keyframes`
   }
 
   to {
-    transform: translateX(-${height});
+    transform: translateX(-100%);
   }
 `
 
@@ -33,10 +28,10 @@ interface PanelProps extends AnimateStateProps {
 }
 
 export const Panel = styled(Box)<PanelProps>`
-  width: 290px;
+  width: ${({ theme }) => theme.spacing * 32}px;
   padding: 1em;
   text-align: left;
-  border-left-width: 3px;
+  border-left-width: ${({ theme }) => theme.spacing / 2}px;
   border-left-style: solid;
   border-left-color: ${({ $color, theme }) => $color || theme.colors.primary};
   z-index: 3;

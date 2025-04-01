@@ -59,7 +59,7 @@ export const Box = styled.div`
   text-align: center;
   overflow: hidden;
   box-shadow: ${({ theme }) => theme.boxShadow.level3};
-  border-radius: ${({ theme }) => theme.borderRadius};
+  border-radius: ${({ theme }) => theme.spacing}px;
   color: ${({ theme }) => theme.colors.text};
   background: ${({ theme }) => theme.colors.background};
 `
@@ -122,7 +122,7 @@ from {
 export const Separator = styled.div`
   opacity: 0.2;
   width: 100%;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.accent};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.text};
 `
 
 export const AccentText = styled.small`

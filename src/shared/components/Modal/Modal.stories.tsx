@@ -18,18 +18,13 @@ const meta = {
   decorators: [
     (story) => <div style={{ width: '100%', height: '100vh' }}>{story()}</div>,
   ],
-  args: {
-    isOpen: true,
-    children: 'Testing modal message',
-  },
+  args: { isOpen: true, children: 'Testing modal message' },
   argTypes: {
     isOpen: {
       description:
         'Controls whether the modal should be shown or hidden. Internal state syncs this with the animations.',
     },
-    children: {
-      description: 'Determines what is shown inside the modal box.',
-    },
+    children: { description: 'Determines what is shown inside the modal box.' },
     onClosingComplete: {
       description:
         'An optional callback for after the modal closure animation is complete.',
@@ -40,16 +35,14 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const StringContent: Story = {}
-
-export const NodeContent: Story = {
+export const Default: Story = {
   args: {
     children: (
-      <>
+      <div style={{ padding: 16 }}>
         <h1>This is a test</h1>
         <p>You can put any ReactNode as Modal content.</p>
         <Link onClick={() => {}}>A link</Link>
-      </>
+      </div>
     ),
   },
 }

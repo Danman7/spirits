@@ -13,12 +13,12 @@ interface CardHeaderProps {
 }
 
 export const CardHeader: React.FC<CardHeaderProps> = ({ card, id }) => {
-  const { categories, factions, name, type } = card
+  const { categories, factions, name, type, isElite } = card
 
   const base = getCardBaseFromName(name)
 
   return (
-    <StyledCardHeader $factions={factions}>
+    <StyledCardHeader $factions={factions} $isElite={!!isElite}>
       <CardTitle $text={name}>
         {name}
 

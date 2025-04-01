@@ -34,10 +34,7 @@ it('should show the correct card in hand', () => {
 
   const { getByText, getByTestId } = renderWithProviders(
     <DuelCardComponent cardId={cardId} playerId={id} />,
-    {
-      preloadedUser,
-      preloadedDuel,
-    },
+    { preloadedUser, preloadedDuel },
   )
 
   expect(getByText(name)).toBeTruthy()
@@ -46,8 +43,8 @@ it('should show the correct card in hand', () => {
     getByTestId(`${CARD_TEST_ID}${cardId}`),
   )
 
-  expect(cardElementStyle.width).toBe(width)
-  expect(cardElementStyle.height).toBe(height)
+  expect(cardElementStyle.width).toBe(`${width}px`)
+  expect(cardElementStyle.height).toBe(`${height}px`)
 })
 
 it('should be able to redraw card', async () => {
@@ -61,10 +58,7 @@ it('should be able to redraw card', async () => {
 
   const { getByText, queryByText } = renderWithProviders(
     <DuelCardComponent cardId={cardId} playerId={id} />,
-    {
-      preloadedUser,
-      preloadedDuel,
-    },
+    { preloadedUser, preloadedDuel },
   )
 
   fireEvent.click(getByText(name))
@@ -85,10 +79,7 @@ it('should discard self from board if strength is zero', async () => {
 
   const { queryByText } = renderWithProviders(
     <DuelCardComponent cardId={cardId} playerId={id} />,
-    {
-      preloadedUser,
-      preloadedDuel,
-    },
+    { preloadedUser, preloadedDuel },
   )
 
   await waitFor(() => {

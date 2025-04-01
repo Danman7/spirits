@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { LeftPanelsWrapper } from 'src/modules/duel/components/Board/BoardStyles'
+import { LeftPanelsWrapper } from 'src/modules/duel/components/PlayerField/PlayerFieldStyles'
 import { Link } from 'src/shared/components/Link'
 import { SidePanel } from 'src/shared/components/SidePanel/SidePanel'
 import { defaultTheme } from 'src/shared/styles/DefaultTheme'
@@ -24,10 +24,7 @@ const meta = {
       </div>
     ),
   ],
-  args: {
-    isOpen: true,
-    children: 'Testing SidePanel message',
-  },
+  args: { isOpen: true, children: 'Testing SidePanel message' },
   argTypes: {
     isOpen: {
       description:
@@ -57,7 +54,5 @@ export const NodeContent: Story = {
 }
 
 export const CustomColor: Story = {
-  args: {
-    color: defaultTheme.colors.hilight,
-  },
+  args: { color: defaultTheme.colors.hilight },
 }

@@ -29,7 +29,7 @@ export const useDuelModalShow = () => {
 
       setTimeout(() => {
         setIsDuelModalOpen(false)
-      }, transitionTime * 20)
+      }, transitionTime)
     }
 
     switch (phase) {

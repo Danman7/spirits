@@ -88,10 +88,7 @@ describe('Hammerite Novice', () => {
 
   it('should not play any copies if there is no Hammerite is in play', () => {
     preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
-      [playerId]: {
-        deck: [baseName],
-        hand: [baseName],
-      },
+      [playerId]: { deck: [baseName], hand: [baseName] },
     })
 
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
@@ -108,10 +105,7 @@ describe('Hammerite Novice', () => {
 
   it('should not play copies from discard or opponent', () => {
     preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
-      [playerId]: {
-        discard: [baseName],
-        hand: [baseName],
-      },
+      [playerId]: { discard: [baseName], hand: [baseName] },
     })
 
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
@@ -137,9 +131,7 @@ describe('Elevated Acolyte', () => {
 
   it('should damage self if played alone', () => {
     preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
-      [playerId]: {
-        hand: [baseName],
-      },
+      [playerId]: { hand: [baseName] },
     })
 
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
@@ -162,10 +154,7 @@ describe('Elevated Acolyte', () => {
 
   it('should damage self if not played next to a Hammerite with higher strength', () => {
     preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
-      [playerId]: {
-        hand: [baseName],
-        board: ['HammeriteNovice'],
-      },
+      [playerId]: { hand: [baseName], board: ['HammeriteNovice'] },
     })
 
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
@@ -183,10 +172,7 @@ describe('Elevated Acolyte', () => {
 
   it('should not damage self if played next to a Hammerite with higher strength', () => {
     preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
-      [playerId]: {
-        hand: [baseName],
-        board: ['TempleGuard'],
-      },
+      [playerId]: { hand: [baseName], board: ['TempleGuard'] },
     })
 
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
@@ -243,10 +229,7 @@ describe('Brother Sachelman', () => {
 
   it('should not boost non-Hammerite agents or Hammerites with highet strength', () => {
     preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
-      [playerId]: {
-        hand: [baseName],
-        board: ['HouseGuard', 'TempleGuard'],
-      },
+      [playerId]: { hand: [baseName], board: ['HouseGuard', 'TempleGuard'] },
     })
 
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
@@ -276,12 +259,8 @@ describe('Temple Guard', () => {
 
   it('should boost self if the opponent has a larger board', () => {
     preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
-      [playerId]: {
-        hand: [baseName],
-      },
-      [opponentId]: {
-        board: ['Zombie', 'Haunt'],
-      },
+      [playerId]: { hand: [baseName] },
+      [opponentId]: { board: ['Zombie', 'Haunt'] },
     })
 
     const { getByText, getByTestId } = renderWithProviders(<Board />, {
@@ -304,12 +283,8 @@ describe('Temple Guard', () => {
 
   it('should not retaliate when not attacked', () => {
     preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
-      [playerId]: {
-        board: ['ElevatedAcolyte', baseName],
-      },
-      [opponentId]: {
-        board: ['Zombie'],
-      },
+      [playerId]: { board: ['ElevatedAcolyte', baseName] },
+      [opponentId]: { board: ['Zombie'] },
     })
 
     preloadedDuel.playerOrder = [opponentId, playerId]
@@ -345,12 +320,8 @@ describe('Temple Guard', () => {
 
   it('should retaliate when attacked', () => {
     preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
-      [playerId]: {
-        board: [baseName],
-      },
-      [opponentId]: {
-        board: ['Zombie'],
-      },
+      [playerId]: { board: [baseName] },
+      [opponentId]: { board: ['Zombie'] },
     })
 
     preloadedDuel.playerOrder = [opponentId, playerId]
@@ -392,12 +363,8 @@ describe('Temple Guard', () => {
 
   it('should retaliate twice if attacked twice', () => {
     preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
-      [playerId]: {
-        board: [baseName],
-      },
-      [opponentId]: {
-        board: ['Haunt', 'Zombie'],
-      },
+      [playerId]: { board: [baseName] },
+      [opponentId]: { board: ['Haunt', 'Zombie'] },
     })
 
     preloadedDuel.playerOrder = [opponentId, playerId]
@@ -511,10 +478,7 @@ describe('High Priest Markander', () => {
 
     const { getByText, queryByText, getByTestId } = renderWithProviders(
       <Board />,
-      {
-        preloadedUser,
-        preloadedDuel,
-      },
+      { preloadedUser, preloadedDuel },
     )
 
     expect(queryByText(base.name)).not.toBeTruthy()

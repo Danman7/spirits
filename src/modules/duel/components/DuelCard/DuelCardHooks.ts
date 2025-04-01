@@ -18,6 +18,18 @@ export const useCard = (cardId: string) => {
   return cards[cardId]
 }
 
+export const useCardIndex = (
+  cardId: string,
+  playerId: string,
+  stack: CardStack,
+) => {
+  const {
+    state: { players },
+  } = useDuel()
+
+  return players[playerId][stack].indexOf(cardId)
+}
+
 export const useCardStack = (playerId: string, cardId: string): CardStack => {
   const {
     state: { players },
@@ -111,12 +123,14 @@ export const useMovement = ({
   playerId,
   cardId,
   element,
+  cardIndex,
 }: {
   isOnTop: boolean
   stack: CardStack
   playerId: string
   cardId: string
   element: HTMLDivElement | null
+  cardIndex: number
 }) => {
   const [portal, setPortal] = useState(`${playerId}-${stack}`)
   const [oldRect, setOldRect] = useState<DOMRect | null>(null)
@@ -148,7 +162,7 @@ export const useMovement = ({
 
     setStyle({
       visibility: 'visible',
-      transform: `translate(${oldRect.left - newRect.left}px, ${oldRect.top - newRect.top}px)`,
+      transform: `translate(${oldRect.x - newRect.x}px, ${oldRect.y - newRect.y}px)`,
     })
 
     requestAnimationFrame(() => setMovingState('invert'))
@@ -159,17 +173,27 @@ export const useMovement = ({
 
     setStyle((prevStyle) => ({
       ...prevStyle,
+      zIndex: 2,
       transform: 'translate(0, 0)',
-      transition: `transform ${transitionTime * 3}ms ease`,
+      transitionProperty: 'all',
+      transitionTimingFunction: 'ease',
+      transitionDuration: `${transitionTime}ms`,
+      transitionDelay: `${stack === 'hand' ? cardIndex * (transitionTime / 4) : 0}ms`,
     }))
 
-    setTimeout(() => {
-      setIsFaceDown(getIsFaceDown(isOnTop, stack))
-      setIsSmall(getIsSmall(stack))
-    }, transitionTime * 3)
+    setTimeout(
+      () => {
+        setIsSmall(getIsSmall(stack))
+        setIsFaceDown(getIsFaceDown(isOnTop, stack))
+      },
+      (cardIndex + 1) * (transitionTime / 4),
+    )
 
-    setTimeout(() => setMovingState('first'), transitionTime * 6)
-  }, [isOnTop, stack, movingState, transitionTime])
+    setTimeout(() => {
+      setMovingState('first')
+      setStyle({})
+    }, transitionTime * 2)
+  }, [isOnTop, stack, movingState, transitionTime, cardIndex])
 
   return { style, portal, isFaceDown, isSmall }
 }

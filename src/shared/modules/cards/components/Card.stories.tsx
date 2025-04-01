@@ -73,16 +73,14 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'An example of a non-unique agent card from the Chaos faction.',
+        story: 'An example of a core agent card from the Chaos faction.',
       },
     },
   },
 }
 
 export const FaceDown: Story = {
-  args: {
-    isFaceDown: true,
-  },
+  args: { isFaceDown: true },
   parameters: {
     docs: {
       description: {
@@ -93,9 +91,7 @@ export const FaceDown: Story = {
 }
 
 export const SmallVariant: Story = {
-  args: {
-    isSmall: true,
-  },
+  args: { isSmall: true },
   parameters: {
     docs: {
       description: {
@@ -106,9 +102,7 @@ export const SmallVariant: Story = {
 }
 
 export const Active: Story = {
-  args: {
-    onClick: () => {},
-  },
+  args: { onClick: () => {} },
   parameters: {
     docs: {
       description: {
@@ -119,24 +113,20 @@ export const Active: Story = {
   },
 }
 
-export const UniqueAgent: Story = {
-  args: {
-    card: AzaranTheCruel,
-  },
+export const EliteAgent: Story = {
+  args: { card: AzaranTheCruel },
   parameters: {
     docs: {
       description: {
         story:
-          'Unique cards have a different border. A deck could only include a single copy of unique cards.',
+          'Elite cards have a different border. A deck could only include a single copy of elite cards.',
       },
     },
   },
 }
 
 export const Instant: Story = {
-  args: {
-    card: BookOfAsh,
-  },
+  args: { card: BookOfAsh },
   parameters: {
     docs: {
       description: {
@@ -148,48 +138,28 @@ export const Instant: Story = {
 }
 
 export const OrderCard: Story = {
-  args: {
-    card: HighPriestMarkander,
-  },
+  args: { card: HighPriestMarkander },
   parameters: {
-    docs: {
-      description: {
-        story: 'An example of an Order faction card.',
-      },
-    },
+    docs: { description: { story: 'An example of an Order faction card.' } },
   },
 }
 
 export const ShadowCard: Story = {
-  args: {
-    card: GarrettMasterThief,
-  },
+  args: { card: GarrettMasterThief },
   parameters: {
-    docs: {
-      description: {
-        story: 'An example of an Shadow faction card.',
-      },
-    },
+    docs: { description: { story: 'An example of an Shadow faction card.' } },
   },
 }
 
 export const MultipleFactions: Story = {
-  args: {
-    card: ViktoriaThiefPawn,
-  },
+  args: { card: ViktoriaThiefPawn },
   parameters: {
-    docs: {
-      description: {
-        story: 'An example of a multi-factions card.',
-      },
-    },
+    docs: { description: { story: 'An example of a multi-factions card.' } },
   },
 }
 
 export const BoostedAgent: Story = {
-  args: {
-    card: { ...Haunt, strength: Haunt.strength + 1 },
-  },
+  args: { card: { ...Haunt, strength: Haunt.strength + 1 } },
   parameters: {
     docs: {
       description: {
@@ -213,9 +183,7 @@ export const DamagedAgent: Story = {
 }
 
 export const WithTraits: Story = {
-  args: {
-    card: TempleGuard,
-  },
+  args: { card: TempleGuard },
   parameters: {
     docs: {
       description: {
