@@ -1,9 +1,10 @@
-import { StyledBoard } from 'src/modules/duel/components/Board/BoardStyles'
-import { DuelModal } from 'src/modules/duel/components/DuelModal'
-import { PlayerField } from 'src/modules/duel/components/PlayerField'
-import { sortPlayerIdsForBoard } from 'src/modules/duel/duelUtils'
-import { useDuel } from 'src/modules/duel/state/context/DuelContext'
-import { useUser } from 'src/shared/modules/user/state/UserContext'
+import { StyledBoard } from 'src/modules/duel/components/Board/Board.styles'
+import { DuelModal } from 'src/modules/duel/components/Board/DuelModal'
+import { PlayerField } from 'src/modules/duel/components/Board/PlayerField'
+import { useDuel } from 'src/modules/duel/components/DuelProvider/useDuel'
+import { sortPlayerIdsForBoard } from 'src/modules/duel/duel.utils'
+
+import { useUser } from 'src/shared/modules/user'
 
 export const Board: React.FC = () => {
   const { state: user } = useUser()

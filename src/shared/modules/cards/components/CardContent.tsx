@@ -1,6 +1,6 @@
-import { traitDescriptions } from 'src/shared/modules/cards/CardMessages'
-import { AgentTraitName, Card } from 'src/shared/modules/cards/CardTypes'
-import { StyledCardContent } from 'src/shared/modules/cards/components/CardStyles'
+import { traitDescriptions } from 'src/shared/modules/cards/cards.messages'
+import { AgentTraitName, Card } from 'src/shared/modules/cards/cards.types'
+import { StyledCardContent } from 'src/shared/modules/cards/components/Card.styles'
 import { AccentText } from 'src/shared/styles/GlobalStyles'
 
 interface CardContentProps {

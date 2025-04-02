@@ -1,7 +1,8 @@
 import { FC, ReactNode, useEffect, useState } from 'react'
-import { Panel } from 'src/shared/components/SidePanel/SidePanelStyles'
-import { AnimateState } from 'src/shared/components/SharedComponentTypes'
-import { Color } from 'src/shared/SharedTypes'
+
+import { AnimateState } from 'src/shared/components/sharedComponents.types'
+import { Panel } from 'src/shared/components/SidePanel/SidePanel.styles'
+import { Color } from 'src/shared/shared.types'
 import { PANEL_TEST_ID } from 'src/shared/test/testIds'
 
 interface SidePanelProps {

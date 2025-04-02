@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { CardComponent } from 'src/shared/modules/cards/components/Card'
+
 import {
   AzaranTheCruel,
   BookOfAsh,
@@ -10,7 +10,8 @@ import {
   HighPriestMarkander,
   TempleGuard,
   ViktoriaThiefPawn,
-} from 'src/shared/modules/cards/data/bases'
+  CardComponent,
+} from 'src/shared/modules/cards'
 
 const meta = {
   title: 'Card',

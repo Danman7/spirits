@@ -1,24 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Icon, IconName, Icons } from 'src/shared/components/Icon'
-import { defaultTheme } from 'src/shared/styles/DefaultTheme'
+
+import { Icon } from 'src/shared/components'
+import { Icons } from 'src/shared/components/Icon/AvailableIcons'
+import { IconName } from 'src/shared/components/Icon/Icon.types'
+import { defaultTheme } from 'src/shared/styles/defaultTheme'
 
 const meta = {
   title: 'Icon',
   component: Icon,
   tags: ['Common', 'Stateless'],
-  parameters: {
-    layout: 'centered',
-  },
-  args: {
-    color: defaultTheme.colors.text,
-    name: 'Scroll',
-    isSmall: false,
-  },
+  parameters: { layout: 'centered' },
+  args: { color: defaultTheme.colors.text, name: 'Scroll', isSmall: false },
   argTypes: {
-    color: {
-      control: 'color',
-      description: 'Controls the color of the SVG.',
-    },
+    color: { control: 'color', description: 'Controls the color of the SVG.' },
     name: {
       control: 'select',
       options: Object.keys(Icons) as IconName[],
@@ -36,6 +30,4 @@ export const CustomColor: Story = {
   args: { color: defaultTheme.colors.chaosFaction, name: 'Coins' },
 }
 
-export const Small: Story = {
-  args: { isSmall: true, name: 'Hourglass' },
-}
+export const Small: Story = { args: { isSmall: true, name: 'Hourglass' } }

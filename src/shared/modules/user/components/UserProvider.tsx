@@ -1,10 +1,11 @@
 import { useReducer } from 'react'
-import { UserContext } from 'src/shared/modules/user/state/UserContext'
+
+import { UserContext } from 'src/shared/modules/user/components/UserContext'
 import {
   initialState,
   userReducer,
-} from 'src/shared/modules/user/state/userReducer'
-import { User } from 'src/shared/modules/user/UserTypes'
+} from 'src/shared/modules/user/state/user.reducer'
+import type { User } from 'src/shared/modules/user/User.types'
 
 export interface UserProviderProps {
   children: React.ReactNode

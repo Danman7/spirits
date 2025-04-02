@@ -1,5 +1,6 @@
-import { animationMixin } from 'src/shared/styles/mixins'
 import styled, { createGlobalStyle, keyframes } from 'styled-components'
+
+import { animationMixin } from 'src/shared/styles/mixins'
 
 export const GlobalStyles = createGlobalStyle`
   body *,

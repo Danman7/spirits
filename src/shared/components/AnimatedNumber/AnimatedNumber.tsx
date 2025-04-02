@@ -1,9 +1,10 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+
 import {
   Difference,
   StyledAnimatedNumber,
-} from 'src/shared/components/AnimatedNumber/AnimatedNumberStyles'
-import { usePrevious } from 'src/shared/SharedHooks'
+} from 'src/shared/components/AnimatedNumber/AnimatedNumber.styles'
+import { usePrevious } from 'src/shared/usePrevious'
 
 interface AnimatedNumberProps {
   value: number
@@ -15,7 +16,7 @@ interface ValueUpdate {
   text: string
 }
 
-export const AnimatedNumber: FC<AnimatedNumberProps> = ({
+export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
   value,
   uniqueId,
 }) => {

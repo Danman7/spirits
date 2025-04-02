@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
-import { initialDuelStateMock, userMock } from 'src/__mocks__/duelMocks'
-import { Board } from 'src/modules/duel/components/Board'
-import { DuelProviderWithMiddleware } from 'src/modules/duel/components/DuelProviderWithMiddleware'
-import { useUser } from 'src/shared/modules/user/state/UserContext'
+
+import { Board, DuelProvider } from 'src/modules/duel'
+import { initialDuelStateMock, userMock } from 'src/modules/duel/__mocks__'
+
+import { useUser } from 'src/shared/modules/user'
 
 export const App: React.FC = () => {
   const { dispatch } = useUser()
@@ -16,8 +17,8 @@ export const App: React.FC = () => {
   }, [dispatch])
 
   return (
-    <DuelProviderWithMiddleware preloadedState={initialDuelStateMock}>
+    <DuelProvider preloadedState={initialDuelStateMock}>
       <Board />
-    </DuelProviderWithMiddleware>
+    </DuelProvider>
   )
 }

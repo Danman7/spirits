@@ -1,5 +1,5 @@
-import { VIKTORIA_COIN_GAIN } from 'src/shared/modules/cards/CardConstants'
-import { Agent } from 'src/shared/modules/cards/CardTypes'
+import { VIKTORIA_COIN_GAIN } from 'src/shared/modules/cards/cards.constants'
+import { Agent } from 'src/shared/modules/cards/cards.types'
 
 export const ViktoriaThiefPawn: Agent = {
   type: 'agent',

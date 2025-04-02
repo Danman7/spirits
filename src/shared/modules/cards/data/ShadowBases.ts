@@ -1,8 +1,8 @@
 import {
   DOWNWINDER_BOOST,
   GARRETT_COIN_GAIN,
-} from 'src/shared/modules/cards/CardConstants'
-import { Agent } from 'src/shared/modules/cards/CardTypes'
+} from 'src/shared/modules/cards/cards.constants'
+import { Agent } from 'src/shared/modules/cards/cards.types'
 
 export const GarrettMasterThief: Agent = {
   type: 'agent',

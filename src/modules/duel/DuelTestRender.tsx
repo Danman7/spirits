@@ -1,11 +1,14 @@
 import { RenderOptions, render as rtlRender } from '@testing-library/react'
 import { PropsWithChildren, ReactElement } from 'react'
-import { DuelProviderWithMiddleware } from 'src/modules/duel/components/DuelProviderWithMiddleware'
-import { initialState as initialDuelState } from 'src/modules/duel/state/duelReducer'
-import { DuelState } from 'src/modules/duel/state/duelStateTypes'
-import { Providers } from 'src/shared/components/Providers'
-import { initialState as initialUserState } from 'src/shared/modules/user/state/userReducer'
-import { User } from 'src/shared/modules/user/UserTypes'
+
+import { DuelProvider } from 'src/modules/duel/components'
+import {
+  DuelState,
+  initialState as initialDuelState,
+} from 'src/modules/duel/state'
+
+import { Providers } from 'src/shared/components'
+import { User, initialState as initialUserState } from 'src/shared/modules/user'
 
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
   preloadedUser?: User
@@ -24,9 +27,7 @@ export const renderWithProviders = (
 
   const Wrapper = ({ children }: PropsWithChildren) => (
     <Providers preloadedUserState={preloadedUser}>
-      <DuelProviderWithMiddleware preloadedState={preloadedDuel}>
-        {children}
-      </DuelProviderWithMiddleware>
+      <DuelProvider preloadedState={preloadedDuel}>{children}</DuelProvider>
     </Providers>
   )
 

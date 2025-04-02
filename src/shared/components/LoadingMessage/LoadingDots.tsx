@@ -1,6 +1,6 @@
-import { LoadingDot } from 'src/shared/components/LoadingMessage/LoadingMessageStyles'
+import { LoadingDot } from 'src/shared/components/LoadingMessage/LoadingMessage.styles'
 
-export const LoadingDots = () => (
+export const LoadingDots: React.FC = () => (
   <>
     <LoadingDot>.</LoadingDot>
     <LoadingDot>.</LoadingDot>

@@ -1,17 +1,24 @@
-import { IconName, Icons } from 'src/shared/components/Icon'
-import { StyledIcon } from 'src/shared/components/Icon/IconStyles'
-import { Color } from 'src/shared/SharedTypes'
-import { defaultTheme } from 'src/shared/styles/DefaultTheme'
+import { useTheme } from 'styled-components'
 
-export const Icon: React.FC<{
+import { Icons } from 'src/shared/components/Icon/AvailableIcons'
+import { StyledIcon } from 'src/shared/components/Icon/Icon.styles'
+import { IconName } from 'src/shared/components/Icon/Icon.types'
+import { Color } from 'src/shared/shared.types'
+
+interface IconProps {
   name: IconName
   color?: Color
   isSmall?: boolean
-}> = ({ color = defaultTheme.colors.text, name, isSmall = false }) => {
+}
+
+export const Icon: React.FC<IconProps> = ({ color, name, isSmall = false }) => {
+  const { colors } = useTheme()
+
+  const iconColor = color || colors.text
   const SvgIcon = Icons[name]
 
   return (
-    <StyledIcon $color={color} $isSmall={isSmall}>
+    <StyledIcon $color={iconColor} $isSmall={isSmall}>
       <SvgIcon />
     </StyledIcon>
   )

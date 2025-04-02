@@ -1,13 +1,10 @@
-import { Modal } from 'src/shared/components/Modal'
-import { render } from 'src/shared/test/TestRender'
+import { Modal } from 'src/shared/components'
+import { render } from 'src/shared/test/render'
 import { MODAL_TEST_ID, OVERLAY_TEST_ID } from 'src/shared/test/testIds'
 
 const content = 'Modal content'
 
-const defaultProps = {
-  isOpen: true,
-  children: content,
-}
+const defaultProps = { isOpen: true, children: content }
 
 it('should show modal when open', () => {
   const { getByText } = render(<Modal {...defaultProps} />)

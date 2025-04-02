@@ -3,12 +3,12 @@ import {
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   HIGH_PRIEST_MAKANDER_COUNTER,
   TEMPLE_GUARD_BOOST,
-} from 'src/shared/modules/cards/CardConstants'
+} from 'src/shared/modules/cards/cards.constants'
 import {
   Agent,
   AgentWithCounter,
   Instant,
-} from 'src/shared/modules/cards/CardTypes'
+} from 'src/shared/modules/cards/cards.types'
 
 export const YoraSkull: Instant = {
   type: 'instant',

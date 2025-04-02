@@ -1,17 +1,17 @@
+import type { Card } from 'src/shared/modules/cards/cards.types'
+import {
+  CardBack,
+  CardFront,
+  CardOutline,
+  CardPaper,
+} from 'src/shared/modules/cards/components/Card.styles'
 import { CardContent } from 'src/shared/modules/cards/components/CardContent'
 import { CardFooter } from 'src/shared/modules/cards/components/CardFooter'
 import { CardHeader } from 'src/shared/modules/cards/components/CardHeader'
 import {
   useCardStrengthAnimation,
   useCardVisibility,
-} from 'src/shared/modules/cards/components/CardHooks'
-import {
-  CardBack,
-  CardFront,
-  CardOutline,
-  CardPaper,
-} from 'src/shared/modules/cards/components/CardStyles'
-import { Card } from 'src/shared/modules/cards/CardTypes'
+} from 'src/shared/modules/cards/components/hooks'
 import { CARD_TEST_ID } from 'src/shared/test/testIds'
 
 interface CardProps {

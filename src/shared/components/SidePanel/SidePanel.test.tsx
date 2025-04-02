@@ -1,13 +1,10 @@
 import { SidePanel } from 'src/shared/components/SidePanel/SidePanel'
-import { render } from 'src/shared/test/TestRender'
+import { render } from 'src/shared/test/render'
 import { PANEL_TEST_ID } from 'src/shared/test/testIds'
 
 const content = 'Side panel content'
 
-const defaultProps = {
-  isOpen: true,
-  children: content,
-}
+const defaultProps = { isOpen: true, children: content }
 
 it('should show panel when open', () => {
   const { getByText } = render(<SidePanel {...defaultProps} />)

@@ -1,10 +1,11 @@
 import { FC, ReactNode, useEffect, useState } from 'react'
+
 import {
   ModalWrapper,
   Overlay,
   StyledModal,
-} from 'src/shared/components/Modal/ModalStyles'
-import { AnimateState } from 'src/shared/components/SharedComponentTypes'
+} from 'src/shared/components/Modal/Modal.styles'
+import type { AnimateState } from 'src/shared/components/sharedComponents.types'
 import { MODAL_TEST_ID, OVERLAY_TEST_ID } from 'src/shared/test/testIds'
 
 interface ModalProps {

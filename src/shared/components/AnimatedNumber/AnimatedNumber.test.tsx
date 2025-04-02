@@ -1,6 +1,7 @@
 import { fireEvent } from '@testing-library/dom'
-import { AnimatedNumber } from 'src/shared/components/AnimatedNumber/AnimatedNumber'
-import { render } from 'src/shared/test/TestRender'
+
+import { AnimatedNumber } from 'src/shared/components'
+import { render } from 'src/shared/test/render'
 
 it('should show changes in value', () => {
   const value = 3

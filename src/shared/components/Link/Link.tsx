@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
-import { StyledLink } from 'src/shared/components/Link/LinkStyles'
+
+import { StyledLink } from 'src/shared/components/Link/Link.styles'
 
 interface LinkProps {
   children: ReactNode

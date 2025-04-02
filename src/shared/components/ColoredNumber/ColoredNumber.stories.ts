@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { ColoredNumber } from 'src/shared/components/ColoredNumber'
+
+import { ColoredNumber } from 'src/shared/components'
 
 const meta = {
   title: 'ColoredNumber',
@@ -14,17 +15,10 @@ const meta = {
       },
     },
   },
-  args: {
-    current: 3,
-    base: 3,
-  },
+  args: { current: 3, base: 3 },
   argTypes: {
-    current: {
-      description: 'The current dynamic value of the number.',
-    },
-    base: {
-      description: 'The base number to compare it with.',
-    },
+    current: { description: 'The current dynamic value of the number.' },
+    base: { description: 'The base number to compare it with.' },
   },
 } satisfies Meta<typeof ColoredNumber>
 
@@ -33,16 +27,6 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 
-export const Positive: Story = {
-  args: {
-    base: 3,
-    current: 4,
-  },
-}
+export const Positive: Story = { args: { base: 3, current: 4 } }
 
-export const Negative: Story = {
-  args: {
-    base: 3,
-    current: 2,
-  },
-}
+export const Negative: Story = { args: { base: 3, current: 2 } }

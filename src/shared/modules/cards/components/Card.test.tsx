@@ -1,10 +1,7 @@
+import { BookOfAsh, BrotherSachelman } from 'src/shared/modules/cards'
 import { CardComponent } from 'src/shared/modules/cards/components/Card'
-import {
-  BookOfAsh,
-  BrotherSachelman,
-} from 'src/shared/modules/cards/data/bases'
-import { render } from 'src/shared/test/TestRender'
-import { joinStringArrayWithComma } from 'src/shared/SharedUtils'
+import { joinStringArrayWithComma } from 'src/shared/shared.utils'
+import { render } from 'src/shared/test/render'
 
 it('should display all UI segments of a card when face up', () => {
   const { name, strength, cost, description, flavor, categories } =

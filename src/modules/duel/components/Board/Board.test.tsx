@@ -1,19 +1,21 @@
 import { fireEvent, waitFor } from '@testing-library/dom'
 import { act } from 'react'
+
 import {
   initialDuelStateMock,
   playerId,
   userMock as preloadedUser,
   stackedDuelStateMock,
-} from 'src/__mocks__/duelMocks'
+} from 'src/modules/duel/__mocks__'
+import { Board } from 'src/modules/duel/components'
 import {
   passButtonMessage,
   skipRedrawLinkMessage,
-} from 'src/modules/duel/components/ActionPanel/ActionPanelMessages'
-import { Board } from 'src/modules/duel/components/Board'
-import { INITIAL_CARDS_DRAWN_IN_DUEL } from 'src/modules/duel/duelConstants'
+} from 'src/modules/duel/components/Board/PlayerField/ActionPanel/ActionPanel.messages'
+import { INITIAL_CARDS_DRAWN_IN_DUEL } from 'src/modules/duel/duel.constants'
+import { normalizeStateCards } from 'src/modules/duel/duel.utils'
 import { renderWithProviders } from 'src/modules/duel/duelTestRender'
-import { normalizeStateCards } from 'src/modules/duel/duelUtils'
+import { DuelState } from 'src/modules/duel/state'
 import {
   discardLogMessage,
   playerHasDrawnCardLogMessage,
@@ -21,10 +23,10 @@ import {
   playersTurnLogMessage,
   reduceStrengthLogMessage,
   reducingCoinsLogMessage,
-} from 'src/modules/duel/state/duelStateMessages'
-import { DuelState } from 'src/modules/duel/state/duelStateTypes'
-import { Agent } from 'src/shared/modules/cards/CardTypes'
-import { deepClone } from 'src/shared/SharedUtils'
+} from 'src/modules/duel/state/playLogs'
+
+import type { Agent } from 'src/shared/modules/cards'
+import { deepClone } from 'src/shared/shared.utils'
 import {
   CARD_TEST_ID,
   LOGS_CONTENT,
@@ -87,10 +89,7 @@ describe('Redrawing', () => {
   it('should be able to redraw a card', async () => {
     const { queryByText, getByText, getByTestId } = renderWithProviders(
       <Board />,
-      {
-        preloadedUser,
-        preloadedDuel,
-      },
+      { preloadedUser, preloadedDuel },
     )
 
     const { hand, deck, name } = preloadedDuel.players[playerId]
@@ -120,10 +119,7 @@ describe('Redrawing', () => {
   it('should be able to skip redraw', async () => {
     const { queryByText, getByText, getByTestId } = renderWithProviders(
       <Board />,
-      {
-        preloadedUser,
-        preloadedDuel,
-      },
+      { preloadedUser, preloadedDuel },
     )
 
     const { deck, name } = preloadedDuel.players[playerId]
@@ -207,10 +203,7 @@ describe('Player Turns', () => {
   it('should discard an instant when played', async () => {
     const { getByText, queryByText, getByTestId } = renderWithProviders(
       <Board />,
-      {
-        preloadedUser,
-        preloadedDuel,
-      },
+      { preloadedUser, preloadedDuel },
     )
 
     const {

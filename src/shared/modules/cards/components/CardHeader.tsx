@@ -1,11 +1,11 @@
-import { ColoredNumber } from 'src/shared/components/ColoredNumber'
+import { ColoredNumber } from 'src/shared/components'
+import type { Card } from 'src/shared/modules/cards'
+import { getCardBaseFromName } from 'src/shared/modules/cards/cards.utils'
 import {
   CardTitle,
   StyledCardHeader,
-} from 'src/shared/modules/cards/components/CardStyles'
-import { Card } from 'src/shared/modules/cards/CardTypes'
-import { getCardBaseFromName } from 'src/shared/modules/cards/CardUtils'
-import { joinStringArrayWithComma } from 'src/shared/SharedUtils'
+} from 'src/shared/modules/cards/components/Card.styles'
+import { joinStringArrayWithComma } from 'src/shared/shared.utils'
 
 interface CardHeaderProps {
   id: string

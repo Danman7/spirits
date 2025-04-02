@@ -1,5 +1,5 @@
-import * as commonTriggers from 'src/modules/duel/state/triggers/CommonTriggers'
-import * as orderTriggers from 'src/modules/duel/state/triggers/OrderTriggers'
+import * as commonTriggers from 'src/modules/duel/state/triggers/triggers.common'
+import * as orderTriggers from 'src/modules/duel/state/triggers/triggers.order'
 
 export const duelTriggers = [
   ...Object.values(commonTriggers),
