@@ -10,7 +10,7 @@ const meta = {
   component: Icon,
   tags: ['Common', 'Stateless'],
   parameters: { layout: 'centered' },
-  args: { color: defaultTheme.colors.text, name: 'Scroll', isSmall: false },
+  args: { color: defaultTheme.colors.text, name: 'Scroll' },
   argTypes: {
     color: { control: 'color', description: 'Controls the color of the SVG.' },
     name: {
@@ -30,4 +30,4 @@ export const CustomColor: Story = {
   args: { color: defaultTheme.colors.chaosFaction, name: 'Coins' },
 }
 
-export const Small: Story = { args: { isSmall: true, name: 'Hourglass' } }
+export const CustomSize: Story = { args: { size: '2rem', name: 'Hourglass' } }

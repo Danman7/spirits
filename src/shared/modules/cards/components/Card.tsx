@@ -12,7 +12,6 @@ import {
   useCardStrengthAnimation,
   useCardVisibility,
 } from 'src/shared/modules/cards/components/hooks'
-import { CARD_TEST_ID } from 'src/shared/test/testIds'
 
 interface CardProps {
   id: string
@@ -41,7 +40,6 @@ export const CardComponent: React.FC<CardProps> = ({
   return (
     <CardOutline
       $isSmall={isSmall}
-      data-testid={`${CARD_TEST_ID}${id}`}
       $isAttacking={isAttacking}
       $isAttackingFromAbove={isAttackingFromAbove}
       onClick={onClick}
@@ -49,6 +47,7 @@ export const CardComponent: React.FC<CardProps> = ({
       <CardPaper $isFaceDown={isFaceDown}>
         {shouldShowFront ? (
           <CardFront
+            data-testid={id}
             $isAttacking={isAttacking}
             $isAttackingFromAbove={isAttackingFromAbove}
             $isActive={!!onClick}

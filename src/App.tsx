@@ -1,7 +1,10 @@
 import { useEffect } from 'react'
 
 import { Board, DuelProvider } from 'src/modules/duel'
-import { initialDuelStateMock, userMock } from 'src/modules/duel/__mocks__'
+import {
+  initialDuelStateWithBotMock,
+  userMock,
+} from 'src/modules/duel/__mocks__'
 
 import { useUser } from 'src/shared/modules/user'
 
@@ -17,7 +20,7 @@ export const App: React.FC = () => {
   }, [dispatch])
 
   return (
-    <DuelProvider preloadedState={initialDuelStateMock}>
+    <DuelProvider preloadedState={initialDuelStateWithBotMock}>
       <Board />
     </DuelProvider>
   )

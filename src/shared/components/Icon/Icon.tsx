@@ -8,17 +8,17 @@ import { Color } from 'src/shared/shared.types'
 interface IconProps {
   name: IconName
   color?: Color
-  isSmall?: boolean
+  size?: string
 }
 
-export const Icon: React.FC<IconProps> = ({ color, name, isSmall = false }) => {
+export const Icon: React.FC<IconProps> = ({ color, name, size = '1em' }) => {
   const { colors } = useTheme()
 
   const iconColor = color || colors.text
   const SvgIcon = Icons[name]
 
   return (
-    <StyledIcon $color={iconColor} $isSmall={isSmall}>
+    <StyledIcon $color={iconColor} $size={size}>
       <SvgIcon />
     </StyledIcon>
   )

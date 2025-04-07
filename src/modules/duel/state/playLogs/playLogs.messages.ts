@@ -1,5 +1,6 @@
-export const playerHasDrawnCardLogMessage = ' has redrawn a card.'
-export const playerHasSkippedRedrawLogMessage = '  has skipped redraw.'
+export const playerHasDrawnCardLogMessage = ' redrew a card.'
+export const playerHasSkippedRedrawLogMessage = ' skipped redraw.'
+export const playerSkippedTurnLogMessage = ' skipped turn.'
 export const playersTurnLogMessage = "'s turn."
 
 export const hasPlayedCardLogMessage = ' played '

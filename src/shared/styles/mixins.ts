@@ -10,6 +10,7 @@ export const animationMixin = (durationMultiplier?: number) => css`
 export const transitionMixin = css`
   transition-duration: ${({ theme }) => theme.transitionTime}ms;
   transition-timing-function: ease-in-out;
+  transition-property: all;
 `
 
 export const paperMixin = css`

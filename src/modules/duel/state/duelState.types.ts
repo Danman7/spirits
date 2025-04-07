@@ -12,6 +12,7 @@ export interface AttackOrder {
 }
 
 export type DuelPhase =
+  | 'Pre-duel'
   | 'Initial Draw'
   | 'Redrawing'
   | 'Player Turn'
@@ -70,6 +71,7 @@ export type UpdateAgentAction = {
 
 export type DuelAction =
   | { type: 'START_DUEL'; users: UsersStartingDuel; firstPlayerIndex?: 0 | 1 }
+  | { type: 'PROCEED_TO_DRAW' }
   | { type: 'DRAW_INITIAL_CARDS' }
   | { type: 'SKIP_REDRAW'; playerId: string }
   | { type: 'COMPLETE_REDRAW' }

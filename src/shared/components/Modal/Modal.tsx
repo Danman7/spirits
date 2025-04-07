@@ -6,7 +6,7 @@ import {
   StyledModal,
 } from 'src/shared/components/Modal/Modal.styles'
 import type { AnimateState } from 'src/shared/components/sharedComponents.types'
-import { MODAL_TEST_ID, OVERLAY_TEST_ID } from 'src/shared/test/testIds'
+import { getIsTest } from 'src/shared/shared.utils'
 
 interface ModalProps {
   isOpen: boolean
@@ -49,6 +49,8 @@ export const Modal: FC<ModalProps> = ({
     }
 
     if (!isOpen) {
+      if (getIsTest()) return setShouldShowModal(false)
+
       setModalAnimation('out')
     }
   }, [isOpen])
@@ -57,13 +59,11 @@ export const Modal: FC<ModalProps> = ({
     <ModalWrapper>
       <Overlay
         $animateState={overlayAnimation}
-        data-testid={OVERLAY_TEST_ID}
         onAnimationEnd={onOverlayAnimationEnd}
       />
 
       <StyledModal
         $animateState={modalAnimation}
-        data-testid={MODAL_TEST_ID}
         onAnimationEnd={onModalAnimationEnd}
       >
         {children}

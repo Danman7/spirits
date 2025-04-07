@@ -15,20 +15,20 @@ export const CardFooter: React.FC<CardFooterProps> = ({ card }) => {
   return (
     <StyledCardFooter $isElite={!!isElite}>
       <FooterSection>
-        <Icon name="Coins" isSmall /> {cost}
+        <Icon name="Coins" /> {cost}
       </FooterSection>
 
       {type === 'agent' && card.traits ? (
         <FooterSection>
           {Object.keys(card.traits).map((trait: AgentTraitName) => (
-            <Icon key={trait} name={trait} isSmall />
+            <Icon key={trait} name={trait} />
           ))}
         </FooterSection>
       ) : null}
 
       {type === 'agent' && card.counter ? (
         <FooterSection>
-          <Icon name="Hourglass" isSmall /> {card.counter}
+          <Icon name="Hourglass" /> {card.counter}
         </FooterSection>
       ) : null}
     </StyledCardFooter>

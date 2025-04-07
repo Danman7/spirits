@@ -1,13 +1,13 @@
 import { useState } from 'react'
+import { useTheme } from 'styled-components'
 
 import { ActionPanel } from 'src/modules/duel/components/Board/PlayerField/ActionPanel/ActionPanel'
 import { BotController } from 'src/modules/duel/components/Board/PlayerField/BotController'
 import { CardStackList } from 'src/modules/duel/components/Board/PlayerField/CardStackList'
 import { LogsPanel } from 'src/modules/duel/components/Board/PlayerField/LogsPanel'
 import { PlayCard } from 'src/modules/duel/components/Board/PlayerField/PlayCard'
-import { deckLabel } from 'src/modules/duel/components/Board/PlayerField/PlayerField.messages'
+import { incomeLabel } from 'src/modules/duel/components/Board/PlayerField/PlayerField.messages'
 import {
-  DeckInfo,
   LeftPanelsWrapper,
   PlayerInfo,
   StyledPlayerField,
@@ -29,15 +29,18 @@ export const PlayerField: React.FC<{ playerId: string; isOnTop?: boolean }> = ({
       players,
       playerOrder: [activePlayerId],
       cards,
+      phase,
     },
   } = useDuel()
 
   const player = players[playerId]
-  const { id, name, coins, income, isBot, deck, discard, board, hand } =
+  const { id, name, coins, income, isBot, deck, discard, board, hand, color } =
     players[playerId]
 
   const [isBrowsingStack, setIsBrowsingStack] = useState(false)
   const [browsedStack, setBrowsedStack] = useState<CardStack>('deck')
+
+  const { colors } = useTheme()
 
   const browseStack = (stack: CardStack) => {
     setBrowsedStack(stack)
@@ -46,22 +49,32 @@ export const PlayerField: React.FC<{ playerId: string; isOnTop?: boolean }> = ({
 
   const onCloseBrowseStackModal = () => setIsBrowsingStack(false)
 
+  const isActive =
+    playerId === activePlayerId &&
+    ['Player Turn', 'Select Target', 'Resolving turn'].includes(phase)
+
   return (
     <StyledPlayerField $isOnTop={isOnTop}>
       <PlayerInfo
-        $isActive={playerId === activePlayerId}
+        $color={color}
+        $isActive={isActive}
         $isOnTop={isOnTop}
         data-testid={`${playerId}-info`}
       >
-        <span>{name}</span> / <AnimatedNumber value={coins} uniqueId={id} />
-        {income ? <span> (+{income})</span> : null}
-      </PlayerInfo>
+        <div>
+          {name} <Icon name="Coins" color={colors.background} />{' '}
+          <AnimatedNumber value={coins} uniqueId={id} />{' '}
+          {isActive ? <Icon name="active" color={colors.background} /> : null}
+        </div>
 
-      {deck.length ? (
-        <DeckInfo>
-          <Icon name="deck" isSmall /> {deckLabel} ({deck.length})
-        </DeckInfo>
-      ) : null}
+        {income ? (
+          <small>
+            {incomeLabel}
+
+            {income}
+          </small>
+        ) : null}
+      </PlayerInfo>
 
       {CARD_STACKS.map((stack) => (
         <CardStackList

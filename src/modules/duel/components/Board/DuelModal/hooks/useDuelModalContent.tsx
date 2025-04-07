@@ -10,7 +10,7 @@ export const useDuelModalContent = () => {
 
   return useMemo(() => {
     switch (phase) {
-      case 'Initial Draw':
+      case 'Pre-duel':
         return <VersusModalContent />
     }
   }, [phase])

@@ -7,9 +7,12 @@ import {
 } from 'src/modules/duel/components/Board/PlayerField/PlayCard/PlayCard.utils'
 import { CardStack } from 'src/modules/duel/state'
 
+import { getIsTest } from 'src/shared/shared.utils'
 import { usePrevious } from 'src/shared/usePrevious'
 
 type MovementState = 'first' | 'last' | 'invert'
+
+const isTest = getIsTest()
 
 export const useMovement = ({
   isOnTop,
@@ -59,11 +62,18 @@ export const useMovement = ({
       transform: `translate(${oldRect.x - newRect.x}px, ${oldRect.y - newRect.y}px)`,
     })
 
+    if (isTest) return setMovingState('invert')
+
     requestAnimationFrame(() => setMovingState('invert'))
   }, [cardId, element, movingState, oldRect])
 
   useEffect(() => {
     if (movingState !== 'invert') return
+
+    const updateCardState = () => {
+      setIsSmall(getIsSmall(stack))
+      setIsFaceDown(getIsFaceDown(isOnTop, stack))
+    }
 
     setStyle((prevStyle) => ({
       ...prevStyle,
@@ -75,13 +85,16 @@ export const useMovement = ({
       transitionDelay: `${stack === 'hand' ? cardIndex * (transitionTime / 4) : 0}ms`,
     }))
 
-    setTimeout(
-      () => {
-        setIsSmall(getIsSmall(stack))
-        setIsFaceDown(getIsFaceDown(isOnTop, stack))
-      },
-      (cardIndex + 1) * (transitionTime / 4),
-    )
+    if (isTest) {
+      updateCardState()
+    } else {
+      setTimeout(
+        () => {
+          updateCardState()
+        },
+        (cardIndex + 1) * (transitionTime / 4),
+      )
+    }
 
     setTimeout(() => {
       setMovingState('first')

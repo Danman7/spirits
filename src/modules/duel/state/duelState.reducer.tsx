@@ -33,7 +33,7 @@ export const initialState: DuelState = {
   cards: {},
   playerOrder: ['', ''],
   attackingQueue: [],
-  phase: 'Initial Draw',
+  phase: 'Pre-duel',
   logs: [],
   validTargets: [],
 }
@@ -56,6 +56,10 @@ export const duelReducer = (
         ...setupPlayersFromUsers(users),
         playerOrder: setInitialPlayerOrder(users, firstPlayerIndex),
       }
+    }
+
+    case 'PROCEED_TO_DRAW': {
+      return { ...state, phase: 'Initial Draw' }
     }
 
     case 'DRAW_INITIAL_CARDS': {
@@ -240,9 +244,9 @@ export const duelReducer = (
     }
 
     case 'DISCARD_CARD': {
-      const { players } = state
       const { cardId, playerId } = action
       const discardingPlayer = players[playerId]
+      const { cost } = cards[cardId]
 
       return {
         ...state,
@@ -255,6 +259,7 @@ export const duelReducer = (
               cardId,
               target: 'discard',
             }),
+            income: discardingPlayer.income + cost,
           },
         },
         logs: [...logs, generateDiscardLogMessage(cards[cardId].name)],

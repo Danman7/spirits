@@ -3,36 +3,46 @@ import styled from 'styled-components'
 import { StyledIcon } from 'src/shared/components/Icon/Icon.styles'
 import { transitionMixin } from 'src/shared/styles'
 
-const size = '42px'
+const openLogsIconSize = '42px'
 
-export const OpenLogsIcon = styled.div<{ $isVisible: boolean }>`
+export const OpenLogsIcon = styled.div`
   ${transitionMixin}
-  cursor: pointer;
-  position: absolute;
   display: flex;
   justify-content: center;
-  bottom: 0;
-  left: 0;
-  width: ${size};
-  height: ${size};
-  opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0)};
+  width: ${openLogsIconSize};
+  height: ${openLogsIconSize};
   border-radius: 50%;
-  border-width: 3px;
+  border-width: ${({ theme }) => theme.spacing / 2}px;
   border-style: solid;
   border-color: ${({ theme }) => theme.colors.text};
-  transition-property: all;
   box-shadow: ${({ theme }) => theme.boxShadow.level2};
 
   ${StyledIcon} path {
     ${transitionMixin}
-    transition-property: all;
   }
+`
+
+export const OpenLogsButton = styled.div<{ $isVisible: boolean }>`
+  ${transitionMixin}
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing}px;
+  opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0)};
+  cursor: pointer;
 
   &:hover {
-    border-color: ${({ theme }) => theme.colors.primary};
+    scale: 1.1;
+    color: ${({ theme }) => theme.colors.hilight};
 
-    ${StyledIcon} path {
-      fill: ${({ theme }) => theme.colors.primary};
+    ${OpenLogsIcon} {
+      border-color: ${({ theme }) => theme.colors.hilight};
+
+      ${StyledIcon} path {
+        fill: ${({ theme }) => theme.colors.hilight};
+      }
     }
   }
 
@@ -42,7 +52,7 @@ export const OpenLogsIcon = styled.div<{ $isVisible: boolean }>`
 `
 
 export const LogsPanelWrapper = styled.div`
-  min-height: ${size};
+  min-height: ${openLogsIconSize};
   position: relative;
 `
 

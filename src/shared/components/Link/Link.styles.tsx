@@ -10,7 +10,6 @@ export const StyledLink = styled.button`
   cursor: pointer;
   color: ${({ theme }) => theme.colors.primary};
   font-weight: 700;
-  transition-property: all;
   margin: 0;
   padding: 0;
   z-index: 2;

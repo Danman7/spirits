@@ -16,10 +16,12 @@ export const getStackConfiguration = (
     board: { component: PlayerBoard },
     deck: {
       component: PlayerDeck,
+      showStackCount: true,
       onClickStack: !isOnTop ? () => browseStack(stack) : undefined,
     },
     discard: {
       component: PlayerDiscard,
+      showStackCount: true,
       onClickStack: !isOnTop ? () => browseStack(stack) : undefined,
     },
     hand: { component: PlayerHand },

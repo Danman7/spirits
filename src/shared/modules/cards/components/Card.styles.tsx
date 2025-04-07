@@ -10,6 +10,7 @@ import {
   animationMixin,
   transitionMixin,
   defaultTheme,
+  ActiveGlow,
 } from 'src/shared/styles'
 
 const { spacing } = defaultTheme
@@ -52,7 +53,6 @@ export const CardOutline = styled.div<CardOutlineProps>`
     theme.card.height * ($isSmall ? 0.6 : 1)}px;
   font-size: ${({ $isSmall }) => ($isSmall ? 0.6 : 1)}rem;
   perspective: 1000px;
-  transition-property: all;
   animation-iteration-count: 2;
   animation-direction: alternate;
   animation-name: ${({ $isAttacking, $isAttackingFromAbove }) => {
@@ -87,7 +87,7 @@ const CardFace = styled.div`
   border-radius: 0.5em;
 `
 
-const { primary, action, hilight } = defaultTheme.colors
+const { primary, hilight } = defaultTheme.colors
 
 const AttackFromTopFace = keyframes`
   from {
@@ -106,15 +106,6 @@ const AttackFromBottomFace = keyframes`
 
   to {
     box-shadow: 0 5px 2px 2px ${primary};
-  }
-`
-
-const ActiveGlow = keyframes`
-  from {
-    box-shadow: 0 0 2px 2px ${action}; 
-  }
-  to {
-    box-shadow: 0 0 5px 5px ${action};
   }
 `
 
@@ -187,7 +178,7 @@ export const CardBack = styled(CardFace)`
   right: 0;
   bottom: 0;
   transform: rotateY(180deg);
-  border: ${({ theme }) => `${theme.spacing / 2}px solid ${theme.colors.text}`};
+  border: 0.25em solid ${({ theme }) => theme.colors.text};
   background: ${({ theme }) =>
     `repeating-linear-gradient(45deg, ${theme.colors.background}, ${theme.colors.background} 0.5em, ${theme.colors.text} 0.5em, ${theme.colors.text} 1em)`};
 `
@@ -220,7 +211,7 @@ export const CardTitle = styled.h3<CardTitleProps>`
 `
 
 export const StyledCardContent = styled.div`
-  text-align: justify;
+  text-align: center;
   overflow: auto;
   padding: 0.5em 0;
   flex-grow: 2;

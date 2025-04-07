@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTheme } from 'styled-components'
 
+import { getIsTest } from 'src/shared/shared.utils'
 import { usePrevious } from 'src/shared/usePrevious'
 
 export const useCardVisibility = (isFaceDown: boolean) => {
@@ -11,6 +12,8 @@ export const useCardVisibility = (isFaceDown: boolean) => {
   useEffect(() => {
     if (prevIsFaceDown !== isFaceDown) {
       if (isFaceDown) {
+        if (getIsTest()) return setShouldShowFront(false)
+
         setTimeout(() => setShouldShowFront(false), transitionTime)
       } else {
         setShouldShowFront(true)

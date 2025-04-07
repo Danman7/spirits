@@ -2,13 +2,13 @@ import styled from 'styled-components'
 
 import { Color } from 'src/shared/shared.types'
 
-export const StyledIcon = styled.div<{ $color: Color; $isSmall?: boolean }>`
+export const StyledIcon = styled.div<{ $color: Color; $size?: string }>`
   display: inline-flex;
   align-self: center;
 
   & svg {
-    width: ${({ $isSmall }) => ($isSmall ? '1em' : '2em')};
-    height: ${({ $isSmall }) => ($isSmall ? '1em' : '2em')};
+    width: ${({ $size }) => $size || '1em'};
+    height: ${({ $size }) => $size || '1em'};
     top: 0.125em;
     position: relative;
   }

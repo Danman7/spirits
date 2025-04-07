@@ -1,5 +1,6 @@
 import styled, { createGlobalStyle, keyframes } from 'styled-components'
 
+import { defaultTheme } from 'src/shared/styles/defaultTheme'
 import { animationMixin } from 'src/shared/styles/mixins'
 
 export const GlobalStyles = createGlobalStyle`
@@ -130,4 +131,14 @@ export const AccentText = styled.small`
   display: block;
   font-style: italic;
   color: ${({ theme }) => theme.colors.accent};
+`
+const { action } = defaultTheme.colors
+
+export const ActiveGlow = keyframes`
+  from {
+    box-shadow: 0 0 2px 2px ${action}; 
+  }
+  to {
+    box-shadow: 0 0 5px 5px ${action};
+  }
 `

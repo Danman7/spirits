@@ -1,5 +1,11 @@
-import { RenderOptions, render as rtlRender } from '@testing-library/react'
-import { PropsWithChildren, ReactElement } from 'react'
+import {
+  RenderOptions,
+  render as rtlRender,
+  fireEvent,
+  waitFor,
+  within,
+} from '@testing-library/react'
+import { act, PropsWithChildren, ReactElement } from 'react'
 
 import { DuelProvider } from 'src/modules/duel/components'
 import {
@@ -31,5 +37,11 @@ export const renderWithProviders = (
     </Providers>
   )
 
-  return rtlRender(ui, { wrapper: Wrapper, ...renderOptions })
+  return {
+    ...rtlRender(ui, { wrapper: Wrapper, ...renderOptions }),
+    fireEvent,
+    within,
+    waitFor,
+    act,
+  }
 }

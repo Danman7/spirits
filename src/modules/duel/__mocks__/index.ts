@@ -18,18 +18,16 @@ export const userMock: User = {
     'BrotherSachelman',
     'HammeriteNovice',
     'HammeriteNovice',
-    'ElevatedAcolyte',
-    'ElevatedAcolyte',
+    'YoraSkull',
     'TempleGuard',
     'TempleGuard',
     'HighPriestMarkander',
   ],
 }
 
-export const opponentMock: Bot = {
+export const opponentMock: User = {
   id: opponentId,
   name: 'Karras',
-  isBot: true,
   color: '#174',
   deck: [
     'Zombie',
@@ -42,9 +40,17 @@ export const opponentMock: Bot = {
   ],
 }
 
+export const botMock: Bot = { ...opponentMock, isBot: true }
+
 export const initialDuelStateMock: DuelState = {
   ...initialDuelState,
   ...setupPlayersFromUsers([userMock, opponentMock]),
+  playerOrder: [playerId, opponentId],
+}
+
+export const initialDuelStateWithBotMock: DuelState = {
+  ...initialDuelState,
+  ...setupPlayersFromUsers([userMock, botMock]),
   playerOrder: [playerId, opponentId],
 }
 
@@ -65,7 +71,7 @@ export const stackedDuelStateMock = normalizeStateCards(
       deck: ['BookOfAsh'],
       hand: ['Haunt', 'ViktoriaThiefPawn'],
       board: ['Zombie'],
-      discard: ['AzaranTheCruel'],
+      discard: ['AzaranTheCruel', 'Zombie'],
     },
   },
 )

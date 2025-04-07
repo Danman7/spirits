@@ -16,12 +16,13 @@ export const useDuelModalShow = () => {
 
       setTimeout(() => {
         setIsDuelModalOpen(false)
-      }, transitionTime)
+      }, transitionTime * 20)
     }
 
     switch (phase) {
-      case 'Initial Draw':
+      case 'Pre-duel':
         flashModal()
+
         break
     }
   }, [phase, transitionTime])

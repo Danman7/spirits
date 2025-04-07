@@ -1,6 +1,0 @@
-export const CARD_TEST_ID = 'card-'
-export const OVERLAY_TEST_ID = 'overlayTestId'
-export const MODAL_TEST_ID = 'modalTestId'
-export const PANEL_TEST_ID = 'panelTestId'
-export const OPEN_LOGS_ICON = 'openLogsIconId'
-export const LOGS_CONTENT = 'logsContentId'

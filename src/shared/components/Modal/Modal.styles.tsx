@@ -33,7 +33,7 @@ export const ModalWrapper = styled.div`
 
 export const Overlay = styled.div<AnimateStateProps>`
   ${animationMixin()}
-  background: rgba(61, 44, 41, 0.9);
+  background: ${({ theme }) => theme.colors.text};
   position: absolute;
   width: 100%;
   height: 100%;

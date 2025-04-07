@@ -9,7 +9,7 @@ import { Modal } from 'src/shared/components'
 export const DuelModal: React.FC = () => {
   const { dispatch } = useDuel()
 
-  const onDuelModalCloseEnd = () => dispatch({ type: 'DRAW_INITIAL_CARDS' })
+  const onDuelModalCloseEnd = () => dispatch({ type: 'PROCEED_TO_DRAW' })
 
   return (
     <Modal isOpen={useDuelModalShow()} onClosingComplete={onDuelModalCloseEnd}>

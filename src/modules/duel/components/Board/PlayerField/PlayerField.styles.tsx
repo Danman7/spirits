@@ -3,6 +3,13 @@ import styled, { css } from 'styled-components'
 import { CardMovementWrapper } from 'src/modules/duel/components/Board/PlayerField/PlayCard/PlayCard.styles'
 
 import { CardOutline } from 'src/shared/modules/cards'
+import { Color } from 'src/shared/shared.types'
+import {
+  ActiveGlow,
+  animationMixin,
+  Box,
+  transitionMixin,
+} from 'src/shared/styles'
 
 interface StyledPlayerFieldProps {
   $isOnTop: boolean
@@ -14,15 +21,15 @@ export const StyledPlayerField = styled.div<StyledPlayerFieldProps>`
   grid-template-columns: 1fr 5fr 1fr;
   grid-template-rows: ${({ $isOnTop, theme }) =>
     $isOnTop
-      ? `${theme.spacing * 9}px ${theme.spacing * 30}px`
-      : `${theme.spacing * 30}px ${theme.spacing * 9}px`};
+      ? `${theme.spacing * 9}px ${theme.spacing * 2}px ${theme.spacing * 30}px`
+      : `${theme.spacing * 30}px ${theme.spacing * 2}px ${theme.spacing * 9}px`};
   justify-items: center;
   align-items: center;
   grid-template-areas: ${({ $isOnTop }) =>
     $isOnTop
       ? `'discard hand deck'
-    'ui board info'`
-      : `'panels board info'
+    'panels info info' 'board board board'`
+      : `'board board board' 'panels info info'
     'discard hand deck'`};
   align-items: ${({ $isOnTop }) => ($isOnTop ? 'flex-end' : 'flex-start')};
 `
@@ -76,12 +83,9 @@ const FaceDownStack = styled.div<StyledPlayerFieldProps>`
   cursor: ${({ $isOnTop }) => ($isOnTop ? 'auto' : 'pointer')};
   display: grid;
 
-  margin: ${({ $isOnTop, theme }) =>
-    $isOnTop ? `0 0 ${theme.spacing * 3}px` : `${theme.spacing * 3}px 0 0`};
-
   ${CardMovementWrapper} {
     pointer-events: none;
-    grid-area: 1 / 1;
+    grid-area: ${({ $isOnTop }) => ($isOnTop ? 1 : 2)} / 1;
   }
 `
 
@@ -95,14 +99,29 @@ export const PlayerDiscard = styled(FaceDownStack)`
 
 interface PlayerInfoProps extends StyledPlayerFieldProps {
   $isActive: boolean
+  $color: Color
 }
 
-export const PlayerInfo = styled.h2<PlayerInfoProps>`
-  right: 1rem;
-  z-index: 3;
-  font-weight: ${({ $isActive }) => ($isActive ? 800 : 400)};
+export const PlayerInfo = styled(Box)<PlayerInfoProps>`
   grid-area: info;
+  ${animationMixin(2)}
+  ${transitionMixin}
+  display: flex;
+  justify-self: end;
+  flex-direction: column;
+  color: ${({ theme }) => theme.colors.background};
+  background-color: ${({ $color }) => $color};
+  padding: 0.5em;
+  z-index: 3;
+  margin-right: 1em;
+  font-size: ${({ $isActive }) => ($isActive ? '1.2em' : '1em')};
   align-self: ${({ $isOnTop }) => ($isOnTop ? 'self-start' : 'self-end')};
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-name: ${({ $isActive }) => {
+    if ($isActive) return ActiveGlow
+    return ''
+  }};
 `
 
 export const CardBrowserModal = styled.div`
@@ -139,17 +158,17 @@ export const CardList = styled.div`
   align-content: center;
 `
 
-export const DeckInfo = styled.div`
-  grid-area: deck;
-`
-
 export const LeftPanelsWrapper = styled.div`
   grid-area: panels;
-  width: 100px;
+  width: ${({ theme }) => theme.spacing * 16}px;
   justify-self: left;
   align-self: end;
   display: flex;
   flex-direction: column;
   gap: 1em;
   padding: 0 1em;
+`
+
+export const StackLabel = styled.div`
+  text-align: center;
 `

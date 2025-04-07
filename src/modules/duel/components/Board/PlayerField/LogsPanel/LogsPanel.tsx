@@ -5,16 +5,16 @@ import {
   logsTitle,
 } from 'src/modules/duel/components/Board/PlayerField/LogsPanel/LogsPanel.messages'
 import {
-  OpenLogsIcon,
+  LogItem,
   LogsPanelWrapper,
   LogsScroll,
-  LogItem,
+  OpenLogsButton,
+  OpenLogsIcon,
 } from 'src/modules/duel/components/Board/PlayerField/LogsPanel/LogsPanel.styles'
 import { useDuel } from 'src/modules/duel/components/DuelProvider/useDuel'
 
-import { Icon, SidePanel, Link } from 'src/shared/components'
+import { Icon, Link, SidePanel } from 'src/shared/components'
 import { defaultTheme, Separator } from 'src/shared/styles'
-import { LOGS_CONTENT, OPEN_LOGS_ICON } from 'src/shared/test/testIds'
 
 export const LogsPanel: React.FC = () => {
   const {
@@ -28,18 +28,23 @@ export const LogsPanel: React.FC = () => {
 
   return (
     <LogsPanelWrapper>
-      <OpenLogsIcon
+      <OpenLogsButton
         $isVisible={!!logs.length && !isOpen}
         onClick={onOpenLogs}
-        data-testid={OPEN_LOGS_ICON}
       >
-        <Icon name="Scroll" />
-      </OpenLogsIcon>
+        <OpenLogsIcon>
+          <Icon name="Scroll" size="2em" />
+        </OpenLogsIcon>
+
+        <p>
+          <strong>{logsTitle}</strong>
+        </p>
+      </OpenLogsButton>
 
       <SidePanel isOpen={isOpen} color={defaultTheme.colors.hilight}>
         <h2>{logsTitle}</h2>
 
-        <LogsScroll data-testid={LOGS_CONTENT}>
+        <LogsScroll role="log" aria-live="polite">
           {logs.map((log, index) => (
             <Fragment key={`log-item-${index}`}>
               <LogItem>{log}</LogItem>

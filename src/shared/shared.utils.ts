@@ -37,3 +37,5 @@ export const getCoinsMessage = (amount: number) =>
 
 export const delay = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms))
+
+export const getIsTest = () => process.env.NODE_ENV === 'test'

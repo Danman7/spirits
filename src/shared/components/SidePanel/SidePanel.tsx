@@ -3,7 +3,6 @@ import { FC, ReactNode, useEffect, useState } from 'react'
 import { AnimateState } from 'src/shared/components/sharedComponents.types'
 import { Panel } from 'src/shared/components/SidePanel/SidePanel.styles'
 import { Color } from 'src/shared/shared.types'
-import { PANEL_TEST_ID } from 'src/shared/test/testIds'
 
 interface SidePanelProps {
   isOpen: boolean
@@ -34,7 +33,6 @@ export const SidePanel: FC<SidePanelProps> = ({ isOpen, children, color }) => {
 
   return shouldShowPanel ? (
     <Panel
-      data-testid={PANEL_TEST_ID}
       $animateState={animation}
       onAnimationEnd={onAnimationEnd}
       $color={color}
