@@ -5,12 +5,8 @@ import type {
 import {
   calculateAttackQueue,
   drawCardFromDeck,
-  drawInitialCardsForBothPlayers,
   handleIncome,
   moveSingleCard,
-  redrawCard,
-  setInitialPlayerOrder,
-  setupPlayersFromUsers,
 } from 'src/modules/duel/state/duelState.utils'
 import {
   generateAttackLogMessage,
@@ -20,11 +16,7 @@ import {
   generatePlayerActionLogMessage,
   generateTriggerLogMessage,
 } from 'src/modules/duel/state/playLogs'
-import {
-  playerHasDrawnCardLogMessage,
-  playerHasSkippedRedrawLogMessage,
-  playersTurnLogMessage,
-} from 'src/modules/duel/state/playLogs/playLogs.messages'
+import { playersTurnLogMessage } from 'src/modules/duel/state/playLogs/playLogs.messages'
 
 import type { Agent } from 'src/shared/modules/cards'
 
@@ -38,105 +30,16 @@ export const initialState: DuelState = {
   validTargets: [],
 }
 
-export const duelReducer = (
+export const duelReducerTurns = (
   state: Readonly<DuelState>,
   action: DuelAction,
-): DuelState => {
+): DuelState | undefined => {
   const { playerOrder, players, logs, attackingQueue, cards } = state
   const [activePlayerId, inactivePlayerId] = playerOrder
   const activePlayer = state.players[activePlayerId]
   const inactivePlayer = state.players[inactivePlayerId]
 
   switch (action.type) {
-    case 'START_DUEL': {
-      const { users, firstPlayerIndex } = action
-
-      return {
-        ...state,
-        ...setupPlayersFromUsers(users),
-        playerOrder: setInitialPlayerOrder(users, firstPlayerIndex),
-      }
-    }
-
-    case 'PROCEED_TO_DRAW': {
-      return { ...state, phase: 'Initial Draw' }
-    }
-
-    case 'DRAW_INITIAL_CARDS': {
-      return {
-        ...state,
-        phase: 'Redrawing',
-        players: drawInitialCardsForBothPlayers(players),
-      }
-    }
-
-    case 'SKIP_REDRAW': {
-      const { playerId } = action
-      const player = players[playerId]
-
-      return {
-        ...state,
-        players: {
-          ...players,
-          [playerId]: { ...player, hasPerformedAction: true },
-        },
-        logs: [
-          ...logs,
-          generatePlayerActionLogMessage(
-            player,
-            playerHasSkippedRedrawLogMessage,
-          ),
-        ],
-      }
-    }
-
-    case 'REDRAW_CARD': {
-      const { playerId, cardId } = action
-      const redrawingPlayer = players[playerId]
-
-      return {
-        ...state,
-        players: {
-          ...players,
-          [playerId]: {
-            ...redrawingPlayer,
-            ...redrawCard(redrawingPlayer, cardId),
-            hasPerformedAction: true,
-          },
-        },
-        logs: [
-          ...logs,
-          generatePlayerActionLogMessage(
-            redrawingPlayer,
-            playerHasDrawnCardLogMessage,
-          ),
-        ],
-      }
-    }
-
-    case 'COMPLETE_REDRAW': {
-      return {
-        ...state,
-        phase: 'Player Turn',
-        players: {
-          [inactivePlayerId]: { ...inactivePlayer, hasPerformedAction: false },
-          [activePlayerId]: {
-            ...activePlayer,
-            ...drawCardFromDeck(activePlayer),
-            hasPerformedAction: false,
-          },
-        },
-        logs: [
-          ...logs,
-          generatePlayerActionLogMessage(
-            activePlayer,
-            playersTurnLogMessage,
-            true,
-          ),
-        ],
-      }
-    }
-
     case 'ADVANCE_TURN': {
       return {
         ...state,
@@ -279,9 +182,6 @@ export const duelReducer = (
       }
     }
 
-    case 'ADD_LOG':
-      return { ...state, logs: [...logs, action.message] }
-
     case 'AGENT_DAMAGE_SELF': {
       const { amount, cardId } = action
       const updatedCard = cards[cardId] as Agent
@@ -311,6 +211,6 @@ export const duelReducer = (
     }
 
     default:
-      return state
+      return undefined
   }
 }
