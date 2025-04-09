@@ -113,7 +113,7 @@ export const HammeritePriest: Agent = {
   type: 'agent',
   name: 'Hammerite Priest',
   strength: 3,
-  cost: 6,
+  cost: 5,
   isElite: true,
   factions: ['Order'],
   categories: ['Hammerite'],

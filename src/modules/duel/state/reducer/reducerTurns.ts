@@ -17,24 +17,15 @@ import {
   generateTriggerLogMessage,
 } from 'src/modules/duel/state/playLogs'
 import { playersTurnLogMessage } from 'src/modules/duel/state/playLogs/playLogs.messages'
+import { initialState } from 'src/modules/duel/state/reducer/duel.reducer'
 
 import type { Agent } from 'src/shared/modules/cards'
-
-export const initialState: DuelState = {
-  players: {},
-  cards: {},
-  playerOrder: ['', ''],
-  attackingQueue: [],
-  phase: 'Pre-duel',
-  logs: [],
-  validTargets: [],
-}
 
 export const duelReducerTurns = (
   state: Readonly<DuelState>,
   action: DuelAction,
 ): DuelState | undefined => {
-  const { playerOrder, players, logs, attackingQueue, cards } = state
+  const { playerOrder, players, logs, attackingQueue, cards, targeting } = state
   const [activePlayerId, inactivePlayerId] = playerOrder
   const activePlayer = state.players[activePlayerId]
   const inactivePlayer = state.players[inactivePlayerId]
@@ -206,8 +197,20 @@ export const duelReducerTurns = (
     }
 
     case 'TRIGGER_TARGET_SELECTION': {
-      const { validTargets } = action
-      return { ...state, phase: 'Select Target', validTargets }
+      const { validTargets, showTargetingModal } = action
+      return {
+        ...state,
+        phase: 'Select Target',
+        targeting: {
+          validTargets,
+          showTargetingModal:
+            showTargetingModal || targeting.showTargetingModal,
+        },
+      }
+    }
+
+    case 'SELECT_TARGET': {
+      return { ...state, targeting: initialState.targeting }
     }
 
     default:

@@ -31,7 +31,7 @@ export interface DuelState {
   playerOrder: [string, string]
   cards: DuelCards
   logs: React.ReactNode[]
-  validTargets: string[]
+  targeting: { showTargetingModal: boolean; validTargets: string[] }
 }
 
 export type DuelDispatch = (action: DuelAction) => void
@@ -89,4 +89,9 @@ export type DuelAction =
   | UpdateAgentAction
   | { type: 'ADD_LOG'; message: React.JSX.Element }
   | { type: 'AGENT_DAMAGE_SELF'; cardId: string; amount: number }
-  | { type: 'TRIGGER_TARGET_SELECTION'; validTargets: string[] }
+  | {
+      type: 'TRIGGER_TARGET_SELECTION'
+      validTargets: string[]
+      showTargetingModal?: boolean
+    }
+  | { type: 'SELECT_TARGET'; cardId: string }

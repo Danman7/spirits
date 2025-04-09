@@ -140,10 +140,10 @@ export const highPriestMarkanderOnUpdate: DuelTrigger = {
   effect: ({ action, state, dispatch }) => {
     const { players, cards } = state
     const { cardId, playerId } = action as UpdateAgentAction
-    const { board } = players[playerId]
+    const { board, discard } = players[playerId]
     const { counter } = cards[cardId] as Agent
 
-    if ((counter as number) <= 0 && !board.includes(cardId)) {
+    if ((counter as number) <= 0 && ![...board, ...discard].includes(cardId)) {
       dispatch({ type: 'PLAY_CARD', cardId, playerId, shouldPay: false })
 
       dispatch({

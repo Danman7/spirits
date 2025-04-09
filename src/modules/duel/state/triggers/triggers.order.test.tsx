@@ -514,7 +514,7 @@ describe(HighPriestMarkander.name, () => {
     )
   })
 
-  it('should play High Priest Markander if counter reaches 0', async () => {
+  it('should play High Priest Markander from deck if counter reaches 0', async () => {
     preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
       [playerId]: { hand: ['ElevatedAcolyte'], deck: [baseName] },
     })
@@ -527,7 +527,7 @@ describe(HighPriestMarkander.name, () => {
     const { fireEvent, act, getAllByText, getByText, queryByText, getByRole } =
       renderWithProviders(<Board />, { preloadedUser, preloadedDuel })
 
-    expect(queryByText(base.name)).not.toBeTruthy()
+    expect(queryByText(base.name)).toBeFalsy()
 
     fireEvent.click(getByText(ElevatedAcolyte.name))
 
@@ -540,6 +540,36 @@ describe(HighPriestMarkander.name, () => {
     fireEvent.click(getByText(logsTitle))
 
     expect(getByRole('log').textContent).toContain(
+      `${base.name}${isPlayedLogMessage}`,
+    )
+  })
+
+  it('should not play High Priest Markander from discard if counter reaches 0', async () => {
+    preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
+      [playerId]: { hand: ['ElevatedAcolyte'], discard: [baseName] },
+    })
+
+    const HighPriestId = preloadedDuel.players[playerId].discard[0]
+    const HighPriest = preloadedDuel.cards[HighPriestId] as AgentWithCounter
+
+    HighPriest.counter = 1
+
+    const { fireEvent, act, getByText, queryByText, getByRole } =
+      renderWithProviders(<Board />, { preloadedUser, preloadedDuel })
+
+    expect(queryByText(base.name)).toBeFalsy()
+
+    fireEvent.click(getByText(ElevatedAcolyte.name))
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    expect(queryByText(base.name)).toBeFalsy()
+
+    fireEvent.click(getByText(logsTitle))
+
+    expect(getByRole('log').textContent).not.toContain(
       `${base.name}${isPlayedLogMessage}`,
     )
   })

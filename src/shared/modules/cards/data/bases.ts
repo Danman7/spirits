@@ -1,7 +1,7 @@
-import * as ChaosBases from 'src/shared/modules/cards/data/ChaosBases'
-import * as MixedBases from 'src/shared/modules/cards/data/MixedBases'
-import * as OrderBases from 'src/shared/modules/cards/data/OrderBases'
-import * as ShadowBases from 'src/shared/modules/cards/data/ShadowBases'
+import * as ChaosBases from 'src/shared/modules/cards/data/bases.chaos'
+import * as MixedBases from 'src/shared/modules/cards/data/bases.mixed'
+import * as OrderBases from 'src/shared/modules/cards/data/bases.order'
+import * as ShadowBases from 'src/shared/modules/cards/data/bases.shadow'
 
 export const CardBases = {
   ...ChaosBases,

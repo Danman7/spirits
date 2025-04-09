@@ -202,10 +202,31 @@ it('should enable target selection when TRIGGER_TARGET_SELECTION action is dispa
   const action: DuelAction = {
     type: 'TRIGGER_TARGET_SELECTION',
     validTargets: targets,
+    showTargetingModal: true,
   }
 
-  const { phase, validTargets } = duelReducer(stackedDuelStateMock, action)
+  const {
+    phase,
+    targeting: { validTargets, showTargetingModal },
+  } = duelReducer(stackedDuelStateMock, action)
 
   expect(phase).toBe('Select Target')
   expect(validTargets).toEqual(targets)
+  expect(showTargetingModal).toBe(true)
+})
+
+it('sould disable targeting when SELECT_TARGET action is dispatched', () => {
+  const cardId = stackedDuelStateMock.players[opponentId].board[0]
+
+  const action: DuelAction = { type: 'SELECT_TARGET', cardId }
+
+  const duelState = stackedDuelStateMock
+  duelState.targeting = { showTargetingModal: true, validTargets: [cardId] }
+
+  const {
+    targeting: { validTargets, showTargetingModal },
+  } = duelReducer(stackedDuelStateMock, action)
+
+  expect(validTargets).toEqual(initialState.targeting.validTargets)
+  expect(showTargetingModal).toBe(initialState.targeting.showTargetingModal)
 })

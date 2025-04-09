@@ -3,7 +3,7 @@ import {
   getCardBaseFromName,
   getCardFactionColor,
 } from 'src/shared/modules/cards/cards.utils'
-import { HammeriteNovice } from 'src/shared/modules/cards/data/OrderBases'
+import { HammeriteNovice } from 'src/shared/modules/cards/data/bases.order'
 import { defaultTheme } from 'src/shared/styles/defaultTheme'
 
 const { orderFaction, chaosFaction, shadowFaction } = defaultTheme.colors
