@@ -11,6 +11,8 @@ import {
 } from 'src/modules/duel/duel.constants'
 import {
   getPlayableCardIds,
+  getPlayerCardIds,
+  getPlayerOwningCardId,
   normalizeStateCards,
   sortPlayerIdsForBoard,
 } from 'src/modules/duel/duel.utils'
@@ -32,6 +34,38 @@ it('should get all playable card ids for a given player with getPlayableCardIds'
     player.hand[1],
   ])
   expect(getPlayableCardIds({ ...player, coins: 0 }, cards)).toHaveLength(0)
+})
+
+it("should get all of a player's card ids with getPlayerCardIds", () => {
+  const player = stackedDuelStateMock.players[playerId]
+  const { deck, hand, board, discard } = player
+
+  expect(getPlayerCardIds(player)).toEqual([
+    ...deck,
+    ...hand,
+    ...board,
+    ...discard,
+  ])
+})
+
+it('should get the id of the player owning a given card with getPlayerOwningCardId', () => {
+  const { players, playerOrder } = stackedDuelStateMock
+  const [activePlayerId, inactivePlayerId] = playerOrder
+
+  expect(
+    getPlayerOwningCardId(
+      players,
+      playerOrder,
+      players[activePlayerId].deck[0],
+    ),
+  ).toBe(activePlayerId)
+  expect(
+    getPlayerOwningCardId(
+      players,
+      playerOrder,
+      players[inactivePlayerId].discard[0],
+    ),
+  ).toBe(inactivePlayerId)
 })
 
 it('should normalize players cards into all possible stacks with normalizePlayerCards', () => {

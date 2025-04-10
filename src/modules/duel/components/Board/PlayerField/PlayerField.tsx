@@ -16,6 +16,7 @@ import { getStackConfiguration } from 'src/modules/duel/components/Board/PlayerF
 import { StackBrowseModal } from 'src/modules/duel/components/Board/PlayerField/StackBrowseModal'
 import { useDuel } from 'src/modules/duel/components/DuelProvider/useDuel'
 import { CARD_STACKS } from 'src/modules/duel/duel.constants'
+import { getPlayerCardIds } from 'src/modules/duel/duel.utils'
 import type { CardStack } from 'src/modules/duel/state'
 
 import { AnimatedNumber, Icon } from 'src/shared/components'
@@ -34,8 +35,7 @@ export const PlayerField: React.FC<{ playerId: string; isOnTop?: boolean }> = ({
   } = useDuel()
 
   const player = players[playerId]
-  const { id, name, coins, income, isBot, deck, discard, board, hand, color } =
-    players[playerId]
+  const { id, name, coins, income, isBot, color } = players[playerId]
 
   const [isBrowsingStack, setIsBrowsingStack] = useState(false)
   const [browsedStack, setBrowsedStack] = useState<CardStack>('deck')
@@ -106,7 +106,7 @@ export const PlayerField: React.FC<{ playerId: string; isOnTop?: boolean }> = ({
         onClose={onCloseBrowseStackModal}
       />
 
-      {[...deck, ...discard, ...board, ...hand].map((cardId) => (
+      {getPlayerCardIds(player).map((cardId) => (
         <PlayCard
           key={cardId}
           playerId={player.id}

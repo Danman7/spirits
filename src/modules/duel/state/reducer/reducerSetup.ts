@@ -8,16 +8,6 @@ import {
   setupPlayersFromUsers,
 } from 'src/modules/duel/state/duelState.utils'
 
-export const initialState: DuelState = {
-  players: {},
-  cards: {},
-  playerOrder: ['', ''],
-  attackingQueue: [],
-  phase: 'Pre-duel',
-  logs: [],
-  validTargets: [],
-}
-
 export const duelReducerSetup = (
   state: Readonly<DuelState>,
   action: DuelAction,

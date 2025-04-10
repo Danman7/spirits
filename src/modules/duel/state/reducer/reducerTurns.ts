@@ -1,3 +1,4 @@
+import { getPlayerOwningCardId } from 'src/modules/duel/duel.utils'
 import type {
   DuelAction,
   DuelState,
@@ -138,7 +139,8 @@ export const duelReducerTurns = (
     }
 
     case 'DISCARD_CARD': {
-      const { cardId, playerId } = action
+      const { cardId, shouldRecoverCost } = action
+      const playerId = getPlayerOwningCardId(players, playerOrder, cardId)
       const discardingPlayer = players[playerId]
       const { cost } = cards[cardId]
 
@@ -153,7 +155,7 @@ export const duelReducerTurns = (
               cardId,
               target: 'discard',
             }),
-            income: discardingPlayer.income + cost,
+            income: discardingPlayer.income + (shouldRecoverCost ? 0 : cost),
           },
         },
         logs: [...logs, generateDiscardLogMessage(cards[cardId].name)],
@@ -197,12 +199,14 @@ export const duelReducerTurns = (
     }
 
     case 'TRIGGER_TARGET_SELECTION': {
-      const { validTargets, showTargetingModal } = action
+      const { validTargets, showTargetingModal, triggererId } = action
+
       return {
         ...state,
         phase: 'Select Target',
         targeting: {
           validTargets,
+          triggererId,
           showTargetingModal:
             showTargetingModal || targeting.showTargetingModal,
         },
@@ -210,7 +214,28 @@ export const duelReducerTurns = (
     }
 
     case 'SELECT_TARGET': {
-      return { ...state, targeting: initialState.targeting }
+      return {
+        ...state,
+        targeting: {
+          ...state.targeting,
+          showTargetingModal: initialState.targeting.showTargetingModal,
+          validTargets: initialState.targeting.validTargets,
+        },
+      }
+    }
+
+    case 'GAIN_COINS': {
+      const { amount, playerId } = action
+
+      const player = players[playerId]
+
+      return {
+        ...state,
+        players: {
+          ...players,
+          [playerId]: { ...player, coins: player.coins + amount },
+        },
+      }
     }
 
     default:

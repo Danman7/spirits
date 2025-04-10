@@ -1,4 +1,7 @@
-import { getOtherPlayer } from 'src/modules/duel/duel.utils'
+import {
+  getOtherPlayer,
+  getPlayerOwningCardId,
+} from 'src/modules/duel/duel.utils'
 import {
   DuelTrigger,
   PlayCardAction,
@@ -11,6 +14,8 @@ import {
   generateBoostedLogMessage,
   generatePlayedFromTriggerLogMessage,
   generateTriggerLogMessage,
+  generateTwoEntitiesAction,
+  recoveredCostLogMessage,
 } from 'src/modules/duel/state/playLogs'
 
 import {
@@ -18,6 +23,7 @@ import {
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   TEMPLE_GUARD_BOOST,
   Agent,
+  HammeritePriest,
 } from 'src/shared/modules/cards'
 
 export const hammeriteNoviceOnPlay: DuelTrigger = {
@@ -153,5 +159,58 @@ export const highPriestMarkanderOnUpdate: DuelTrigger = {
         ),
       })
     }
+  },
+}
+
+export const hammeritePriestOnPlay: DuelTrigger = {
+  predicate: (state, action) =>
+    getOnPlayCardPredicate(action, state.cards, 'HammeritePriest'),
+  effect: ({ action, state, dispatch }) => {
+    const { playerId, cardId } = action as PlayCardAction
+    const player = state.players[playerId]
+
+    dispatch({
+      type: 'TRIGGER_TARGET_SELECTION',
+      validTargets: player.board.filter(
+        (boardCardId) => boardCardId !== cardId,
+      ),
+      triggererId: cardId,
+    })
+  },
+}
+
+export const hammeritePriestOnSelectTarget: DuelTrigger = {
+  predicate: (state, action) => {
+    const triggerer = state.cards[state.targeting.triggererId]
+
+    return (
+      triggerer &&
+      action.type === 'SELECT_TARGET' &&
+      triggerer.name === HammeritePriest.name
+    )
+  },
+  effect: ({ action, state, dispatch }) => {
+    const { cards, players, playerOrder } = state
+    const { cardId } = action as PlayCardAction
+
+    const playerId = getPlayerOwningCardId(players, playerOrder, cardId)
+
+    dispatch({ type: 'DISCARD_CARD', cardId, shouldRecoverCost: true })
+    dispatch({ type: 'GAIN_COINS', amount: cards[cardId].cost, playerId })
+
+    const triggererName = state.cards[state.targeting.triggererId].name
+    const recoveredCardName = cards[cardId].name
+
+    dispatch({
+      type: 'ADD_LOG',
+      message: generateTriggerLogMessage(
+        generateTwoEntitiesAction(
+          triggererName,
+          recoveredCardName,
+          recoveredCostLogMessage,
+        ),
+      ),
+    })
+    dispatch({ type: 'RESOLVE_TURN' })
   },
 }

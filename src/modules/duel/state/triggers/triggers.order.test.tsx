@@ -5,7 +5,15 @@ import {
   stackedDuelStateMock,
 } from 'src/modules/duel/__mocks__'
 import { Board } from 'src/modules/duel/components'
+import {
+  chooseTargetMessage,
+  opponentTurnTitle,
+} from 'src/modules/duel/components/Board/PlayerField/ActionPanel/ActionPanel.messages'
 import { logsTitle } from 'src/modules/duel/components/Board/PlayerField/LogsPanel/LogsPanel.messages'
+import {
+  discardLabel,
+  incomeLabel,
+} from 'src/modules/duel/components/Board/PlayerField/PlayerField.messages'
 import { normalizeStateCards } from 'src/modules/duel/duel.utils'
 import { renderWithProviders } from 'src/modules/duel/duelTestRender'
 import { DuelState } from 'src/modules/duel/state'
@@ -14,11 +22,12 @@ import {
   agentRetaliatesLogMessage,
   boostedLogMessage,
   copiesLogMessage,
+  discardLogMessage,
   hasDamagedSelfLogMessage,
   hasPlayedCardLogMessage,
-  isPlayedLogMessage,
   playedLogMessage,
   playersTurnLogMessage,
+  recoveredCostLogMessage,
   reduceCounterLogMessage,
   reduceStrengthLogMessage,
 } from 'src/modules/duel/state/playLogs'
@@ -32,6 +41,7 @@ import {
   ELEVATED_ACOLYTE_SELF_DAMAGE,
   ElevatedAcolyte,
   HammeriteNovice,
+  HammeritePriest,
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   HighPriestMarkander,
   TEMPLE_GUARD_BOOST,
@@ -540,7 +550,7 @@ describe(HighPriestMarkander.name, () => {
     fireEvent.click(getByText(logsTitle))
 
     expect(getByRole('log').textContent).toContain(
-      `${base.name}${isPlayedLogMessage}`,
+      `${base.name}${playedLogMessage}`,
     )
   })
 
@@ -570,7 +580,99 @@ describe(HighPriestMarkander.name, () => {
     fireEvent.click(getByText(logsTitle))
 
     expect(getByRole('log').textContent).not.toContain(
-      `${base.name}${isPlayedLogMessage}`,
+      `${base.name}${playedLogMessage}`,
+    )
+  })
+})
+
+describe(HammeritePriest.name, () => {
+  let base: Agent
+
+  beforeEach(() => {
+    baseName = 'HammeritePriest'
+    base = CardBases[baseName]
+  })
+
+  it('should be able to discard a single card and recover its cost immediately', () => {
+    preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
+      [playerId]: { board: ['TempleGuard'], hand: [baseName] },
+    })
+
+    const { fireEvent, act, getByText, getByRole, getByTestId } =
+      renderWithProviders(<Board />, { preloadedUser, preloadedDuel })
+
+    fireEvent.click(getByText(base.name))
+
+    expect(getByText(chooseTargetMessage)).toBeTruthy()
+
+    fireEvent.click(getByText(TempleGuard.name))
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    const { discard, name, coins } = preloadedDuel.players[playerId]
+    const { name: opponentName } = preloadedDuel.players[opponentId]
+
+    expect(getByText(`${discardLabel} (${discard.length + 1})`)).toBeTruthy()
+    expect(getByTestId(`${playerId}-info`).textContent).not.toContain(
+      incomeLabel,
+    )
+    expect(getByTestId(`${playerId}-info`).textContent).toContain(
+      `${name}  ${coins - base.cost + TempleGuard.cost}`,
+    )
+    expect(getByText(opponentTurnTitle)).toBeTruthy()
+
+    fireEvent.click(getByText(logsTitle))
+
+    expect(getByRole('log').textContent).toContain(
+      `${TempleGuard.name}${discardLogMessage}`,
+    )
+    expect(getByRole('log').textContent).toContain(
+      `${opponentName}${playersTurnLogMessage}`,
+    )
+    expect(getByRole('log').textContent).toContain(
+      `${base.name}${recoveredCostLogMessage}${TempleGuard.name}`,
+    )
+  })
+
+  it("should not be able to discard self or cards on opponent's board", () => {
+    preloadedDuel = normalizeStateCards(stackedDuelStateMock, {
+      [playerId]: { board: ['TempleGuard'], hand: [baseName] },
+    })
+
+    const { fireEvent, act, getByText, queryByText, getByRole, getByTestId } =
+      renderWithProviders(<Board />, { preloadedUser, preloadedDuel })
+
+    fireEvent.click(getByText(base.name))
+
+    expect(getByText(chooseTargetMessage)).toBeTruthy()
+
+    const { cards, players } = preloadedDuel
+    const { board } = players[opponentId]
+    const opponentCardName = cards[board[0]].name
+
+    fireEvent.click(getByText(opponentCardName))
+    fireEvent.click(getByText(HammeritePriest.name))
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    const { discard, name, coins } = preloadedDuel.players[playerId]
+
+    expect(queryByText(`${discardLabel} (${discard.length + 1})`)).toBeFalsy()
+    expect(getByTestId(`${playerId}-info`).textContent).not.toContain(
+      `${name}  ${coins - base.cost + TempleGuard.cost}`,
+    )
+
+    fireEvent.click(getByText(logsTitle))
+
+    expect(getByRole('log').textContent).not.toContain(
+      `${HammeritePriest.name}${discardLogMessage}`,
+    )
+    expect(getByRole('log').textContent).not.toContain(
+      `${opponentCardName}${discardLogMessage}`,
     )
   })
 })

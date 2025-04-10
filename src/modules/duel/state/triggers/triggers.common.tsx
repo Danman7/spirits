@@ -5,6 +5,7 @@ import {
 } from 'src/modules/duel/state/playLogs'
 
 import { AgentWithCounter, HighPriestMarkander } from 'src/shared/modules/cards'
+import { cardNamesThatTriggerTargetingOnPlay } from 'src/shared/modules/cards/data/bases'
 import { defaultTheme } from 'src/shared/styles'
 
 export const completeRedraw: DuelTrigger = {
@@ -29,9 +30,10 @@ export const handlePostPlayCard: DuelTrigger = {
     const { cards } = state
     const { shouldPay, cardId, playerId } = action as PlayCardAction
 
-    if (shouldPay) dispatch({ type: 'RESOLVE_TURN' })
+    const { categories, name } = cards[cardId]
 
-    const { categories } = cards[cardId]
+    if (shouldPay && !cardNamesThatTriggerTargetingOnPlay.includes(name))
+      dispatch({ type: 'RESOLVE_TURN' })
 
     const HighPriest = Object.entries(cards).find(
       ([, card]) => card.name === HighPriestMarkander.name,
@@ -78,6 +80,17 @@ export const handleAttack: DuelTrigger = {
 
     setTimeout(() => {
       dispatch({ type: 'MOVE_TO_NEXT_ATTACKER' })
+    }, defaultTheme.transitionTime)
+  },
+}
+
+export const handleSelectTargetNoValidTargets: DuelTrigger = {
+  predicate: (state, action) =>
+    action.type === 'TRIGGER_TARGET_SELECTION' &&
+    !state.targeting.validTargets.length,
+  effect: ({ dispatch }) => {
+    setTimeout(() => {
+      dispatch({ type: 'RESOLVE_TURN' })
     }, defaultTheme.transitionTime)
   },
 }

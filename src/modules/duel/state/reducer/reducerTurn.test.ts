@@ -1,4 +1,5 @@
 import {
+  initialDuelStateMock,
   opponentId,
   playerId,
   stackedDuelStateMock,
@@ -165,11 +166,7 @@ it('should play and pay cost of played card when PLAY_CARD action is dispatched'
 it('should discard a card when DISCARD_CARD action is dispatched', () => {
   const discardedCardId = stackedDuelStateMock.players[playerId].board[0]
 
-  const action: DuelAction = {
-    type: 'DISCARD_CARD',
-    cardId: discardedCardId,
-    playerId,
-  }
+  const action: DuelAction = { type: 'DISCARD_CARD', cardId: discardedCardId }
 
   const {
     players: { [playerId]: player },
@@ -202,6 +199,7 @@ it('should enable target selection when TRIGGER_TARGET_SELECTION action is dispa
   const action: DuelAction = {
     type: 'TRIGGER_TARGET_SELECTION',
     validTargets: targets,
+    triggererId: '123',
     showTargetingModal: true,
   }
 
@@ -221,7 +219,11 @@ it('sould disable targeting when SELECT_TARGET action is dispatched', () => {
   const action: DuelAction = { type: 'SELECT_TARGET', cardId }
 
   const duelState = stackedDuelStateMock
-  duelState.targeting = { showTargetingModal: true, validTargets: [cardId] }
+  duelState.targeting = {
+    showTargetingModal: true,
+    validTargets: [cardId],
+    triggererId: '123',
+  }
 
   const {
     targeting: { validTargets, showTargetingModal },
@@ -229,4 +231,15 @@ it('sould disable targeting when SELECT_TARGET action is dispatched', () => {
 
   expect(validTargets).toEqual(initialState.targeting.validTargets)
   expect(showTargetingModal).toBe(initialState.targeting.showTargetingModal)
+})
+
+it('should gain coins when GAIN_COINS is triggered', () => {
+  const amount = 5
+  const action: DuelAction = { type: 'GAIN_COINS', playerId, amount }
+
+  const { players } = duelReducer(initialDuelStateMock, action)
+
+  expect(players[playerId].coins).toBe(
+    initialDuelStateMock.players[playerId].coins + 5,
+  )
 })

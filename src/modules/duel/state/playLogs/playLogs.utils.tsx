@@ -9,7 +9,6 @@ import {
   discardLogMessage,
   hasDamagedSelfLogMessage,
   hasPlayedCardLogMessage,
-  isPlayedLogMessage,
   playedLogMessage,
   reduceCounterLogMessage,
   reduceStrengthLogMessage,
@@ -126,6 +125,18 @@ export const generateBoostedLogMessage = (name: string, amount: number) => (
 export const generatePlayedFromTriggerLogMessage = (name: string) => (
   <>
     <strong>{name}</strong>
-    {isPlayedLogMessage}
+    {playedLogMessage}
+  </>
+)
+
+export const generateTwoEntitiesAction = (
+  firstName: string,
+  secondName: string,
+  actionMessage: string,
+) => (
+  <>
+    <strong>{firstName}</strong>
+    {actionMessage}
+    <strong>{secondName}</strong>.
   </>
 )

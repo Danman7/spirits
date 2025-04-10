@@ -7,13 +7,14 @@ export const useDuelCardOnClick = (
   cardId: string,
   playerId: string,
   stack: CardStack,
-) => {
+): (() => void) | undefined => {
   const {
     state: {
       cards,
       players,
       phase,
       playerOrder: [activePlayerId],
+      targeting: { validTargets },
     },
     dispatch,
   } = useDuel()
@@ -23,6 +24,10 @@ export const useDuelCardOnClick = (
 
   const { hasPerformedAction, coins } = players[playerId]
   const { cost } = cards[cardId]
+
+  if (phase === 'Select Target' && validTargets.includes(cardId)) {
+    return () => dispatch({ type: 'SELECT_TARGET', cardId })
+  }
 
   if (stack === 'hand' && !hasPerformedAction) {
     if (

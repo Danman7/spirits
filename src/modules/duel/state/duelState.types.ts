@@ -24,14 +24,20 @@ type DuelCard = Card & { id: string }
 
 export type DuelCards = { [index: string]: DuelCard }
 
+export type PlayerOrder = [string, string]
+
 export interface DuelState {
   phase: DuelPhase
   attackingQueue: AttackOrder[]
   players: DuelPlayers
-  playerOrder: [string, string]
+  playerOrder: PlayerOrder
   cards: DuelCards
   logs: React.ReactNode[]
-  targeting: { showTargetingModal: boolean; validTargets: string[] }
+  targeting: {
+    showTargetingModal: boolean
+    triggererId: string
+    validTargets: string[]
+  }
 }
 
 export type DuelDispatch = (action: DuelAction) => void
@@ -85,13 +91,15 @@ export type DuelAction =
   | { type: 'MOVE_TO_NEXT_ATTACKER' }
   | { type: 'REDRAW_CARD'; playerId: string; cardId: string }
   | PlayCardAction
-  | { type: 'DISCARD_CARD'; playerId: string; cardId: string }
+  | { type: 'DISCARD_CARD'; cardId: string; shouldRecoverCost?: boolean }
+  | { type: 'GAIN_COINS'; playerId: string; amount: number }
   | UpdateAgentAction
   | { type: 'ADD_LOG'; message: React.JSX.Element }
   | { type: 'AGENT_DAMAGE_SELF'; cardId: string; amount: number }
   | {
       type: 'TRIGGER_TARGET_SELECTION'
       validTargets: string[]
+      triggererId: string
       showTargetingModal?: boolean
     }
   | { type: 'SELECT_TARGET'; cardId: string }

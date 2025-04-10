@@ -4,7 +4,12 @@ import type {
   Player,
   PlayerStacks,
 } from 'src/modules/duel/duel.types'
-import type { CardStack, DuelCards, DuelState } from 'src/modules/duel/state'
+import type {
+  CardStack,
+  DuelCards,
+  DuelState,
+  PlayerOrder,
+} from 'src/modules/duel/state'
 
 import { CardBases, CardBaseKey } from 'src/shared/modules/cards'
 import { generateUUID } from 'src/shared/shared.utils'
@@ -17,6 +22,26 @@ type NormalizedPlayers = Record<
   Partial<Record<CardStack, CardBaseKey[]>>
 >
 
+export const getPlayerCardIds = (player: Player) => [
+  ...player.deck,
+  ...player.hand,
+  ...player.board,
+  ...player.discard,
+]
+
+export const getPlayerOwningCardId = (
+  players: DuelPlayers,
+  playerOrder: PlayerOrder,
+  cardId: string,
+): string => {
+  const [activePlayerId, inavtivePlayerId] = playerOrder
+  const isCardInActivePlayer = getPlayerCardIds(
+    players[activePlayerId],
+  ).includes(cardId)
+
+  return isCardInActivePlayer ? activePlayerId : inavtivePlayerId
+}
+
 export const normalizeStateCards = (
   state: DuelState,
   players: NormalizedPlayers,
@@ -25,10 +50,9 @@ export const normalizeStateCards = (
   const cards = { ...state.cards }
 
   Object.entries(players).forEach(([playerId, stacks]) => {
-    const { deck, hand, discard, board } = state.players[playerId]
-    const statePlayerStacks = [...deck, ...hand, ...discard, ...board]
+    const playerCardIds = getPlayerCardIds(state.players[playerId])
 
-    statePlayerStacks.forEach((cardId) => {
+    playerCardIds.forEach((cardId) => {
       delete cards[cardId]
     })
 
@@ -66,13 +90,13 @@ export const sortPlayerIdsForBoard = (
         Number(playerA.id === loggedInPlayerId) -
         Number(playerB.id === loggedInPlayerId),
     )
-    .map(({ id }) => id) as [string, string]
+    .map(({ id }) => id) as PlayerOrder
 
 export const getOtherPlayer = (
   players: DuelPlayers,
-  playerOrder: [string, string],
+  playerOrder: PlayerOrder,
   playerId: string,
-) => {
+): Player => {
   const otherId = playerOrder[0] === playerId ? playerOrder[1] : playerOrder[0]
   return players[otherId]
 }

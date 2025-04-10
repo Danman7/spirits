@@ -14,6 +14,7 @@ import type {
   DuelAction,
   PlayCardAction,
   UsersStartingDuel,
+  PlayerOrder,
 } from 'src/modules/duel/state'
 import {
   generatePlayedCopyLogMessage,
@@ -189,7 +190,7 @@ export const setInitialPlayerOrder = (
   users: UsersStartingDuel,
   firstPlayerIndex?: 0 | 1,
 ) => {
-  const userIds = users.map(({ id }) => id) as [string, string]
+  const userIds = users.map(({ id }) => id) as PlayerOrder
 
   const activePlayerId =
     typeof firstPlayerIndex !== 'undefined'
@@ -198,7 +199,7 @@ export const setInitialPlayerOrder = (
 
   return activePlayerId === userIds[0]
     ? userIds
-    : ([...userIds].reverse() as [string, string])
+    : ([...userIds].reverse() as PlayerOrder)
 }
 
 export const setupPlayersFromUsers = (
@@ -240,6 +241,6 @@ export const drawInitialCardsForBothPlayers = (players: DuelPlayers) =>
   )
 
 export const handleIncome = (player: Player) => ({
-  coins: player.income ? player.coins + INCOME_PER_TURN : player.coins,
-  income: player.income ? player.income - INCOME_PER_TURN : player.income,
+  income: player.income - (player.income ? INCOME_PER_TURN : 0),
+  coins: player.coins + (player.income ? INCOME_PER_TURN : 0),
 })

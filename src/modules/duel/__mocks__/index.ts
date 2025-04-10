@@ -22,6 +22,7 @@ export const userMock: User = {
     'TempleGuard',
     'TempleGuard',
     'HighPriestMarkander',
+    'HammeritePriest',
   ],
 }
 

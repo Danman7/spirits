@@ -278,8 +278,11 @@ it('should discard an agent when its strength reaches 0', () => {
   } = preloadedDuel
 
   const { board: attackerBoard } = players[activePlayerId]
-  const { board: defenderBoard, name: defendingPlayerName } =
-    players[inactivePlayerId]
+  const {
+    board: defenderBoard,
+    discard: defenderDiscard,
+    name: defendingPlayerName,
+  } = players[inactivePlayerId]
   const attackingAgentId = attackerBoard[0]
   const defendingAgentId = defenderBoard[0]
   const { name: attackerName } = preloadedDuel.cards[attackingAgentId] as Agent
@@ -301,6 +304,10 @@ it('should discard an agent when its strength reaches 0', () => {
   act(() => {
     jest.runAllTimers()
   })
+
+  expect(
+    getByText(`${discardLabel} (${defenderDiscard.length + 1})`),
+  ).toBeTruthy()
 
   fireEvent.click(getByText(logsTitle))
 

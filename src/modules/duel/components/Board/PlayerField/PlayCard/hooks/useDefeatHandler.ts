@@ -22,6 +22,6 @@ export const useDefeatHandler = (
     if (stack !== 'board' || card.strength > 0 || discard.includes(cardId))
       return
 
-    dispatch({ type: 'DISCARD_CARD', cardId, playerId })
+    dispatch({ type: 'DISCARD_CARD', cardId })
   }, [cardId, playerId, stack, card.strength, card.type, discard, dispatch])
 }

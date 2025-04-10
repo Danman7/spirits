@@ -97,7 +97,7 @@ export const HighPriestMarkander: AgentWithCounter = {
   type: 'agent',
   name: 'High Priest Markander',
   strength: 4,
-  cost: 5,
+  cost: 7,
   counter: HIGH_PRIEST_MAKANDER_COUNTER,
   isElite: true,
   factions: ['Order'],

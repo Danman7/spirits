@@ -13,7 +13,7 @@ export const initialState: DuelState = {
   attackingQueue: [],
   phase: 'Pre-duel',
   logs: [],
-  targeting: { showTargetingModal: false, validTargets: [] },
+  targeting: { showTargetingModal: false, triggererId: '', validTargets: [] },
 }
 
 export const duelReducer = (

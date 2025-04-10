@@ -9,3 +9,7 @@ export const CardBases = {
   ...ShadowBases,
   ...MixedBases,
 }
+
+export const cardNamesThatTriggerTargetingOnPlay = [
+  CardBases['HammeritePriest'].name,
+]

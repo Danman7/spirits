@@ -3,6 +3,7 @@ import { ReactNode } from 'react'
 import {
   PlayerTurnPanelContent,
   RedrawingPanelContent,
+  SelectTarget,
 } from 'src/modules/duel/components/Board/PlayerField/ActionPanel/content'
 import { useDuel } from 'src/modules/duel/components/DuelProvider/useDuel'
 import {
@@ -61,6 +62,9 @@ export const useActionPanelContent = (): ReactNode => {
           onPassTurn={onPassTurn}
         />
       )
+
+    case 'Select Target':
+      return <SelectTarget />
 
     default:
       return <LoadingDots />

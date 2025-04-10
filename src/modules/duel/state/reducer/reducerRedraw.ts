@@ -13,16 +13,6 @@ import {
   playersTurnLogMessage,
 } from 'src/modules/duel/state/playLogs/playLogs.messages'
 
-export const initialState: DuelState = {
-  players: {},
-  cards: {},
-  playerOrder: ['', ''],
-  attackingQueue: [],
-  phase: 'Pre-duel',
-  logs: [],
-  validTargets: [],
-}
-
 export const duelReducerRedraw = (
   state: Readonly<DuelState>,
   action: DuelAction,
