@@ -59,7 +59,6 @@ select {
 export const Box = styled.div`
   ${animationMixin()}
   text-align: center;
-  overflow: hidden;
   box-shadow: ${({ theme }) => theme.boxShadow.level3};
   border-radius: ${({ theme }) => theme.spacing}px;
   color: ${({ theme }) => theme.colors.text};
