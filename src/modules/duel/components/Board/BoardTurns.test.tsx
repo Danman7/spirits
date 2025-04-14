@@ -147,6 +147,11 @@ it('should discard an instant when one is played', async () => {
   expect(getByTestId(`${playerId}-info`).textContent).toContain(
     `${incomeLabel}${cost}`,
   )
+
+  act(() => {
+    jest.runAllTimers()
+  })
+
   expect(getByText(opponentTurnTitle)).toBeTruthy()
 
   fireEvent.click(getByText(logsTitle))

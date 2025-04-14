@@ -28,7 +28,9 @@ export const handlePostPlayCard: DuelTrigger = {
     const { name } = cards[cardId]
 
     if (shouldPay && !cardNamesThatTriggerTargetingOnPlay.includes(name))
-      dispatch({ type: 'RESOLVE_TURN' })
+      setTimeout(() => {
+        dispatch({ type: 'RESOLVE_TURN' })
+      }, defaultTheme.transitionTime * 3)
   },
 }
 

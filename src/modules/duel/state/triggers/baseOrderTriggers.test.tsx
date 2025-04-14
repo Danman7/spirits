@@ -93,6 +93,31 @@ describe(HammeriteNovice.name, () => {
       `${copiesLogMessage}${base.name}${playedLogMessage}`,
     )
 
+    const { players, cards } = stackedDuelStateMock
+    const { name: defendingAgentName, strength } = cards[
+      players[opponentId].board[0]
+    ] as Agent
+
+    expect(getByRole('log').textContent).toContain(
+      `${TempleGuard.name}${agentAttackLogMessage}${defendingAgentName}${reduceStrengthLogMessage}${strength - 1}`,
+    )
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    expect(getByRole('log').textContent).toContain(
+      `${base.name}${agentAttackLogMessage}${defendingAgentName}${reduceStrengthLogMessage}${strength - 2}`,
+    )
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    expect(getByRole('log').textContent).toContain(
+      `${base.name}${agentAttackLogMessage}${defendingAgentName}${reduceStrengthLogMessage}${strength - 3}`,
+    )
+
     act(() => {
       jest.runAllTimers()
     })
@@ -171,7 +196,7 @@ describe(ElevatedAcolyte.name, () => {
 
     fireEvent.click(getByText(base.name))
 
-    const { players } = preloadedDuel
+    const { players, cards } = preloadedDuel
     const { hand } = players[playerId]
 
     expect(getByTestId(hand[0]).textContent).toContain(
@@ -182,6 +207,18 @@ describe(ElevatedAcolyte.name, () => {
 
     expect(getByRole('log').textContent).toContain(
       `${base.name}${hasDamagedSelfLogMessage}${ELEVATED_ACOLYTE_SELF_DAMAGE}`,
+    )
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    const { name: defendingAgentName, strength } = cards[
+      players[opponentId].board[0]
+    ] as Agent
+
+    expect(getByRole('log').textContent).toContain(
+      `${base.name}${agentAttackLogMessage}${defendingAgentName}${reduceStrengthLogMessage}${strength - 1}`,
     )
 
     act(() => {
