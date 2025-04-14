@@ -19,11 +19,8 @@ const LeftSlide = keyframes`
     transform: translateX(-${spacing * 20}px);
   }
 
-  20% {
-    opacity: 1;
-  }
-
   100% {
+    opacity: 1;
 	  transform: translateX(0);
   }
 `
@@ -34,11 +31,8 @@ const RightSlide = keyframes`
     transform: translateX(${spacing * 20}px);
   }
 
-  20% {
-    opacity: 1;
-  }
-
   100% {
+    opacity: 1;
 	  transform: translateX(0);
   }
 `
@@ -67,7 +61,7 @@ const PlayerNameBox = styled.div<{ $color: Color }>`
 
   h2 {
     animation-delay: ${({ theme }) => theme.transitionTime}ms;
-    ${animationMixin(20)}
+    ${animationMixin(12)}
   }
 `
 

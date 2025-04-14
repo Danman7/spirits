@@ -11,6 +11,7 @@ import {
   useDuelCardOnClick,
 } from 'src/modules/duel/components/Board/PlayerField/PlayCard/hooks'
 import { CardMovementWrapper } from 'src/modules/duel/components/Board/PlayerField/PlayCard/PlayCard.styles'
+import { getCardMargin } from 'src/modules/duel/components/Board/PlayerField/PlayCard/PlayCard.utils'
 
 import { CardComponent } from 'src/shared/modules/cards'
 
@@ -52,13 +53,7 @@ export const PlayCard: React.FC<PlayCardProps> = ({
 
   const cardComponent = (
     <CardMovementWrapper
-      $margin={
-        ['deck', 'discard'].includes(stack)
-          ? isOnTop
-            ? stack.length - cardIndex * 4
-            : cardIndex * 4
-          : 0
-      }
+      $margin={getCardMargin(stack, cardIndex, isOnTop)}
       ref={cardMovementWrapper}
       style={style}
     >
