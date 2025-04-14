@@ -7,11 +7,13 @@ import {
 import {
   generateBoostedLogMessage,
   generatePlayedFromTriggerLogMessage,
+  generateReduceCounterMessage,
   generateTriggerLogMessage,
 } from 'src/modules/duel/state/playLogs'
 
 import {
   Agent,
+  AgentWithCounter,
   HAMMERITES_WITH_LOWER_STRENGTH_BOOST,
   HighPriestMarkander,
 } from 'src/shared/modules/cards'
@@ -50,6 +52,42 @@ export const brotherSachelmanOnPlay: DuelTrigger = {
         })
       }
     })
+  },
+}
+
+export const highPriestMarkanderOnPlayCard: DuelTrigger = {
+  predicate: (_, action) => action.type === 'PLAY_CARD',
+  effect: ({ state, action, dispatch }) => {
+    const { cards } = state
+    const { cardId, playerId } = action as PlayCardAction
+
+    const { categories } = cards[cardId]
+
+    const HighPriest = Object.entries(cards).find(
+      ([, card]) => card.name === HighPriestMarkander.name,
+    )
+
+    if (!HighPriest) return
+
+    const [priestId, card] = HighPriest
+
+    const { counter } = card as AgentWithCounter
+
+    if (categories.includes('Hammerite') && counter > 0) {
+      dispatch({
+        type: 'UPDATE_AGENT',
+        playerId,
+        cardId: priestId,
+        update: { counter: counter - 1 },
+      })
+
+      dispatch({
+        type: 'ADD_LOG',
+        message: generateTriggerLogMessage(
+          generateReduceCounterMessage(card as AgentWithCounter),
+        ),
+      })
+    }
   },
 }
 
