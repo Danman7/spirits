@@ -1,7 +1,4 @@
-import {
-  DOWNWINDER_BOOST,
-  GARRETT_COIN_GAIN,
-} from 'src/shared/modules/cards/cards.constants'
+import { DOWNWINDER_BOOST } from 'src/shared/modules/cards/cards.constants'
 import { Agent } from 'src/shared/modules/cards/cards.types'
 
 export const GarrettMasterThief: Agent = {
@@ -12,9 +9,7 @@ export const GarrettMasterThief: Agent = {
   isElite: true,
   factions: ['Shadow'],
   categories: ['Thief'],
-  description: [
-    `Whenever your opponent spends coins, gain ${GARRETT_COIN_GAIN} coin.`,
-  ],
+  description: ['This card never looses its Hidden trait.'],
   flavor:
     'His heart was clouded, and his balance was lost, but his abilities were unmatched. -- Keeper Annals',
 }

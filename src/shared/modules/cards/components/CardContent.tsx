@@ -19,10 +19,10 @@ export const CardContent: React.FC<CardContentProps> = ({ card, id }) => {
 
       {type === 'agent' && card.traits
         ? Object.keys(card.traits).map((trait: AgentTraitName) => (
-            <p key={`${id}-${trait}`}>
+            <small key={`${id}-${trait}`}>
               <strong>{traitDescriptions[trait].title}</strong>{' '}
               {traitDescriptions[trait].description}
-            </p>
+            </small>
           ))
         : null}
 

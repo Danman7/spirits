@@ -1,5 +1,3 @@
-import { useTheme } from 'styled-components'
-
 import { Icons } from 'src/shared/components/Icon/AvailableIcons'
 import { StyledIcon } from 'src/shared/components/Icon/Icon.styles'
 import { IconName } from 'src/shared/components/Icon/Icon.types'
@@ -12,9 +10,7 @@ interface IconProps {
 }
 
 export const Icon: React.FC<IconProps> = ({ color, name, size = '1em' }) => {
-  const { colors } = useTheme()
-
-  const iconColor = color || colors.text
+  const iconColor = color || '#3d2c29'
   const SvgIcon = Icons[name]
 
   return (

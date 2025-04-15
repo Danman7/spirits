@@ -211,6 +211,9 @@ export const CardTitle = styled.h3<CardTitleProps>`
 `
 
 export const StyledCardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   text-align: center;
   overflow: auto;
   padding: 0.5em 0;
