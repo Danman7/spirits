@@ -51,7 +51,7 @@ export const handleAttack: DuelTrigger = {
 
     setTimeout(() => {
       dispatch({ type: 'MOVE_TO_NEXT_ATTACKER' })
-    }, defaultTheme.transitionTime)
+    }, defaultTheme.transitionTime * 3)
   },
 }
 

@@ -48,6 +48,7 @@ interface CardOutlineProps extends CardIsSmall, AttackingProps {}
 
 export const CardOutline = styled.div<CardOutlineProps>`
   ${transitionMixin}
+  ${animationMixin()}
   width: ${({ theme, $isSmall }) => theme.card.width * ($isSmall ? 0.6 : 1)}px;
   height: ${({ theme, $isSmall }) =>
     theme.card.height * ($isSmall ? 0.6 : 1)}px;
