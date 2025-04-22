@@ -82,6 +82,12 @@ describe(HammeriteNovice.name, () => {
       jest.runAllTimers()
     })
 
+    expect(getAllByText(base.name)).toHaveLength(1)
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
     expect(getAllByText(base.name)).toHaveLength(2)
 
     fireEvent.click(getByText(logsTitle))
@@ -492,6 +498,11 @@ describe(HammeritePriest.name, () => {
     expect(getByTestId(`${playerId}-info`).textContent).toContain(
       `${name}  ${coins - base.cost + TempleGuard.cost}`,
     )
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
     expect(getByText(opponentTurnTitle)).toBeTruthy()
 
     fireEvent.click(getByText(logsTitle))

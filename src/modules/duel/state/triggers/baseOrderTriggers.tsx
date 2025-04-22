@@ -21,24 +21,34 @@ import {
   HammeritePriest,
   TEMPLE_GUARD_BOOST,
 } from 'src/shared/modules/cards'
+import { defaultTheme } from 'src/shared/styles'
 
 export const hammeriteNoviceOnPlay: DuelTrigger = {
   predicate: (state, action) =>
     getOnPlayCardPredicate(action, state.cards, 'HammeriteNovice') &&
-    action.type === 'PLAY_CARD' &&
-    !!state.players[action.playerId].board.find(
-      (cardId) =>
-        cardId !== action.cardId &&
-        state.cards[cardId].categories.includes('Hammerite'),
-    ),
-  effect: ({ action, state, dispatch }) =>
-    getPlayAllCopiesEffect(
-      action,
-      state.players,
-      state.cards,
-      'HammeriteNovice',
-      dispatch,
-    ),
+    action.type === 'PLAY_CARD',
+  effect: ({ action, state, dispatch }) => {
+    if (
+      action.type === 'PLAY_CARD' &&
+      state.players[action.playerId].board.find(
+        (cardId) =>
+          cardId !== action.cardId &&
+          state.cards[cardId].categories.includes('Hammerite'),
+      )
+    ) {
+      getPlayAllCopiesEffect(
+        action,
+        state.players,
+        state.cards,
+        'HammeriteNovice',
+        dispatch,
+      )
+    } else {
+      setTimeout(() => {
+        dispatch({ type: 'RESOLVE_TURN' })
+      }, defaultTheme.transitionTime * 3)
+    }
+  },
 }
 
 export const elevatedAcolyteOnPlay: DuelTrigger = {
@@ -147,6 +157,9 @@ export const hammeritePriestOnSelectTarget: DuelTrigger = {
         ),
       ),
     })
-    dispatch({ type: 'RESOLVE_TURN' })
+
+    setTimeout(() => {
+      dispatch({ type: 'RESOLVE_TURN' })
+    }, defaultTheme.transitionTime * 3)
   },
 }

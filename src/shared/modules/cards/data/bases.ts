@@ -10,6 +10,7 @@ export const CardBases = {
   ...MixedBases,
 }
 
-export const cardNamesThatTriggerTargetingOnPlay = [
+export const cardNamesThatPauseResolvingTurnOnPlay = [
   CardBases['HammeritePriest'].name,
+  CardBases['HammeriteNovice'].name,
 ]

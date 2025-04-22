@@ -1,6 +1,6 @@
 import type { DuelTrigger, PlayCardAction } from 'src/modules/duel/state'
 
-import { cardNamesThatTriggerTargetingOnPlay } from 'src/shared/modules/cards/data/bases'
+import { cardNamesThatPauseResolvingTurnOnPlay } from 'src/shared/modules/cards/data/bases'
 import { defaultTheme } from 'src/shared/styles'
 
 export const completeRedraw: DuelTrigger = {
@@ -27,7 +27,7 @@ export const handlePostPlayCard: DuelTrigger = {
 
     const { name } = cards[cardId]
 
-    if (shouldPay && !cardNamesThatTriggerTargetingOnPlay.includes(name))
+    if (shouldPay && !cardNamesThatPauseResolvingTurnOnPlay.includes(name))
       setTimeout(() => {
         dispatch({ type: 'RESOLVE_TURN' })
       }, defaultTheme.transitionTime * 3)

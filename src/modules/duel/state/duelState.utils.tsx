@@ -28,6 +28,7 @@ import {
   getRandomArrayItem,
   shuffleArray,
 } from 'src/shared/shared.utils'
+import { defaultTheme } from 'src/shared/styles'
 
 export const getNeighboursIndexes = (
   index: number,
@@ -175,7 +176,9 @@ export const getPlayAllCopiesEffect = (
     )
       return
 
-    dispatch({ type: 'PLAY_CARD', cardId, playerId, shouldPay: false })
+    setTimeout(() => {
+      dispatch({ type: 'PLAY_CARD', cardId, playerId, shouldPay: false })
+    }, defaultTheme.transitionTime * 2)
 
     dispatch({
       type: 'ADD_LOG',
@@ -183,6 +186,10 @@ export const getPlayAllCopiesEffect = (
         generatePlayedCopyLogMessage(base.name),
       ),
     })
+
+    setTimeout(() => {
+      dispatch({ type: 'RESOLVE_TURN' })
+    }, defaultTheme.transitionTime * 4)
   })
 }
 
