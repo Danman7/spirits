@@ -164,33 +164,46 @@ export const getPlayAllCopiesEffect = (
   const { board, discard, hand, deck } = player
   const base = CardBases[comparingBase]
 
-  Object.keys(cards).forEach((cardId) => {
-    const { name } = cards[cardId]
-
-    if (
-      name !== base.name ||
-      cardId === playedCardId ||
-      board.includes(cardId) ||
-      discard.includes(cardId) ||
-      (!hand.includes(cardId) && !deck.includes(cardId))
+  if (
+    action.type === 'PLAY_CARD' &&
+    players[action.playerId].board.find(
+      (cardId) =>
+        cardId !== action.cardId &&
+        cards[cardId].categories.includes('Hammerite'),
     )
-      return
+  ) {
+    Object.keys(cards).forEach((cardId) => {
+      const { name } = cards[cardId]
 
-    setTimeout(() => {
-      dispatch({ type: 'PLAY_CARD', cardId, playerId, shouldPay: false })
-    }, defaultTheme.transitionTime * 2)
+      if (
+        name !== base.name ||
+        cardId === playedCardId ||
+        board.includes(cardId) ||
+        discard.includes(cardId) ||
+        (!hand.includes(cardId) && !deck.includes(cardId))
+      )
+        return
 
-    dispatch({
-      type: 'ADD_LOG',
-      message: generateTriggerLogMessage(
-        generatePlayedCopyLogMessage(base.name),
-      ),
+      setTimeout(() => {
+        dispatch({ type: 'PLAY_CARD', cardId, playerId, shouldPay: false })
+      }, defaultTheme.transitionTime * 2)
+
+      dispatch({
+        type: 'ADD_LOG',
+        message: generateTriggerLogMessage(
+          generatePlayedCopyLogMessage(base.name),
+        ),
+      })
+
+      setTimeout(() => {
+        dispatch({ type: 'RESOLVE_TURN' })
+      }, defaultTheme.transitionTime * 4)
     })
-
+  } else {
     setTimeout(() => {
       dispatch({ type: 'RESOLVE_TURN' })
-    }, defaultTheme.transitionTime * 4)
-  })
+    }, defaultTheme.transitionTime * 3)
+  }
 }
 
 export const setInitialPlayerOrder = (

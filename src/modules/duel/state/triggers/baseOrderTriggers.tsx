@@ -27,28 +27,14 @@ export const hammeriteNoviceOnPlay: DuelTrigger = {
   predicate: (state, action) =>
     getOnPlayCardPredicate(action, state.cards, 'HammeriteNovice') &&
     action.type === 'PLAY_CARD',
-  effect: ({ action, state, dispatch }) => {
-    if (
-      action.type === 'PLAY_CARD' &&
-      state.players[action.playerId].board.find(
-        (cardId) =>
-          cardId !== action.cardId &&
-          state.cards[cardId].categories.includes('Hammerite'),
-      )
-    ) {
-      getPlayAllCopiesEffect(
-        action,
-        state.players,
-        state.cards,
-        'HammeriteNovice',
-        dispatch,
-      )
-    } else {
-      setTimeout(() => {
-        dispatch({ type: 'RESOLVE_TURN' })
-      }, defaultTheme.transitionTime * 3)
-    }
-  },
+  effect: ({ action, state, dispatch }) =>
+    getPlayAllCopiesEffect(
+      action,
+      state.players,
+      state.cards,
+      'HammeriteNovice',
+      dispatch,
+    ),
 }
 
 export const elevatedAcolyteOnPlay: DuelTrigger = {
