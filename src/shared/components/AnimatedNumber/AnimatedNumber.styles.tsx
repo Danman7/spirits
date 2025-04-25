@@ -4,6 +4,7 @@ import { animationMixin } from 'src/shared/styles'
 
 export const StyledAnimatedNumber = styled.div`
   display: inline-block;
+  position: relative;
 `
 
 const slideUpOpacity = keyframes`
@@ -13,7 +14,6 @@ const slideUpOpacity = keyframes`
 
   20% {
     opacity: 1;
-    transform: translateY(-1em);
   }
 
   80% {
@@ -22,14 +22,17 @@ const slideUpOpacity = keyframes`
 
   100% {
     opacity: 0;
-    transform: translateY(-2em);
+    transform: translateY(-2.5em);
   }
 `
 
 export const Difference = styled.div`
   ${animationMixin(20)}
+  font-size: 1rem;
+  color: ${({ theme }) => theme.colors.text};
+  text-shadow: 1px 1px 2px ${({ theme }) => theme.colors.background};
   position: absolute;
-  top: 0;
+  top: -1em;
   opacity: 0;
   pointer-events: none;
   animation-name: ${slideUpOpacity};

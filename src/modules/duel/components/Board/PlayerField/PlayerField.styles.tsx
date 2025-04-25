@@ -4,12 +4,7 @@ import { CardMovementWrapper } from 'src/modules/duel/components/Board/PlayerFie
 
 import { CardOutline } from 'src/shared/modules/cards'
 import { Color } from 'src/shared/shared.types'
-import {
-  ActiveGlow,
-  animationMixin,
-  Box,
-  transitionMixin,
-} from 'src/shared/styles'
+import { Box, transitionMixin } from 'src/shared/styles'
 
 interface StyledPlayerFieldProps {
   $isOnTop: boolean
@@ -103,9 +98,10 @@ interface PlayerInfoProps extends StyledPlayerFieldProps {
 }
 
 export const PlayerInfo = styled(Box)<PlayerInfoProps>`
-  grid-area: info;
-  ${animationMixin(2)}
   ${transitionMixin}
+  text-align: left;
+  grid-area: info;
+  border-radius: ${({ theme }) => `${theme.spacing}px 0 0 ${theme.spacing}px`};
   display: flex;
   justify-self: end;
   flex-direction: column;
@@ -113,15 +109,9 @@ export const PlayerInfo = styled(Box)<PlayerInfoProps>`
   background-color: ${({ $color }) => $color};
   padding: 0.5em;
   z-index: 3;
-  margin-right: 1em;
-  font-size: ${({ $isActive }) => ($isActive ? '1.2em' : '1em')};
+  padding: ${({ $isActive }) =>
+    $isActive ? '0.5em 2em 0.5em 0.5em' : '0.5em'};
   align-self: ${({ $isOnTop }) => ($isOnTop ? 'self-start' : 'self-end')};
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-  animation-name: ${({ $isActive }) => {
-    if ($isActive) return ActiveGlow
-    return ''
-  }};
 `
 
 export const CardBrowserModal = styled.div`
