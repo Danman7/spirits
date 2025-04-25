@@ -15,7 +15,9 @@ export const completeRedraw: DuelTrigger = {
 
 export const advanceTurn: DuelTrigger = {
   predicate: (state, action) =>
-    action.type === 'MOVE_TO_NEXT_ATTACKER' && !state.attackingQueue.length,
+    (action.type === 'RESOLVE_TURN' ||
+      action.type === 'MOVE_TO_NEXT_ATTACKER') &&
+    !state.attackingQueue.length,
   effect: ({ dispatch }) => dispatch({ type: 'ADVANCE_TURN' }),
 }
 

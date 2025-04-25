@@ -326,3 +326,39 @@ it('should discard an agent when its strength reaches 0', () => {
     `${defendingPlayerName}${playersTurnLogMessage}`,
   )
 })
+
+it('should advance the turn if the board is empty', () => {
+  preloadedDuel.phase = 'Player Turn'
+  preloadedDuel.players[playerId].board = []
+  preloadedDuel.players[opponentId].board = []
+
+  const { fireEvent, getByText, getByRole } = renderWithProviders(<Board />, {
+    preloadedUser,
+    preloadedDuel,
+  })
+
+  const {
+    playerOrder: [activePlayerId, inactivePlayerId],
+    players,
+  } = preloadedDuel
+  const activePlayer = players[activePlayerId]
+  const inactivePlayer = players[inactivePlayerId]
+
+  fireEvent.click(getByText(passButtonMessage))
+
+  act(() => {
+    jest.runAllTimers()
+  })
+
+  expect(getByText(opponentTurnTitle)).toBeTruthy()
+  expect(getByText(opponentDecidingMessage)).toBeTruthy()
+
+  fireEvent.click(getByText(logsTitle))
+
+  expect(getByRole('log').textContent).toContain(
+    `${activePlayer.name}${playerSkippedTurnLogMessage}`,
+  )
+  expect(getByRole('log').textContent).toContain(
+    `${inactivePlayer.name}${playersTurnLogMessage}`,
+  )
+})
